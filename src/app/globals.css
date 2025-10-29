@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import "tailwindcss";
+
+/* @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
+
+
+.merriweather-sans {
+  font-family: "Merriweather Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+@theme {
+  --color-green: #39AA69;
+  --color-green-text: #38AA69;
+  --color-app-black: #000000;
+  --color-app-white: #FFFFFF;
+  --color-app-dark: #010101;
+  --color-insight-primary: #3A113D;
+  --color-insight: #FFC944;
+  --breakpoint-custom: 96.25rem;
+}
+
+.custom-scrollbarteam {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.custom-scrollbarteam::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
+}
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+  /* thickness */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Scrollbar thumb */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+/* Trick: center the scrollbar itself, without shrinking content */
+.custom-scrollbar {
+  scrollbar-gutter: stable;
+  /* prevents layout shift when scrollbar appears */
+  position: relative;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: auto;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  margin: 0 calc(50% - 100px);
+  /* keeps scrollbar only 200px visible in center */
+}
+
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background: white;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
