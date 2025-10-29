@@ -91,14 +91,14 @@ export default function MahabharataDialogues() {
 
       <div className="relative">
         {/* Top Section with Faces and Title */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between gap-5 mb-12">
           {/* Left Face */}
           <div className="">
             <img src="Web_Assets-07.png" alt="" />
           </div>
 
           {/* Center Circle with Title */}
-         <div className=''>
+         <div className='md:mb-30'>
           <img src="Web_Assets-08.png" alt="" />
          </div>
 
@@ -109,7 +109,7 @@ export default function MahabharataDialogues() {
         </div>
 
         {/* Quote Section */}
-        <div className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center ">
+        <div className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 xl:-mt-66 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center ">
           <p className="text-white text-lg italic leading-relaxed ">
             {testimonials[currentIndex].quote}
           </p>
