@@ -1,332 +1,412 @@
-export const impactStoriesDataCarousl = [
+export const allSkills = [
+  "All",
+  "Adaptability",
+  "Client Centricity",
+  "Coaching",
+  "Collaboration",
+  "Communication",
+  "Decision-Making",
+  "Empathy",
+  "Engagement",
+  "Facilitation",
+  "Feedback",
+  "Inclusion",
+  "Influence",
+  "Leadership",
+  "Negotiation",
+  "Ownership",
+  "People Management",
+  "Presence",
+  "Prioritisation",
+  "Problem Solving",
+  "Resilience",
+  "Result Orientation",
+  "Self-Awareness",
+  "Stakeholder Management",
+  "Storytelling",
+  "Strategic Thinking",
+  "Stress Management",
+];
+
+// Competencies (with "All" option at start)
+export const allGameSkills = [
+  "All",
+  "Agility",
+  "Alignment",
+  "Attention to Detail",
+  "Collaboration",
+  "Communication",
+  "Critical Thinking",
+  "Decision-Making",
+  "Empathy",
+  "Inclusion",
+  "Leadership",
+  "Ownership",
+  "Problem Solving",
+  "Resilience",
+  "Self-Awareness",
+  "Storytelling",
+  "Strategic Thinking",
+  "Trust",
+  "Stakeholder Management",
+  "Negotiation",
+  "Influence",
+  "Prioritisation",
+];
+
+  // Team data array
+export const teamMembers = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop',
-    title: 'Step Up, Speak Up, Stand Out',
-    description: 'Redefining women leadership',
-    alt: 'Women leaders finding their voice',
-    experience: {
-      banner: {
-        title: 'Step Up, Speak Up, Stand Out',
-        subtitle: 'Women leaders finding their voice',
-        image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop',
-      },
-      objective:
-        'The program set out to create a space where women leaders could safely rehearse influence, presence, and voice. It was about trying and finding new ways of showing up with confidence.',
-      challenge:
-        'Even accomplished women leaders often carried hidden hesitations. Many credited their success to luck or their teams, not themselves. In meetings, they spoke briefly, softened their tone in conflict, or let others dominate conversations. Some shared they feared being seen as "too ambitious" if they pushed harder. Others admitted they avoided opportunities, doubting if they were ready enough. These patterns weren\'t about capability. They were about confidence, voice, and permission to lead authentically.',
-      solution:
-        'We created rehearsal spaces for leadership. We designed Step Up, Speak Up, Stand Out as a multi-day journey where participants could safely experiment with vulnerability, presence, and power. The idea was not to "teach confidence" but to rehearse it through roleplays, storytelling, dialogue circles, and reflective practices that brought patterns to the surface. Women could see themselves differently, test new behaviours, and build allies along the way.',
-      methodology: {
-        title: 'The journey unfolded in three days with layered design:',
-        phases: [
-          {
-            number: 1,
-            title: 'Exploring identity and ambitions',
-            description:
-              'Reflection exercises surfaced limiting beliefs, while group dialogue created safety and empathy.',
-          },
-          {
-            number: 2,
-            title: 'Practising assertiveness and influence',
-            description:
-              'Roleplays like Apply Anyway pushed women to go beyond self-doubt, while exercises on saying "no" rehearsed boundaries and clarity.',
-          },
-          {
-            number: 3,
-            title: 'Learning frameworks and building networks',
-            description:
-              'Learning frameworks like the 4Ps for impact stories and the CEDAR model for feedback. Women practised real developmental conversations and built strong "asks" for growth. Alongside this, accountability partners kept reflection alive, and senior leaders provided mentoring and sponsorship pathways.',
-          },
-        ],
-      },
-      impact: {
-        title: 'The shifts were visible within weeks:',
-        results: [
-          'Women told sharper stories of their impact.',
-          'Feedback conversations turned into growth-focused dialogues.',
-          'All the 15 participants found new mentors or sponsors, building support networks they had not accessed before.',
-          'Many reported they felt more willing to apply for opportunities they once held back from.',
-          'One participant said, "I walked out with a voice I didn\'t know I had."',
-        ],
-      },
-      takeaway:
-        'Confidence grows when it\'s rehearsed. By creating safe rehearsal spaces, women leaders could try, reflect, and refine their presence. They left ready to carry their voices into the rooms where decisions are made.',
-      cta: {
-        description:
-          'Want to help your leaders step into voice and presence?',
-          title: 'Let’s design the right journey for them.',
-        buttonText: 'Connect with us',
-      },
-    },
+    name: "Abhilash Purohit",
+    position: ["Corporate Educator,", "Storyteller" ],
+    image: "headshot-abhilash.png",
+    row: 2,
+    marginTop: "mt-24",
+    marginLeft: "",
+    linkedinUrl: "https://www.linkedin.com/in/abhilash-purohit",
+    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop',
-    title: 'SOAR',
-    description: 'Transforming Potential for a professional services firm',
-    alt: 'Helping employees rediscover capability and confidence',
-    experience: {
-      banner: {
-        title: 'SOAR',
-        subtitle: 'Helping employees rediscover capability and confidence',
-        image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop',
-      },
-      objective:
-        'The program was designed to reinvigorate employees who were on the verge of performance improvement plans. The goal was to rescue talent at risk, build personal effectiveness, and translate it into business results.',
-      challenge:
-        '18 tenured employees had been identified as disengaged and underperforming. Many were close to being put on PIP. Their managers saw low energy, poor accountability, and declining ownership. The firm wanted transformation.',
-      solution:
-        'We created SOAR, a journey that combined training, coaching, project work, and feedback to give struggling employees a structured path back to confidence. Instead of classroom lectures, participants rehearsed behaviours, applied learning on live projects, and showcased progress through feedback and reviews.',
-      methodology: {
-        title: 'The design blended multiple elements over 8 weeks:',
-        phases: [
-          {
-            number: 1,
-            title: 'Training',
-            description:
-              'Workshops on self-leadership, problem solving, planning, communication, empathy, and interpersonal effectiveness.',
-          },
-          {
-            number: 2,
-            title: 'Coaching',
-            description:
-              'One-on-one sessions to surface barriers, set goals, and provide personalised feedback.',
-          },
-          {
-            number: 3,
-            title: 'Project Work',
-            description:
-              'Real assignments to demonstrate ownership and apply new skills in business contexts.',
-          },
-          {
-            number: 4,
-            title: 'Showcase & Review',
-            description:
-              'Participants presented progress to managers and peers, receiving structured feedback.',
-          },
-          {
-            number: 5,
-            title: 'Retention & Support',
-            description:
-              'Post-program assessments, mystery calls, and follow-up discussions ensured behaviours stuck.',
-          },
-        ],
-      },
-      impact: {
-        title: 'The results were clear:',
-        results: [
-          '12 out of 18 participants turned their performance around and avoided PIP.',
-          'Managers saw improved ownership, visibility, and accountability.',
-          'Employees reported renewed energy and purpose in their roles.',
-          'The program not only rescued careers, it helped the firm retain skilled employees who could now contribute with confidence.',
-        ],
-      },
-      takeaway:
-        'Performance issues don\'t always mean exits. With the right journey of training, coaching, and application, struggling employees can rediscover their strengths and SOAR again.',
-      cta: {
-        description:
-          'Want to see how a structured journey can transform potential in your teams?',
-          title: '',
-        buttonText: 'Connect with us',
-      },
-    },
+    name: "Rakshith Bhagavath",
+    position: ["Master Facilitator,", "Brain-Based Coach"],
+    image: "headshot-rakshith.png",
+    row: 2,
+     marginTop: "",
+    marginLeft: "",
+    linkedinUrl: "https://www.linkedin.com/in/rakshit-bhagvat",
+    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
   },
-  {
+   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
-    title: 'Building Our Future',
-    description: 'Strengthening customer satisfaction across India',
-    alt: 'Local IT Service Team: Raising CSAT from 88 to 93',
-    experience: {
-      banner: {
-        title: 'Building Our Future',
-        subtitle:
-          'Local IT Service Team: Raising CSAT from 88 to 93 - A three-month journey to make customer centricity actionable',
-        image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop',
-      },
-      objective:
-        'The program aimed to help a 50+ member IT service team improve customer satisfaction scores while serving stakeholders across India and global locations. Beyond technical fixes, the focus was on empathy, ownership, and proactive communication.',
-      challenge:
-        'The team had strong technical skills but inconsistent behaviours around empathy, listening, and follow-through. Customers felt updates came late, accountability got diluted across teams, and service interactions were often transactional. At the time, CSAT scores sat at 88%, below the global benchmark of 92%. The need was to transform service from functional to truly customer-centric.',
-      solution:
-        'We designed a three-month journey that focused on behaviours, not just process. Using real cases, simulations, and dialogue, the program created space for participants to reflect on "moments of misery" versus "moments of magic." A mix of practice, peer observation, and reinforcement tools helped teams translate values like ownership and empathy into day-to-day service actions.',
-      methodology: {
-        title: 'The journey unfolded in four phases:',
-        phases: [
-          {
-            number: 1,
-            title: 'Assessment',
-            description:
-              'Assessing the current state through reflection and live case studies.',
-          },
-          {
-            number: 2,
-            title: 'Framework & Training',
-            description:
-              'Workshops introducing frameworks like "RATER", "Moments of Magic" and "Teach, Tailor, Take Control," combined with game-based activities.',
-          },
-          {
-            number: 3,
-            title: 'Practice & Showcase',
-            description:
-              'Showcase of suggestions and practices for real customer challenges, tested and refined in groups.',
-          },
-          {
-            number: 4,
-            title: 'Implementation & Feedback',
-            description:
-              'Implementation of practices, with ongoing peer feedback using the "Star Canvas" to celebrate behaviours and track accountability.',
-          },
-        ],
-      },
-      impact: {
-        title: 'The transformation was measurable:',
-        results: [
-          'CSAT scores rose from 88% to 93%, crossing the benchmark.',
-          'Customers noted more proactive updates, clearer communication, and greater empathy in interactions.',
-          'Internally, managers saw stronger ownership, adaptability, and cross-team accountability.',
-          'The team moved from transactional problem-solving to delivering service that felt human and dependable.',
-        ],
-      },
-      takeaway:
-        'Customer centricity isn\'t taught. It\'s rehearsed. By practicing empathy, ownership, and proactive behaviours in real scenarios, service teams can create interactions that delight.',
-      cta: {
-        description:
-          'Want to help your teams move the needle on customer satisfaction?',
-          title: '',
-        buttonText: 'Connect with us',
-      },
-    },
+    name: "Namitha Vijaykumar",
+    position: ["Game-Based Learning Evangelist,", "Design Thinking Expert"],
+    image: "headshot-namitha.png",
+    row: 2,
+    marginTop: "mt-24",
+    marginLeft: "",
+    linkedinUrl: "https://www.linkedin.com/in/payal",
+    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
   },
   {
     id: 4,
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop',
-    title: 'Culture Architects',
-    description: 'Making culture actionable across a tax team',
-    alt: 'Culture champions turning values into behaviours',
-    experience: {
-      banner: {
-        title: 'Culture Architects',
-        subtitle: 'Making culture actionable across a tax team',
-        image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=300&fit=crop',
-      },
-      objective:
-        'To turn “culture” from an abstract idea into lived behaviours. The program aimed to equip culture champions across the tax practice of a global professional services firm with the tools to cascade 7 culture contours and make them real in daily work.',
-      challenge:
-        'Culture was often spoken of in posters, strategy decks, and leadership townhalls, but it wasn’t always felt in everyday spaces like cubicles, cafeterias, or team meetings. The firm’s seven culture contours (Inclusiveness, Communication, Empowerment, Strategic Intent, Ownership, Trustworthiness, and Well-being) were well-defined but not consistently understood, let alone practiced. The tax business needed champions at every level who could model these behaviours, spark dialogue, and help colleagues translate abstract values into concrete actions.',
-      solution:
-        'We designed and delivered Culture Architects, a game-based experience where culture champions became “architects” of the workplace itself. Using interactive activities like Culture Bingo and the Culture Architects simulation, participants explored how behaviours shape culture in shared spaces like conference rooms, cafeterias, lobbies, and more. The champions were equipped to take the program forward. Each was prepared to facilitate the same experience for their teams, ensuring a consistent and scalable way of cascading culture.',
-      methodology: {
-        title: 'The journey combined play, reflection, and practice:',
-        phases: [
-          {
-            number: 1,
-            title: 'Phase 1',
-            description:
-              'Warm-up activities like Culture Bingo to surface real experiences and connect them to the seven contours.',
-          },
-          {
-            number: 2,
-            title: 'Phase 2',
-            description:
-              'The Culture Architects game, where teams traded, bargained, and built office spaces that reflected cultural priorities.',
-          },
-          {
-            number: 3,
-            title: 'Phase 3',
-            description:
-              'Robust debriefs, linking in-game behaviour to everyday choices at work.',
-          },
-          {
-            number: 4,
-            title: 'Phase 4',
-            description:
-              'Champions committed to “In” and “Out” behaviours through personal contracts and identified accountability partners.',
-          },
-          {
-            number: 5,
-            title: 'Phase 5',
-            description:
-              'Champions rolled out the program across the tax business, with central coordination for consistency and impact.',
-          },
-        ],
-      },
-      impact: {
-        title: 'The impact was tangible:',
-        results: [
-          'Dozens of culture champions trained and empowered to run sessions across teams.',
-          'The seven contours became actionable and visible, shifting from values on a page to behaviours colleagues could practice, notice, and hold each other accountable for.',
-          'Teams began using the language of the contours in everyday interactions. Culture conversations stopped being abstract—they became playful, tangible, and team-owned.',
-        ],
-      },
-      takeaway:
-        'Culture lives in daily interactions, not in posters. By turning champions into facilitators and giving them playful, reflective tools, culture became something teams could design, debate, and live out together.',
-      cta: {
-        description:
-          'Want to make your culture actionable for every team member?',
-          title: 'Let’s talk about building your own Culture Architects journey.',
-        buttonText: 'Connect with us',
-      },
-    },
+    name: "Saishraddha B",
+    position: ["Published Game Designer,", "Design Thinking Expert"],
+    image: "headshot-saii.png",
+    row: 2,
+    marginTop: "",
+    marginLeft: "",
+    linkedinUrl: "https://www.linkedin.com/in/saishraddha-b",
+    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
   },
   {
     id: 5,
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop',
-    title: 'Campus to Corporate Journey',
-    description: 'Equipping fresh graduates to thrive at Vena Energy',
-    alt: 'Helping fresh graduates transition into corporate life',
-    experience: {
-      banner: {
-        title: 'Campus to Corporate Journey',
-        subtitle: 'Equipping fresh graduates to thrive at Vena Energy',
-        image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop',
-      },
-      objective:
-        'The program aimed to help fresh graduates transition smoothly into the corporate world. Beyond technical skills, the focus was on building ownership, professionalism, and communication, to fully contribute to Vena Energy’s purpose.',
-      challenge:
-        'For many freshers, stepping into corporate life can feel overwhelming. At Vena Energy, new hires came in with technical knowledge and ambition, but often lacked the confidence to navigate workplace dynamics, balance priorities, or align with the company’s values and expectations. The challenge was to provide a structured, engaging journey that would give them both clarity and confidence.',
-      solution:
-        'We designed a Campus to Corporate journey that blended workshops, reflection tools, and social learning. The program created rehearsal spaces where participants could try out new behaviours, reflect on their choices, and practice ownership in a safe, supportive environment.',
-      methodology: {
-        title: 'The journey unfolded in three phases:',
-        phases: [
-          {
-            number: 1,
-            title: 'Pre-boarding',
-            description:
-              'Tools and exercises to prime participants for the transition, including reflection activities and curated resources.',
-          },
-          {
-            number: 2,
-            title: 'Onboarding Workshops',
-            description:
-              'Interactive sessions on ownership, professionalism, and communication, using games and simulations to make the learning real.',
-          },
-          {
-            number: 3,
-            title: 'Post-program reinforcement',
-            description:
-              'Reflection journals, peer check-ins, and continued dialogue to sustain learning and embed behaviours into daily practice.',
-          },
-        ],
-      },
-      impact: {
-        title: 'The outcomes were clear:',
-        results: [
-          'Freshers reported greater confidence in owning tasks and communicating clearly with peers and managers.',
-          'Managers observed faster integration into teams, with less time spent correcting basic professional behaviours.',
-          'Participants built early habits of reflection and accountability, setting a strong foundation for their careers at Vena Energy.',
-        ],
-      },
-      takeaway:
-        'Transitions are easier when rehearsed. With the right blend of reflection, play, and dialogue, fresh graduates step into the workplace not as rookies, but as professionals ready to contribute.',
-      cta: {
-        description:
-          'Want to help your young hires make a confident start?',
-          title: 'Let’s build a Campus to Corporate journey for your teams.',
-        buttonText: 'Connect with us',
-      },
-    },
+    name: "Gauri Seshadri",
+    position: ["International Leadership Facilitator,", "Communication Coach"],
+    image: "headshot-gauri.png",
+    row: 2,
+    marginTop: "mt-24",
+    marginLeft: "",
+    linkedinUrl: "https://www.linkedin.com/in/saishraddha-b",
+    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
   },
+  {
+    id:6,
+    name: "Usha Shivaprakash",
+    position: ["DISC Certified Facilitator,", "Life Coach"],
+    image: "headshot-usha.png",
+    row: 2,
+    marginTop: "",
+    marginLeft: "",
+    linkedinUrl: "https://www.linkedin.com/in/nikhil-joshi",
+    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
+  },
+  // {
+  //   id: 6,
+  //   name: "Namitha",
+  //   position: "TRAINER",
+  //   image: "headshot-namitha.png",
+  //   row: 2,
+  //   marginTop: "mt-16",
+  //   marginLeft: "",
+  //   linkedinUrl: "https://www.linkedin.com/in/payal",
+  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
+  // },
+  // {
+  //   id: 7,
+  //   name: "Gauri Sheshadri",
+  //   position: "TRAINER",
+  //   image: "Group519.png",
+  //   row: 2,
+  //   marginTop: "mt-16",
+  //   marginLeft: "",
+  //   linkedinUrl: "https://www.linkedin.com/in/gauri-sheshadri",
+  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
+  // },
+  // {
+  //   id: 7,
+  //   name: "John Doe",
+  //   position: "TRAINER",
+  //   image: "Group519.png",
+  //   row: 2,
+  //   marginTop: "",
+  //   marginLeft: "",
+  //   linkedinUrl: "https://www.linkedin.com/in/gauri-sheshadri",
+  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
+  // },
+  // {
+  //   id: 7,
+  //   name: "Sheshadri",
+  //   position: "TRAINER",
+  //   image: "Group519.png",
+  //   row: 2,
+  //   marginTop: "mt-16",
+  //   marginLeft: "",
+  //   linkedinUrl: "https://www.linkedin.com/in/gauri-sheshadri",
+  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
+  // }
+
 ];
+
+export const faqData = [
+  {
+    id: 1,
+    question: "Why are we called Gentle Bamboo?",
+    answer: "We are inspired by the Chinese Bamboo. For years it grows underground where nobody can see it. Then one day it shoots up taller than you. That’s what real learning feels like.  It is characterized by quiet roots and sudden growth. We loved that story. Plus, bamboo bends without breaking, and we think leaders should too.",
+    hasLine: true
+  },
+  {
+    id: 2,
+    question: "What’s up with the turtle?",
+    answer: "Bam is our mascot. He is a curious little turtle who brings warmth and wisdom to our slides and workshops. \n \n In a fast-paced world, he reminds us to listen deeply, ask thoughtful questions, and add a touch of playfulness to serious discussions. \n \n He stands for steadiness, adaptability, and wisdom, embodying our belief that leadership and learning are journeys taken one mindful step at a time.",
+     hasLine: true
+  },
+  {
+    id: 3,
+    question: "How do we design and test our programs?",
+    answer: "We play them. Then we break them. Then we play again. Designing a program for us looks like sticky notes flying, people arguing over rules, and someone inevitably yelling “this doesn’t make sense!” If we don’t enjoy it ourselves, we don’t ship it.",
+     hasLine: true
+  },
+ {
+    id: 4,
+    question: "What is the GPS framework and why do we love it?",
+    answer: `GPS stands for Gamified, Personalised, Social. It’s how we make learning stick.
+**Gamified:** We sneak skills into games so you forget you’re “learning.”
+**Personalised:** No two people walk away with the same insight because no two journeys are the same.
+**Social:** We learn better together, so we bake in dialogue, debate, and laughs.
+Think of it as Google Maps for growth.`,
+ hasLine: true
+  },
+  {
+    id: 5,
+    question: "What does collaboration with us really look like?",
+    answer: "It’s messy, fun, and alive. We co-create with you. Lots of sticky notes, laughter, “what if” moments, and honest debates. You’ll see your fingerprints on every solution we deliver.",
+     hasLine: true
+  },
+  {
+    id: 6,
+    question: "How do we balance play with outcomes?",
+    answer: "By never treating play as a gimmick. A farming game is secretly about strategy. A rocket game is really negotiation practice. A storytelling circle is rehearsal for boardrooms. Our games and tools are joyful on the surface, but they’re wired to rehearse real-world skills.",
+     hasLine: false
+  }
+]
+
+
+// Data for testimonials section
+export const testimonialsData = [
+  // First row
+  [
+    {
+      id: 1,
+      height: "h-[570px]",
+      marginTop: "",
+      quote:
+        "This wasn’t about right or wrong answers. It was about seeing my own patterns. I understood why I default to long-term solutions over speed in decision-making.",
+      name: "Leader",
+      title: "Leadership Retreat",
+      company: "@Beads of Intent",
+      avatar: "/Illustrations-GB-Website-08.png",
+    },
+    {
+      id: 2,
+      height: "h-[470px]",
+      marginTop: "",
+      quote:
+        "Everything was chaotic! But instead of breaking down, we laughed, adapted, and figured it out. It was the most fun resilience training I’ve done.",
+      name: "Workflow Coordinator",
+      title: "Global Consulting Firm",
+      company: "@Restaurant Rush",
+      avatar: "/Illustrations-GB-Website-14.png",
+    },
+    {
+      id: 3,
+      height: "h-[470px]",
+      marginTop: "",
+      quote:
+        "Climbing Everest together wasn’t easy. But at the end, the summit felt real because we got there as a team and not alone. And we didn’t leave anyone behind.",
+      name: "Researcher",
+      title: "Biopharma Company",
+      company: "@Summit Everest",
+      avatar: "/Illustrations-GB-Website-11.png",
+    },
+  ],
+
+  // Second row
+  [
+    {
+      id: 4,
+      height: "h-[570px]",
+      marginTop: "mt-3",
+      quote:
+        "It was like the cards knew what was going on in our company. So conversations became easier, and we were able to plan how to move forward together.",
+      name: "Team in Transition",
+      title: "Green Energy Company",
+      company: "@Change Discovery",
+      avatar: "/Illustrations-GB-Website-12.png",
+    },
+    {
+      id: 5,
+      height: "h-[470px]",
+      marginTop: "mt-28",
+      quote:
+        "We learnt so much about delivering results while playing Let’s Sail! Planning, resources, not having enough information, dealing with uncertainty was all done in the game.",
+      name: "Territory Sales Manager",
+      title: "FMCG Brand",
+      company: "@Let’s Sail",
+      avatar: "/Illustrations-GB-Website-15.png",
+    },
+    {
+      id: 6,
+      height: "h-[470px]",
+      marginTop: "mt-3",
+      quote:
+        "I thought facilitation was about content. This showed me it’s about energy, timing, and games and space.",
+      name: "L&D Professional",
+      title: "Financial Services Firm",
+      company: "@Facilitation Skills Workshop",
+      avatar: "/Illustrations-GB-Website-10.png",
+    },
+  ],
+
+
+  // Fourth row
+  [
+    {
+      id: 7,
+      height: "h-[570px]",
+      marginTop: "",
+      quote:
+        "The team built a game around our exact challenge. It was a great collaboration between subject matter expertise and engaging game design.",
+      name: "Subject Matter Expert",
+      title: "D&I Specialists",
+      company: "For Custom Game Design",
+      avatar: "/Illustrations-GB-Website-13.png",
+    },
+  ],
+];
+
+
+export const impactDataDesktop = [
+   {
+    id: 1,
+    number: '600+',
+    text: 'Engagements<br />Delivered',
+    bgColor: '#FFD45B',
+  },
+  {
+    id: 2,
+    number: '4.7/5',
+    text: 'Average Rating<br />Across Workshops',
+    bgColor: '#E18226',
+  },
+  {
+    id: 3,
+    number: '18+',
+    text: 'Original Games<br />Developed',
+    bgColor: '#2EBDBA',
+  },
+  {
+    id: 4,
+    number: '25+',
+    text: 'Organization<br />Partnered',
+    bgColor: '#704ea0',
+  },
+  {
+    id: 5,
+    number: '9+',
+    text: 'Industries<br />Explored',
+    bgColor: '#2EBDBA',
+  },
+  {
+    id: 6,
+    number: '20000+',
+    text: 'Leaders<br />Engaged',
+    bgColor: '#704ea0',
+  },
+  {
+    id: 7,
+    number: '30,000+',
+    text: 'Hours of Play<br />Facilitated',
+    bgColor: '#FFD45B',
+  },
+  {
+    id: 8,
+    number: '95%+',
+    text: 'Returning \n Clients',
+    backgroundImage: 'url(/Blobs-6.svg)',
+    bgColor: '#E18226'
+  },
+  {
+    id: 9,
+    number: '4.7/5',
+    text: 'Average Rating \n Across Workshops',
+  bgColor: '#2fb77e'
+  },
+  
+]
+
+export const impactDataMobile = [
+  {
+    id: 1,
+    number: '600+',
+    text: 'Engagements<br />Delivered',
+    bgColor: '#704ea0',
+  },
+  {
+    id: 2,
+    number: '4.7/5',
+    text: 'Average Rating<br />Across Workshops',
+    bgColor: '#E18226',
+  },
+  {
+    id: 3,
+    number: '18+',
+    text: 'Original Games<br />Developed',
+    bgColor: '#2EBDBA',
+  },
+  {
+    id: 4,
+    number: '25+',
+    text: 'Organization<br />Partnered',
+    bgColor: '#FFD45B',
+  },
+  {
+    id: 5,
+    number: '9+',
+    text: 'Industries<br />Explored',
+    bgColor: '#E18226',
+  },
+  {
+    id: 6,
+    number: '20000+',
+    text: 'Leaders<br />Engaged',
+    bgColor: '#704ea0',
+  },
+  {
+    id: 7,
+    number: '30,000+',
+    text: 'Hours of Play<br />Facilitated',
+    bgColor: '#FFD45B',
+  },
+]

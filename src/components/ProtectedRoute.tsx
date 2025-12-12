@@ -1,9 +1,9 @@
-
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/authContext'
+import Cookies from 'js-cookie'
 import { AlertCircle, LogIn } from 'lucide-react'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -15,32 +15,84 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requireAdmin = true,
 }) => {
   const router = useRouter()
-  const { user, userData, loading, isAdmin, logout } = useAuth()
+  const [loading, setLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    if (loading) return
+    const checkAuth = async () => {
+      try {
+        // Check cookies first for quick validation
+        const authToken = Cookies.get('authToken')
+        const userRole = Cookies.get('userRole')
+        
+        if (!authToken) {
+          console.log('No auth token found, redirecting to login')
+          router.replace('/login')
+          return
+        }
 
-    
-    if (!user) {
-      router.push('/login')
-      return
+        // Verify with Firebase Auth
+        const auth = getAuth()
+        
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (!user) {
+            console.log('No Firebase user found, redirecting to login')
+            // Clear invalid cookies
+            Cookies.remove('authToken')
+            Cookies.remove('userEmail')
+            Cookies.remove('userDisplayName')
+            Cookies.remove('userRole')
+            Cookies.remove('userId')
+            router.replace('/login')
+            return
+          }
+
+          // User is authenticated
+          console.log('User authenticated:', user.email)
+          
+          // Check admin status
+          const isUserAdmin = userRole === 'admin'
+          setIsAdmin(isUserAdmin)
+
+          if (requireAdmin && !isUserAdmin) {
+            console.log('User is not admin, showing access denied')
+            setIsAuthorized(false)
+            setLoading(false)
+            return
+          }
+
+          // User is authorized
+          console.log('User is authorized')
+          setIsAuthorized(true)
+          setLoading(false)
+        })
+
+        // Cleanup subscription
+        return () => unsubscribe()
+      } catch (error) {
+        console.error('Auth check error:', error)
+        router.replace('/login')
+      }
     }
-// console.log("admin ", user)
-    // Check if admin access is required and user is not admin
-    // if (requireAdmin && !isAdmin) {
-    //   router.push('/unauthoriz')
-    //   return
-    // }
 
-    // User is authorized
-    setIsAuthorized(true)
-  }, [user, isAdmin, loading, requireAdmin, router])
+    checkAuth()
+  }, [router, requireAdmin])
 
-   const handleLogout = async () => {
-    await logout()
-    router.push('/login')
+  const handleLogout = () => {
+    const auth = getAuth()
+    auth.signOut()
+    
+    // Clear all cookies
+    Cookies.remove('authToken')
+    Cookies.remove('userEmail')
+    Cookies.remove('userDisplayName')
+    Cookies.remove('userRole')
+    Cookies.remove('userId')
+    
+    router.replace('/login')
   }
+
   // Show loading state
   if (loading) {
     return (
@@ -53,8 +105,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     )
   }
 
-
-  if (requireAdmin && !isAdmin) {
+  // Show access denied for non-admin users
+  if (requireAdmin && !isAdmin && !loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
@@ -83,12 +135,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     )
   }
 
- 
-  if (!isAuthorized) {
+  // User is not authorized (shouldn't reach here but just in case)
+  if (!isAuthorized && !loading) {
     return null
   }
 
-  
+  // User is authorized, render children
   return <>{children}</>
 }
 

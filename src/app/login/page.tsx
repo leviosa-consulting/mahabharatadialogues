@@ -1,13 +1,15 @@
+// login/page.tsx
 'use client'
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
 import { 
   getAuth, 
   signInWithEmailAndPassword,
   sendPasswordResetEmail
 } from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import db from '@/firebase/firebaseServices'
 import { Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react'
 import Cookies from 'js-cookie'
 
@@ -24,7 +26,7 @@ const LoginContent = () => {
   const [resetSuccess, setResetSuccess] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
 
-  useEffect(() => {
+  useEffect(() => { 
     const message = searchParams.get('message')
     if (message) {
       setSuccessMessage(message)
@@ -50,36 +52,69 @@ const LoginContent = () => {
       setLoading(true)
       const auth = getAuth()
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
       
-      const idToken = await userCredential.user.getIdToken()
+     
+      const userDocRef = doc(db, 'users', user.uid)
+      const userDocSnap = await getDoc(userDocRef)
       
-      // Set cookies with 7 days expiry
-      Cookies.set('authToken', idToken, { 
+      let userRole = 'admin' 
+      
+     
+      if (!userDocSnap.exists()) {
+        await setDoc(userDocRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || email.split('@')[0],
+          role: userRole,
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString()
+        })
+      } else {
+      
+        const userData = userDocSnap.data()
+        userRole = userData.role || 'admin'
+        
+       
+        await setDoc(userDocRef, {
+          lastLogin: new Date().toISOString()
+        }, { merge: true })
+      }
+      
+      const idToken = await user.getIdToken()
+      
+     
+      const isProduction = window.location.protocol === 'https:'
+      const cookieOptions = { 
         expires: 7,
-        secure: true,
-        sameSite: 'strict'
-      })
+        secure: isProduction,
+        sameSite: 'strict' as const,
+        path: '/'
+      }
       
-      Cookies.set('userEmail', userCredential.user.email || '', { 
-        expires: 7,
-        secure: true,
-        sameSite: 'strict'
-      })
+     
+      Cookies.set('authToken', idToken, cookieOptions)
+      Cookies.set('userEmail', user.email || '', cookieOptions)
+      Cookies.set('userDisplayName', user.displayName || email.split('@')[0], cookieOptions)
+      Cookies.set('userRole', userRole, cookieOptions)
+      Cookies.set('userId', user.uid, cookieOptions)
       
-      Cookies.set('userDisplayName', userCredential.user.displayName || '', { 
-        expires: 7,
-        secure: true,
-        sameSite: 'strict'
+      console.log('Login successful - Cookies set:', {
+        authToken: 'Set',
+        userRole,
+        userEmail: user.email
       })
       
       router.push('/admin')
     } catch (err: any) {
-      if (err.code === 'auth/invalid-credential') {
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
         setError('Invalid email or password')
       } else if (err.code === 'auth/user-not-found') {
-        setError('No account found with this email')
+        setError('No account found with this email. Please contact the administrator.')
       } else if (err.code === 'auth/too-many-requests') {
-        setError('Too many login attempts. Try again later.')
+        setError('Too many login attempts. Please try again later.')
+      } else if (err.code === 'auth/user-disabled') {
+        setError('This account has been disabled. Please contact the administrator.')
       } else {
         setError(err.message || 'Login failed')
       }
@@ -228,6 +263,7 @@ const LoginContent = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
                 placeholder="Enter your email"
+                autoComplete="email"
               />
             </div>
           </div>
@@ -244,6 +280,7 @@ const LoginContent = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
                 placeholder="Enter your password"
+                autoComplete="current-password"
               />
             </div>
           </div>
@@ -272,12 +309,11 @@ const LoginContent = () => {
           Forgot your password?
         </button>
 
-        <p className="text-center text-gray-600 text-sm mt-6">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
-            Sign up
-          </Link>
-        </p>
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <p className="text-center text-gray-500 text-xs">
+            Don't have an account? Contact your administrator.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -285,7 +321,14 @@ const LoginContent = () => {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
       <LoginContent />
     </Suspense>
   )
