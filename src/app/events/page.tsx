@@ -1,4 +1,4 @@
-// app/events/page.tsx
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -61,15 +61,14 @@ const EventsPage = () => {
       }
     })
 
-    // Sort upcoming events: latest first (ascending order)
-    // Sort past events: most recent first (descending order)
+   
     return filtered.sort((a, b) => {
       const dateA = new Date(a.eventDate).getTime()
       const dateB = new Date(b.eventDate).getTime()
       if (type === 'upcoming') {
-        return dateA - dateB // Earliest upcoming events first
+        return dateA - dateB
       } else {
-        return dateB - dateA // Most recent past events first
+        return dateB - dateA 
       }
     })
   }
@@ -239,7 +238,7 @@ const EventsPage = () => {
           </div>
         ) : (
           <>
-            {/* Show upcoming events if tab is active or if there are no past events */}
+           
             {(activeTab === 'upcoming' || !showTabs) &&
               upcomingEvents.length > 0 && (
                 <div>
@@ -256,7 +255,7 @@ const EventsPage = () => {
                 </div>
               )}
 
-            {/* Show past events if tab is active or if there are no upcoming events */}
+          
             {(activeTab === 'past' ||
               (upcomingEvents.length === 0 && !showTabs)) && (
               <>
@@ -290,7 +289,7 @@ const EventsPage = () => {
               </>
             )}
 
-            {/* Show message if no events at all */}
+           
             {upcomingEvents.length === 0 && pastEvents.length === 0 && (
               <div className="text-center py-20">
                 <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
