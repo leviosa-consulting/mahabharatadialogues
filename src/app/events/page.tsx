@@ -60,7 +60,7 @@ const EventsPage = () => {
         return eventDate < now
       }
     })
-    
+
     // Sort upcoming events: latest first (ascending order)
     // Sort past events: most recent first (descending order)
     return filtered.sort((a, b) => {
@@ -135,8 +135,10 @@ const EventsPage = () => {
       </div>
 
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-          {event.title}
+        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors h-16 overflow-hidden">
+          {event?.title?.length > 60
+            ? event.title.substring(0, 60) + '...'
+            : event?.title}
         </h3>
 
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
@@ -150,7 +152,9 @@ const EventsPage = () => {
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {event.description}
+          {event?.description?.length > 80
+            ? event.description.substring(0, 80) + '...'
+            : event?.description}
         </p>
 
         <div className="flex items-center justify-between">
@@ -224,7 +228,11 @@ const EventsPage = () => {
       )}
 
       {/* Events Grid */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${showTabs ? 'py-12' : 'py-8'}`}>
+      <div
+        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+          showTabs ? 'py-12' : 'py-8'
+        }`}
+      >
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
@@ -232,21 +240,25 @@ const EventsPage = () => {
         ) : (
           <>
             {/* Show upcoming events if tab is active or if there are no past events */}
-            {(activeTab === 'upcoming' || !showTabs) && upcomingEvents.length > 0 && (
-              <div>
-                {!showTabs && (
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Upcoming Events</h2>
-                )}
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                  {upcomingEvents.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                  ))}
+            {(activeTab === 'upcoming' || !showTabs) &&
+              upcomingEvents.length > 0 && (
+                <div>
+                  {!showTabs && (
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                      Upcoming Events
+                    </h2>
+                  )}
+                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    {upcomingEvents.map((event) => (
+                      <EventCard key={event.id} event={event} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Show past events if tab is active or if there are no upcoming events */}
-            {(activeTab === 'past' || (upcomingEvents.length === 0 && !showTabs)) && (
+            {(activeTab === 'past' ||
+              (upcomingEvents.length === 0 && !showTabs)) && (
               <>
                 {pastEvents.length === 0 ? (
                   <div className="text-center py-20">
@@ -264,7 +276,9 @@ const EventsPage = () => {
                 ) : (
                   <div>
                     {!showTabs && (
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">Past Events</h2>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                        Past Events
+                      </h2>
                     )}
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                       {pastEvents.map((event) => (
@@ -279,10 +293,7 @@ const EventsPage = () => {
             {/* Show message if no events at all */}
             {upcomingEvents.length === 0 && pastEvents.length === 0 && (
               <div className="text-center py-20">
-                <Calendar
-                  size={64}
-                  className="mx-auto mb-4 text-gray-400"
-                />
+                <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">
                   No Events Yet
                 </h3>
