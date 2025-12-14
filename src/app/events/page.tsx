@@ -52,7 +52,7 @@ const EventsPage = () => {
 
   const filterEvents = (type: 'upcoming' | 'past') => {
     const now = getCurrentDate()
-    return events.filter((event) => {
+    const filtered = events.filter((event) => {
       const eventDate = new Date(event.eventDate)
       if (type === 'upcoming') {
         return eventDate >= now
@@ -60,10 +60,29 @@ const EventsPage = () => {
         return eventDate < now
       }
     })
+    
+    // Sort upcoming events: latest first (ascending order)
+    // Sort past events: most recent first (descending order)
+    return filtered.sort((a, b) => {
+      const dateA = new Date(a.eventDate).getTime()
+      const dateB = new Date(b.eventDate).getTime()
+      if (type === 'upcoming') {
+        return dateA - dateB // Earliest upcoming events first
+      } else {
+        return dateB - dateA // Most recent past events first
+      }
+    })
   }
 
   const upcomingEvents = filterEvents('upcoming')
   const pastEvents = filterEvents('past')
+
+  // Auto-switch to past events if no upcoming events
+  useEffect(() => {
+    if (!loading && upcomingEvents.length === 0 && pastEvents.length > 0) {
+      setActiveTab('past')
+    }
+  }, [loading, upcomingEvents.length, pastEvents.length])
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -150,6 +169,8 @@ const EventsPage = () => {
     </div>
   )
 
+  const showTabs = upcomingEvents.length > 0 && pastEvents.length > 0
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -157,82 +178,75 @@ const EventsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Events</h1>
           <p className="text-lg md:text-xl text-purple-100 max-w-2xl">
-            Discover our upcoming events and relive the memories from past
-            gatherings
+            {upcomingEvents.length > 0
+              ? 'Discover our upcoming events and relive the memories from past gatherings'
+              : 'Relive the memories from our past events'}
           </p>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
-          <button
-            onClick={() => setActiveTab('upcoming')}
-            className={`px-6 py-3 rounded-md font-semibold transition-all ${
-              activeTab === 'upcoming'
-                ? 'bg-purple-600 text-white shadow-md'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Upcoming Events
-            {upcomingEvents.length > 0 && (
-              <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                {upcomingEvents.length}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('past')}
-            className={`px-6 py-3 rounded-md font-semibold transition-all ${
-              activeTab === 'past'
-                ? 'bg-purple-600 text-white shadow-md'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Past Events
-            {pastEvents.length > 0 && (
-              <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                {pastEvents.length}
-              </span>
-            )}
-          </button>
+      {/* Tabs - Only show if both upcoming and past events exist */}
+      {showTabs && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+          <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
+            <button
+              onClick={() => setActiveTab('upcoming')}
+              className={`px-6 py-3 rounded-md font-semibold transition-all ${
+                activeTab === 'upcoming'
+                  ? 'bg-purple-600 text-white shadow-md'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Upcoming Events
+              {upcomingEvents.length > 0 && (
+                <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
+                  {upcomingEvents.length}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('past')}
+              className={`px-6 py-3 rounded-md font-semibold transition-all ${
+                activeTab === 'past'
+                  ? 'bg-purple-600 text-white shadow-md'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Past Events
+              {pastEvents.length > 0 && (
+                <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
+                  {pastEvents.length}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Events Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${showTabs ? 'py-12' : 'py-8'}`}>
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
           </div>
         ) : (
           <>
-            {activeTab === 'upcoming' && (
-              <>
-                {upcomingEvents.length === 0 ? (
-                  <div className="text-center py-20">
-                    <Calendar
-                      size={64}
-                      className="mx-auto mb-4 text-gray-400"
-                    />
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                      No Upcoming Events
-                    </h3>
-                    <p className="text-gray-500">
-                      Check back soon for new events!
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {upcomingEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
-                    ))}
-                  </div>
+            {/* Show upcoming events if tab is active or if there are no past events */}
+            {(activeTab === 'upcoming' || !showTabs) && upcomingEvents.length > 0 && (
+              <div>
+                {!showTabs && (
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Upcoming Events</h2>
                 )}
-              </>
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                  {upcomingEvents.map((event) => (
+                    <EventCard key={event.id} event={event} />
+                  ))}
+                </div>
+              </div>
             )}
 
-            {activeTab === 'past' && (
+            {/* Show past events if tab is active or if there are no upcoming events */}
+            {(activeTab === 'past' || (upcomingEvents.length === 0 && !showTabs)) && (
               <>
                 {pastEvents.length === 0 ? (
                   <div className="text-center py-20">
@@ -248,13 +262,34 @@ const EventsPage = () => {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {pastEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
-                    ))}
+                  <div>
+                    {!showTabs && (
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">Past Events</h2>
+                    )}
+                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                      {pastEvents.map((event) => (
+                        <EventCard key={event.id} event={event} />
+                      ))}
+                    </div>
                   </div>
                 )}
               </>
+            )}
+
+            {/* Show message if no events at all */}
+            {upcomingEvents.length === 0 && pastEvents.length === 0 && (
+              <div className="text-center py-20">
+                <Calendar
+                  size={64}
+                  className="mx-auto mb-4 text-gray-400"
+                />
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  No Events Yet
+                </h3>
+                <p className="text-gray-500">
+                  Check back soon for upcoming events!
+                </p>
+              </div>
             )}
           </>
         )}

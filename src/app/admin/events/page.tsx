@@ -37,6 +37,7 @@ const EventsAdminPage = () => {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [uploadingCover, setUploadingCover] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -163,10 +164,23 @@ const EventsAdminPage = () => {
   }
 
   const handleSubmit = async () => {
+    // Validation
     if (!formData.title || !formData.description || !formData.eventDate) {
       alert('Title, description, and event date are required')
       return
     }
+
+    if (!formData.coverImage) {
+      alert('Please upload a cover image before creating the event')
+      return
+    }
+
+    // Prevent multiple submissions
+    if (submitting) {
+      return
+    }
+
+    setSubmitting(true)
 
     try {
       const url = editingId ? `/api/events/${editingId}` : '/api/events'
@@ -194,6 +208,8 @@ const EventsAdminPage = () => {
       fetchEvents()
     } catch (err) {
       alert(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -222,6 +238,16 @@ const EventsAdminPage = () => {
       month: 'long',
       day: 'numeric',
     })
+  }
+
+  // Check if form is valid for submission
+  const isFormValid = () => {
+    return (
+      formData.title.trim() !== '' &&
+      formData.description.trim() !== '' &&
+      formData.eventDate !== '' &&
+      formData.coverImage !== ''
+    )
   }
 
   return (
@@ -266,9 +292,9 @@ const EventsAdminPage = () => {
               {events.map((event) => (
                 <div
                   key={event.id}
-                  className="bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow rounded-lg"
+                  className="bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow rounded-lg flex flex-col"
                 >
-                  <div className="h-48 bg-gray-200 overflow-hidden">
+                  <div className="h-48 bg-gray-200 overflow-hidden flex-shrink-0">
                     {event.coverImage ? (
                       <img
                         src={event.coverImage}
@@ -282,34 +308,41 @@ const EventsAdminPage = () => {
                     )}
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <div className="p-6 flex flex-col flex-grow">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
                       {event.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
                       {event.description}
                     </p>
+                    
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
                       <Calendar size={14} />
                       <span>{formatDate(event.eventDate)}</span>
                     </div>
-                    {event.gallery && event.gallery.length > 0 && (
-                      <p className="text-xs text-gray-500 mb-2">
-                        📸 {event.gallery.length} gallery image(s)
-                      </p>
-                    )}
-                    {event.youtubeUrl && (
-                      <p className="text-xs text-gray-500 mb-2">
-                        🎥 YouTube video attached
-                      </p>
-                    )}
-                    {event.bookingUrl && (
-                      <p className="text-xs text-gray-500 mb-4">
-                        🔗 Booking link available
-                      </p>
-                    )}
+                    
+                    <div className="space-y-1 mb-4 flex-grow">
+                      {event.gallery && event.gallery.length > 0 && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <ImageIcon size={14} />
+                          <span>{event.gallery.length} gallery image(s)</span>
+                        </div>
+                      )}
+                      {event.youtubeUrl && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <Youtube size={14} />
+                          <span>YouTube video attached</span>
+                        </div>
+                      )}
+                      {event.bookingUrl && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <LinkIcon size={14} />
+                          <span>Booking link available</span>
+                        </div>
+                      )}
+                    </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-auto">
                       <button
                         onClick={() => handleEdit(event)}
                         className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
@@ -344,6 +377,7 @@ const EventsAdminPage = () => {
                       resetForm()
                     }}
                     className="text-gray-400 hover:text-gray-600"
+                    disabled={submitting}
                   >
                     <X size={24} />
                   </button>
@@ -359,7 +393,8 @@ const EventsAdminPage = () => {
                       name="title"
                       value={formData.title}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="Enter event title"
                     />
                   </div>
@@ -373,7 +408,8 @@ const EventsAdminPage = () => {
                       value={formData.description}
                       onChange={handleInputChange}
                       rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="Enter event description"
                     />
                   </div>
@@ -387,13 +423,14 @@ const EventsAdminPage = () => {
                       name="eventDate"
                       value={formData.eventDate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Cover Image *
+                      Cover Image * {!formData.coverImage && <span className="text-red-600">(Required to create event)</span>}
                     </label>
                     <div className="flex items-center gap-4">
                       <input
@@ -402,10 +439,13 @@ const EventsAdminPage = () => {
                         onChange={handleCoverImageUpload}
                         className="hidden"
                         id="cover-image-upload"
+                        disabled={uploadingCover || submitting}
                       />
                       <label
                         htmlFor="cover-image-upload"
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                        className={`flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${
+                          uploadingCover || submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                        }`}
                       >
                         <ImageIcon size={20} />
                         {uploadingCover ? 'Uploading...' : 'Upload Cover Image'}
@@ -424,13 +464,19 @@ const EventsAdminPage = () => {
                                 coverImage: '',
                               }))
                             }
-                            className="text-red-600 hover:text-red-700 text-sm"
+                            disabled={submitting}
+                            className="text-red-600 hover:text-red-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Remove
                           </button>
                         </div>
                       )}
                     </div>
+                    {!formData.coverImage && (
+                      <p className="text-sm text-gray-500 mt-2">
+                        ⚠️ Please upload a cover image to enable event creation
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -445,10 +491,13 @@ const EventsAdminPage = () => {
                         onChange={handleGalleryUpload}
                         className="hidden"
                         id="gallery-upload"
+                        disabled={uploadingGallery || submitting}
                       />
                       <label
                         htmlFor="gallery-upload"
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer"
+                        className={`inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors ${
+                          uploadingGallery || submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                        }`}
                       >
                         <Upload size={20} />
                         {uploadingGallery ? 'Uploading...' : 'Upload Gallery Images'}
@@ -464,7 +513,8 @@ const EventsAdminPage = () => {
                               />
                               <button
                                 onClick={() => removeGalleryImage(url)}
-                                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                disabled={submitting}
+                                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity disabled:cursor-not-allowed"
                               >
                                 <X size={14} />
                               </button>
@@ -484,7 +534,8 @@ const EventsAdminPage = () => {
                       value={formData.testimonial}
                       onChange={handleInputChange}
                       rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="Enter testimonial (optional)"
                     />
                   </div>
@@ -499,7 +550,8 @@ const EventsAdminPage = () => {
                         name="bookingUrl"
                         value={formData.bookingUrl}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                        disabled={submitting}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="https://..."
                       />
                     </div>
@@ -513,7 +565,8 @@ const EventsAdminPage = () => {
                         name="youtubeUrl"
                         value={formData.youtubeUrl}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                        disabled={submitting}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                         placeholder="https://youtube.com/..."
                       />
                     </div>
@@ -525,18 +578,37 @@ const EventsAdminPage = () => {
                         setShowModal(false)
                         resetForm()
                       }}
-                      className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      disabled={submitting}
+                      className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSubmit}
-                      className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors"
+                      disabled={!isFormValid() || uploadingCover || uploadingGallery || submitting}
+                      className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Save size={20} />
-                      {editingId ? 'Update Event' : 'Create Event'}
+                      {submitting ? (
+                        <>
+                          <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                          {editingId ? 'Updating...' : 'Creating...'}
+                        </>
+                      ) : (
+                        <>
+                          <Save size={20} />
+                          {editingId ? 'Update Event' : 'Create Event'}
+                        </>
+                      )}
                     </button>
                   </div>
+                  
+                  {!isFormValid() && (
+                    <div className="text-sm text-red-600 text-center">
+                      {!formData.coverImage 
+                        ? '⚠️ Cover image is required to create event' 
+                        : '⚠️ Please fill all required fields (Title, Description, Date, Cover Image)'}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
