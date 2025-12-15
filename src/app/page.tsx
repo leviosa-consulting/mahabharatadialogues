@@ -30,11 +30,10 @@ export default function MahabharataDialogues() {
     try {
       const response = await fetch('/api/testimonials')
       const data = await response.json()
-      
+
       if (data.success && data.data.length > 0) {
         setTestimonials(data.data)
       } else {
-       
         setTestimonials([
           {
             id: '1',
@@ -48,7 +47,7 @@ export default function MahabharataDialogues() {
       setLoading(false)
     } catch (error) {
       console.error('Error fetching testimonials:', error)
-     
+
       setTestimonials([
         {
           id: '1',
@@ -91,19 +90,15 @@ export default function MahabharataDialogues() {
     }
 
     wheelTimeout.current = setTimeout(() => {
-     
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         if (e.deltaX > 0) {
-          
           setCurrentIndex((prev) => (prev + 1) % testimonials.length)
         } else if (e.deltaX < 0) {
-         
           setCurrentIndex(
             (prev) => (prev - 1 + testimonials.length) % testimonials.length
           )
         }
       } else {
-        
         if (e.deltaY > 0) {
           setCurrentIndex((prev) => (prev + 1) % testimonials.length)
         } else if (e.deltaY < 0) {
@@ -129,10 +124,8 @@ export default function MahabharataDialogues() {
 
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0) {
-       
         setCurrentIndex((prev) => (prev + 1) % testimonials.length)
       } else {
-       
         setCurrentIndex(
           (prev) => (prev - 1 + testimonials.length) % testimonials.length
         )
@@ -149,36 +142,38 @@ export default function MahabharataDialogues() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-400 to-blue-500  relative overflow-hidden">
-     
+    <div className="min-h-screen relative overflow-hidden" 
+     style={{
+    backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+    
+    
+    >
       <div
         className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `radial-gradient(circle, #1e3a8a 1px, transparent 1px)`,
-          backgroundSize: '20px 20px',
-        }}
+        // style={{
+        //   backgroundImage: `radial-gradient(circle, #1e3a8a 1px, transparent 1px)`,
+        //   backgroundSize: '20px 20px',
+        // }}
       ></div>
 
       <div className="relative">
-        
         <div className="flex items-center justify-between gap-5 mb-12">
-         
           <div className="">
             <img src="Web_Assets-07.png" alt="" />
           </div>
 
-         
           <div className="md:mb-30">
             <img src="Web_Assets-08.png" alt="" />
           </div>
 
-         
           <div className="">
             <img src="Web_Assets-09.png" alt="" />
           </div>
         </div>
 
-       
         <div
           className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 xl:-mt-66 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center"
           onWheel={handleWheel}
