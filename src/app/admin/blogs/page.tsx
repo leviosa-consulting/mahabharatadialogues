@@ -34,6 +34,7 @@ import Youtube from '@tiptap/extension-youtube'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 
 import ProtectedRoute from '@/components/ProtectedRoute'
+import Navbar from '@/components/Navbar'
 
 interface Blog {
   id: string
@@ -517,6 +518,7 @@ const BlogAdminPage = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
+      <Navbar currentTab='blogs'/>
       <div>
         <div className="min-h-screen bg-gray-50 p-4 md:p-8">
           <style jsx global>{`

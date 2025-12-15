@@ -1,86 +1,156 @@
-"use client"
-import Link from 'next/link';
+'use client'
+import Link from 'next/link'
 import React, { useState, useRef, useEffect } from 'react'
+import { doc, getDoc } from 'firebase/firestore'
+import db from '@/firebase/firebaseServices'
+import { formatRetreatText } from '@/utils/formatRetreatText'
+
+interface Testimonial {
+  id: string
+  quote: string
+  name: string
+  designation: string
+}
 
 export default function MahabharataDialogues() {
-  const testimonials = [
-    {
-      quote: "Quotes on how amazing it is to be in any of the workshop, long or short, and what an enriching time you had with information and meeting like-minded people.",
-      name: "Hansini",
-      designation: "President of Rotary Club, Bengaluru"
-    },
-    {
-      quote: "An absolutely transformative experience! The depth of knowledge shared and the passionate discussions made this workshop truly unforgettable.",
-      name: "Rajesh Kumar",
-      designation: "Cultural Enthusiast, Bengaluru"
-    },
-    {
-      quote: "The storytelling sessions brought ancient wisdom to life. I learned so much about our heritage and connected with wonderful people.",
-      name: "Priya Sharma",
-      designation: "Teacher, Bengaluru"
-    },
-    {
-      quote: "Every session was enlightening. The facilitators made complex philosophical concepts accessible and engaging for everyone.",
-      name: "Anil Menon",
-      designation: "Business Owner, Bengaluru"
-    },
-    {
-      quote: "A beautiful blend of tradition and modern interpretation. The workshops exceeded all my expectations!",
-      name: "Kavita Reddy",
-      designation: "Artist, Bengaluru"
-    },
-    {
-      quote: "The community we built during these sessions is invaluable. Great learning, great people, great memories!",
-      name: "Vikram Singh",
-      designation: "Software Engineer, Bengaluru"
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [retreatText, setRetreatText] = useState('')
+  const [loading, setLoading] = useState(true)
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
+  const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    fetchTestimonials()
+    fetchRetreat()
+  }, [])
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch('/api/testimonials')
+      const data = await response.json()
+      
+      if (data.success && data.data.length > 0) {
+        setTestimonials(data.data)
+      } else {
+       
+        setTestimonials([
+          {
+            id: '1',
+            quote:
+              'Quotes on how amazing it is to be in any of the workshop, long or short, and what an enriching time you had with information and meeting like-minded people.',
+            name: 'Hansini',
+            designation: 'President of Rotary Club, Bengaluru',
+          },
+        ])
+      }
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching testimonials:', error)
+     
+      setTestimonials([
+        {
+          id: '1',
+          quote:
+            'Quotes on how amazing it is to be in any of the workshop, long or short, and what an enriching time you had with information and meeting like-minded people.',
+          name: 'Hansini',
+          designation: 'President of Rotary Club, Bengaluru',
+        },
+      ])
+      setLoading(false)
     }
-  ];
+  }
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-  const wheelTimeout = useRef(null);
+  const fetchRetreat = async () => {
+    try {
+      const retreatRef = doc(db, 'retreat', 'settings')
+      const snap = await getDoc(retreatRef)
 
-  const handleWheel = (e) => {
-    e.preventDefault();
-    
+      if (snap.exists()) {
+        const data = snap.data()
+
+        if (data.startDate && data.endDate) {
+          const start = data.startDate.toDate()
+          const end = data.endDate.toDate()
+
+          const formatted = formatRetreatText(start, end)
+          setRetreatText(formatted)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching retreat:', error)
+    }
+  }
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault()
+
     if (wheelTimeout.current) {
-      clearTimeout(wheelTimeout.current);
+      clearTimeout(wheelTimeout.current)
     }
 
     wheelTimeout.current = setTimeout(() => {
-      if (e.deltaY > 0 || e.deltaX > 0) {
-        setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-      } else if (e.deltaY < 0 || e.deltaX < 0) {
-        setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+     
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        if (e.deltaX > 0) {
+          
+          setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+        } else if (e.deltaX < 0) {
+         
+          setCurrentIndex(
+            (prev) => (prev - 1 + testimonials.length) % testimonials.length
+          )
+        }
+      } else {
+        
+        if (e.deltaY > 0) {
+          setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+        } else if (e.deltaY < 0) {
+          setCurrentIndex(
+            (prev) => (prev - 1 + testimonials.length) % testimonials.length
+          )
+        }
       }
-    }, 50);
-  };
+    }, 50)
+  }
 
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
 
-  const handleTouchMove = (e) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX
+  }
 
   const handleTouchEnd = () => {
-    const swipeDistance = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
+    const swipeDistance = touchStartX.current - touchEndX.current
+    const minSwipeDistance = 50
 
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0) {
-        setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+       
+        setCurrentIndex((prev) => (prev + 1) % testimonials.length)
       } else {
-        setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+       
+        setCurrentIndex(
+          (prev) => (prev - 1 + testimonials.length) % testimonials.length
+        )
       }
     }
-  };
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-400 to-blue-500  relative overflow-hidden">
-      {/* Decorative dots pattern */}
+     
       <div
         className="absolute inset-0 opacity-20"
         style={{
@@ -90,32 +160,40 @@ export default function MahabharataDialogues() {
       ></div>
 
       <div className="relative">
-        {/* Top Section with Faces and Title */}
+        
         <div className="flex items-center justify-between gap-5 mb-12">
-          {/* Left Face */}
+         
           <div className="">
             <img src="Web_Assets-07.png" alt="" />
           </div>
 
-          {/* Center Circle with Title */}
-         <div className='md:mb-30'>
-          <img src="Web_Assets-08.png" alt="" />
-         </div>
+         
+          <div className="md:mb-30">
+            <img src="Web_Assets-08.png" alt="" />
+          </div>
 
-          {/* Right Face */}
+         
           <div className="">
-          <img src="Web_Assets-09.png" alt="" />
+            <img src="Web_Assets-09.png" alt="" />
           </div>
         </div>
 
-        {/* Quote Section */}
-        <div className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 xl:-mt-66 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center ">
+       
+        <div
+          className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 xl:-mt-66 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center"
+          onWheel={handleWheel}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <p className="text-white text-lg italic leading-relaxed ">
-            {testimonials[currentIndex].quote}
+            {testimonials[currentIndex]?.quote}
           </p>
-          <p className="text-white mt-4 font-semibold">{testimonials[currentIndex].name}</p>
+          <p className="text-white mt-4 font-semibold">
+            {testimonials[currentIndex]?.name}
+          </p>
           <p className="text-white text-sm">
-            {testimonials[currentIndex].designation}
+            {testimonials[currentIndex]?.designation}
           </p>
         </div>
 
@@ -124,7 +202,9 @@ export default function MahabharataDialogues() {
           <p className="text-white merriweather-sans font-extrabold text-[18px]">
             STORYTELLING @ JP NAGAR
           </p>
-          <p className="text-white merriweather-sans font-normal text-[18px]">BENGALURU</p>
+          <p className="text-white merriweather-sans font-normal text-[18px]">
+            BENGALURU
+          </p>
         </div>
         {/* Navigation Dots */}
         <div className="flex justify-center gap-2 mb-18">
@@ -139,37 +219,37 @@ export default function MahabharataDialogues() {
           ))}
         </div>
 
-       <div className='max-w-5xl mx-auto mt-10'>
-         {/* Button Section */}
-         <div className="grid grid-cols-1 px-4 md:grid-cols-3 gap-4 mb-12">
-      <button className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300">
-        YOUTUBE
-      </button>
+        <div className="max-w-5xl mx-auto mt-10">
+          {/* Button Section */}
+          <div className="grid grid-cols-1 px-4 md:grid-cols-3 gap-4 mb-12">
+            <button className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300">
+              YOUTUBE
+            </button>
 
-      <button className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300">
-        <div className="font-extrabold">THE RETREAT</div>
-        <div className="font-normal">7-8 DEC</div>
-      </button>
+            <button className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300">
+              <div className="font-extrabold">THE RETREAT</div>
+              <div className="font-normal">{retreatText}</div>
+            </button>
 
-      <Link
-        href="/blogs"
-        className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
-      >
-        BLOG
-      </Link>
-    </div>
-        {/* Footer */}
-        <div className="flex flex-col md:flex-row justify-center md:justify-between items-center md:items-end text-white pb-10 mx-8">
-          <Link href={"/events"}>
-            <p className="text-xl font-semibold">Photos from</p>
-            <p className="text-xl font-semibold">our events</p>
-          </Link>
-          <div className="text-right">
-            <p className="text-lg mb-2">mahabharatadialogues@gmail.com</p>
-            <p className="text-lg text-center">+91 00000 00000</p>
+            <Link
+              href="/blogs"
+              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+            >
+              BLOG
+            </Link>
+          </div>
+          {/* Footer */}
+          <div className="flex flex-col md:flex-row justify-center md:justify-between items-center md:items-end text-white pb-10 mx-8">
+            <Link href={'/events'}>
+              <p className="text-xl font-semibold">Photos from</p>
+              <p className="text-xl font-semibold">our events</p>
+            </Link>
+            <div className="text-right">
+              <p className="text-lg mb-2">mahabharatadialogues@gmail.com</p>
+              <p className="text-lg text-center">+91 00000 00000</p>
+            </div>
           </div>
         </div>
-       </div>
       </div>
     </div>
   )
