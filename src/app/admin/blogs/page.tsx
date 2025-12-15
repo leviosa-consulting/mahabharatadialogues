@@ -22,7 +22,9 @@ import {
   AlignRight,
   Tag,
   User,
-  YoutubeIcon
+  YoutubeIcon,
+  Link as LinkIcon,
+  Unlink
 } from 'lucide-react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -101,6 +103,25 @@ const MenuBar = ({ editor }: any) => {
     }
   }
 
+  const setLink = () => {
+    const previousUrl = editor.getAttributes('link').href
+    const url = prompt('Enter URL:', previousUrl)
+
+    // cancelled
+    if (url === null) {
+      return
+    }
+
+    // empty
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+      return
+    }
+
+    // update link
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  }
+
   return (
     <div className="border-b border-gray-300 p-2 flex flex-wrap gap-1 bg-gray-50 sticky top-0 z-10">
       <button
@@ -175,6 +196,32 @@ const MenuBar = ({ editor }: any) => {
         title="Underline"
       >
         <span className="underline font-semibold text-lg">U</span>
+      </button>
+      <div className="w-px bg-gray-300 mx-1"></div>
+      <button
+        onClick={setLink}
+        className={`px-3 py-2 rounded hover:bg-gray-200 transition-colors ${
+          editor.isActive('link')
+            ? 'bg-purple-200 text-purple-700'
+            : 'text-gray-700'
+        }`}
+        type="button"
+        title="Add Link"
+      >
+        <LinkIcon size={20} />
+      </button>
+      <button
+        onClick={() => editor.chain().focus().unsetLink().run()}
+        disabled={!editor.isActive('link')}
+        className={`px-3 py-2 rounded transition-colors ${
+          !editor.isActive('link')
+            ? 'text-gray-400 cursor-not-allowed'
+            : 'text-gray-700 hover:bg-gray-200'
+        }`}
+        type="button"
+        title="Remove Link"
+      >
+        <Unlink size={20} />
       </button>
       <div className="w-px bg-gray-300 mx-1"></div>
       <button
@@ -286,6 +333,9 @@ const BlogAdminPage = () => {
       }),
       Link.configure({
         openOnClick: false,
+        HTMLAttributes: {
+          class: 'text-purple-600 underline hover:text-purple-700',
+        },
       }),
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -623,6 +673,16 @@ const BlogAdminPage = () => {
               text-decoration: underline;
             }
 
+            .ProseMirror a {
+              color: #7c3aed;
+              text-decoration: underline;
+              cursor: pointer;
+            }
+
+            .ProseMirror a:hover {
+              color: #6d28d9;
+            }
+
             .ProseMirror:focus {
               outline: none;
             }
@@ -924,7 +984,7 @@ const BlogAdminPage = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Content *{' '}
                         <span className="text-sm font-normal text-gray-500">
-                          (Click a heading button before typing for headings)
+                          (Select text and click link button to add URLs)
                         </span>
                       </label>
 
@@ -939,8 +999,7 @@ const BlogAdminPage = () => {
                       </div>
 
                       <p className="text-sm text-gray-500 mt-2">
-                        💡 <strong>Tip:</strong> Click H1 or H2 buttons{' '}
-                        <em>before</em> typing to start a heading. Use the image
+                        💡 <strong>Tip:</strong> Select text and click the link button (🔗) to add URLs. Use the image
                         button to upload images and YouTube button to embed videos.
                       </p>
                     </div>

@@ -132,7 +132,7 @@ const BlogDetailPage = () => {
         <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-purple-600 border-t-transparent"></div>
       </div>
     )
-  }
+  }                                       
 
   if (error || !blog) {
     return (
