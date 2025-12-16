@@ -287,7 +287,7 @@ export default function BlogsClient({ initialBlogs }: { initialBlogs: Blog[] }) 
           <div className="mb-6">
             <p className="text-gray-600">
               Showing <span className="font-semibold">{filteredBlogs.length}</span> of{" "}
-              <span className="font-semibold">{blogs.length}</span> articles
+              <span className="font-semibold">{blogs.length}</span> blogs
               {hasActiveFilters && " (filtered)"}
             </p>
           </div>
@@ -358,7 +358,7 @@ export default function BlogsClient({ initialBlogs }: { initialBlogs: Blog[] }) 
           <div className="text-center py-16">
             <Loader2 className="animate-spin h-12 w-12 text-purple-600 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading blogs...</h2>
-            <p className="text-gray-600">Please wait while we fetch the latest articles.</p>
+            <p className="text-gray-600">Please wait while we fetch the latest blogs.</p>
           </div>
         ) : (
           <div className="text-center py-16">
