@@ -217,9 +217,9 @@ export default function MahabharataDialogues() {
         <div className="max-w-5xl mx-auto mt-10">
           {/* Button Section */}
           <div className="grid grid-cols-1 px-4 md:grid-cols-3 gap-4 mb-12">
-            <button className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300">
+            <Link href="https://www.youtube.com/@mahabharatadialogues"   target="_blank"  rel="noopener noreferrer" className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center">
               YOUTUBE
-            </button>
+            </Link>
 
             <button className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300">
               <div className="font-extrabold">THE RETREAT</div>
