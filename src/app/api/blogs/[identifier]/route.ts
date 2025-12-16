@@ -1,4 +1,6 @@
-// app/api/blogs/[identifier]/route.ts
+
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { deleteFromFirebaseStorageServer } from "@/utils/firebaseDeleteServer";
