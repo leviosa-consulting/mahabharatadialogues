@@ -26,52 +26,69 @@ export const metadata: Metadata = {
 
 async function fetchBlogs() {
   try {
-    // Determine the base URL
-    const base =
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000";
+   
+    let baseUrl = "";
+    
+   
+    if (process.env.NEXT_PUBLIC_BASE_URL) {
+      baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    }
+   
+    else if (process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    }
+    
+    else if (process.env.NODE_ENV === "development") {
+      baseUrl = "http://localhost:3000";
+    }
+    
+    else {
+      baseUrl = "https://mahabharatadialogues.com";
+    }
 
-    console.log("Fetching blogs from:", `${base}/api/blogs`);
+    console.log("🔍 Fetching blogs from:", `${baseUrl}/api/blogs`);
+    console.log("Environment:", process.env.NODE_ENV);
 
-    const res = await fetch(`${base}/api/blogs`, {
-      next: { revalidate: 60 },
+    const res = await fetch(`${baseUrl}/api/blogs`, {
+      cache: 'no-store', 
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    // Check if response is ok
+    console.log("📡 Response status:", res.status);
+
     if (!res.ok) {
-      console.error(`Failed to fetch blogs: ${res.status} ${res.statusText}`);
+      console.error(`❌ Failed to fetch blogs: ${res.status} ${res.statusText}`);
       return [];
     }
 
-    // Check content type
     const contentType = res.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
-      console.error("API did not return JSON:", contentType);
+      console.error("❌ API did not return JSON:", contentType);
       const text = await res.text();
-      console.error("Response body:", text.substring(0, 200));
+      console.error("Response preview:", text.substring(0, 300));
       return [];
     }
 
     const data = await res.json();
+    console.log("✅ Blogs fetched successfully:", data?.data?.length || 0);
     
-    // Validate response structure
-    if (!data || typeof data !== 'object') {
-      console.error("Invalid response structure:", data);
-      return [];
-    }
-
     return data.data || data.blogs || [];
   } catch (error) {
-    console.error("Error fetching blogs:", error);
+    console.error("❌ Error fetching blogs:", error);
     return [];
   }
 }
 
 export default async function BlogsPage() {
   const blogs = await fetchBlogs();
+  
+  console.log("📊 Rendering BlogsPage with", blogs.length, "blogs");
+  
   return <BlogsClient initialBlogs={blogs} />;
 }
+
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 60; 

@@ -32,9 +32,44 @@ export default function BlogsClient({ initialBlogs }: { initialBlogs: Blog[] }) 
   const [selectedAuthor, setSelectedAuthor] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState(initialBlogs.length === 0);
 
   const [allAuthors, setAllAuthors] = useState<string[]>([]);
   const [allCategories, setAllCategories] = useState<string[]>([]);
+
+  // Fetch blogs client-side if not provided by server
+  useEffect(() => {
+    if (initialBlogs.length === 0) {
+      fetchBlogsClientSide();
+    }
+  }, []);
+
+  const fetchBlogsClientSide = async () => {
+    try {
+      console.log("🔄 Fetching blogs client-side...");
+      setIsLoading(true);
+      
+      const res = await fetch('/api/blogs');
+      
+      if (!res.ok) {
+        console.error("❌ Client-side fetch failed:", res.status);
+        setIsLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+      const fetchedBlogs = data.data || data.blogs || [];
+      
+      console.log("✅ Client-side blogs fetched:", fetchedBlogs.length);
+      
+      setBlogs(fetchedBlogs);
+      setFilteredBlogs(fetchedBlogs);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("❌ Error fetching blogs client-side:", error);
+      setIsLoading(false);
+    }
+  };
 
   // Add structured data on mount
   useEffect(() => {
@@ -356,9 +391,19 @@ export default function BlogsClient({ initialBlogs }: { initialBlogs: Blog[] }) 
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center py-16">
-            <Loader2 className="animate-spin h-12 w-12 text-purple-600 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading blogs...</h2>
-            <p className="text-gray-600">Please wait while we fetch the latest blogs.</p>
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin h-12 w-12 text-purple-600 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading blogs...</h2>
+                <p className="text-gray-600">Please wait while we fetch the latest blogs.</p>
+              </>
+            ) : (
+              <>
+                <Tag size={48} className="text-gray-400 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">No blogs available</h2>
+                <p className="text-gray-600">Check back soon for new blogs.</p>
+              </>
+            )}
           </div>
         ) : (
           <div className="text-center py-16">
