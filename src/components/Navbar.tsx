@@ -9,7 +9,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ currentTab }) => {
   return (
     <nav className="w-full border-b bg-white/70 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto flex items-center justify-center gap-10 py-4">
+      <div className="max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 items-center justify-center gap-10 py-4">
 
         {/* Events */}
         <Link href="/admin/events">
