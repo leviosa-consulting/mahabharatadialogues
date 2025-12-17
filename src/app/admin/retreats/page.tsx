@@ -472,7 +472,7 @@ const RetreatAdminPage = () => {
                         Start Date *
                       </label>
                       <input
-                        type="datetime-local"
+                        type="date"
                         name="retreatstartData"
                         value={formData.retreatstartData}
                         onChange={handleInputChange}
@@ -486,7 +486,7 @@ const RetreatAdminPage = () => {
                         End Date *
                       </label>
                       <input
-                        type="datetime-local"
+                        type="date"
                         name="retreatendData"
                         value={formData.retreatendData}
                         onChange={handleInputChange}
