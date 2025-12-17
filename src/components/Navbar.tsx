@@ -25,6 +25,20 @@ const Navbar: React.FC<NavbarProps> = ({ currentTab }) => {
           </span>
         </Link>
 
+        {/* Retreats  */}
+        <Link href="/admin/retreats">
+          <span
+            className={clsx(
+              "text-lg font-semibold cursor-pointer transition-all duration-200 px-3 py-1 rounded-md",
+              currentTab === "retreats"
+                ? "text-purple-600 border-b-2 border-purple-600"
+                : "text-gray-700 hover:text-purple-600"
+            )}
+          >
+            Retreats
+          </span>
+        </Link>
+
         {/* Blogs */}
         <Link href="/admin/blogs">
           <span

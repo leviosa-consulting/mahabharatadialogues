@@ -48,14 +48,14 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error(error);
       setMessage("Error saving retreat dates.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <Navbar currentTab={"admin"} />
+      <Navbar currentTab="admin" />
 
       <div className="min-h-screen bg-gray-50 p-8 flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
@@ -91,7 +91,21 @@ const AdminDashboard = () => {
             <span className="text-gray-400 text-2xl">→</span>
           </Link>
 
-          {/* Testimonials (NEW) */}
+          {/* Retreats (NEW) */}
+          <Link
+            href="/admin/retreats"
+            className="bg-white shadow-sm border rounded-xl p-6 hover:shadow-md transition flex items-center justify-between"
+          >
+            <div>
+              <h2 className="text-xl font-semibold">Manage Retreats</h2>
+              <p className="text-gray-500 text-sm mt-1">
+                Create & manage retreat listings.
+              </p>
+            </div>
+            <span className="text-gray-400 text-2xl">→</span>
+          </Link>
+
+          {/* Testimonials */}
           <Link
             href="/admin/testimonials"
             className="bg-white shadow-sm border rounded-xl p-6 hover:shadow-md transition flex items-center justify-between"
@@ -99,19 +113,21 @@ const AdminDashboard = () => {
             <div>
               <h2 className="text-xl font-semibold">Manage Testimonials</h2>
               <p className="text-gray-500 text-sm mt-1">
-                Add, edit & manage all testimonials.
+                Add, edit & manage testimonials.
               </p>
             </div>
             <span className="text-gray-400 text-2xl">→</span>
           </Link>
 
-          {/* Retreat Date Range */}
+          {/* Retreat Date Range Settings */}
           <div className="bg-white shadow-sm border rounded-xl p-6 flex flex-col gap-4 md:col-span-2">
             <h2 className="text-xl font-semibold">Update Retreat Dates</h2>
 
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex flex-col w-full">
-                <label className="text-sm text-gray-600 mb-1">Start Date</label>
+                <label className="text-sm text-gray-600 mb-1">
+                  Start Date
+                </label>
                 <input
                   type="date"
                   value={startDate}
@@ -121,7 +137,9 @@ const AdminDashboard = () => {
               </div>
 
               <div className="flex flex-col w-full">
-                <label className="text-sm text-gray-600 mb-1">End Date</label>
+                <label className="text-sm text-gray-600 mb-1">
+                  End Date
+                </label>
                 <input
                   type="date"
                   value={endDate}
@@ -140,10 +158,9 @@ const AdminDashboard = () => {
             </button>
 
             {message && (
-              <p className="text-sm text-green-600 mt-2">{message}</p>
+              <p className="text-sm text-green-600">{message}</p>
             )}
           </div>
-
         </div>
       </div>
     </ProtectedRoute>
