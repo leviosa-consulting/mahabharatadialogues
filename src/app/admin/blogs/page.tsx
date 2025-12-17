@@ -1,4 +1,3 @@
-
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -24,7 +23,7 @@ import {
   User,
   YoutubeIcon,
   Link as LinkIcon,
-  Unlink
+  Unlink,
 } from 'lucide-react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -79,7 +78,7 @@ const MenuBar = ({ editor }: any) => {
     try {
       // Extract video ID from various YouTube URL formats
       let videoId = ''
-      
+
       if (url.includes('youtube.com/watch?v=')) {
         videoId = url.split('v=')[1]?.split('&')[0]
       } else if (url.includes('youtu.be/')) {
@@ -366,16 +365,19 @@ const BlogAdminPage = () => {
       },
       handlePaste: (view, event) => {
         const text = event.clipboardData?.getData('text/plain')
-        if (text && (text.includes('youtube.com') || text.includes('youtu.be'))) {
+        if (
+          text &&
+          (text.includes('youtube.com') || text.includes('youtu.be'))
+        ) {
           event.preventDefault()
-          
+
           let videoId = ''
           if (text.includes('youtube.com/watch?v=')) {
             videoId = text.split('v=')[1]?.split('&')[0]
           } else if (text.includes('youtu.be/')) {
             videoId = text.split('youtu.be/')[1]?.split('?')[0]
           }
-          
+
           if (videoId && editor) {
             editor.commands.setYoutubeVideo({
               src: `https://www.youtube.com/watch?v=${videoId}`,
@@ -515,7 +517,12 @@ const BlogAdminPage = () => {
   }
 
   const handleSubmit = async () => {
-    if (!formData.title || !formData.slug || !formData.content || !formData.author) {
+    if (
+      !formData.title ||
+      !formData.slug ||
+      !formData.content ||
+      !formData.author
+    ) {
       alert('Title, slug, author, and content are required')
       return
     }
@@ -537,9 +544,7 @@ const BlogAdminPage = () => {
       }
 
       alert(
-        editingId
-          ? 'Blog updated successfully!'
-          : 'Blog created successfully!'
+        editingId ? 'Blog updated successfully!' : 'Blog created successfully!'
       )
       setShowModal(false)
       resetForm()
@@ -568,7 +573,7 @@ const BlogAdminPage = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <Navbar currentTab='blogs'/>
+      <Navbar currentTab="blogs" />
       <div>
         <div className="min-h-screen bg-gray-50 p-4 md:p-8">
           <style jsx global>{`
@@ -751,8 +756,10 @@ const BlogAdminPage = () => {
                     </div>
 
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        {blog.title}
+                      <h3 className="text-xl h-14 font-bold text-gray-900 mb-2 line-clamp-2">
+                        {blog.title.length > 45
+                          ? blog.title.slice(0, 45) + '...'
+                          : blog.title}
                       </h3>
                       {blog.subtitle && (
                         <p className="text-gray-600 text-sm mb-2 line-clamp-2">
@@ -999,8 +1006,9 @@ const BlogAdminPage = () => {
                       </div>
 
                       <p className="text-sm text-gray-500 mt-2">
-                        💡 <strong>Tip:</strong> Select text and click the link button (🔗) to add URLs. Use the image
-                        button to upload images and YouTube button to embed videos.
+                        💡 <strong>Tip:</strong> Select text and click the link
+                        button (🔗) to add URLs. Use the image button to upload
+                        images and YouTube button to embed videos.
                       </p>
                     </div>
 
