@@ -16,7 +16,7 @@ import { storage } from "@/firebase/firebaseServices";
  */
 export async function uploadToFirebaseStorage(
   file: File,
-  folder: "blogs" | "events" 
+  folder: "blogs" | "events" | "retreats"
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
@@ -116,7 +116,7 @@ export async function deleteFromFirebaseStorage(
  */
 export const uploadImage = async (
   file: File,
-  folder: "blogs" | "events"
+  folder: "blogs" | "events" | "retreats"
 ): Promise<string | null> => {
   try {
     const downloadURL = await uploadToFirebaseStorage(file, folder);

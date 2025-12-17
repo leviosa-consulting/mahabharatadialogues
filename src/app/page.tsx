@@ -221,10 +221,10 @@ export default function MahabharataDialogues() {
               YOUTUBE
             </Link>
 
-            <button className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300">
+            <Link href={"/retreats"} className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300 text-center flex flex-col items-center justify-center">
               <div className="font-extrabold">THE RETREAT</div>
               <div className="font-normal">{retreatText}</div>
-            </button>
+            </Link>
 
             <Link
               href="/blogs"

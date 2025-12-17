@@ -412,7 +412,7 @@ export default function BlogsClient({ initialBlogs }: { initialBlogs: Blog[] }) 
               <h2 className="text-2xl font-bold text-gray-900 mb-2">No blogs found</h2>
               <p className="text-gray-600 mb-6">
                 Try adjusting your search or filters to find what you're looking for.
-              </p>
+              </p> 
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}

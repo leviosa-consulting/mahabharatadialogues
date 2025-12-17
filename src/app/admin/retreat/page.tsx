@@ -1,4 +1,4 @@
-// admin/events/page.tsx
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -12,27 +12,34 @@ import {
   Image as ImageIcon,
   Upload,
   Link as LinkIcon,
-  MessageSquare,
-  Youtube
+  Youtube,
+  HelpCircle,
+  Trash,
 } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import Navbar from '@/components/Navbar'
 
-interface Event {
+interface FAQ {
+  question: string
+  answer: string
+}
+
+interface Retreat {
   id: string
+  retreatstartData: string
+  retreatendData: string
   title: string
-  description: string
+  description?: string
   coverImage: string
   gallery?: string[]
   testimonial?: string
   bookingUrl?: string
   youtubeUrl?: string
-  eventDate: string
+  faqs?: FAQ[]
 }
 
-const EventsAdminPage = () => {
-  const [events, setEvents] = useState<Event[]>([])
+const RetreatAdminPage = () => {
+  const [retreats, setRetreats] = useState<Retreat[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -40,6 +47,8 @@ const EventsAdminPage = () => {
   const [uploadingGallery, setUploadingGallery] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [formData, setFormData] = useState({
+    retreatstartData: '',
+    retreatendData: '',
     title: '',
     description: '',
     coverImage: '',
@@ -47,21 +56,21 @@ const EventsAdminPage = () => {
     testimonial: '',
     bookingUrl: '',
     youtubeUrl: '',
-    eventDate: '',
+    faqs: [] as FAQ[],
   })
 
   useEffect(() => {
-    fetchEvents()
+    fetchRetreats()
   }, [])
 
-  const fetchEvents = async () => {
+  const fetchRetreats = async () => {
     try {
-      const response = await fetch('/api/events')
+      const response = await fetch('/api/retreats')
       const data = await response.json()
-      setEvents(data.data || [])
+      setRetreats(data.data || [])
       setLoading(false)
     } catch (err) {
-      alert('Failed to fetch events')
+      alert('Failed to fetch retreats')
       setLoading(false)
     }
   }
@@ -86,7 +95,7 @@ const EventsAdminPage = () => {
 
     setUploadingCover(true)
     try {
-      const downloadURL = await uploadToFirebaseStorage(file, 'events')
+      const downloadURL = await uploadToFirebaseStorage(file, 'retreats')
       setFormData((prev) => ({ ...prev, coverImage: downloadURL }))
       alert('Cover image uploaded successfully!')
     } catch (error) {
@@ -106,7 +115,7 @@ const EventsAdminPage = () => {
     setUploadingGallery(true)
     try {
       const uploadPromises = Array.from(files).map((file) =>
-        uploadToFirebaseStorage(file, 'events')
+        uploadToFirebaseStorage(file, 'retreats')
       )
       const urls = await Promise.all(uploadPromises)
       setFormData((prev) => ({
@@ -129,8 +138,37 @@ const EventsAdminPage = () => {
     }))
   }
 
+  const addFAQ = () => {
+    setFormData((prev) => ({
+      ...prev,
+      faqs: [...prev.faqs, { question: '', answer: '' }],
+    }))
+  }
+
+  const removeFAQ = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      faqs: prev.faqs.filter((_, i) => i !== index),
+    }))
+  }
+
+  const handleFAQChange = (
+    index: number,
+    field: 'question' | 'answer',
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      faqs: prev.faqs.map((faq, i) =>
+        i === index ? { ...faq, [field]: value } : faq
+      ),
+    }))
+  }
+
   const resetForm = () => {
     setFormData({
+      retreatstartData: '',
+      retreatendData: '',
       title: '',
       description: '',
       coverImage: '',
@@ -138,7 +176,7 @@ const EventsAdminPage = () => {
       testimonial: '',
       bookingUrl: '',
       youtubeUrl: '',
-      eventDate: '',
+      faqs: [],
     })
     setEditingId(null)
     setShowModal(false)
@@ -149,34 +187,34 @@ const EventsAdminPage = () => {
     setShowModal(true)
   }
 
-  const handleEdit = (event: Event) => {
+  const handleEdit = (retreat: Retreat) => {
     setFormData({
-      title: event.title,
-      description: event.description || '',
-      coverImage: event.coverImage || '',
-      gallery: event.gallery || [],
-      testimonial: event.testimonial || '',
-      bookingUrl: event.bookingUrl || '',
-      youtubeUrl: event.youtubeUrl || '',
-      eventDate: event.eventDate || '',
+      retreatstartData: retreat.retreatstartData || '',
+      retreatendData: retreat.retreatendData || '',
+      title: retreat.title || '',
+      description: retreat.description || '',
+      coverImage: retreat.coverImage || '',
+      gallery: retreat.gallery || [],
+      testimonial: retreat.testimonial || '',
+      bookingUrl: retreat.bookingUrl || '',
+      youtubeUrl: retreat.youtubeUrl || '',
+      faqs: retreat.faqs || [],
     })
-    setEditingId(event.id)
+    setEditingId(retreat.id)
     setShowModal(true)
   }
 
   const handleSubmit = async () => {
-    // Validation
-    if (!formData.title || !formData.description || !formData.eventDate) {
-      alert('Title, description, and event date are required')
+    if (
+      !formData.title ||
+      !formData.retreatstartData ||
+      !formData.retreatendData ||
+      !formData.coverImage
+    ) {
+      alert('Title, start date, end date, and cover image are required')
       return
     }
 
-    if (!formData.coverImage) {
-      alert('Please upload a cover image before creating the event')
-      return
-    }
-
-    // Prevent multiple submissions
     if (submitting) {
       return
     }
@@ -184,7 +222,7 @@ const EventsAdminPage = () => {
     setSubmitting(true)
 
     try {
-      const url = editingId ? `/api/events/${editingId}` : '/api/events'
+      const url = editingId ? `/api/retreats/${editingId}` : '/api/retreats'
       const method = editingId ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
@@ -196,17 +234,17 @@ const EventsAdminPage = () => {
       const data = await response.json()
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to save event')
+        throw new Error(data.error || 'Failed to save retreat')
       }
 
       alert(
         editingId
-          ? 'Event updated successfully!'
-          : 'Event created successfully!'
+          ? 'Retreat updated successfully!'
+          : 'Retreat created successfully!'
       )
       setShowModal(false)
       resetForm()
-      fetchEvents()
+      fetchRetreats()
     } catch (err) {
       alert(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -215,17 +253,17 @@ const EventsAdminPage = () => {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this event?')) return
+    if (!confirm('Are you sure you want to delete this retreat?')) return
 
     try {
-      const response = await fetch(`/api/events/${id}`, {
+      const response = await fetch(`/api/retreats/${id}`, {
         method: 'DELETE',
       })
 
-      if (!response.ok) throw new Error('Failed to delete event')
+      if (!response.ok) throw new Error('Failed to delete retreat')
 
-      alert('Event deleted successfully!')
-      fetchEvents()
+      alert('Retreat deleted successfully!')
+      fetchRetreats()
     } catch (err) {
       alert(err instanceof Error ? err.message : 'An error occurred')
     }
@@ -241,30 +279,27 @@ const EventsAdminPage = () => {
     })
   }
 
-  // Check if form is valid for submission
   const isFormValid = () => {
     return (
       formData.title.trim() !== '' &&
-      formData.description.trim() !== '' &&
-      formData.eventDate !== '' &&
+      formData.retreatstartData !== '' &&
+      formData.retreatendData !== '' &&
       formData.coverImage !== ''
     )
   }
 
   return (
     <ProtectedRoute requireAdmin={true}>
-       <Navbar currentTab={'events'}/>
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-       
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  Events Management
+                  Retreats Management
                 </h1>
                 <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
-                  Create, edit, and manage your events
+                  Create, edit, and manage your retreats
                 </p>
               </div>
 
@@ -273,7 +308,7 @@ const EventsAdminPage = () => {
                 className="flex items-center justify-center cursor-pointer gap-2 bg-purple-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-purple-700 transition-colors w-full sm:w-auto"
               >
                 <Plus size={20} />
-                New Event
+                New Retreat
               </button>
             </div>
           </div>
@@ -281,27 +316,27 @@ const EventsAdminPage = () => {
           {loading ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
-              <p className="mt-4 text-gray-600">Loading events...</p>
+              <p className="mt-4 text-gray-600">Loading retreats...</p>
             </div>
-          ) : events.length === 0 ? (
+          ) : retreats.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
               <Calendar size={48} className="mx-auto mb-4 text-gray-400" />
               <p className="text-gray-600 text-lg">
-                No events found. Create your first event!
+                No retreats found. Create your first retreat!
               </p>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {events.map((event) => (
+              {retreats.map((retreat) => (
                 <div
-                  key={event.id}
+                  key={retreat.id}
                   className="bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow rounded-lg flex flex-col"
                 >
                   <div className="h-48 bg-gray-200 overflow-hidden flex-shrink-0">
-                    {event.coverImage ? (
+                    {retreat.coverImage ? (
                       <img
-                        src={event.coverImage}
-                        alt={event.title}
+                        src={retreat.coverImage}
+                        alt={retreat.title}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -313,48 +348,59 @@ const EventsAdminPage = () => {
 
                   <div className="p-6 flex flex-col flex-grow">
                     <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
-                      {event.title}
+                      {retreat.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
-                      {event.description}
-                    </p>
-                    
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+                    {retreat.description && (
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
+                        {retreat.description}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                       <Calendar size={14} />
-                      <span>{formatDate(event.eventDate)}</span>
+                      <span>
+                        {formatDate(retreat.retreatstartData)} -{' '}
+                        {formatDate(retreat.retreatendData)}
+                      </span>
                     </div>
-                    
+
                     <div className="space-y-1 mb-4 flex-grow">
-                      {event.gallery && event.gallery.length > 0 && (
+                      {retreat.gallery && retreat.gallery.length > 0 && (
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <ImageIcon size={14} />
-                          <span>{event.gallery.length} gallery image(s)</span>
+                          <span>{retreat.gallery.length} gallery image(s)</span>
                         </div>
                       )}
-                      {event.youtubeUrl && (
+                      {retreat.youtubeUrl && (
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <Youtube size={14} />
                           <span>YouTube video attached</span>
                         </div>
                       )}
-                      {event.bookingUrl && (
+                      {retreat.bookingUrl && (
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <LinkIcon size={14} />
                           <span>Booking link available</span>
+                        </div>
+                      )}
+                      {retreat.faqs && retreat.faqs.length > 0 && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <HelpCircle size={14} />
+                          <span>{retreat.faqs.length} FAQ(s)</span>
                         </div>
                       )}
                     </div>
 
                     <div className="flex gap-2 mt-auto">
                       <button
-                        onClick={() => handleEdit(event)}
+                        onClick={() => handleEdit(retreat)}
                         className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
                       >
                         <Pencil size={16} />
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(event.id)}
+                        onClick={() => handleDelete(retreat.id)}
                         className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
                       >
                         <Trash2 size={16} />
@@ -372,7 +418,7 @@ const EventsAdminPage = () => {
               <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full my-8">
                 <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-20 rounded-t-lg">
                   <h2 className="text-2xl font-bold text-gray-900">
-                    {editingId ? 'Edit Event' : 'Create New Event'}
+                    {editingId ? 'Edit Retreat' : 'Create New Retreat'}
                   </h2>
                   <button
                     onClick={() => {
@@ -398,13 +444,13 @@ const EventsAdminPage = () => {
                       onChange={handleInputChange}
                       disabled={submitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      placeholder="Enter event title"
+                      placeholder="Enter retreat title"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description *
+                      Description
                     </label>
                     <textarea
                       name="description"
@@ -413,27 +459,48 @@ const EventsAdminPage = () => {
                       rows={4}
                       disabled={submitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      placeholder="Enter event description"
+                      placeholder="Enter retreat description"
                     />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Start Date *
+                      </label>
+                      <input
+                        type="datetime-local"
+                        name="retreatstartData"
+                        value={formData.retreatstartData}
+                        onChange={handleInputChange}
+                        disabled={submitting}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        End Date *
+                      </label>
+                      <input
+                        type="datetime-local"
+                        name="retreatendData"
+                        value={formData.retreatendData}
+                        onChange={handleInputChange}
+                        disabled={submitting}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      />
+                    </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Event Date *
-                    </label>
-                    <input
-                      type="datetime-local"
-                      name="eventDate"
-                      value={formData.eventDate}
-                      onChange={handleInputChange}
-                      disabled={submitting}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Cover Image * {!formData.coverImage && <span className="text-red-600">(Required to create event)</span>}
+                      Cover Image *{' '}
+                      {!formData.coverImage && (
+                        <span className="text-red-600">
+                          (Required to create retreat)
+                        </span>
+                      )}
                     </label>
                     <div className="flex items-center gap-4">
                       <input
@@ -447,7 +514,9 @@ const EventsAdminPage = () => {
                       <label
                         htmlFor="cover-image-upload"
                         className={`flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${
-                          uploadingCover || submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                          uploadingCover || submitting
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'cursor-pointer'
                         }`}
                       >
                         <ImageIcon size={20} />
@@ -475,11 +544,6 @@ const EventsAdminPage = () => {
                         </div>
                       )}
                     </div>
-                    {!formData.coverImage && (
-                      <p className="text-sm text-gray-500 mt-2">
-                        ⚠️ Please upload a cover image to enable event creation
-                      </p>
-                    )}
                   </div>
 
                   <div>
@@ -499,11 +563,15 @@ const EventsAdminPage = () => {
                       <label
                         htmlFor="gallery-upload"
                         className={`inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors ${
-                          uploadingGallery || submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                          uploadingGallery || submitting
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'cursor-pointer'
                         }`}
                       >
                         <Upload size={20} />
-                        {uploadingGallery ? 'Uploading...' : 'Upload Gallery Images'}
+                        {uploadingGallery
+                          ? 'Uploading...'
+                          : 'Upload Gallery Images'}
                       </label>
                       {formData.gallery.length > 0 && (
                         <div className="grid grid-cols-4 gap-2">
@@ -575,6 +643,65 @@ const EventsAdminPage = () => {
                     </div>
                   </div>
 
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        FAQs
+                      </label>
+                      <button
+                        onClick={addFAQ}
+                        disabled={submitting}
+                        className="flex items-center gap-1 text-sm text-purple-600 hover:text-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Plus size={16} />
+                        Add FAQ
+                      </button>
+                    </div>
+                    {formData.faqs.length > 0 && (
+                      <div className="space-y-3">
+                        {formData.faqs.map((faq, index) => (
+                          <div
+                            key={index}
+                            className="border border-gray-300 rounded-lg p-4"
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <span className="text-sm font-medium text-gray-700">
+                                FAQ {index + 1}
+                              </span>
+                              <button
+                                onClick={() => removeFAQ(index)}
+                                disabled={submitting}
+                                className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <Trash size={16} />
+                              </button>
+                            </div>
+                            <input
+                              type="text"
+                              value={faq.question}
+                              onChange={(e) =>
+                                handleFAQChange(index, 'question', e.target.value)
+                              }
+                              disabled={submitting}
+                              className="w-full px-3 py-2 border border-gray-300 rounded mb-2 focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                              placeholder="Question"
+                            />
+                            <textarea
+                              value={faq.answer}
+                              onChange={(e) =>
+                                handleFAQChange(index, 'answer', e.target.value)
+                              }
+                              disabled={submitting}
+                              rows={2}
+                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                              placeholder="Answer"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex gap-4 pt-4">
                     <button
                       onClick={() => {
@@ -588,7 +715,12 @@ const EventsAdminPage = () => {
                     </button>
                     <button
                       onClick={handleSubmit}
-                      disabled={!isFormValid() || uploadingCover || uploadingGallery || submitting}
+                      disabled={
+                        !isFormValid() ||
+                        uploadingCover ||
+                        uploadingGallery ||
+                        submitting
+                      }
                       className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {submitting ? (
@@ -599,17 +731,16 @@ const EventsAdminPage = () => {
                       ) : (
                         <>
                           <Save size={20} />
-                          {editingId ? 'Update Event' : 'Create Event'}
+                          {editingId ? 'Update Retreat' : 'Create Retreat'}
                         </>
                       )}
                     </button>
                   </div>
-                  
+
                   {!isFormValid() && (
                     <div className="text-sm text-red-600 text-center">
-                      {!formData.coverImage 
-                        ? '⚠️ Cover image is required to create event' 
-                        : '⚠️ Please fill all required fields (Title, Description, Date, Cover Image)'}
+                      ⚠️ Title, start date, end date, and cover image are
+                      required
                     </div>
                   )}
                 </div>
@@ -622,45 +753,4 @@ const EventsAdminPage = () => {
   )
 }
 
-export default EventsAdminPage
-
-
-
-
-
-
-
-
-
-/*
-
-interface FAQ {
-  question: string
-  answer: string
-}
-
-interface Retreat {
-  id: string
-  retreatstartData: string
-  retreatendData: string
-  title: string
-  description?: string
-  coverImage: string
-  gallery?: string[]
-  testimonial?: string
-  bookingUrl?: string
-  youtubeUrl?: string
-  faqs?: FAQ[]
-}
-
-
-
-
-
-
-
-
-
-
-
-*/
+export default RetreatAdminPage
