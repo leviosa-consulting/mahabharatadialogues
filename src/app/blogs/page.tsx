@@ -72,7 +72,7 @@ async function fetchBlogs() {
     }
 
     const data = await res.json();
-    console.log("✅ Blogs fetched successfully:", data?.data?.length || 0);
+    // console.log("✅ Blogs fetched successfully:", data?.data?.length || 0);
     
     return data.data || data.blogs || [];
   } catch (error) {
