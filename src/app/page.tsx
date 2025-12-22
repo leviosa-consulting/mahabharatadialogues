@@ -143,17 +143,16 @@ export default function MahabharataDialogues() {
 
   return (
     <div
-  className="relative bg-cover"
-    style={{
-      backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
-      backgroundSize: 'contain',
-      backgroundPosition: 'center',
+      className="relative bg-cover overflow-hidden"
+      style={{
+        backgroundImage: `url('/Blue_Background_with_Texture-02.png')`,
+        backgroundSize: 'contain',
      
+      }}
+    >
       
-    }}
->
-  {/* Texture softener overlay */}
-  {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
+      {/* Texture softener overlay */}
+      {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
 
       <div className="relative">
         <div className="flex items-center justify-between mb-12">
@@ -162,8 +161,12 @@ export default function MahabharataDialogues() {
           </div>
 
           <div className="md:mb-30 w-[650px] md:w-100">
-            <img src="Web_Assets-08.png" alt="web-asset" className='w-full h-full object-cover'/>
-          </div>
+            <img
+              src="Web_Assets-08.png"
+              alt="web-asset"
+              className="w-full h-full object-cover"
+            />
+          </div>  
 
           <div className="">
             <img src="Web_Assets-09.png" alt="" />
