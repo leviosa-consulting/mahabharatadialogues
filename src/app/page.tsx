@@ -142,14 +142,13 @@ export default function MahabharataDialogues() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden" 
-     style={{
-    backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
-    
-    
+    <div
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       <div
         className="absolute inset-0 opacity-20"
@@ -191,16 +190,6 @@ export default function MahabharataDialogues() {
             {testimonials[currentIndex]?.designation}
           </p>
         </div>
-
-        {/* Event Banner */}
-        <div className="bg-[#1D5C75] bg-opacity-80 p-4 mb-8 text-center mx-4 sm:max-w-[320px] sm:mx-auto">
-          <p className="text-white merriweather-sans font-extrabold text-[18px]">
-            STORYTELLING @ JP NAGAR
-          </p>
-          <p className="text-white merriweather-sans font-normal text-[18px]">
-            BENGALURU
-          </p>
-        </div>
         {/* Navigation Dots */}
         <div className="flex justify-center gap-2 mb-18">
           {testimonials.map((_, index) => (
@@ -214,14 +203,32 @@ export default function MahabharataDialogues() {
           ))}
         </div>
 
+        {/* Event Banner */}
+        <div className="bg-[#1D5C75] bg-opacity-80 p-4 mb-8 text-center mx-4 sm:max-w-[320px] sm:mx-auto">
+          <p className="text-white merriweather-sans font-extrabold text-[18px]">
+            STORYTELLING @ JP NAGAR
+          </p>
+          <p className="text-white merriweather-sans font-normal text-[18px]">
+            BENGALURU
+          </p>
+        </div>
+
         <div className="max-w-5xl mx-auto mt-10">
           {/* Button Section */}
           <div className="grid grid-cols-1 px-4 md:grid-cols-3 gap-4 mb-12">
-            <Link href="https://www.youtube.com/@mahabharatadialogues"   target="_blank"  rel="noopener noreferrer" className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center">
+            <Link
+              href="https://www.youtube.com/@mahabharatadialogues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+            >
               YOUTUBE
             </Link>
 
-            <Link href={"/retreats"} className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300 text-center flex flex-col items-center justify-center">
+            <Link
+              href={'/retreats'}
+              className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300 text-center flex flex-col items-center justify-center"
+            >
               <div className="font-extrabold">THE RETREAT</div>
               <div className="font-normal">{retreatText}</div>
             </Link>
