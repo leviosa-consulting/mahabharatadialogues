@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import db from '@/firebase/firebaseServices'
 import { formatRetreatText } from '@/utils/formatRetreatText'
-
+import { Mail, Phone } from "lucide-react";
 interface Testimonial {
   id: string
   quote: string
@@ -215,7 +215,7 @@ export default function MahabharataDialogues() {
 
         <div className="max-w-5xl mx-auto mt-10">
           {/* Button Section */}
-          <div className="grid grid-cols-1 px-4 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 justify-center items-center">
+          <div className="grid grid-cols-1 px-4 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12 justify-center items-center">
             <Link
               href="https://www.youtube.com/@MahabharataDialogues/videos"
               target="_blank"
@@ -243,20 +243,44 @@ export default function MahabharataDialogues() {
               href="https://www.instagram.com/mahabharatadialogues"
               className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
             >
-              Instagram
+              COMMUNITY STORIES
+            </Link>
+
+            <Link
+              href="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
+              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+            >
+              Booking URL
             </Link>
           </div>
           {/* Footer */}
-          <div className="flex  justify-center  items-center md:items-end text-white pb-10 mx-8">
-            {/* <Link href={'/events'}>
-              <p className="text-xl font-semibold">Photos from</p>
-              <p className="text-xl font-semibold">our events</p>
-            </Link> */}
-            <div className="text-right">
-              <p className="text-lg mb-2">mahabharatadialogues@gmail.com</p>
-              <p className="text-lg text-center">+91 00000 00000</p>
-            </div>
-          </div>
+          <div className="flex justify-center pb-10 px-6">
+  <div className="flex flex-col gap-4 text-white text-center">
+
+    {/* Email */}
+    <div className="flex items-center justify-center gap-3">
+      <Mail className="w-5 h-5 opacity-80" />
+      <a
+        href="mailto:mahabharatadialogues@gmail.com"
+        className="text-lg hover:underline transition"
+      >
+        mahabharatadialogues@gmail.com
+      </a>
+    </div>
+
+    {/* Phone */}
+    <div className="flex items-center justify-center gap-3">
+      <Phone className="w-5 h-5 opacity-80" />
+      <a
+        href="tel:+910000000000"
+        className="text-lg hover:underline transition"
+      >
+        +91 00000 00000
+      </a>
+    </div>
+
+  </div>
+</div>
         </div>
       </div>
     </div>
