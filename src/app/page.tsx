@@ -83,7 +83,7 @@ export default function MahabharataDialogues() {
   }
 
   const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault()
+    // e.preventDefault()
 
     if (wheelTimeout.current) {
       clearTimeout(wheelTimeout.current)
@@ -143,29 +143,26 @@ export default function MahabharataDialogues() {
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <div
-        className="absolute inset-0 opacity-20"
-        // style={{
-        //   backgroundImage: `radial-gradient(circle, #1e3a8a 1px, transparent 1px)`,
-        //   backgroundSize: '20px 20px',
-        // }}
-      ></div>
+  className="relative bg-cover"
+    style={{
+      backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
+      backgroundSize: 'contain',
+      backgroundPosition: 'center',
+     
+      
+    }}
+>
+  {/* Texture softener overlay */}
+  {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
 
       <div className="relative">
-        <div className="flex items-center justify-between gap-5 mb-12">
+        <div className="flex items-center justify-between mb-12">
           <div className="">
             <img src="Web_Assets-07.png" alt="" />
           </div>
 
-          <div className="md:mb-30">
-            <img src="Web_Assets-08.png" alt="" />
+          <div className="md:mb-30 w-[650px] md:w-100">
+            <img src="Web_Assets-08.png" alt="web-asset" className='w-full h-full object-cover'/>
           </div>
 
           <div className="">
@@ -215,9 +212,9 @@ export default function MahabharataDialogues() {
 
         <div className="max-w-5xl mx-auto mt-10">
           {/* Button Section */}
-          <div className="grid grid-cols-1 px-4 md:grid-cols-3 gap-4 mb-12">
+          <div className="grid grid-cols-1 px-4 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 justify-center items-center">
             <Link
-              href="https://www.youtube.com/@mahabharatadialogues"
+              href="https://www.youtube.com/@MahabharataDialogues/videos"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
@@ -229,23 +226,29 @@ export default function MahabharataDialogues() {
               href={'/retreats'}
               className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300 text-center flex flex-col items-center justify-center"
             >
-              <div className="font-extrabold">THE RETREAT</div>
-              <div className="font-normal">{retreatText}</div>
+              <div className="font-extrabold">OUR RETREATS</div>
+              {/* <div className="font-normal">{retreatText}</div> */}
             </Link>
 
             <Link
               href="/blogs"
               className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
             >
-              BLOG
+              BLOGS
+            </Link>
+            <Link
+              href="https://www.instagram.com/mahabharatadialogues"
+              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+            >
+              Instagram
             </Link>
           </div>
           {/* Footer */}
-          <div className="flex flex-col md:flex-row justify-center md:justify-between items-center md:items-end text-white pb-10 mx-8">
-            <Link href={'/events'}>
+          <div className="flex  justify-center  items-center md:items-end text-white pb-10 mx-8">
+            {/* <Link href={'/events'}>
               <p className="text-xl font-semibold">Photos from</p>
               <p className="text-xl font-semibold">our events</p>
-            </Link>
+            </Link> */}
             <div className="text-right">
               <p className="text-lg mb-2">mahabharatadialogues@gmail.com</p>
               <p className="text-lg text-center">+91 00000 00000</p>
