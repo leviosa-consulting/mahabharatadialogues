@@ -142,7 +142,7 @@ export default function MahabharataDialogues() {
   }
 
   return (
-    <div className='bg-blue-800 w-full h-full'>
+    <div className="bg-blue-800 w-full h-full">
       <div
         className="relative overflow-hidden"
         style={{
@@ -245,12 +245,14 @@ export default function MahabharataDialogues() {
                 COMMUNITY STORIES
               </Link>
 
-              <Link
+              <a
                 href="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
               >
                 Booking URL
-              </Link>
+              </a>
             </div>
             {/* Footer */}
             <div className="flex justify-center pb-10 px-6">
