@@ -142,138 +142,140 @@ export default function MahabharataDialogues() {
   }
 
   return (
-    <div
-      className="relative bg-cover overflow-hidden"
-      style={{
-        backgroundImage: `url('/Blue_Background_with_Texture-02.png')`,
-        backgroundSize: 'contain',
-      }}
-    >
-      {/* Texture softener overlay */}
-      {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
+    <div className='bg-blue-800 w-full h-full'>
+      <div
+        className="relative overflow-hidden"
+        style={{
+          backgroundImage: `url('/Blue_Background_with_Texture-02.png')`,
+          backgroundSize: 'contain',
+        }}
+      >
+        {/* Texture softener overlay */}
+        {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
 
-      <div className="relative">
-        <div className="flex items-center justify-between mb-12">
-          <div className="">
-            <img src="Web_Assets-07.png" alt="" />
+        <div className="relative">
+          <div className="flex items-center justify-between mb-12">
+            <div className="">
+              <img src="Web_Assets-07.png" alt="" />
+            </div>
+
+            <div className="md:mb-30 w-[650px] md:w-100">
+              <img
+                src="Web_Assets-08.png"
+                alt="web-asset"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="">
+              <img src="Web_Assets-09.png" alt="" />
+            </div>
           </div>
 
-          <div className="md:mb-30 w-[650px] md:w-100">
-            <img
-              src="Web_Assets-08.png"
-              alt="web-asset"
-              className="w-full h-full object-cover"
-            />
+          <div
+            className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 xl:-mt-66 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center"
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <p className="text-white text-lg italic leading-relaxed ">
+              {testimonials[currentIndex]?.quote}
+            </p>
+            <p className="text-white mt-4 font-semibold">
+              {testimonials[currentIndex]?.name}
+            </p>
+            <p className="text-white text-sm">
+              {testimonials[currentIndex]?.designation}
+            </p>
+          </div>
+          {/* Navigation Dots */}
+          <div className="flex justify-center gap-2 mb-18">
+            {testimonials.map((_, index) => (
+              <div
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
+                  index === currentIndex ? 'bg-white' : 'bg-gray-400'
+                }`}
+              ></div>
+            ))}
           </div>
 
-          <div className="">
-            <img src="Web_Assets-09.png" alt="" />
+          {/* Event Banner */}
+          <div className="bg-[#1D5C75] bg-opacity-80 p-4 mb-8 text-center mx-4 sm:max-w-[320px] sm:mx-auto">
+            <p className="text-white merriweather-sans font-extrabold text-[18px]">
+              STORYTELLING @ JP NAGAR
+            </p>
+            <p className="text-white merriweather-sans font-normal text-[18px]">
+              BENGALURU
+            </p>
           </div>
-        </div>
 
-        <div
-          className="bg-opacity-60  rounded-lg p-6 -mt-12 sm:-mt-40 md:-mt-48 xl:-mt-66 sm:mx-40 md:mx-60 lg:mx-90 xl:mx-[450px] 2xl:mx-[500px] text-center"
-          onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <p className="text-white text-lg italic leading-relaxed ">
-            {testimonials[currentIndex]?.quote}
-          </p>
-          <p className="text-white mt-4 font-semibold">
-            {testimonials[currentIndex]?.name}
-          </p>
-          <p className="text-white text-sm">
-            {testimonials[currentIndex]?.designation}
-          </p>
-        </div>
-        {/* Navigation Dots */}
-        <div className="flex justify-center gap-2 mb-18">
-          {testimonials.map((_, index) => (
-            <div
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
-                index === currentIndex ? 'bg-white' : 'bg-gray-400'
-              }`}
-            ></div>
-          ))}
-        </div>
+          <div className="max-w-5xl mx-auto mt-10">
+            {/* Button Section */}
+            <div className="grid grid-cols-1 px-4 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12 justify-center items-center">
+              <Link
+                href="https://www.youtube.com/@MahabharataDialogues/videos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+              >
+                YOUTUBE
+              </Link>
 
-        {/* Event Banner */}
-        <div className="bg-[#1D5C75] bg-opacity-80 p-4 mb-8 text-center mx-4 sm:max-w-[320px] sm:mx-auto">
-          <p className="text-white merriweather-sans font-extrabold text-[18px]">
-            STORYTELLING @ JP NAGAR
-          </p>
-          <p className="text-white merriweather-sans font-normal text-[18px]">
-            BENGALURU
-          </p>
-        </div>
+              <Link
+                href={'/retreats'}
+                className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300 text-center flex flex-col items-center justify-center"
+              >
+                <div className="font-extrabold">OUR RETREATS</div>
+                {/* <div className="font-normal">{retreatText}</div> */}
+              </Link>
 
-        <div className="max-w-5xl mx-auto mt-10">
-          {/* Button Section */}
-          <div className="grid grid-cols-1 px-4 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12 justify-center items-center">
-            <Link
-              href="https://www.youtube.com/@MahabharataDialogues/videos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
-            >
-              YOUTUBE
-            </Link>
+              <Link
+                href="/blogs"
+                className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+              >
+                BLOGS
+              </Link>
+              <Link
+                href="https://www.instagram.com/mahabharatadialogues"
+                className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+              >
+                COMMUNITY STORIES
+              </Link>
 
-            <Link
-              href={'/retreats'}
-              className="bg-[#1D5C75] merriweather-sans text-[18px] text-white py-4 px-6 transition duration-300 text-center flex flex-col items-center justify-center"
-            >
-              <div className="font-extrabold">OUR RETREATS</div>
-              {/* <div className="font-normal">{retreatText}</div> */}
-            </Link>
+              <Link
+                href="https://bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
+                className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
+              >
+                Booking URL
+              </Link>
+            </div>
+            {/* Footer */}
+            <div className="flex justify-center pb-10 px-6">
+              <div className="flex flex-col gap-4 text-white text-center">
+                {/* Email */}
+                <div className="flex items-center justify-center gap-3">
+                  <Mail className="w-5 h-5 opacity-80" />
+                  <a
+                    href="mailto:mahabharatadialogues@gmail.com"
+                    className="text-lg hover:underline transition"
+                  >
+                    mahabharatadialogues@gmail.com
+                  </a>
+                </div>
 
-            <Link
-              href="/blogs"
-              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
-            >
-              BLOGS
-            </Link>
-            <Link
-              href="https://www.instagram.com/mahabharatadialogues"
-              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
-            >
-              COMMUNITY STORIES
-            </Link>
-
-            <Link
-              href="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
-              className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
-            >
-              Booking URL
-            </Link>
-          </div>
-          {/* Footer */}
-          <div className="flex justify-center pb-10 px-6">
-            <div className="flex flex-col gap-4 text-white text-center">
-              {/* Email */}
-              <div className="flex items-center justify-center gap-3">
-                <Mail className="w-5 h-5 opacity-80" />
-                <a
-                  href="mailto:mahabharatadialogues@gmail.com"
-                  className="text-lg hover:underline transition"
-                >
-                  mahabharatadialogues@gmail.com
-                </a>
-              </div>
-
-              {/* Phone */}
-              <div className="flex items-center justify-center gap-3">
-                <Phone className="w-5 h-5 opacity-80" />
-                <a
-                  href="tel:+910000000000"
-                  className="text-lg hover:underline transition"
-                >
-                  +91 00000 00000
-                </a>
+                {/* Phone */}
+                <div className="flex items-center justify-center gap-3">
+                  <Phone className="w-5 h-5 opacity-80" />
+                  <a
+                    href="tel:+910000000000"
+                    className="text-lg hover:underline transition"
+                  >
+                    +91 00000 00000
+                  </a>
+                </div>
               </div>
             </div>
           </div>
