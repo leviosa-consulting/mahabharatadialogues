@@ -154,12 +154,12 @@ export default function MahabharataDialogues() {
         {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
 
         <div className="relative">
-          <div className="flex items-center justify-between mb-12">
-            <div className="">
+          <div className="flex items-center justify-between mb-12 top-0">
+            <div className="mt-20 md:mt-0">
               <img src="Web_Assets-07.png" alt="" />
             </div>
 
-            <div className="md:mb-30 w-[650px] md:w-100">
+            <div className="md:mb-30 w-[700px] md:w-100 -mt-30">
               <img
                 src="Web_Assets-08.png"
                 alt="web-asset"
@@ -167,7 +167,7 @@ export default function MahabharataDialogues() {
               />
             </div>
 
-            <div className="">
+            <div className="mt-20 md:mt-0">
               <img src="Web_Assets-09.png" alt="" />
             </div>
           </div>
