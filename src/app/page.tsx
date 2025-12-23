@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import db from '@/firebase/firebaseServices'
 import { formatRetreatText } from '@/utils/formatRetreatText'
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone } from 'lucide-react'
 interface Testimonial {
   id: string
   quote: string
@@ -147,10 +147,8 @@ export default function MahabharataDialogues() {
       style={{
         backgroundImage: `url('/Blue_Background_with_Texture-02.png')`,
         backgroundSize: 'contain',
-     
       }}
     >
-      
       {/* Texture softener overlay */}
       {/* <div className="absolute inset-0 bg-black/40 pointer-events-none" /> */}
 
@@ -166,7 +164,7 @@ export default function MahabharataDialogues() {
               alt="web-asset"
               className="w-full h-full object-cover"
             />
-          </div>  
+          </div>
 
           <div className="">
             <img src="Web_Assets-09.png" alt="" />
@@ -255,32 +253,30 @@ export default function MahabharataDialogues() {
           </div>
           {/* Footer */}
           <div className="flex justify-center pb-10 px-6">
-  <div className="flex flex-col gap-4 text-white text-center">
+            <div className="flex flex-col gap-4 text-white text-center">
+              {/* Email */}
+              <div className="flex items-center justify-center gap-3">
+                <Mail className="w-5 h-5 opacity-80" />
+                <a
+                  href="mailto:mahabharatadialogues@gmail.com"
+                  className="text-lg hover:underline transition"
+                >
+                  mahabharatadialogues@gmail.com
+                </a>
+              </div>
 
-    {/* Email */}
-    <div className="flex items-center justify-center gap-3">
-      <Mail className="w-5 h-5 opacity-80" />
-      <a
-        href="mailto:mahabharatadialogues@gmail.com"
-        className="text-lg hover:underline transition"
-      >
-        mahabharatadialogues@gmail.com
-      </a>
-    </div>
-
-    {/* Phone */}
-    <div className="flex items-center justify-center gap-3">
-      <Phone className="w-5 h-5 opacity-80" />
-      <a
-        href="tel:+910000000000"
-        className="text-lg hover:underline transition"
-      >
-        +91 00000 00000
-      </a>
-    </div>
-
-  </div>
-</div>
+              {/* Phone */}
+              <div className="flex items-center justify-center gap-3">
+                <Phone className="w-5 h-5 opacity-80" />
+                <a
+                  href="tel:+910000000000"
+                  className="text-lg hover:underline transition"
+                >
+                  +91 00000 00000
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
