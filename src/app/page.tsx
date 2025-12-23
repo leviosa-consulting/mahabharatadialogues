@@ -246,7 +246,7 @@ export default function MahabharataDialogues() {
               </Link>
 
               <Link
-                href="https://bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
+                href="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
                 className="bg-[#1D5C75] merriweather-sans font-extrabold text-[18px] text-white py-4 px-6 transition duration-300 text-center flex items-center justify-center"
               >
                 Booking URL
