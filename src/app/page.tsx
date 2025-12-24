@@ -143,9 +143,9 @@ export default function MahabharataDialogues() {
 
   return (
     <div
-      className="relative overflow-hidden min-h-screen w-full"
-      style={{
-        backgroundImage: `
+     className="relative min-h-screen w-full overflow-hidden"
+  style={{
+    backgroundImage: `
       linear-gradient(
         to bottom,
         rgba(45,156,207, 0) 40%,
@@ -155,10 +155,11 @@ export default function MahabharataDialogues() {
       ),
       url('/Blue_Background_with_Texture-02.png')
     `,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+  }}
+
     >
       <div className="relative">
         <div className="flex items-center justify-between mb-12 top-0">
