@@ -143,9 +143,9 @@ export default function MahabharataDialogues() {
 
   return (
     <div
-     className="relative min-h-screen w-full overflow-hidden"
-  style={{
-    backgroundImage: `
+      className="relative min-h-screen w-full overflow-hidden"
+      style={{
+        backgroundImage: `
       linear-gradient(
         to bottom,
         rgba(45,156,207, 0) 40%,
@@ -155,19 +155,30 @@ export default function MahabharataDialogues() {
       ),
       url('/Blue_Background_with_Texture-01.png')
     `,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-  }}
-
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
     >
       <div className="relative">
-        <div className="flex items-center justify-between mb-12 top-0">
-          <div className="mt-20 md:mt-0">
-            <img src="Web_Assets-07.png" alt="" />
+        <div className="flex justify-center items-center md:hidden mt-6">
+          <img
+            src="Web_Assets-08.png"
+            alt="web-asset"
+            className="w-48 object-contain"
+          />
+        </div>
+
+        <div className="flex items-center justify-between mb-12 mt-4 md:mt-0 gap-2 md:gap-0">
+          <div className="">
+            <img
+              src="Web_Assets-07.png"
+              alt=""
+              className="w-[1200px] md:w-full"
+            />
           </div>
 
-          <div className="md:mb-30 w-[700px] md:w-100 -mt-30">
+          <div className="hidden md:block md:mb-30 md:w-100 -mt-30">
             <img
               src="Web_Assets-08.png"
               alt="web-asset"
@@ -175,8 +186,12 @@ export default function MahabharataDialogues() {
             />
           </div>
 
-          <div className="mt-20 md:mt-0">
-            <img src="Web_Assets-09.png" alt="" />
+          <div className="">
+            <img
+              src="Web_Assets-09.png"
+              alt=""
+              className="w-[1200px] md:w-full"
+            />
           </div>
         </div>
 
