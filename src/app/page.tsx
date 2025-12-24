@@ -153,7 +153,7 @@ export default function MahabharataDialogues() {
         rgba(45,156,207, 0.9) 85%,
         rgba(45,156,207, 1) 100%
       ),
-      url('/Blue_Background_with_Texture-02.png')
+      url('/Blue_Background_with_Texture-01.png')
     `,
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
