@@ -91,3 +91,8 @@ html, body{
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+
+.grad {
+  background-image: linear-gradient(to bottom, white, #2d9ccf);
+}
