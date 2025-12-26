@@ -1,312 +1,471 @@
+import React from 'react'
 
-'use client'
-
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import {
-  Calendar,
-  Clock,
-  Image as ImageIcon,
-  ArrowRight,
-  HelpCircle,
-} from 'lucide-react'
-
-interface Retreat {
-  id: string
-  retreatstartData: string
-  retreatendData: string
-  title: string
-  description?: string
-  coverImage: string
-  gallery?: string[]
-  testimonial?: string
-  bookingUrl?: string
-  youtubeUrl?: string
-  faqs?: Array<{ question: string; answer: string }>
-}
-
-const RetreatsPage = () => {
-  const router = useRouter()
-  const [retreats, setRetreats] = useState<Retreat[]>([])
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming')
-
-  useEffect(() => {
-    fetchRetreats()
-  }, [])
-
-  const fetchRetreats = async () => {
-    try {
-      const response = await fetch('/api/retreats')
-      const data = await response.json()
-      setRetreats(data.data || [])
-      setLoading(false)
-    } catch (err) {
-      console.error('Failed to fetch retreats:', err)
-      setLoading(false)
-    }
-  }
-
-  const getCurrentDate = () => {
-    return new Date()
-  }
-
-  const filterRetreats = (type: 'upcoming' | 'past') => {
-    const now = getCurrentDate()
-    const filtered = retreats.filter((retreat) => {
-      const endDate = new Date(retreat.retreatendData)
-      if (type === 'upcoming') {
-        return endDate >= now
-      } else {
-        return endDate < now
-      }
-    })
-
-    return filtered.sort((a, b) => {
-      const dateA = new Date(a.retreatstartData).getTime()
-      const dateB = new Date(b.retreatstartData).getTime()
-      if (type === 'upcoming') {
-        return dateA - dateB
-      } else {
-        return dateB - dateA
-      }
-    })
-  }
-
-  const upcomingRetreats = filterRetreats('upcoming')
-  const pastRetreats = filterRetreats('past')
-
-  useEffect(() => {
-    if (!loading && upcomingRetreats.length === 0 && pastRetreats.length > 0) {
-      setActiveTab('past')
-    }
-  }, [loading, upcomingRetreats.length, pastRetreats.length])
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
-  }
-
-  const formatDateRange = (startDate: string, endDate: string) => {
-    return `${formatDate(startDate)} - ${formatDate(endDate)}`
-  }
-
-  const handleRetreatClick = (retreatId: string) => {
-    router.push(`/retreats/${retreatId}`)
-  }
-
-  const RetreatCard = ({ retreat }: { retreat: Retreat }) => {
-    const isUpcoming = new Date(retreat.retreatendData) >= getCurrentDate()
-
-    return (
-      <div
-        onClick={() => handleRetreatClick(retreat.id)}
-        className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
-      >
-        <div className="relative h-56 overflow-hidden">
-          {retreat.coverImage ? (
-            <img
-              src={retreat.coverImage}
-              alt={retreat.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
-              <Calendar size={64} className="text-purple-400" />
-            </div>
-          )}
-          <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md">
-            <span className="text-sm font-semibold text-purple-600">
-              {new Date(retreat.retreatstartData).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-              })}
-            </span>
-          </div>
-        </div>
-
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors h-16 overflow-hidden">
-            {retreat?.title?.length > 60
-              ? retreat.title.substring(0, 60) + '...'
-              : retreat?.title}
-          </h3>
-
-          <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-            <Calendar size={16} />
-            <span className="line-clamp-2">
-              {formatDateRange(retreat.retreatstartData, retreat.retreatendData)}
-            </span>
-          </div>
-
-          {retreat.description && (
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-              {retreat?.description?.length > 80
-                ? retreat.description.substring(0, 80) + '...'
-                : retreat?.description}
-            </p>
-          )}
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {retreat.gallery && retreat.gallery.length > 0 && (
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <ImageIcon size={16} />
-                  <span>{retreat.gallery.length}</span>
-                </div>
-              )}
-              {retreat.faqs && retreat.faqs.length > 0 && (
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <HelpCircle size={16} />
-                  <span>{retreat.faqs.length}</span>
-                </div>
-              )}
-            </div>
-            <div className="flex items-center gap-2 text-purple-600 font-semibold group-hover:gap-3 transition-all">
-              <span>View Details</span>
-              <ArrowRight size={18} />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const showTabs = upcomingRetreats.length > 0 && pastRetreats.length > 0
-
+const RetreatSchedule: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Retreats</h1>
-          <p className="text-lg md:text-xl text-purple-100 max-w-2xl">
-            {upcomingRetreats.length > 0
-              ? 'Discover our upcoming retreats and relive the memories from past gatherings'
-              : 'Relive the memories from our past retreats'}
-          </p>
+    <div className="min-h-screen bg-white ">
+      {/* Header */}
+
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6  relative overflow-hidden">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+          {/* Left */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="text-xs md:text-sm mb-2">Mahabharata Dialogues</div>
+            <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
+          </div>
+
+          {/* Divider (only md+) */}
+          <div className="hidden md:block w-px h-24 bg-white/60" />
+
+          {/* Right */}
+          <div className="flex-1 text-center md:text-left">
+            <p className="text-sm md:text-base italic leading-relaxed">
+              An immersive two-day residential retreat with every moment
+              revolving around the Mahabharata.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Tabs - Only show if both upcoming and past retreats exist */}
-      {showTabs && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-          <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
-            <button
-              onClick={() => setActiveTab('upcoming')}
-              className={`px-6 py-3 rounded-md font-semibold transition-all ${
-                activeTab === 'upcoming'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Upcoming Retreats
-              {upcomingRetreats.length > 0 && (
-                <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                  {upcomingRetreats.length}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('past')}
-              className={`px-6 py-3 rounded-md font-semibold transition-all ${
-                activeTab === 'past'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Past Retreats
-              {pastRetreats.length > 0 && (
-                <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                  {pastRetreats.length}
-                </span>
-              )}
-            </button>
+      {/* Day circles */}
+      <div className="w-full hidden  relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
+        {/* Day 1 */}
+        <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+          <div className="text-center leading-tight">
+            <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
+            <div className="text-xl md:text-2xl font-semibold">03 Aug 2024</div>
+            <div className="text-sm mt-1">Saturday</div>
           </div>
         </div>
-      )}
 
-      {/* Retreats Grid */}
-      <div
-        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
-          showTabs ? 'py-12' : 'py-8'
-        }`}
-      >
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+        {/* Day 2 */}
+        <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+          <div className="text-center leading-tight">
+            <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
+            <div className="text-xl md:text-2xl font-semibold">04 Aug 2024</div>
+            <div className="text-sm mt-1">Sunday</div>
           </div>
-        ) : (
-          <>
-            {(activeTab === 'upcoming' || !showTabs) &&
-              upcomingRetreats.length > 0 && (
-                <div>
-                  {!showTabs && (
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      Upcoming Retreats
-                    </h2>
-                  )}
-                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {upcomingRetreats.map((retreat) => (
-                      <RetreatCard key={retreat.id} retreat={retreat} />
-                    ))}
+        </div>
+      </div>
+
+      {/* Day circle Mobile*/}
+      <div className="sm:hidden flex justify-center items-center mt-4">
+        <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+          <div className="text-center leading-tight">
+            <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
+            <div className="text-xl md:text-2xl font-semibold">03 Aug 2024</div>
+            <div className="text-sm mt-1">Saturday</div>
+          </div>
+        </div>
+      </div>
+      {/* Schedule Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 md:mx-10 lg:mx-30">
+        {/* Day 1 Column */}
+        <div className="md:border-r border-gray-200">
+          {/* Day 1 Schedule */}
+          <div className="px-6 py-6 md:px-8 md:py-8 space-y-4">
+            {/* Breakfast */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>Breakfast</span>
+              <span className="text-[16px] md:text-lg">08:45 - 09:30</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Introduction & Icebreaker
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Get to know your fellow retreat participants and facilitator
                   </div>
                 </div>
-              )}
-
-            {(activeTab === 'past' ||
-              (upcomingRetreats.length === 0 && !showTabs)) && (
-              <>
-                {pastRetreats.length === 0 ? (
-                  <div className="text-center py-20">
-                    <Calendar
-                      size={64}
-                      className="mx-auto mb-4 text-gray-400"
-                    />
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                      No Past Retreats
-                    </h3>
-                    <p className="text-gray-500">
-                      Past retreats will appear here once they conclude.
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    {!showTabs && (
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                        Past Retreats
-                      </h2>
-                    )}
-                    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                      {pastRetreats.map((retreat) => (
-                        <RetreatCard key={retreat.id} retreat={retreat} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-
-            {upcomingRetreats.length === 0 && pastRetreats.length === 0 && (
-              <div className="text-center py-20">
-                <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                  No Retreats Yet
-                </h3>
-                <p className="text-gray-500">
-                  Check back soon for upcoming retreats!
-                </p>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  09:30 - 10:00
+                </div>
               </div>
-            )}
-          </>
-        )}
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Vows
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Why vows take a new imprint this week
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  10:00 - 11:15
+                </div>
+              </div>
+            </div>
+
+            {/* High Tea with cookies */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>High Tea with cookies</span>
+              <span className="ttext-[16px] md:text-lg">11:15 - 11:35</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Dance Drama
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Stories we tell and tales we dance and shout!
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  11:35 - 12:50
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Indraprastha
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    How the name changes, that drama and its aftermath
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  12:55 - 13:30
+                </div>
+              </div>
+            </div>
+
+            {/* Lunch */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>Lunch</span>
+              <span className="text-[16px] md:text-lg">13:30 - 14:30</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Guess in 10
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Can you guess the character? Expose your skills
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  14:30 - 14:50
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Mahabharata is yeu!
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    An unvarnished approach and perspective walk you
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  14:50 - 15:50
+                </div>
+              </div>
+            </div>
+
+            {/* High Tea with Pakodas */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>High Tea with Pakodas</span>
+              <span className="text-[16px] md:text-lg">15:50 - 16:15</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • The Maha Quiz
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Open your mind to amazement
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  16:15 - 16:45
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Poetry recitation
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    A look the rhymes, verse, rhythmed too
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  16:45 - 17:30
+                </div>
+              </div>
+            </div>
+
+            {/* Take a break */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>Take a break</span>
+              <span className="text-[16px] md:text-lg">17:30 - 18:15</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Draupadi
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Perspectives on the life of Draupadi
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  19:15 - 20:15
+                </div>
+              </div>
+            </div>
+
+            {/* Dinner */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>Dinner</span>
+              <span className="text-[16px] md:text-lg">20:15 - 21:30</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-ms leading-snug">
+                    • Farzi Mushiara
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Impromptu shayari, or poems
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  21:30 - 22:15
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Khronology/chai with Prateek
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    A last word of wisdom before we walk death into Mahabharata
+                    yourself's Khandav
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  22:15 - 01:00
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Day 2 Column */}
+
+        {/* Day circle Mobile*/}
+        <div className="sm:hidden flex justify-center items-center mt-4">
+          <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+            <div className="text-center leading-tight">
+              <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
+              <div className="text-xl md:text-2xl font-semibold">
+                04 Aug 2024
+              </div>
+              <div className="text-sm mt-1">Sunday</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          {/* Day 2 Schedule */}
+          <div className="px-6 py-6 md:px-8 md:py-8 space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Storytelling masterclass ♦
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    as in Mahabharata
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  07:00 - 08:00
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • What's in a name/a ♦
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Take some stories early in the morning
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  07:00 - 08:00
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • What's in a name/b
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Some fun stories about enduring names, naming and denomizing
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  07:00 - 08:00
+                </div>
+              </div>
+            </div>
+
+            {/* Breakfast */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>Breakfast</span>
+              <span className="text-[16px] md:text-lg">08:00 - 09:30</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • The 7 (nine) Strategy Game
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    A relook at the Strategies (or may be not) ahead
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  09:30 - 10:15
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • The Butterfly Effect
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Consequences
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  10:15 - 11:00
+                </div>
+              </div>
+            </div>
+
+            {/* High Tea with cookies */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>High Tea with cookies</span>
+              <span className="text-[16px] md:text-lg">11:00 - 11:30</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Communicate like Krishna
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Lesson from Krsna. Conversations and learning
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  11:30 - 12:30
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • karmanye vadhikaraste
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    A lyrical dissection with live music
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  12:30 - 13:30
+                </div>
+              </div>
+            </div>
+
+            {/* Lunch */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>Lunch</span>
+              <span className="text-[16px] md:text-lg">13:30 - 14:30</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • The Last Dialogue
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Conversation about deep questions in
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  14:30 - 16:15
+                </div>
+              </div>
+            </div>
+
+            {/* High Tea with Pakoda */}
+            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+              <span>High Tea with Pakoda</span>
+              <span className="text-[16px] md:text-lg">16:15 - 16:40</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Conversations about Mahabharata
+                  </div>
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                    Any final thoughts, perspectives, observations, and some
+                    stories from the two days
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  16:40 - 17:30
+                </div>
+              </div>
+
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="font-semibold text-md leading-snug">
+                    • Conclusion
+                  </div>
+                </div>
+                <div className="text-md whitespace-nowrap pt-0.5">
+                  17:30 - 18:00
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="text-center text-md text-gray-500 py-4 border-t border-gray-200">
+        * Optional/Simultaneous events
       </div>
     </div>
   )
 }
 
-export default RetreatsPage
+export default RetreatSchedule
