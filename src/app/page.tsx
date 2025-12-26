@@ -170,25 +170,26 @@ export default function MahabharataDialogues() {
         </div>
 
         <div className="flex items-center justify-between mb-12 mt-4 md:mt-0 gap-2 md:gap-0">
-          <div className="">
+          <div>
             <img
-              src="Web_Assets-07.png"
+              src="Web_Assets-02.png"
               alt=""
               className="w-[1200px] md:w-full"
             />
           </div>
 
-          <div className="hidden md:block md:mb-30 md:w-100 -mt-30">
+          {/* CENTER IMAGE – MADE LARGER */}
+          <div className="hidden md:block w-[500px] lg:w-[650px] -mt-30">
             <img
               src="Web_Assets-08.png"
               alt="web-asset"
-              className="w-full h-full object-cover"
+              className="w-full h-auto object-contain"
             />
           </div>
 
-          <div className="">
+          <div>
             <img
-              src="Web_Assets-09.png"
+              src="Web_Assets-03.png"
               alt=""
               className="w-[1200px] md:w-full"
             />
@@ -202,13 +203,13 @@ export default function MahabharataDialogues() {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <p className="text-white text-lg italic leading-relaxed ">
+          <p className="text-white font-neco text-[20px] md:text-[24px] leading-relaxed ">
             {testimonials[currentIndex]?.quote}
           </p>
-          <p className="text-white mt-4 font-semibold">
+          <p className="text-white font-merri mt-4 font-bold text-[20px]">
             {testimonials[currentIndex]?.name}
           </p>
-          <p className="text-white text-sm">
+          <p className="text-white font-merri text-[20px] font-normal">
             {testimonials[currentIndex]?.designation}
           </p>
         </div>
