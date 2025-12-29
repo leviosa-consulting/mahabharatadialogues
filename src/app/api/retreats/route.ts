@@ -32,15 +32,15 @@ export async function POST(req: NextRequest) {
 
     const { title, subtitle, day1, day2, footerNote } = body;
 
-    if (!title || !day1?.date || !day2?.date) {
+    if (!day1?.date || !day2?.date) {
       return NextResponse.json(
-        { success: false, error: "Title and both day dates are required" },
+        { success: false, error: "Both day dates are required" },
         { status: 400 }
       );
     }
 
     const newRetreat = {
-      title,
+      title: title || "Mahabharata Dialogues",
       subtitle: subtitle || "",
       day1: {
         date: day1.date,
@@ -71,4 +71,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

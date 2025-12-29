@@ -120,7 +120,7 @@ const AdminDashboard = () => {
           </Link>
 
           {/* Retreat Date Range Settings */}
-          <div className="bg-white shadow-sm border rounded-xl p-6 flex flex-col gap-4 md:col-span-2">
+          <div className="bg-white hidden shadow-sm border rounded-xl p-6  gap-4 md:col-span-2">
             <h2 className="text-xl font-semibold">Update Retreat Dates</h2>
 
             <div className="flex flex-col md:flex-row gap-4">

@@ -1,25 +1,14 @@
-// components/RetreatScheduleDisplay.tsx
+// app/retreats/page.tsx
 'use client'
 
-import React, { useState, useEffect } from 'react'
-
-interface ScheduleItem {
-  title: string
-  description: string
-  time: string
-}
-
-interface ScheduleSection {
-  type: 'meal' | 'activities'
-  title?: string
-  time?: string
-  items?: ScheduleItem[]
-}
+import React, { useEffect, useState } from 'react'
+import { Calendar, ArrowRight } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 interface DaySchedule {
   date: string
   dayName: string
-  schedule: ScheduleSection[]
+  schedule: any[]
 }
 
 interface Retreat {
@@ -29,170 +18,180 @@ interface Retreat {
   day1: DaySchedule
   day2: DaySchedule
   footerNote: string
+  created_at: string
 }
 
-const RetreatScheduleDisplay: React.FC = () => {
-  const [retreat, setRetreat] = useState<Retreat | null>(null)
+const RetreatsPage: React.FC = () => {
+  const [retreats, setRetreats] = useState<Retreat[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
-    fetchLatestRetreat()
+    fetchRetreats()
   }, [])
 
-  const fetchLatestRetreat = async () => {
+  const fetchRetreats = async () => {
     try {
       const response = await fetch('/api/retreats')
       const data = await response.json()
-      if (data.success && data.data.length > 0) {
-        // Get the most recent retreat
-        setRetreat(data.data[0])
+      
+      if (data.success) {
+        // Sort retreats: upcoming first (by day1 date), then by created_at
+        const sorted = data.data.sort((a: Retreat, b: Retreat) => {
+          const dateA = new Date(parseDate(a.day1.date))
+          const dateB = new Date(parseDate(b.day1.date))
+          const today = new Date()
+          today.setHours(0, 0, 0, 0)
+
+          const isUpcomingA = dateA >= today
+          const isUpcomingB = dateB >= today
+
+          // If one is upcoming and other is not, upcoming comes first
+          if (isUpcomingA && !isUpcomingB) return -1
+          if (!isUpcomingA && isUpcomingB) return 1
+
+          // If both upcoming or both past, sort by date (upcoming: nearest first, past: most recent first)
+          if (isUpcomingA && isUpcomingB) {
+            return dateA.getTime() - dateB.getTime()
+          } else {
+            return dateB.getTime() - dateA.getTime()
+          }
+        })
+        setRetreats(sorted)
       }
       setLoading(false)
     } catch (err) {
-      console.error('Failed to fetch retreat:', err)
+      console.error('Error fetching retreats:', err)
       setLoading(false)
     }
   }
 
-  const renderScheduleSection = (section: ScheduleSection, index: number, isLastActivity: boolean) => {
-    if (section.type === 'meal') {
-      return (
-        <div key={index} className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-          <span>{section.title}</span>
-          <span className="text-[16px] md:text-lg">{section.time}</span>
-        </div>
-      )
+  // Helper to parse "03 Aug 2024" format to Date
+  const parseDate = (dateStr: string): Date => {
+    const months: { [key: string]: number } = {
+      'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+      'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
     }
+    const parts = dateStr.split(' ')
+    const day = parseInt(parts[0])
+    const month = months[parts[1]]
+    const year = parseInt(parts[2])
+    return new Date(year, month, day)
+  }
 
-    return (
-      <div key={index} className="space-y-2">
-        {section.items?.map((item, itemIndex) => (
-          <div key={itemIndex} className="flex justify-between items-start gap-3">
-            <div className="flex-1">
-              <div className="font-semibold text-md leading-snug">
-                {item.title}
-              </div>
-              {item.description && (
-                <div className={`text-sm text-gray-600 leading-tight mt-0.5 ${isLastActivity && itemIndex === (section.items?.length || 0) - 1 ? 'pb-8' : ''}`}>
-                  {item.description}
-                </div>
-              )}
-            </div>
-            <div className="text-md whitespace-nowrap pt-0.5">
-              {item.time}
-            </div>
-          </div>
-        ))}
-      </div>
-    )
+  const isUpcoming = (dateStr: string): boolean => {
+    const retreatDate = parseDate(dateStr)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return retreatDate >= today
+  }
+
+  const handleRetreatClick = (id: string) => {
+    router.push(`/retreats/${id}`)
   }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
-          <p className="mt-4 text-gray-600">Loading retreat schedule...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading retreats...</p>
         </div>
       </div>
     )
   }
-
-  if (!retreat) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 text-lg">No retreat schedule available.</p>
-        </div>
-      </div>
-    )
-  }
-
-  const days = [
-    { day: 1, date: retreat.day1.date, dayName: retreat.day1.dayName },
-    { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName }
-  ]
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
-        <div className="mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
-          <div className="text-center md:text-left">
-            <div className="text-lg mb-2">{retreat.title}</div>
-            <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
-          </div>
-          <div className="hidden md:block w-px h-24 bg-white/60" />
-          <div className="text-center md:text-left">
-            <p className="text-lg italic leading-relaxed">
-              {retreat.subtitle}
-            </p>
-          </div>
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="text-lg mb-2">Mahabharata Dialogues</div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Retreats</h1>
+          <p className="text-lg italic">
+            Explore our immersive two-day residential retreats
+          </p>
         </div>
       </div>
 
-      {/* Day circles - Desktop */}
-      <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
-        {days.map((dayInfo) => (
-          <div key={dayInfo.day} className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
-            <div className="text-center leading-tight">
-              <div className="text-xs tracking-wide mb-1">-DAY {dayInfo.day}-</div>
-              <div className="text-xl md:text-2xl font-semibold">{dayInfo.date}</div>
-              <div className="text-sm mt-1">{dayInfo.dayName}</div>
-            </div>
+      {/* Retreats Grid */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        {retreats.length === 0 ? (
+          <div className="text-center py-12">
+            <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">No Retreats Available</h2>
+            <p className="text-gray-600">Check back soon for upcoming retreat schedules.</p>
           </div>
-        ))}
-      </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {retreats.map((retreat) => {
+              const upcoming = isUpcoming(retreat.day1.date)
+              return (
+                <div
+                  key={retreat.id}
+                  onClick={() => handleRetreatClick(retreat.id)}
+                  className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all cursor-pointer group hover:border-red-600"
+                >
+                  {/* Card Header */}
+                  <div className={`${upcoming ? 'bg-red-600' : 'bg-gray-600'} text-white px-6 py-4`}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold tracking-wide">
+                        {upcoming ? 'UPCOMING' : 'PAST RETREAT'}
+                      </span>
+                      <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                    </div>
+                  </div>
 
-      {/* Day circle Mobile - Day 1 */}
-      <div className="sm:hidden flex justify-center items-center mt-4">
-        <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
-          <div className="text-center leading-tight">
-            <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
-            <div className="text-xl font-semibold">{days[0].date}</div>
-            <div className="text-sm mt-1">{days[0].dayName}</div>
+                  {/* Card Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {retreat.title}
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <Calendar className="text-red-600 mt-1 flex-shrink-0" size={18} />
+                        <div>
+                          <div className="font-semibold text-gray-900">Day 1</div>
+                          <div className="text-sm text-gray-600">
+                            {retreat.day1.date} • {retreat.day1.dayName}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <Calendar className="text-red-600 mt-1 flex-shrink-0" size={18} />
+                        <div>
+                          <div className="font-semibold text-gray-900">Day 2</div>
+                          <div className="text-sm text-gray-600">
+                            {retreat.day2.date} • {retreat.day2.dayName}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <div className="text-sm text-gray-500">
+                        {retreat.day1.schedule.length + retreat.day2.schedule.length} schedule sections
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Footer */}
+                  <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                    <button className="text-red-600 font-semibold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                      View Full Schedule
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        </div>
-      </div>
-
-      {/* Schedule Grid */}
-      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 lg:mx-10 xl:mx-30">
-        {/* Day 1 Column */}
-        <div className="md:border-r-2 border-black">
-          <div className="px-6 md:px-8 py-6 md:py-0 space-y-4">
-            {retreat.day1.schedule.map((section, index) => 
-              renderScheduleSection(section, index, index === retreat.day1.schedule.length - 1)
-            )}
-          </div>
-        </div>
-
-        {/* Day 2 Column */}
-        <div>
-          {/* Day circle Mobile - Day 2 */}
-          <div className="sm:hidden flex justify-center items-center mt-4">
-            <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
-              <div className="text-center leading-tight">
-                <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
-                <div className="text-xl font-semibold">{days[1].date}</div>
-                <div className="text-sm mt-1">{days[1].dayName}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="px-6 py-6 md:px-8 md:py-0 space-y-4">
-            {retreat.day2.schedule.map((section, index) => 
-              renderScheduleSection(section, index, false)
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black md:mx-10 lg:mx-30">
-        {retreat.footerNote}
+        )}
       </div>
     </div>
   )
 }
 
-export default RetreatScheduleDisplay
+export default RetreatsPage

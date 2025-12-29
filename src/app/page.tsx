@@ -23,7 +23,6 @@ export default function MahabharataDialogues() {
 
   useEffect(() => {
     fetchTestimonials()
-    fetchRetreat()
   }, [])
 
   const fetchTestimonials = async () => {
@@ -61,26 +60,7 @@ export default function MahabharataDialogues() {
     }
   }
 
-  const fetchRetreat = async () => {
-    try {
-      const retreatRef = doc(db, 'retreat', 'settings')
-      const snap = await getDoc(retreatRef)
-
-      if (snap.exists()) {
-        const data = snap.data()
-
-        if (data.startDate && data.endDate) {
-          const start = data.startDate.toDate()
-          const end = data.endDate.toDate()
-
-          const formatted = formatRetreatText(start, end)
-          setRetreatText(formatted)
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching retreat:', error)
-    }
-  }
+ 
 
   const handleWheel = (e: React.WheelEvent) => {
     // e.preventDefault()

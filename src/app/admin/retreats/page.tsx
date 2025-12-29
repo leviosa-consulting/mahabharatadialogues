@@ -85,6 +85,25 @@ const RetreatsAdminPage = () => {
     }
   }
 
+  // Helper function to get day name from date
+  const getDayName = (dateString: string): string => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    return days[date.getDay()]
+  }
+
+  // Helper function to format date as "03 Aug 2024"
+  const formatDisplayDate = (dateString: string): string => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    return `${day} ${month} ${year}`
+  }
+
   const resetForm = () => {
     setFormData({
       title: 'Mahabharata Dialogues',
@@ -123,8 +142,8 @@ const RetreatsAdminPage = () => {
   }
 
   const handleSubmit = async () => {
-    if (!formData.title || !formData.day1.date || !formData.day2.date) {
-      alert('Title and both day dates are required')
+    if (!formData.day1.date || !formData.day2.date) {
+      alert('Both day dates are required')
       return
     }
 
@@ -133,13 +152,30 @@ const RetreatsAdminPage = () => {
     setSubmitting(true)
 
     try {
+      // Format dates and calculate day names before submission
+      const submitData = {
+        title: formData.title,
+        subtitle: formData.subtitle,
+        day1: {
+          date: formatDisplayDate(formData.day1.date),
+          dayName: getDayName(formData.day1.date),
+          schedule: formData.day1.schedule
+        },
+        day2: {
+          date: formatDisplayDate(formData.day2.date),
+          dayName: getDayName(formData.day2.date),
+          schedule: formData.day2.schedule
+        },
+        footerNote: formData.footerNote
+      }
+
       const url = editingId ? `/api/retreats/${editingId}` : '/api/retreats'
       const method = editingId ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       })
 
       const data = await response.json()
@@ -263,45 +299,41 @@ const RetreatsAdminPage = () => {
     }))
   }
 
+  const handleDateChange = (day: 'day1' | 'day2', dateValue: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      [day]: { 
+        ...prev[day], 
+        date: dateValue,
+        dayName: getDayName(dateValue)
+      } 
+    }))
+  }
+
   const renderDayScheduleForm = (day: 'day1' | 'day2', dayNumber: number) => {
     const dayData = formData[day]
     
     return (
       <div className="border-t pt-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Day {dayNumber} Schedule</h3>
-        <div className="grid md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Date *
-            </label>
-            <input
-              type="text"
-              value={dayData.date}
-              onChange={(e) => setFormData(prev => ({ 
-                ...prev, 
-                [day]: { ...prev[day], date: e.target.value } 
-              }))}
-              disabled={submitting}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-              placeholder="03 Aug 2024"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Day Name
-            </label>
-            <input
-              type="text"
-              value={dayData.dayName}
-              onChange={(e) => setFormData(prev => ({ 
-                ...prev, 
-                [day]: { ...prev[day], dayName: e.target.value } 
-              }))}
-              disabled={submitting}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-              placeholder="Saturday"
-            />
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Date *
+          </label>
+          <input
+            type="date"
+            value={dayData.date}
+            onChange={(e) => handleDateChange(day, e.target.value)}
+            disabled={submitting}
+            className="w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+          />
+          {dayData.date && (
+            <p className="mt-2 text-sm text-gray-600">
+              Day: <span className="font-medium">{getDayName(dayData.date)}</span>
+              {' '}&middot;{' '}
+              Formatted: <span className="font-medium">{formatDisplayDate(dayData.date)}</span>
+            </p>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -459,7 +491,7 @@ const RetreatsAdminPage = () => {
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900">{retreat.title}</h3>
+                        <h3 className="text-xl font-bold text-gray-900"></h3>
                         <p className="text-gray-600 text-sm mt-1">{retreat.subtitle}</p>
                         <div className="flex gap-4 mt-3">
                           <div className="flex items-center gap-2 text-sm">
@@ -507,7 +539,7 @@ const RetreatsAdminPage = () => {
                               <div key={idx} className="border-l-2 border-purple-200 pl-3">
                                 {section.type === 'meal' ? (
                                   <div className="bg-purple-50 p-2 rounded">
-                                    <div className="font-semibold">{section.title}</div>
+                                    
                                     <div className="text-gray-600 text-xs">{section.time}</div>
                                   </div>
                                 ) : (
@@ -515,7 +547,7 @@ const RetreatsAdminPage = () => {
                                     {section.items?.map((item, iIdx) => (
                                       <div key={iIdx} className="py-1">
                                         <div className="font-medium">{item.title}</div>
-                                        <div className="text-gray-600 text-xs">{item.description}</div>
+                                       
                                         <div className="text-purple-600 text-xs">{item.time}</div>
                                       </div>
                                     ))}
@@ -578,48 +610,6 @@ const RetreatsAdminPage = () => {
                 </div>
 
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
-                  {/* Basic Info */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Title *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.title}
-                        onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                        disabled={submitting}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                        placeholder="Mahabharata Dialogues"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Subtitle
-                      </label>
-                      <textarea
-                        value={formData.subtitle}
-                        onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
-                        disabled={submitting}
-                        rows={2}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Footer Note
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.footerNote}
-                        onChange={(e) => setFormData(prev => ({ ...prev, footerNote: e.target.value }))}
-                        disabled={submitting}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-
                   {/* Day 1 */}
                   {renderDayScheduleForm('day1', 1)}
 

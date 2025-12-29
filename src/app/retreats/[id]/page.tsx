@@ -1,46 +1,44 @@
-
+// app/retreats/[id]/page.tsx
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import {
-  Calendar,
-  ArrowLeft,
-  ExternalLink,
-  Quote,
-  Youtube,
-  Image as ImageIcon,
-  X,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
-interface FAQ {
-  question: string
-  answer: string
+interface ScheduleItem {
+  title: string
+  description: string
+  time: string
+}
+
+interface ScheduleSection {
+  type: 'meal' | 'activities'
+  title?: string
+  time?: string
+  items?: ScheduleItem[]
+}
+
+interface DaySchedule {
+  date: string
+  dayName: string
+  schedule: ScheduleSection[]
 }
 
 interface Retreat {
   id: string
-  retreatstartData: string
-  retreatendData: string
   title: string
-  description?: string
-  coverImage: string
-  gallery?: string[]
-  testimonial?: string
-  bookingUrl?: string
-  youtubeUrl?: string
-  faqs?: FAQ[]
+  subtitle: string
+  day1: DaySchedule
+  day2: DaySchedule
+  footerNote: string
 }
 
-const RetreatDetailPage = () => {
+const RetreatDetailPage: React.FC = () => {
   const params = useParams()
   const router = useRouter()
   const [retreat, setRetreat] = useState<Retreat | null>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [openFAQIndex, setOpenFAQIndex] = useState<number | null>(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     if (params.id) {
@@ -50,297 +48,185 @@ const RetreatDetailPage = () => {
 
   const fetchRetreat = async (id: string) => {
     try {
-      const response = await fetch(`/api/retreats/${id}`)
+      const response = await fetch('/api/retreats')
       const data = await response.json()
+      
       if (data.success) {
-        setRetreat(data.data)
+        const foundRetreat = data.data.find((r: Retreat) => r.id === id)
+        if (foundRetreat) {
+          setRetreat(foundRetreat)
+        } else {
+          setError(true)
+        }
       } else {
-        router.push('/retreats')
+        setError(true)
       }
       setLoading(false)
     } catch (err) {
-      console.error('Failed to fetch retreat:', err)
-      router.push('/retreats')
+      console.error('Error fetching retreat:', err)
+      setError(true)
       setLoading(false)
     }
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
-  }
+  const renderScheduleSection = (section: ScheduleSection, index: number, isLastActivity: boolean) => {
+    if (section.type === 'meal') {
+      return (
+        <div key={index} className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+          <span>{section.title}</span>
+          <span className="text-[16px] md:text-lg">{section.time}</span>
+        </div>
+      )
+    }
 
-  const extractYouTubeId = (url: string) => {
-    if (!url) return null
-    const regExp =
-      /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
-    const match = url.match(regExp)
-    return match && match[7].length === 11 ? match[7] : null
-  }
-
-  const toggleFAQ = (index: number) => {
-    setOpenFAQIndex(openFAQIndex === index ? null : index)
-  }
-
-  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+      <div key={index} className="space-y-2">
+        {section.items?.map((item, itemIndex) => (
+          <div key={itemIndex} className="flex justify-between items-start gap-3">
+            <div className="flex-1">
+              <div className="font-semibold text-md leading-snug">
+                {item.title}
+              </div>
+              {item.description && (
+                <div className={`text-sm text-gray-600 leading-tight mt-0.5 ${isLastActivity && itemIndex === section.items!.length - 1 ? 'pb-8' : ''}`}>
+                  {item.description}
+                </div>
+              )}
+            </div>
+            <div className="text-md whitespace-nowrap pt-0.5">
+              {item.time}
+            </div>
+          </div>
+        ))}
       </div>
     )
   }
 
-  if (!retreat) {
-    return null
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading retreat schedule...</p>
+        </div>
+      </div>
+    )
   }
 
-  const youtubeId = retreat.youtubeUrl
-    ? extractYouTubeId(retreat.youtubeUrl)
-    : null
-  const isUpcoming = new Date(retreat.retreatendData) >= new Date()
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative h-96 bg-gradient-to-r from-purple-600 to-purple-800">
-        {retreat.coverImage && (
-          <>
-            <img
-              src={retreat.coverImage}
-              alt={retreat.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-30"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-          </>
-        )}
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12">
+  if (error || !retreat) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center px-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Retreat Not Found</h2>
+          <p className="text-gray-600 mb-6">The retreat you're looking for doesn't exist.</p>
           <button
             onClick={() => router.push('/retreats')}
-            className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors mb-6 w-fit"
+            className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
           >
             <ArrowLeft size={20} />
-            <span>Back to Retreats</span>
+            Back to Retreats
           </button>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            {retreat.title}
-          </h1>
-          <div className="flex flex-wrap gap-6 text-white">
-            <div className="flex items-center gap-2">
-              <Calendar size={20} />
-              <span>
-                {formatDate(retreat.retreatstartData)} -{' '}
-                {formatDate(retreat.retreatendData)}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
+    )
+  }
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Description */}
-            {retreat.description && (
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  About This Retreat
-                </h2>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {retreat.description}
-                </p>
-              </div>
-            )}
+  const days = [
+    { day: 1, date: retreat.day1.date, dayName: retreat.day1.dayName },
+    { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName }
+  ]
 
-            {/* YouTube Video */}
-            {youtubeId && (
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Youtube className="text-red-600" size={24} />
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Retreat Video
-                  </h2>
-                </div>
-                <div className="relative aspect-video rounded-lg overflow-hidden">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${youtubeId}`}
-                    title="Retreat Video"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  ></iframe>
-                </div>
-              </div>
-            )}
-
-            {/* Gallery */}
-            {retreat.gallery && retreat.gallery.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <ImageIcon className="text-purple-600" size={24} />
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    Retreat Gallery
-                  </h2>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {retreat.gallery.map((img, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setSelectedImage(img)}
-                      className="relative aspect-square rounded-lg overflow-hidden cursor-pointer group"
-                    >
-                      <img
-                        src={img}
-                        alt={`Gallery ${idx + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* FAQs */}
-            {retreat.faqs && retreat.faqs.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Frequently Asked Questions
-                </h2>
-                <div className="space-y-4">
-                  {retreat.faqs.map((faq, index) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg overflow-hidden"
-                    >
-                      <button
-                        onClick={() => toggleFAQ(index)}
-                        className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
-                      >
-                        <span className="font-semibold text-gray-900">
-                          {faq.question}
-                        </span>
-                        {openFAQIndex === index ? (
-                          <ChevronUp className="text-purple-600 flex-shrink-0" size={20} />
-                        ) : (
-                          <ChevronDown className="text-purple-600 flex-shrink-0" size={20} />
-                        )}
-                      </button>
-                      {openFAQIndex === index && (
-                        <div className="p-4 bg-white">
-                          <p className="text-gray-700 leading-relaxed">
-                            {faq.answer}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Testimonial */}
-            {retreat.testimonial && (
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-md p-8">
-                <div className="flex items-start gap-4">
-                  <Quote className="text-purple-600 flex-shrink-0" size={32} />
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                      Testimonial
-                    </h2>
-                    <p className="text-gray-700 text-lg italic leading-relaxed">
-                      "{retreat.testimonial}"
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Retreat Details
-              </h3>
-
-              <div className="space-y-4 mb-6">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Start Date</p>
-                  <p className="text-gray-900 font-semibold">
-                    {formatDate(retreat.retreatstartData)}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">End Date</p>
-                  <p className="text-gray-900 font-semibold">
-                    {formatDate(retreat.retreatendData)}
-                  </p>
-                </div>
-
-                {retreat.gallery && retreat.gallery.length > 0 && (
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Gallery</p>
-                    <p className="text-gray-900 font-semibold">
-                      {retreat.gallery.length} Photos
-                    </p>
-                  </div>
-                )}
-
-                {retreat.faqs && retreat.faqs.length > 0 && (
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">FAQs</p>
-                    <p className="text-gray-900 font-semibold">
-                      {retreat.faqs.length} Questions
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Only show booking button for upcoming retreats */}
-              {isUpcoming && retreat.bookingUrl && (
-                <a
-                  href={retreat.bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
-                >
-                  <span>Book Now</span>
-                  <ExternalLink size={18} />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Image Modal */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedImage(null)}
-        >
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Back Button */}
+      <div className="bg-gray-100 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <button
-            onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            onClick={() => router.push('/retreats')}
+            className="inline-flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors"
           >
-            <X size={32} />
+            <ArrowLeft size={20} />
+            <span className="font-medium">Back to All Retreats</span>
           </button>
-          <img
-            src={selectedImage}
-            alt="Gallery"
-            className="max-w-full max-h-full object-contain rounded-lg"
-            onClick={(e) => e.stopPropagation()}
-          />
         </div>
-      )}
+      </div>
+
+      {/* Header */}
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
+        <div className="mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+          <div className="text-center md:text-left">
+            <div className="text-lg mb-2">Mahabharata Dialogues</div>
+            <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
+          </div>
+          <div className="hidden md:block w-px h-24 bg-white/60" />
+          <div className="text-center md:text-left">
+            <p className="text-lg italic leading-relaxed">
+              An immersive two-day residential retreat with every moment<br className="hidden md:block" /> revolving around the Mahabharata.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Day circles - Desktop */}
+      <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
+        {days.map((dayInfo) => (
+          <div key={dayInfo.day} className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+            <div className="text-center leading-tight">
+              <div className="text-xs tracking-wide mb-1">-DAY {dayInfo.day}-</div>
+              <div className="text-xl md:text-2xl font-semibold">{dayInfo.date}</div>
+              <div className="text-sm mt-1">{dayInfo.dayName}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Day circle Mobile - Day 1 */}
+      <div className="sm:hidden flex justify-center items-center mt-4">
+        <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+          <div className="text-center leading-tight">
+            <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
+            <div className="text-xl font-semibold">{days[0].date}</div>
+            <div className="text-sm mt-1">{days[0].dayName}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Schedule Grid */}
+      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 lg:mx-10 xl:mx-30">
+        {/* Day 1 Column */}
+        <div className="md:border-r-2 border-black">
+          <div className="px-6 md:px-8 py-6 md:py-0 space-y-4">
+            {retreat.day1.schedule.map((section, index) => 
+              renderScheduleSection(section, index, index === retreat.day1.schedule.length - 1)
+            )}
+          </div>
+        </div>
+
+        {/* Day 2 Column */}
+        <div>
+          {/* Day circle Mobile - Day 2 */}
+          <div className="sm:hidden flex justify-center items-center mt-4">
+            <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+              <div className="text-center leading-tight">
+                <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
+                <div className="text-xl font-semibold">{days[1].date}</div>
+                <div className="text-sm mt-1">{days[1].dayName}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-6 py-6 md:px-8 md:py-0 space-y-4">
+            {retreat.day2.schedule.map((section, index) => 
+              renderScheduleSection(section, index, false)
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black md:mx-10 lg:mx-30">
+        * Optional/Simultaneous events
+      </div>
     </div>
   )
 }

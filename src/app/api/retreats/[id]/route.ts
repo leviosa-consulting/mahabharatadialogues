@@ -1,24 +1,27 @@
+
+
 // app/api/retreats/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await req.json();
     const { title, subtitle, day1, day2, footerNote } = body;
 
-    if (!title || !day1?.date || !day2?.date) {
+    if (!day1?.date || !day2?.date) {
       return NextResponse.json(
-        { success: false, error: "Title and both day dates are required" },
+        { success: false, error: "Both day dates are required" },
         { status: 400 }
       );
     }
 
     const updateData = {
-      title,
+      title: title || "Mahabharata Dialogues",
       subtitle: subtitle || "",
       day1: {
         date: day1.date,
@@ -36,12 +39,12 @@ export async function PUT(
 
     await adminDB
       .collection("retreats")
-      .doc(params.id)
+      .doc(id)
       .update(updateData);
 
     return NextResponse.json({
       success: true,
-      data: { id: params.id, ...updateData },
+      data: { id, ...updateData },
     });
   } catch (err) {
     console.error("Error updating retreat:", err);
@@ -54,10 +57,12 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await adminDB.collection("retreats").doc(params.id).delete();
+    const { id } = await params;
+    
+    await adminDB.collection("retreats").doc(id).delete();
 
     return NextResponse.json({
       success: true,
