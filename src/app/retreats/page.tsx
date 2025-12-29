@@ -64,7 +64,7 @@ const RetreatSchedule: React.FC = () => {
           {/* Day 1 Schedule */}
           <div className="px-6 py-6 md:px-8 md:py-8 space-y-4">
             {/* Breakfast */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Breakfast</span>
               <span className="text-[16px] md:text-lg">08:45 - 09:30</span>
             </div>
@@ -100,7 +100,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* High Tea with cookies */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>High Tea with cookies</span>
               <span className="ttext-[16px] md:text-lg">11:15 - 11:35</span>
             </div>
@@ -136,7 +136,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* Lunch */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Lunch</span>
               <span className="text-[16px] md:text-lg">13:30 - 14:30</span>
             </div>
@@ -172,7 +172,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* High Tea with Pakodas */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>High Tea with Pakodas</span>
               <span className="text-[16px] md:text-lg">15:50 - 16:15</span>
             </div>
@@ -208,7 +208,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* Take a break */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Take a break</span>
               <span className="text-[16px] md:text-lg">17:30 - 18:15</span>
             </div>
@@ -230,7 +230,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* Dinner */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Dinner</span>
               <span className="text-[16px] md:text-lg">20:15 - 21:30</span>
             </div>
@@ -330,7 +330,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* Breakfast */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Breakfast</span>
               <span className="text-[16px] md:text-lg">08:00 - 09:30</span>
             </div>
@@ -366,7 +366,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* High Tea with cookies */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>High Tea with cookies</span>
               <span className="text-[16px] md:text-lg">11:00 - 11:30</span>
             </div>
@@ -402,7 +402,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* Lunch */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Lunch</span>
               <span className="text-[16px] md:text-lg">13:30 - 14:30</span>
             </div>
@@ -424,7 +424,7 @@ const RetreatSchedule: React.FC = () => {
             </div>
 
             {/* High Tea with Pakoda */}
-            <div className="bg-cyan-300 text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+            <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>High Tea with Pakoda</span>
               <span className="text-[16px] md:text-lg">16:15 - 16:40</span>
             </div>
