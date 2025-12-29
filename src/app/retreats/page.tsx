@@ -255,7 +255,7 @@ const RetreatSchedule: React.FC = () => {
                   <div className="font-semibold text-md leading-snug">
                     • Khronology/chai with Prateek
                   </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
+                  <div className="text-sm text-gray-600 leading-tight mt-0.5 pb-8">
                     A last word of wisdom before we walk death into Mahabharata
                     yourself's Khandav
                   </div>
