@@ -30,7 +30,17 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { title, subtitle, day1, day2, footerNote } = body;
+    const { 
+      title, 
+      subtitle, 
+      eventTitle, 
+      venue, 
+      youtube_video, 
+      photos, 
+      day1, 
+      day2, 
+      footerNote 
+    } = body;
 
     if (!day1?.date || !day2?.date) {
       return NextResponse.json(
@@ -42,6 +52,10 @@ export async function POST(req: NextRequest) {
     const newRetreat = {
       title: title || "Mahabharata Dialogues",
       subtitle: subtitle || "",
+      ...(eventTitle && { eventTitle }),
+      ...(venue && { venue }),
+      ...(youtube_video && { youtube_video }),
+      ...(photos && photos.length > 0 && { photos }),
       day1: {
         date: day1.date,
         dayName: day1.dayName || "",

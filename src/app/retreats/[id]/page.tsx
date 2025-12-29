@@ -27,6 +27,7 @@ interface DaySchedule {
 interface Retreat {
   id: string
   title: string
+  eventTitle: string
   subtitle: string
   day1: DaySchedule
   day2: DaySchedule
@@ -151,21 +152,30 @@ const RetreatDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Header */}
-      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
-        <div className="mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
-          <div className="text-center md:text-left">
-            <div className="text-lg mb-2">Mahabharata Dialogues</div>
-            <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
-          </div>
-          <div className="hidden md:block w-px h-24 bg-white/60" />
-          <div className="text-center md:text-left">
-            <p className="text-lg italic leading-relaxed">
-              An immersive two-day residential retreat with every moment<br className="hidden md:block" /> revolving around the Mahabharata.
-            </p>
-          </div>
-        </div>
-      </div>
+   {/* Header */}
+<div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
+  <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+    
+    {/* Left */}
+    <div className="text-center md:text-left">
+      <div className="text-lg mb-2">Mahabharata Dialogues</div>
+      <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
+    </div>
+
+    {/* Divider */}
+    <div className="hidden md:block w-px h-24 bg-white/60" />
+
+    {/* Right */}
+    <div className="text-center md:text-left md:max-w-lg">
+      <p className="text-lg italic leading-relaxed">
+        {retreat.eventTitle}
+      </p>
+    </div>
+
+  </div>
+</div>
+
+
 
       {/* Day circles - Desktop */}
       <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">

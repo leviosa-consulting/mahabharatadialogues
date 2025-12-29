@@ -11,9 +11,12 @@ import {
   Calendar,
   ChevronDown,
   ChevronUp,
+  Upload,
+  Image as ImageIcon,
 } from 'lucide-react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Navbar from '@/components/Navbar'
+import { uploadImage,deleteFromFirebaseStorage } from '@/utils/firebaseStorageUpload'
 
 interface ScheduleItem {
   title: string
@@ -38,6 +41,10 @@ interface Retreat {
   id: string
   title: string
   subtitle: string
+  eventTitle?: string
+  venue?: string
+  youtube_video?: string
+  photos?: string[]
   day1: DaySchedule
   day2: DaySchedule
   footerNote: string
@@ -52,10 +59,15 @@ const RetreatsAdminPage = () => {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [expandedRetreat, setExpandedRetreat] = useState<string | null>(null)
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
   
   const [formData, setFormData] = useState<Omit<Retreat, 'id' | 'created_at' | 'updated_at'>>({
     title: 'Mahabharata Dialogues',
     subtitle: 'An immersive two-day residential retreat with every moment revolving around the Mahabharata.',
+    eventTitle: '',
+    venue: '',
+    youtube_video: '',
+    photos: [],
     day1: {
       date: '',
       dayName: '',
@@ -85,7 +97,6 @@ const RetreatsAdminPage = () => {
     }
   }
 
-  // Helper function to get day name from date
   const getDayName = (dateString: string): string => {
     if (!dateString) return ''
     const date = new Date(dateString)
@@ -93,7 +104,6 @@ const RetreatsAdminPage = () => {
     return days[date.getDay()]
   }
 
-  // Helper function to format date as "03 Aug 2024"
   const formatDisplayDate = (dateString: string): string => {
     if (!dateString) return ''
     const date = new Date(dateString)
@@ -108,6 +118,10 @@ const RetreatsAdminPage = () => {
     setFormData({
       title: 'Mahabharata Dialogues',
       subtitle: 'An immersive two-day residential retreat with every moment revolving around the Mahabharata.',
+      eventTitle: '',
+      venue: '',
+      youtube_video: '',
+      photos: [],
       day1: {
         date: '',
         dayName: '',
@@ -133,12 +147,49 @@ const RetreatsAdminPage = () => {
     setFormData({
       title: retreat.title,
       subtitle: retreat.subtitle,
+      eventTitle: retreat.eventTitle || '',
+      venue: retreat.venue || '',
+      youtube_video: retreat.youtube_video || '',
+      photos: retreat.photos || [],
       day1: retreat.day1,
       day2: retreat.day2,
       footerNote: retreat.footerNote
     })
     setEditingId(retreat.id)
     setShowModal(true)
+  }
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setUploadingPhotos(true)
+    try {
+      const uploadPromises = Array.from(files).map(file => uploadImage(file, 'retreats'))
+      const uploadedUrls = await Promise.all(uploadPromises)
+      const validUrls = uploadedUrls.filter((url): url is string => url !== null)
+      
+      setFormData(prev => ({
+        ...prev,
+        photos: [...(prev.photos || []), ...validUrls]
+      }))
+    } catch (error) {
+      alert('Failed to upload some photos')
+    } finally {
+      setUploadingPhotos(false)
+    }
+  }
+
+  const handleRemovePhoto = async (photoUrl: string, index: number) => {
+    try {
+      await deleteFromFirebaseStorage(photoUrl)
+      setFormData(prev => ({
+        ...prev,
+        photos: prev.photos?.filter((_, i) => i !== index) || []
+      }))
+    } catch (error) {
+      alert('Failed to delete photo')
+    }
   }
 
   const handleSubmit = async () => {
@@ -152,10 +203,13 @@ const RetreatsAdminPage = () => {
     setSubmitting(true)
 
     try {
-      // Format dates and calculate day names before submission
       const submitData = {
         title: formData.title,
         subtitle: formData.subtitle,
+        eventTitle: formData.eventTitle || undefined,
+        venue: formData.venue || undefined,
+        youtube_video: formData.youtube_video || undefined,
+        photos: formData.photos && formData.photos.length > 0 ? formData.photos : undefined,
         day1: {
           date: formatDisplayDate(formData.day1.date),
           dayName: getDayName(formData.day1.date),
@@ -491,8 +545,14 @@ const RetreatsAdminPage = () => {
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900"></h3>
+                        <h3 className="text-xl font-bold text-gray-900">{retreat.title}</h3>
                         <p className="text-gray-600 text-sm mt-1">{retreat.subtitle}</p>
+                        {retreat.eventTitle && (
+                          <p className="text-purple-600 font-medium text-sm mt-2">Event: {retreat.eventTitle}</p>
+                        )}
+                        {retreat.venue && (
+                          <p className="text-gray-500 text-sm">Venue: {retreat.venue}</p>
+                        )}
                         <div className="flex gap-4 mt-3">
                           <div className="flex items-center gap-2 text-sm">
                             <Calendar size={16} className="text-purple-600" />
@@ -503,6 +563,12 @@ const RetreatsAdminPage = () => {
                             <span className="font-medium">Day 2:</span> {retreat.day2.date} ({retreat.day2.dayName})
                           </div>
                         </div>
+                        {retreat.photos && retreat.photos.length > 0 && (
+                          <div className="flex gap-2 mt-3">
+                            <ImageIcon size={16} className="text-gray-500 mt-1" />
+                            <span className="text-sm text-gray-600">{retreat.photos.length} photo(s)</span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <button
@@ -527,59 +593,81 @@ const RetreatsAdminPage = () => {
                       className="flex items-center gap-2 text-purple-600 hover:text-purple-700 text-sm font-medium"
                     >
                       {expandedRetreat === retreat.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                      {expandedRetreat === retreat.id ? 'Hide' : 'Show'} Schedule Details
+                      {expandedRetreat === retreat.id ? 'Hide' : 'Show'} Details
                     </button>
 
                     {expandedRetreat === retreat.id && (
-                      <div className="mt-4 grid md:grid-cols-2 gap-6 border-t pt-4">
-                        <div>
-                          <h4 className="font-semibold text-lg mb-3 text-purple-600">Day 1 Schedule</h4>
-                          <div className="space-y-2 text-sm">
-                            {retreat.day1.schedule.map((section, idx) => (
-                              <div key={idx} className="border-l-2 border-purple-200 pl-3">
-                                {section.type === 'meal' ? (
-                                  <div className="bg-purple-50 p-2 rounded">
-                                    
-                                    <div className="text-gray-600 text-xs">{section.time}</div>
-                                  </div>
-                                ) : (
-                                  <div className="space-y-1">
-                                    {section.items?.map((item, iIdx) => (
-                                      <div key={iIdx} className="py-1">
-                                        <div className="font-medium">{item.title}</div>
-                                       
-                                        <div className="text-purple-600 text-xs">{item.time}</div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            ))}
+                      <div className="mt-4 border-t pt-4">
+                        {retreat.youtube_video && (
+                          <div className="mb-4">
+                            <p className="text-sm font-medium text-gray-700 mb-2">YouTube Video:</p>
+                            <a href={retreat.youtube_video} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline">
+                              {retreat.youtube_video}
+                            </a>
                           </div>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-lg mb-3 text-purple-600">Day 2 Schedule</h4>
-                          <div className="space-y-2 text-sm">
-                            {retreat.day2.schedule.map((section, idx) => (
-                              <div key={idx} className="border-l-2 border-purple-200 pl-3">
-                                {section.type === 'meal' ? (
-                                  <div className="bg-purple-50 p-2 rounded">
-                                    <div className="font-semibold">{section.title}</div>
-                                    <div className="text-gray-600 text-xs">{section.time}</div>
-                                  </div>
-                                ) : (
-                                  <div className="space-y-1">
-                                    {section.items?.map((item, iIdx) => (
-                                      <div key={iIdx} className="py-1">
-                                        <div className="font-medium">{item.title}</div>
-                                        <div className="text-gray-600 text-xs">{item.description}</div>
-                                        <div className="text-purple-600 text-xs">{item.time}</div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            ))}
+                        )}
+                        
+                        {retreat.photos && retreat.photos.length > 0 && (
+                          <div className="mb-4">
+                            <p className="text-sm font-medium text-gray-700 mb-2">Photos:</p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                              {retreat.photos.map((photo, idx) => (
+                                <img key={idx} src={photo} alt={`Photo ${idx + 1}`} className="w-full h-32 object-cover rounded" />
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <div>
+                            <h4 className="font-semibold text-lg mb-3 text-purple-600">Day 1 Schedule</h4>
+                            <div className="space-y-2 text-sm">
+                              {retreat.day1.schedule.map((section, idx) => (
+                                <div key={idx} className="border-l-2 border-purple-200 pl-3">
+                                  {section.type === 'meal' ? (
+                                    <div className="bg-purple-50 p-2 rounded">
+                                      <div className="font-semibold">{section.title}</div>
+                                      <div className="text-gray-600 text-xs">{section.time}</div>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-1">
+                                      {section.items?.map((item, iIdx) => (
+                                        <div key={iIdx} className="py-1">
+                                          <div className="font-medium">{item.title}</div>
+                                          <div className="text-gray-600 text-xs">{item.description}</div>
+                                          <div className="text-purple-600 text-xs">{item.time}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-lg mb-3 text-purple-600">Day 2 Schedule</h4>
+                            <div className="space-y-2 text-sm">
+                              {retreat.day2.schedule.map((section, idx) => (
+                                <div key={idx} className="border-l-2 border-purple-200 pl-3">
+                                  {section.type === 'meal' ? (
+                                    <div className="bg-purple-50 p-2 rounded">
+                                      <div className="font-semibold">{section.title}</div>
+                                      <div className="text-gray-600 text-xs">{section.time}</div>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-1">
+                                      {section.items?.map((item, iIdx) => (
+                                        <div key={iIdx} className="py-1">
+                                          <div className="font-medium">{item.title}</div>
+                                          <div className="text-gray-600 text-xs">{item.description}</div>
+                                          <div className="text-purple-600 text-xs">{item.time}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -610,6 +698,99 @@ const RetreatsAdminPage = () => {
                 </div>
 
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
+                  {/* Optional Fields Section */}
+                  <div className="border-b pb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Optional Information</h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Event Title (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.eventTitle}
+                          onChange={(e) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
+                          placeholder="Enter event title"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Venue (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.venue}
+                          onChange={(e) => setFormData(prev => ({ ...prev, venue: e.target.value }))}
+                          placeholder="Enter venue location"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          YouTube Video URL (Optional)
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.youtube_video}
+                          onChange={(e) => setFormData(prev => ({ ...prev, youtube_video: e.target.value }))}
+                          placeholder="https://www.youtube.com/watch?v=..."
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Photos (Optional)
+                        </label>
+                        <div className="space-y-3">
+                          <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors">
+                            <Upload size={20} className="text-gray-400" />
+                            <span className="text-sm text-gray-600">
+                              {uploadingPhotos ? 'Uploading...' : 'Upload Photos'}
+                            </span>
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={handlePhotoUpload}
+                              className="hidden"
+                              disabled={submitting || uploadingPhotos}
+                            />
+                          </label>
+
+                          {formData.photos && formData.photos.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                              {formData.photos.map((photo, idx) => (
+                                <div key={idx} className="relative group">
+                                  <img
+                                    src={photo}
+                                    alt={`Photo ${idx + 1}`}
+                                    className="w-full h-32 object-cover rounded-lg"
+                                  />
+                                  <button
+                                    onClick={() => handleRemovePhoto(photo, idx)}
+                                    className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                    type="button"
+                                    disabled={submitting}
+                                  >
+                                    <X size={16} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Day 1 */}
                   {renderDayScheduleForm('day1', 1)}
 

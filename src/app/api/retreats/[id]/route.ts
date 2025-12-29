@@ -11,7 +11,17 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { title, subtitle, day1, day2, footerNote } = body;
+    const { 
+      title, 
+      subtitle, 
+      eventTitle, 
+      venue, 
+      youtube_video, 
+      photos, 
+      day1, 
+      day2, 
+      footerNote 
+    } = body;
 
     if (!day1?.date || !day2?.date) {
       return NextResponse.json(
@@ -20,7 +30,7 @@ export async function PUT(
       );
     }
 
-    const updateData = {
+    const updateData: any = {
       title: title || "Mahabharata Dialogues",
       subtitle: subtitle || "",
       day1: {
@@ -36,6 +46,12 @@ export async function PUT(
       footerNote: footerNote || "",
       updated_at: new Date().toISOString(),
     };
+
+    // Only add optional fields if they have values
+    if (eventTitle) updateData.eventTitle = eventTitle;
+    if (venue) updateData.venue = venue;
+    if (youtube_video) updateData.youtube_video = youtube_video;
+    if (photos && photos.length > 0) updateData.photos = photos;
 
     await adminDB
       .collection("retreats")
