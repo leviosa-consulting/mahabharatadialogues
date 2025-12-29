@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MapPin, Youtube } from 'lucide-react'
 
 interface ScheduleItem {
   title: string
@@ -27,8 +27,11 @@ interface DaySchedule {
 interface Retreat {
   id: string
   title: string
-  eventTitle: string
+  eventTitle?: string
   subtitle: string
+  venue?: string
+  youtube_video?: string
+  photos?: string[]
   day1: DaySchedule
   day2: DaySchedule
   footerNote: string
@@ -51,7 +54,7 @@ const RetreatDetailPage: React.FC = () => {
     try {
       const response = await fetch('/api/retreats')
       const data = await response.json()
-      
+
       if (data.success) {
         const foundRetreat = data.data.find((r: Retreat) => r.id === id)
         if (foundRetreat) {
@@ -70,10 +73,17 @@ const RetreatDetailPage: React.FC = () => {
     }
   }
 
-  const renderScheduleSection = (section: ScheduleSection, index: number, isLastActivity: boolean) => {
+  const renderScheduleSection = (
+    section: ScheduleSection,
+    index: number,
+    isLastActivity: boolean
+  ) => {
     if (section.type === 'meal') {
       return (
-        <div key={index} className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+        <div
+          key={index}
+          className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center"
+        >
           <span>{section.title}</span>
           <span className="text-[16px] md:text-lg">{section.time}</span>
         </div>
@@ -83,24 +93,48 @@ const RetreatDetailPage: React.FC = () => {
     return (
       <div key={index} className="space-y-2">
         {section.items?.map((item, itemIndex) => (
-          <div key={itemIndex} className="flex justify-between items-start gap-3">
+          <div
+            key={itemIndex}
+            className="flex justify-between items-start gap-3"
+          >
             <div className="flex-1">
               <div className="font-semibold text-md leading-snug">
                 {item.title}
               </div>
               {item.description && (
-                <div className={`text-sm text-gray-600 leading-tight mt-0.5 ${isLastActivity && itemIndex === section.items!.length - 1 ? 'pb-8' : ''}`}>
+                <div
+                  className={`text-sm text-gray-600 leading-tight mt-0.5 ${
+                    isLastActivity && itemIndex === section.items!.length - 1
+                      ? 'pb-8'
+                      : ''
+                  }`}
+                >
                   {item.description}
                 </div>
               )}
             </div>
-            <div className="text-md whitespace-nowrap pt-0.5">
-              {item.time}
-            </div>
+            <div className="text-md whitespace-nowrap pt-0.5">{item.time}</div>
           </div>
         ))}
       </div>
     )
+  }
+
+  const getYoutubeEmbedUrl = (url: string): string | null => {
+    try {
+      const urlObj = new URL(url)
+      let videoId = ''
+
+      if (urlObj.hostname.includes('youtube.com')) {
+        videoId = urlObj.searchParams.get('v') || ''
+      } else if (urlObj.hostname.includes('youtu.be')) {
+        videoId = urlObj.pathname.slice(1)
+      }
+
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null
+    } catch {
+      return null
+    }
   }
 
   if (loading) {
@@ -118,8 +152,12 @@ const RetreatDetailPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Retreat Not Found</h2>
-          <p className="text-gray-600 mb-6">The retreat you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Retreat Not Found
+          </h2>
+          <p className="text-gray-600 mb-6">
+            The retreat you're looking for doesn't exist.
+          </p>
           <button
             onClick={() => router.push('/retreats')}
             className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
@@ -134,8 +172,10 @@ const RetreatDetailPage: React.FC = () => {
 
   const days = [
     { day: 1, date: retreat.day1.date, dayName: retreat.day1.dayName },
-    { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName }
+    { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName },
   ]
+
+  const youtubeEmbedUrl = retreat.youtube_video ? getYoutubeEmbedUrl(retreat.youtube_video) : null
 
   return (
     <div className="min-h-screen bg-white">
@@ -152,38 +192,49 @@ const RetreatDetailPage: React.FC = () => {
         </div>
       </div>
 
-   {/* Header */}
-<div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
-  <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+      {/* Header */}
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+          {/* Left */}
+          <div className="text-center md:text-left">
+            <div className="text-lg mb-2">Mahabharata Dialogues</div>
+            <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
+          </div>
+
+          {/* Divider */}
+          <div className="hidden md:block w-px h-24 bg-white/60" />
+
+          {/* Right */}
+          <div className="text-center md:text-left md:max-w-lg">
+            <p className="text-lg italic leading-relaxed">
+              {retreat.eventTitle || retreat.subtitle}
+            </p>
+            {retreat.venue && (
+              <div className="flex items-center gap-2 mt-3 justify-center md:justify-start">
+                <MapPin size={18} className="text-white/80" />
+                <span className="text-sm text-white/90">{retreat.venue}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
     
-    {/* Left */}
-    <div className="text-center md:text-left">
-      <div className="text-lg mb-2">Mahabharata Dialogues</div>
-      <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
-    </div>
-
-    {/* Divider */}
-    <div className="hidden md:block w-px h-24 bg-white/60" />
-
-    {/* Right */}
-    <div className="text-center md:text-left md:max-w-lg">
-      <p className="text-lg italic leading-relaxed">
-        {retreat.eventTitle}
-      </p>
-    </div>
-
-  </div>
-</div>
-
-
 
       {/* Day circles - Desktop */}
       <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
         {days.map((dayInfo) => (
-          <div key={dayInfo.day} className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+          <div
+            key={dayInfo.day}
+            className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center"
+          >
             <div className="text-center leading-tight">
-              <div className="text-xs tracking-wide mb-1">-DAY {dayInfo.day}-</div>
-              <div className="text-xl md:text-2xl font-semibold">{dayInfo.date}</div>
+              <div className="text-xs tracking-wide mb-1">
+                -DAY {dayInfo.day}-
+              </div>
+              <div className="text-xl md:text-2xl font-semibold">
+                {dayInfo.date}
+              </div>
               <div className="text-sm mt-1">{dayInfo.dayName}</div>
             </div>
           </div>
@@ -206,8 +257,12 @@ const RetreatDetailPage: React.FC = () => {
         {/* Day 1 Column */}
         <div className="md:border-r-2 border-black">
           <div className="px-6 md:px-8 py-6 md:py-0 space-y-4">
-            {retreat.day1.schedule.map((section, index) => 
-              renderScheduleSection(section, index, index === retreat.day1.schedule.length - 1)
+            {retreat.day1.schedule.map((section, index) =>
+              renderScheduleSection(
+                section,
+                index,
+                index === retreat.day1.schedule.length - 1
+              )
             )}
           </div>
         </div>
@@ -226,7 +281,7 @@ const RetreatDetailPage: React.FC = () => {
           </div>
 
           <div className="px-6 py-6 md:px-8 md:py-0 space-y-4">
-            {retreat.day2.schedule.map((section, index) => 
+            {retreat.day2.schedule.map((section, index) =>
               renderScheduleSection(section, index, false)
             )}
           </div>
@@ -237,6 +292,39 @@ const RetreatDetailPage: React.FC = () => {
       <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black md:mx-10 lg:mx-30">
         * Optional/Simultaneous events
       </div>
+
+
+        {/* YouTube Video Section */}
+      {youtubeEmbedUrl && (
+        <div className="max-w-5xl mx-auto px-6 py-8">
+          <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+            <iframe
+              src={youtubeEmbedUrl}
+              title="Retreat Video"
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Photos Gallery */}
+      {retreat.photos && retreat.photos.length > 0 && (
+        <div className="max-w-5xl mx-auto px-6 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {retreat.photos.map((photo, idx) => (
+              <div key={idx} className="aspect-square overflow-hidden rounded-lg shadow-md">
+                <img
+                  src={photo}
+                  alt={`Retreat photo ${idx + 1}`}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

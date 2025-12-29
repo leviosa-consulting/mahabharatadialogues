@@ -705,7 +705,7 @@ const RetreatsAdminPage = () => {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Event Title (Optional)
+                          Event Title 
                         </label>
                         <input
                           type="text"
@@ -719,7 +719,7 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Venue (Optional)
+                          Venue 
                         </label>
                         <input
                           type="text"
@@ -733,7 +733,7 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          YouTube Video URL (Optional)
+                          YouTube Video URL 
                         </label>
                         <input
                           type="url"
@@ -747,7 +747,7 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Photos (Optional)
+                          Photos 
                         </label>
                         <div className="space-y-3">
                           <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors">

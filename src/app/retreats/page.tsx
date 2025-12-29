@@ -2,7 +2,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Calendar, ArrowRight } from 'lucide-react'
+import { Calendar, ArrowRight, MapPin, Image as ImageIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface DaySchedule {
@@ -15,6 +15,10 @@ interface Retreat {
   id: string
   title: string
   subtitle: string
+  eventTitle?: string
+  venue?: string
+  youtube_video?: string
+  photos?: string[]
   day1: DaySchedule
   day2: DaySchedule
   footerNote: string
@@ -147,6 +151,19 @@ const RetreatsPage: React.FC = () => {
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
                       {retreat.title}
                     </h3>
+
+                    {retreat.eventTitle && (
+                      <p className="text-sm text-red-600 font-medium mb-2">
+                        {retreat.eventTitle}
+                      </p>
+                    )}
+
+                    {retreat.venue && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <MapPin className="text-gray-500 flex-shrink-0" size={16} />
+                        <span className="text-sm text-gray-600">{retreat.venue}</span>
+                      </div>
+                    )}
                     
                     <div className="space-y-3">
                       <div className="flex items-start gap-3">
@@ -171,8 +188,16 @@ const RetreatsPage: React.FC = () => {
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-gray-200">
-                      <div className="text-sm text-gray-500">
-                        {retreat.day1.schedule.length + retreat.day2.schedule.length} schedule sections
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-500">
+                          {retreat.day1.schedule.length + retreat.day2.schedule.length} schedule sections
+                        </div>
+                        {retreat.photos && retreat.photos.length > 0 && (
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <ImageIcon size={16} />
+                            <span>{retreat.photos.length}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
