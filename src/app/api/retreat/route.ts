@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const snapshot = await adminDB
       .collection("retreats")
-      .orderBy("created_at", "desc")
+      .orderBy("retreatstartData", "desc")
       .get();
 
     const retreats = snapshot.docs.map((doc) => ({
@@ -30,29 +30,29 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { title, subtitle, day1, day2, footerNote } = body;
+    const { title, retreatstartData, retreatendData, coverImage } = body;
 
-    if (!title || !day1?.date || !day2?.date) {
+    if (!title || !retreatstartData || !retreatendData || !coverImage) {
       return NextResponse.json(
-        { success: false, error: "Title and both day dates are required" },
+        {
+          success: false,
+          error: "Title, start date, end date, and cover image are required",
+        },
         { status: 400 }
       );
     }
 
     const newRetreat = {
       title,
-      subtitle: subtitle || "",
-      day1: {
-        date: day1.date,
-        dayName: day1.dayName || "",
-        schedule: day1.schedule || []
-      },
-      day2: {
-        date: day2.date,
-        dayName: day2.dayName || "",
-        schedule: day2.schedule || []
-      },
-      footerNote: footerNote || "",
+      retreatstartData,
+      retreatendData,
+      description: body.description || "",
+      coverImage,
+      gallery: body.gallery || [],
+      testimonial: body.testimonial || "",
+      bookingUrl: body.bookingUrl || "",
+      youtubeUrl: body.youtubeUrl || "",
+      faqs: body.faqs || [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };

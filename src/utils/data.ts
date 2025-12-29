@@ -1,412 +1,217 @@
-export const allSkills = [
-  "All",
-  "Adaptability",
-  "Client Centricity",
-  "Coaching",
-  "Collaboration",
-  "Communication",
-  "Decision-Making",
-  "Empathy",
-  "Engagement",
-  "Facilitation",
-  "Feedback",
-  "Inclusion",
-  "Influence",
-  "Leadership",
-  "Negotiation",
-  "Ownership",
-  "People Management",
-  "Presence",
-  "Prioritisation",
-  "Problem Solving",
-  "Resilience",
-  "Result Orientation",
-  "Self-Awareness",
-  "Stakeholder Management",
-  "Storytelling",
-  "Strategic Thinking",
-  "Stress Management",
-];
-
-// Competencies (with "All" option at start)
-export const allGameSkills = [
-  "All",
-  "Agility",
-  "Alignment",
-  "Attention to Detail",
-  "Collaboration",
-  "Communication",
-  "Critical Thinking",
-  "Decision-Making",
-  "Empathy",
-  "Inclusion",
-  "Leadership",
-  "Ownership",
-  "Problem Solving",
-  "Resilience",
-  "Self-Awareness",
-  "Storytelling",
-  "Strategic Thinking",
-  "Trust",
-  "Stakeholder Management",
-  "Negotiation",
-  "Influence",
-  "Prioritisation",
-];
-
-  // Team data array
-export const teamMembers = [
-  {
-    id: 1,
-    name: "Abhilash Purohit",
-    position: ["Corporate Educator,", "Storyteller" ],
-    image: "headshot-abhilash.png",
-    row: 2,
-    marginTop: "mt-24",
-    marginLeft: "",
-    linkedinUrl: "https://www.linkedin.com/in/abhilash-purohit",
-    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  },
-  {
-    id: 2,
-    name: "Rakshith Bhagavath",
-    position: ["Master Facilitator,", "Brain-Based Coach"],
-    image: "headshot-rakshith.png",
-    row: 2,
-     marginTop: "",
-    marginLeft: "",
-    linkedinUrl: "https://www.linkedin.com/in/rakshit-bhagvat",
-    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  },
-   {
-    id: 3,
-    name: "Namitha Vijaykumar",
-    position: ["Game-Based Learning Evangelist,", "Design Thinking Expert"],
-    image: "headshot-namitha.png",
-    row: 2,
-    marginTop: "mt-24",
-    marginLeft: "",
-    linkedinUrl: "https://www.linkedin.com/in/payal",
-    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  },
-  {
-    id: 4,
-    name: "Saishraddha B",
-    position: ["Published Game Designer,", "Design Thinking Expert"],
-    image: "headshot-saii.png",
-    row: 2,
-    marginTop: "",
-    marginLeft: "",
-    linkedinUrl: "https://www.linkedin.com/in/saishraddha-b",
-    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  },
-  {
-    id: 5,
-    name: "Gauri Seshadri",
-    position: ["International Leadership Facilitator,", "Communication Coach"],
-    image: "headshot-gauri.png",
-    row: 2,
-    marginTop: "mt-24",
-    marginLeft: "",
-    linkedinUrl: "https://www.linkedin.com/in/saishraddha-b",
-    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  },
-  {
-    id:6,
-    name: "Usha Shivaprakash",
-    position: ["DISC Certified Facilitator,", "Life Coach"],
-    image: "headshot-usha.png",
-    row: 2,
-    marginTop: "",
-    marginLeft: "",
-    linkedinUrl: "https://www.linkedin.com/in/nikhil-joshi",
-    description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  },
-  // {
-  //   id: 6,
-  //   name: "Namitha",
-  //   position: "TRAINER",
-  //   image: "headshot-namitha.png",
-  //   row: 2,
-  //   marginTop: "mt-16",
-  //   marginLeft: "",
-  //   linkedinUrl: "https://www.linkedin.com/in/payal",
-  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  // },
-  // {
-  //   id: 7,
-  //   name: "Gauri Sheshadri",
-  //   position: "TRAINER",
-  //   image: "Group519.png",
-  //   row: 2,
-  //   marginTop: "mt-16",
-  //   marginLeft: "",
-  //   linkedinUrl: "https://www.linkedin.com/in/gauri-sheshadri",
-  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  // },
-  // {
-  //   id: 7,
-  //   name: "John Doe",
-  //   position: "TRAINER",
-  //   image: "Group519.png",
-  //   row: 2,
-  //   marginTop: "",
-  //   marginLeft: "",
-  //   linkedinUrl: "https://www.linkedin.com/in/gauri-sheshadri",
-  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  // },
-  // {
-  //   id: 7,
-  //   name: "Sheshadri",
-  //   position: "TRAINER",
-  //   image: "Group519.png",
-  //   row: 2,
-  //   marginTop: "mt-16",
-  //   marginLeft: "",
-  //   linkedinUrl: "https://www.linkedin.com/in/gauri-sheshadri",
-  //   description: " is a iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,"
-  // }
-
-];
-
-export const faqData = [
-  {
-    id: 1,
-    question: "Why are we called Gentle Bamboo?",
-    answer: "We are inspired by the Chinese Bamboo. For years it grows underground where nobody can see it. Then one day it shoots up taller than you. That’s what real learning feels like.  It is characterized by quiet roots and sudden growth. We loved that story. Plus, bamboo bends without breaking, and we think leaders should too.",
-    hasLine: true
-  },
-  {
-    id: 2,
-    question: "What’s up with the turtle?",
-    answer: "Bam is our mascot. He is a curious little turtle who brings warmth and wisdom to our slides and workshops. \n \n In a fast-paced world, he reminds us to listen deeply, ask thoughtful questions, and add a touch of playfulness to serious discussions. \n \n He stands for steadiness, adaptability, and wisdom, embodying our belief that leadership and learning are journeys taken one mindful step at a time.",
-     hasLine: true
-  },
-  {
-    id: 3,
-    question: "How do we design and test our programs?",
-    answer: "We play them. Then we break them. Then we play again. Designing a program for us looks like sticky notes flying, people arguing over rules, and someone inevitably yelling “this doesn’t make sense!” If we don’t enjoy it ourselves, we don’t ship it.",
-     hasLine: true
-  },
- {
-    id: 4,
-    question: "What is the GPS framework and why do we love it?",
-    answer: `GPS stands for Gamified, Personalised, Social. It’s how we make learning stick.
-**Gamified:** We sneak skills into games so you forget you’re “learning.”
-**Personalised:** No two people walk away with the same insight because no two journeys are the same.
-**Social:** We learn better together, so we bake in dialogue, debate, and laughs.
-Think of it as Google Maps for growth.`,
- hasLine: true
-  },
-  {
-    id: 5,
-    question: "What does collaboration with us really look like?",
-    answer: "It’s messy, fun, and alive. We co-create with you. Lots of sticky notes, laughter, “what if” moments, and honest debates. You’ll see your fingerprints on every solution we deliver.",
-     hasLine: true
-  },
-  {
-    id: 6,
-    question: "How do we balance play with outcomes?",
-    answer: "By never treating play as a gimmick. A farming game is secretly about strategy. A rocket game is really negotiation practice. A storytelling circle is rehearsal for boardrooms. Our games and tools are joyful on the surface, but they’re wired to rehearse real-world skills.",
-     hasLine: false
-  }
-]
-
-
-// Data for testimonials section
-export const testimonialsData = [
-  // First row
-  [
+ // Day 1 Schedule Data
+  export const day1Schedule = [
     {
-      id: 1,
-      height: "h-[570px]",
-      marginTop: "",
-      quote:
-        "This wasn’t about right or wrong answers. It was about seeing my own patterns. I understood why I default to long-term solutions over speed in decision-making.",
-      name: "Leader",
-      title: "Leadership Retreat",
-      company: "@Beads of Intent",
-      avatar: "/Illustrations-GB-Website-08.png",
+      type: 'meal',
+      title: 'Breakfast',
+      time: '08:45 - 09:30'
     },
     {
-      id: 2,
-      height: "h-[470px]",
-      marginTop: "",
-      quote:
-        "Everything was chaotic! But instead of breaking down, we laughed, adapted, and figured it out. It was the most fun resilience training I’ve done.",
-      name: "Workflow Coordinator",
-      title: "Global Consulting Firm",
-      company: "@Restaurant Rush",
-      avatar: "/Illustrations-GB-Website-14.png",
+      type: 'activities',
+      items: [
+        {
+          title: '• Introduction & Icebreaker',
+          description: 'Get to know your fellow retreat participants and facilitator',
+          time: '09:30 - 10:00'
+        },
+        {
+          title: '• Vows',
+          description: 'Why vows take a new imprint this week',
+          time: '10:00 - 11:15'
+        }
+      ]
     },
     {
-      id: 3,
-      height: "h-[470px]",
-      marginTop: "",
-      quote:
-        "Climbing Everest together wasn’t easy. But at the end, the summit felt real because we got there as a team and not alone. And we didn’t leave anyone behind.",
-      name: "Researcher",
-      title: "Biopharma Company",
-      company: "@Summit Everest",
-      avatar: "/Illustrations-GB-Website-11.png",
-    },
-  ],
-
-  // Second row
-  [
-    {
-      id: 4,
-      height: "h-[570px]",
-      marginTop: "mt-3",
-      quote:
-        "It was like the cards knew what was going on in our company. So conversations became easier, and we were able to plan how to move forward together.",
-      name: "Team in Transition",
-      title: "Green Energy Company",
-      company: "@Change Discovery",
-      avatar: "/Illustrations-GB-Website-12.png",
+      type: 'meal',
+      title: 'High Tea with cookies',
+      time: '11:15 - 11:35'
     },
     {
-      id: 5,
-      height: "h-[470px]",
-      marginTop: "mt-28",
-      quote:
-        "We learnt so much about delivering results while playing Let’s Sail! Planning, resources, not having enough information, dealing with uncertainty was all done in the game.",
-      name: "Territory Sales Manager",
-      title: "FMCG Brand",
-      company: "@Let’s Sail",
-      avatar: "/Illustrations-GB-Website-15.png",
+      type: 'activities',
+      items: [
+        {
+          title: '• Dance Drama',
+          description: 'Stories we tell and tales we dance and shout!',
+          time: '11:35 - 12:50'
+        },
+        {
+          title: '• Indraprastha',
+          description: 'How the name changes, that drama and its aftermath',
+          time: '12:55 - 13:30'
+        }
+      ]
     },
     {
-      id: 6,
-      height: "h-[470px]",
-      marginTop: "mt-3",
-      quote:
-        "I thought facilitation was about content. This showed me it’s about energy, timing, and games and space.",
-      name: "L&D Professional",
-      title: "Financial Services Firm",
-      company: "@Facilitation Skills Workshop",
-      avatar: "/Illustrations-GB-Website-10.png",
+      type: 'meal',
+      title: 'Lunch',
+      time: '13:30 - 14:30'
     },
-  ],
-
-
-  // Fourth row
-  [
     {
-      id: 7,
-      height: "h-[570px]",
-      marginTop: "",
-      quote:
-        "The team built a game around our exact challenge. It was a great collaboration between subject matter expertise and engaging game design.",
-      name: "Subject Matter Expert",
-      title: "D&I Specialists",
-      company: "For Custom Game Design",
-      avatar: "/Illustrations-GB-Website-13.png",
+      type: 'activities',
+      items: [
+        {
+          title: '• Guess in 10',
+          description: 'Can you guess the character? Expose your skills',
+          time: '14:30 - 14:50'
+        },
+        {
+          title: '• Mahabharata is yeu!',
+          description: 'An unvarnished approach and perspective walk you',
+          time: '14:50 - 15:50'
+        }
+      ]
     },
-  ],
-];
+    {
+      type: 'meal',
+      title: 'High Tea with Pakodas',
+      time: '15:50 - 16:15'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• The Maha Quiz',
+          description: 'Open your mind to amazement',
+          time: '16:15 - 16:45'
+        },
+        {
+          title: '• Poetry recitation',
+          description: 'A look the rhymes, verse, rhythmed too',
+          time: '16:45 - 17:30'
+        }
+      ]
+    },
+    {
+      type: 'meal',
+      title: 'Take a break',
+      time: '17:30 - 18:15'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• Draupadi',
+          description: 'Perspectives on the life of Draupadi',
+          time: '19:15 - 20:15'
+        }
+      ]
+    },
+    {
+      type: 'meal',
+      title: 'Dinner',
+      time: '20:15 - 21:30'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• Farzi Mushiara',
+          description: 'Impromptu shayari, or poems',
+          time: '21:30 - 22:15'
+        },
+        {
+          title: '• Khronology/chai with Prateek',
+          description: 'A last word of wisdom before we walk death into Mahabharata yourself\'s Khandav',
+          time: '22:15 - 01:00'
+        }
+      ]
+    }
+  ]
 
-
-export const impactDataDesktop = [
-   {
-    id: 1,
-    number: '600+',
-    text: 'Engagements<br />Delivered',
-    bgColor: '#FFD45B',
-  },
-  {
-    id: 2,
-    number: '4.7/5',
-    text: 'Average Rating<br />Across Workshops',
-    bgColor: '#E18226',
-  },
-  {
-    id: 3,
-    number: '18+',
-    text: 'Original Games<br />Developed',
-    bgColor: '#2EBDBA',
-  },
-  {
-    id: 4,
-    number: '25+',
-    text: 'Organization<br />Partnered',
-    bgColor: '#704ea0',
-  },
-  {
-    id: 5,
-    number: '9+',
-    text: 'Industries<br />Explored',
-    bgColor: '#2EBDBA',
-  },
-  {
-    id: 6,
-    number: '20000+',
-    text: 'Leaders<br />Engaged',
-    bgColor: '#704ea0',
-  },
-  {
-    id: 7,
-    number: '30,000+',
-    text: 'Hours of Play<br />Facilitated',
-    bgColor: '#FFD45B',
-  },
-  {
-    id: 8,
-    number: '95%+',
-    text: 'Returning \n Clients',
-    backgroundImage: 'url(/Blobs-6.svg)',
-    bgColor: '#E18226'
-  },
-  {
-    id: 9,
-    number: '4.7/5',
-    text: 'Average Rating \n Across Workshops',
-  bgColor: '#2fb77e'
-  },
-  
-]
-
-export const impactDataMobile = [
-  {
-    id: 1,
-    number: '600+',
-    text: 'Engagements<br />Delivered',
-    bgColor: '#704ea0',
-  },
-  {
-    id: 2,
-    number: '4.7/5',
-    text: 'Average Rating<br />Across Workshops',
-    bgColor: '#E18226',
-  },
-  {
-    id: 3,
-    number: '18+',
-    text: 'Original Games<br />Developed',
-    bgColor: '#2EBDBA',
-  },
-  {
-    id: 4,
-    number: '25+',
-    text: 'Organization<br />Partnered',
-    bgColor: '#FFD45B',
-  },
-  {
-    id: 5,
-    number: '9+',
-    text: 'Industries<br />Explored',
-    bgColor: '#E18226',
-  },
-  {
-    id: 6,
-    number: '20000+',
-    text: 'Leaders<br />Engaged',
-    bgColor: '#704ea0',
-  },
-  {
-    id: 7,
-    number: '30,000+',
-    text: 'Hours of Play<br />Facilitated',
-    bgColor: '#FFD45B',
-  },
-]
+  // Day 2 Schedule Data
+  export const day2Schedule = [
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• Storytelling masterclass ♦',
+          description: 'as in Mahabharata',
+          time: '07:00 - 08:00'
+        },
+        {
+          title: '• What\'s in a name/a ♦',
+          description: 'Take some stories early in the morning',
+          time: '07:00 - 08:00'
+        },
+        {
+          title: '• What\'s in a name/b',
+          description: 'Some fun stories about enduring names, naming and denomizing',
+          time: '07:00 - 08:00'
+        }
+      ]
+    },
+    {
+      type: 'meal',
+      title: 'Breakfast',
+      time: '08:00 - 09:30'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• The 7 (nine) Strategy Game',
+          description: 'A relook at the Strategies (or may be not) ahead',
+          time: '09:30 - 10:15'
+        },
+        {
+          title: '• The Butterfly Effect',
+          description: 'Consequences',
+          time: '10:15 - 11:00'
+        }
+      ]
+    },
+    {
+      type: 'meal',
+      title: 'High Tea with cookies',
+      time: '11:00 - 11:30'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• Communicate like Krishna',
+          description: 'Lesson from Krsna. Conversations and learning',
+          time: '11:30 - 12:30'
+        },
+        {
+          title: '• karmanye vadhikaraste',
+          description: 'A lyrical dissection with live music',
+          time: '12:30 - 13:30'
+        }
+      ]
+    },
+    {
+      type: 'meal',
+      title: 'Lunch',
+      time: '13:30 - 14:30'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• The Last Dialogue',
+          description: 'Conversation about deep questions in',
+          time: '14:30 - 16:15'
+        }
+      ]
+    },
+    {
+      type: 'meal',
+      title: 'High Tea with Pakoda',
+      time: '16:15 - 16:40'
+    },
+    {
+      type: 'activities',
+      items: [
+        {
+          title: '• Conversations about Mahabharata',
+          description: 'Any final thoughts, perspectives, observations, and some stories from the two days',
+          time: '16:40 - 17:30'
+        },
+        {
+          title: '• Conclusion',
+          description: '',
+          time: '17:30 - 18:00'
+        }
+      ]
+    }
+  ]

@@ -1,471 +1,198 @@
-import React from 'react'
+// components/RetreatScheduleDisplay.tsx
+'use client'
 
-const RetreatSchedule: React.FC = () => {
+import React, { useState, useEffect } from 'react'
+
+interface ScheduleItem {
+  title: string
+  description: string
+  time: string
+}
+
+interface ScheduleSection {
+  type: 'meal' | 'activities'
+  title?: string
+  time?: string
+  items?: ScheduleItem[]
+}
+
+interface DaySchedule {
+  date: string
+  dayName: string
+  schedule: ScheduleSection[]
+}
+
+interface Retreat {
+  id: string
+  title: string
+  subtitle: string
+  day1: DaySchedule
+  day2: DaySchedule
+  footerNote: string
+}
+
+const RetreatScheduleDisplay: React.FC = () => {
+  const [retreat, setRetreat] = useState<Retreat | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchLatestRetreat()
+  }, [])
+
+  const fetchLatestRetreat = async () => {
+    try {
+      const response = await fetch('/api/retreats')
+      const data = await response.json()
+      if (data.success && data.data.length > 0) {
+        // Get the most recent retreat
+        setRetreat(data.data[0])
+      }
+      setLoading(false)
+    } catch (err) {
+      console.error('Failed to fetch retreat:', err)
+      setLoading(false)
+    }
+  }
+
+  const renderScheduleSection = (section: ScheduleSection, index: number, isLastActivity: boolean) => {
+    if (section.type === 'meal') {
+      return (
+        <div key={index} className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
+          <span>{section.title}</span>
+          <span className="text-[16px] md:text-lg">{section.time}</span>
+        </div>
+      )
+    }
+
+    return (
+      <div key={index} className="space-y-2">
+        {section.items?.map((item, itemIndex) => (
+          <div key={itemIndex} className="flex justify-between items-start gap-3">
+            <div className="flex-1">
+              <div className="font-semibold text-md leading-snug">
+                {item.title}
+              </div>
+              {item.description && (
+                <div className={`text-sm text-gray-600 leading-tight mt-0.5 ${isLastActivity && itemIndex === (section.items?.length || 0) - 1 ? 'pb-8' : ''}`}>
+                  {item.description}
+                </div>
+              )}
+            </div>
+            <div className="text-md whitespace-nowrap pt-0.5">
+              {item.time}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading retreat schedule...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!retreat) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 text-lg">No retreat schedule available.</p>
+        </div>
+      </div>
+    )
+  }
+
+  const days = [
+    { day: 1, date: retreat.day1.date, dayName: retreat.day1.dayName },
+    { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName }
+  ]
+
   return (
-    <div className="min-h-screen bg-white ">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-
-      <div className="bg-[#282828] text-white py-12 md:py-24 px-6  relative overflow-hidden">
-        <div className=" mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
-          {/* Left */}
-          <div className=" text-center md:text-left">
-            <div className="text-lg mb-2">Mahabharata Dialogues</div>
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
+        <div className="mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
+          <div className="text-center md:text-left">
+            <div className="text-lg mb-2">{retreat.title}</div>
             <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
           </div>
-
-          {/* Divider (only md+) */}
           <div className="hidden md:block w-px h-24 bg-white/60" />
-
-          {/* Right */}
-          <div className=" text-center md:text-left">
-            <p className="text-lg italic leading-relaxed text-center md:text-left">
-              An immersive two-day residential retreat with every
-              <br className="hidden md:block" />
-              moment revolving around the Mahabharata.
+          <div className="text-center md:text-left">
+            <p className="text-lg italic leading-relaxed">
+              {retreat.subtitle}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Day circles */}
-      <div className="w-full hidden  relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
-        {/* Day 1 */}
-        <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
-          <div className="text-center leading-tight">
-            <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
-            <div className="text-xl md:text-2xl font-semibold">03 Aug 2024</div>
-            <div className="text-sm mt-1">Saturday</div>
+      {/* Day circles - Desktop */}
+      <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
+        {days.map((dayInfo) => (
+          <div key={dayInfo.day} className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+            <div className="text-center leading-tight">
+              <div className="text-xs tracking-wide mb-1">-DAY {dayInfo.day}-</div>
+              <div className="text-xl md:text-2xl font-semibold">{dayInfo.date}</div>
+              <div className="text-sm mt-1">{dayInfo.dayName}</div>
+            </div>
           </div>
-        </div>
-
-        {/* Day 2 */}
-        <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
-          <div className="text-center leading-tight">
-            <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
-            <div className="text-xl md:text-2xl font-semibold">04 Aug 2024</div>
-            <div className="text-sm mt-1">Sunday</div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Day circle Mobile*/}
+      {/* Day circle Mobile - Day 1 */}
       <div className="sm:hidden flex justify-center items-center mt-4">
-        <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+        <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
           <div className="text-center leading-tight">
             <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
-            <div className="text-xl md:text-2xl font-semibold">03 Aug 2024</div>
-            <div className="text-sm mt-1">Saturday</div>
+            <div className="text-xl font-semibold">{days[0].date}</div>
+            <div className="text-sm mt-1">{days[0].dayName}</div>
           </div>
         </div>
       </div>
+
       {/* Schedule Grid */}
-      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2  lg:mx-10 xl:mx-30">
+      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 lg:mx-10 xl:mx-30">
         {/* Day 1 Column */}
         <div className="md:border-r-2 border-black">
-          {/* Day 1 Schedule */}
           <div className="px-6 md:px-8 py-6 md:py-0 space-y-4">
-            {/* Breakfast */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>Breakfast</span>
-              <span className="text-[16px] md:text-lg">08:45 - 09:30</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Introduction & Icebreaker
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Get to know your fellow retreat participants and facilitator
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  09:30 - 10:00
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Vows
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Why vows take a new imprint this week
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  10:00 - 11:15
-                </div>
-              </div>
-            </div>
-
-            {/* High Tea with cookies */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>High Tea with cookies</span>
-              <span className="ttext-[16px] md:text-lg">11:15 - 11:35</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Dance Drama
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Stories we tell and tales we dance and shout!
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  11:35 - 12:50
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Indraprastha
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    How the name changes, that drama and its aftermath
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  12:55 - 13:30
-                </div>
-              </div>
-            </div>
-
-            {/* Lunch */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>Lunch</span>
-              <span className="text-[16px] md:text-lg">13:30 - 14:30</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Guess in 10
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Can you guess the character? Expose your skills
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  14:30 - 14:50
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Mahabharata is yeu!
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    An unvarnished approach and perspective walk you
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  14:50 - 15:50
-                </div>
-              </div>
-            </div>
-
-            {/* High Tea with Pakodas */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>High Tea with Pakodas</span>
-              <span className="text-[16px] md:text-lg">15:50 - 16:15</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • The Maha Quiz
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Open your mind to amazement
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  16:15 - 16:45
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Poetry recitation
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    A look the rhymes, verse, rhythmed too
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  16:45 - 17:30
-                </div>
-              </div>
-            </div>
-
-            {/* Take a break */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>Take a break</span>
-              <span className="text-[16px] md:text-lg">17:30 - 18:15</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Draupadi
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Perspectives on the life of Draupadi
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  19:15 - 20:15
-                </div>
-              </div>
-            </div>
-
-            {/* Dinner */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>Dinner</span>
-              <span className="text-[16px] md:text-lg">20:15 - 21:30</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-ms leading-snug">
-                    • Farzi Mushiara
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Impromptu shayari, or poems
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  21:30 - 22:15
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Khronology/chai with Prateek
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5 pb-8">
-                    A last word of wisdom before we walk death into Mahabharata
-                    yourself's Khandav
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  22:15 - 01:00
-                </div>
-              </div>
-            </div>
+            {retreat.day1.schedule.map((section, index) => 
+              renderScheduleSection(section, index, index === retreat.day1.schedule.length - 1)
+            )}
           </div>
         </div>
 
         {/* Day 2 Column */}
-
-        {/* Day circle Mobile*/}
-        <div className="sm:hidden flex justify-center items-center mt-4">
-          <div className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
-            <div className="text-center leading-tight">
-              <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
-              <div className="text-xl md:text-2xl font-semibold">
-                04 Aug 2024
+        <div>
+          {/* Day circle Mobile - Day 2 */}
+          <div className="sm:hidden flex justify-center items-center mt-4">
+            <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+              <div className="text-center leading-tight">
+                <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
+                <div className="text-xl font-semibold">{days[1].date}</div>
+                <div className="text-sm mt-1">{days[1].dayName}</div>
               </div>
-              <div className="text-sm mt-1">Sunday</div>
             </div>
           </div>
-        </div>
-        <div>
-          {/* Day 2 Schedule */}
+
           <div className="px-6 py-6 md:px-8 md:py-0 space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Storytelling masterclass ♦
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    as in Mahabharata
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  07:00 - 08:00
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • What's in a name/a ♦
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Take some stories early in the morning
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  07:00 - 08:00
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • What's in a name/b
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Some fun stories about enduring names, naming and denomizing
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  07:00 - 08:00
-                </div>
-              </div>
-            </div>
-
-            {/* Breakfast */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>Breakfast</span>
-              <span className="text-[16px] md:text-lg">08:00 - 09:30</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • The 7 (nine) Strategy Game
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    A relook at the Strategies (or may be not) ahead
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  09:30 - 10:15
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • The Butterfly Effect
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Consequences
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  10:15 - 11:00
-                </div>
-              </div>
-            </div>
-
-            {/* High Tea with cookies */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>High Tea with cookies</span>
-              <span className="text-[16px] md:text-lg">11:00 - 11:30</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Communicate like Krishna
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Lesson from Krsna. Conversations and learning
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  11:30 - 12:30
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • karmanye vadhikaraste
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    A lyrical dissection with live music
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  12:30 - 13:30
-                </div>
-              </div>
-            </div>
-
-            {/* Lunch */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>Lunch</span>
-              <span className="text-[16px] md:text-lg">13:30 - 14:30</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • The Last Dialogue
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Conversation about deep questions in
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  14:30 - 16:15
-                </div>
-              </div>
-            </div>
-
-            {/* High Tea with Pakoda */}
-            <div className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
-              <span>High Tea with Pakoda</span>
-              <span className="text-[16px] md:text-lg">16:15 - 16:40</span>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Conversations about Mahabharata
-                  </div>
-                  <div className="text-sm text-gray-600 leading-tight mt-0.5">
-                    Any final thoughts, perspectives, observations, and some
-                    stories from the two days
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  16:40 - 17:30
-                </div>
-              </div>
-
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <div className="font-semibold text-md leading-snug">
-                    • Conclusion
-                  </div>
-                </div>
-                <div className="text-md whitespace-nowrap pt-0.5">
-                  17:30 - 18:00
-                </div>
-              </div>
-            </div>
+            {retreat.day2.schedule.map((section, index) => 
+              renderScheduleSection(section, index, false)
+            )}
           </div>
         </div>
       </div>
+
       {/* Footer */}
-      <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black  md:mx-10 lg:mx-30">
-        * Optional/Simultaneous events
+      <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black md:mx-10 lg:mx-30">
+        {retreat.footerNote}
       </div>
     </div>
   )
 }
 
-export default RetreatSchedule
+export default RetreatScheduleDisplay
