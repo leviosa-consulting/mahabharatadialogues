@@ -692,9 +692,22 @@ const RetreatsAdminPage = () => {
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
                   {/* Optional Fields Section */}
                   <div className="border-b pb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Optional Information</h3>
+                  
                     
                     <div className="space-y-4">
+                       <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                         Title
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.title}
+                          onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                          placeholder="Enter Description"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Description
