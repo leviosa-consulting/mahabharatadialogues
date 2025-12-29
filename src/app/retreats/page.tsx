@@ -58,11 +58,11 @@ const RetreatSchedule: React.FC = () => {
         </div>
       </div>
       {/* Schedule Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 md:mx-10 lg:mx-30">
+      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 md:mx-10 lg:mx-30">
         {/* Day 1 Column */}
-        <div className="md:border-r border-gray-200">
+        <div className="md:border-r-2 border-black">
           {/* Day 1 Schedule */}
-          <div className="px-6 py-6 md:px-8 md:py-8 space-y-4">
+          <div className="px-6 md:px-8 py-6 md:py-0 space-y-4">
             {/* Breakfast */}
             <div className="bg-[#7dd3fc] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center">
               <span>Breakfast</span>
@@ -284,7 +284,7 @@ const RetreatSchedule: React.FC = () => {
         </div>
         <div>
           {/* Day 2 Schedule */}
-          <div className="px-6 py-6 md:px-8 md:py-8 space-y-4">
+          <div className="px-6 py-6 md:px-8 md:py-0 space-y-4">
             <div className="space-y-2">
               <div className="flex justify-between items-start gap-3">
                 <div className="flex-1">
@@ -459,9 +459,8 @@ const RetreatSchedule: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* Footer */}
-      <div className="text-center text-md text-gray-500 py-4 border-t border-gray-200">
+      <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black  md:mx-10 lg:mx-30">
         * Optional/Simultaneous events
       </div>
     </div>
