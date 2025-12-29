@@ -14,8 +14,7 @@ interface DaySchedule {
 interface Retreat {
   id: string
   title: string
-  subtitle: string
-  eventTitle?: string
+  description?: string
   venue?: string
   youtube_video?: string
   photos?: string[]
@@ -152,9 +151,9 @@ const RetreatsPage: React.FC = () => {
                       {retreat.title}
                     </h3>
 
-                    {retreat.eventTitle && (
+                    {retreat.description && (
                       <p className="text-sm text-red-600 font-medium mb-2">
-                        {retreat.eventTitle}
+                        {retreat.description}
                       </p>
                     )}
 

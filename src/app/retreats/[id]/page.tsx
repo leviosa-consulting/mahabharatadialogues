@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, MapPin, Youtube } from 'lucide-react'
+import { ArrowLeft, MapPin, Youtube, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react'
 
 interface ScheduleItem {
   title: string
@@ -27,8 +27,7 @@ interface DaySchedule {
 interface Retreat {
   id: string
   title: string
-  eventTitle?: string
-  subtitle: string
+  description?: string
   venue?: string
   youtube_video?: string
   photos?: string[]
@@ -43,12 +42,30 @@ const RetreatDetailPage: React.FC = () => {
   const [retreat, setRetreat] = useState<Retreat | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
 
   useEffect(() => {
     if (params.id) {
       fetchRetreat(params.id as string)
     }
   }, [params.id])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImageIndex === null) return
+      
+      if (e.key === 'ArrowLeft') {
+        navigateImage('prev')
+      } else if (e.key === 'ArrowRight') {
+        navigateImage('next')
+      } else if (e.key === 'Escape') {
+        closeLightbox()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedImageIndex])
 
   const fetchRetreat = async (id: string) => {
     try {
@@ -82,10 +99,12 @@ const RetreatDetailPage: React.FC = () => {
       return (
         <div
           key={index}
-          className="bg-[#60a5fa] text-white px-4 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center"
+          className="bg-[#60a5fa] text-white font-merri px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center"
         >
-          <span>{section.title}</span>
-          <span className="text-[16px] md:text-lg">{section.time}</span>
+          <span className="font-merri">{section.title}</span>
+          <span className="text-[16px] md:text-lg font-merri">
+            {section.time}
+          </span>
         </div>
       )
     }
@@ -98,12 +117,14 @@ const RetreatDetailPage: React.FC = () => {
             className="flex justify-between items-start gap-3"
           >
             <div className="flex-1">
-              <div className="font-semibold text-md leading-snug">
-                {item.title}
+              <div className="flex items-start font-semibold text-md leading-snug font-merri">
+                <span className="mr-2 text-2xl leading-none">•</span>
+                <span>{item.title}</span>
               </div>
+
               {item.description && (
                 <div
-                  className={`text-sm text-gray-600 leading-tight mt-0.5 ${
+                  className={`text-sm text-gray-600 leading-tight mt-0.5 font-merri px-3 md:w-[90%] ${
                     isLastActivity && itemIndex === section.items!.length - 1
                       ? 'pb-8'
                       : ''
@@ -113,7 +134,9 @@ const RetreatDetailPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="text-md whitespace-nowrap pt-0.5">{item.time}</div>
+            <div className="text-md whitespace-nowrap pt-0.5 pr-2.5 font-merri md:pr-5">
+              {item.time}
+            </div>
           </div>
         ))}
       </div>
@@ -137,11 +160,33 @@ const RetreatDetailPage: React.FC = () => {
     }
   }
 
+  const openLightbox = (index: number) => {
+    setSelectedImageIndex(index)
+  }
+
+  const closeLightbox = () => {
+    setSelectedImageIndex(null)
+  }
+
+  const navigateImage = (direction: 'prev' | 'next') => {
+    if (selectedImageIndex === null || !retreat?.photos) return
+    
+    if (direction === 'prev') {
+      setSelectedImageIndex(
+        selectedImageIndex === 0 ? retreat.photos.length - 1 : selectedImageIndex - 1
+      )
+    } else {
+      setSelectedImageIndex(
+        selectedImageIndex === retreat.photos.length - 1 ? 0 : selectedImageIndex + 1
+      )
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-transparent"></div>
           <p className="mt-4 text-gray-600">Loading retreat schedule...</p>
         </div>
       </div>
@@ -175,7 +220,9 @@ const RetreatDetailPage: React.FC = () => {
     { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName },
   ]
 
-  const youtubeEmbedUrl = retreat.youtube_video ? getYoutubeEmbedUrl(retreat.youtube_video) : null
+  const youtubeEmbedUrl = retreat.youtube_video
+    ? getYoutubeEmbedUrl(retreat.youtube_video)
+    : null
 
   return (
     <div className="min-h-screen bg-white">
@@ -196,37 +243,45 @@ const RetreatDetailPage: React.FC = () => {
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Left */}
-          <div className="text-center md:text-left">
-            <div className="text-lg mb-2">Mahabharata Dialogues</div>
+          <div className="text-center md:text-left font-merri">
+            <div className="text-lg mb-2 ">Mahabharata Dialogues</div>
             <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
+
+            <div className="flex items-center justify-center md:justify-start gap-3 mt-4 text-white/90">
+              <Calendar size={18} className="opacity-80" />
+              <span className="text-sm md:text-base tracking-wide">
+                {retreat.day1.date} <span className="mx-1">–</span>{' '}
+                {retreat.day2.date}
+              </span>
+            </div>
           </div>
 
           {/* Divider */}
-          <div className="hidden md:block w-px h-24 bg-white/60" />
+          <div className="hidden md:block w-px h-28 bg-white/60" />
 
           {/* Right */}
           <div className="text-center md:text-left md:max-w-lg">
-            <p className="text-lg italic leading-relaxed">
-              {retreat.eventTitle || retreat.subtitle}
+            <p className="text-lg italic leading-relaxed font-neco">
+              {retreat.description}
             </p>
             {retreat.venue && (
               <div className="flex items-center gap-2 mt-3 justify-center md:justify-start">
                 <MapPin size={18} className="text-white/80" />
-                <span className="text-sm text-white/90">{retreat.venue}</span>
+                <span className="text-sm md:text-base tracking-wide text-white/90 font-merri">
+                  {retreat.venue}
+                </span>
               </div>
             )}
           </div>
         </div>
       </div>
 
-    
-
       {/* Day circles - Desktop */}
       <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
         {days.map((dayInfo) => (
           <div
             key={dayInfo.day}
-            className="w-40 h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center"
+            className="w-40 font-merri h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center"
           >
             <div className="text-center leading-tight">
               <div className="text-xs tracking-wide mb-1">
@@ -242,7 +297,7 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Day circle Mobile - Day 1 */}
-      <div className="sm:hidden flex justify-center items-center mt-4">
+      <div className="md:hidden flex justify-center items-center mt-4 font-merri">
         <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
           <div className="text-center leading-tight">
             <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
@@ -253,10 +308,10 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Schedule Grid */}
-      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 lg:mx-10 xl:mx-30">
+      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 lg:mx-10 xl:mx-25 ">
         {/* Day 1 Column */}
-        <div className="md:border-r-2 border-black">
-          <div className="px-6 md:px-8 py-6 md:py-0 space-y-4">
+        <div className="border-b md:border-b-0 md:border-r border-black">
+          <div className="px-2 md:px-8 py-6 md:py-0 space-y-4">
             {retreat.day1.schedule.map((section, index) =>
               renderScheduleSection(
                 section,
@@ -270,7 +325,7 @@ const RetreatDetailPage: React.FC = () => {
         {/* Day 2 Column */}
         <div>
           {/* Day circle Mobile - Day 2 */}
-          <div className="sm:hidden flex justify-center items-center mt-4">
+          <div className="md:hidden flex justify-center items-center mt-4 font-merri">
             <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
@@ -280,7 +335,7 @@ const RetreatDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="px-6 py-6 md:px-8 md:py-0 space-y-4">
+          <div className="px-2 py-6 md:px-8 md:py-0 space-y-4">
             {retreat.day2.schedule.map((section, index) =>
               renderScheduleSection(section, index, false)
             )}
@@ -289,12 +344,11 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <div className="text-center text-md text-gray-500 py-4 border-t-2 border-black md:mx-10 lg:mx-30">
+      <div className="text-center text-md text-gray-500 py-4 border-t border-black md:mx-10 lg:mx-30 font-merri">
         * Optional/Simultaneous events
       </div>
 
-
-        {/* YouTube Video Section */}
+      {/* YouTube Video Section */}
       {youtubeEmbedUrl && (
         <div className="max-w-5xl mx-auto px-6 py-8">
           <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
@@ -314,7 +368,11 @@ const RetreatDetailPage: React.FC = () => {
         <div className="max-w-5xl mx-auto px-6 py-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {retreat.photos.map((photo, idx) => (
-              <div key={idx} className="aspect-square overflow-hidden rounded-lg shadow-md">
+              <div
+                key={idx}
+                className="aspect-square overflow-hidden rounded-lg shadow-md cursor-pointer"
+                onClick={() => openLightbox(idx)}
+              >
                 <img
                   src={photo}
                   alt={`Retreat photo ${idx + 1}`}
@@ -323,6 +381,60 @@ const RetreatDetailPage: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal */}
+      {selectedImageIndex !== null && retreat.photos && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          {/* Close Button */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          >
+            <X size={36} />
+          </button>
+
+          {/* Previous Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              navigateImage('prev')
+            }}
+            className="absolute left-4 text-white hover:text-gray-300 transition-colors z-10"
+          >
+            <ChevronLeft size={48} />
+          </button>
+
+          {/* Image */}
+          <div 
+            className="max-w-7xl max-h-[90vh] px-16"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={retreat.photos[selectedImageIndex]}
+              alt={`Retreat photo ${selectedImageIndex + 1}`}
+              className="max-w-full max-h-[90vh] object-contain"
+            />
+            {/* Image Counter */}
+            <div className="text-center text-white mt-4 text-sm">
+              {selectedImageIndex + 1} / {retreat.photos.length}
+            </div>
+          </div>
+
+          {/* Next Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              navigateImage('next')
+            }}
+            className="absolute right-4 text-white hover:text-gray-300 transition-colors z-10"
+          >
+            <ChevronRight size={48} />
+          </button>
         </div>
       )}
     </div>

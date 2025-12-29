@@ -32,14 +32,12 @@ export async function POST(req: NextRequest) {
 
     const { 
       title, 
-      subtitle, 
-      eventTitle, 
+      description, 
       venue, 
       youtube_video, 
       photos, 
       day1, 
       day2, 
-      footerNote 
     } = body;
 
     if (!day1?.date || !day2?.date) {
@@ -51,8 +49,7 @@ export async function POST(req: NextRequest) {
 
     const newRetreat = {
       title: title || "Mahabharata Dialogues",
-      subtitle: subtitle || "",
-      ...(eventTitle && { eventTitle }),
+      ...(description && { description }),
       ...(venue && { venue }),
       ...(youtube_video && { youtube_video }),
       ...(photos && photos.length > 0 && { photos }),
@@ -66,7 +63,6 @@ export async function POST(req: NextRequest) {
         dayName: day2.dayName || "",
         schedule: day2.schedule || []
       },
-      footerNote: footerNote || "",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };

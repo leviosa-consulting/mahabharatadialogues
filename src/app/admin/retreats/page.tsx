@@ -40,14 +40,12 @@ interface DaySchedule {
 interface Retreat {
   id: string
   title: string
-  subtitle: string
-  eventTitle?: string
+  description?: string
   venue?: string
   youtube_video?: string
   photos?: string[]
   day1: DaySchedule
   day2: DaySchedule
-  footerNote: string
   created_at: string
   updated_at: string
 }
@@ -63,8 +61,7 @@ const RetreatsAdminPage = () => {
   
   const [formData, setFormData] = useState<Omit<Retreat, 'id' | 'created_at' | 'updated_at'>>({
     title: 'Mahabharata Dialogues',
-    subtitle: 'An immersive two-day residential retreat with every moment revolving around the Mahabharata.',
-    eventTitle: '',
+    description: '',
     venue: '',
     youtube_video: '',
     photos: [],
@@ -78,7 +75,7 @@ const RetreatsAdminPage = () => {
       dayName: '',
       schedule: []
     },
-    footerNote: '* Optional/Simultaneous events'
+   
   })
 
   useEffect(() => {
@@ -117,8 +114,7 @@ const RetreatsAdminPage = () => {
   const resetForm = () => {
     setFormData({
       title: 'Mahabharata Dialogues',
-      subtitle: 'An immersive two-day residential retreat with every moment revolving around the Mahabharata.',
-      eventTitle: '',
+      description: '',
       venue: '',
       youtube_video: '',
       photos: [],
@@ -132,7 +128,7 @@ const RetreatsAdminPage = () => {
         dayName: '',
         schedule: []
       },
-      footerNote: '* Optional/Simultaneous events'
+     
     })
     setEditingId(null)
     setShowModal(false)
@@ -146,14 +142,12 @@ const RetreatsAdminPage = () => {
   const handleEdit = (retreat: Retreat) => {
     setFormData({
       title: retreat.title,
-      subtitle: retreat.subtitle,
-      eventTitle: retreat.eventTitle || '',
+      description: retreat.description || '',
       venue: retreat.venue || '',
       youtube_video: retreat.youtube_video || '',
       photos: retreat.photos || [],
       day1: retreat.day1,
       day2: retreat.day2,
-      footerNote: retreat.footerNote
     })
     setEditingId(retreat.id)
     setShowModal(true)
@@ -205,8 +199,7 @@ const RetreatsAdminPage = () => {
     try {
       const submitData = {
         title: formData.title,
-        subtitle: formData.subtitle,
-        eventTitle: formData.eventTitle || undefined,
+        description: formData.description || undefined,
         venue: formData.venue || undefined,
         youtube_video: formData.youtube_video || undefined,
         photos: formData.photos && formData.photos.length > 0 ? formData.photos : undefined,
@@ -220,7 +213,6 @@ const RetreatsAdminPage = () => {
           dayName: getDayName(formData.day2.date),
           schedule: formData.day2.schedule
         },
-        footerNote: formData.footerNote
       }
 
       const url = editingId ? `/api/retreats/${editingId}` : '/api/retreats'
@@ -547,8 +539,8 @@ const RetreatsAdminPage = () => {
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900">{retreat.title}</h3>
                         <p className="text-gray-600 text-sm mt-1">{retreat.subtitle}</p>
-                        {retreat.eventTitle && (
-                          <p className="text-purple-600 font-medium text-sm mt-2">Event: {retreat.eventTitle}</p>
+                        {retreat.description && (
+                          <p className="text-purple-600 font-medium text-sm mt-2">Event: {retreat.description}</p>
                         )}
                         {retreat.venue && (
                           <p className="text-gray-500 text-sm">Venue: {retreat.venue}</p>
@@ -705,13 +697,13 @@ const RetreatsAdminPage = () => {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Event Title 
+                          Description
                         </label>
                         <input
                           type="text"
-                          value={formData.eventTitle}
-                          onChange={(e) => setFormData(prev => ({ ...prev, eventTitle: e.target.value }))}
-                          placeholder="Enter event title"
+                          value={formData.description}
+                          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                          placeholder="Enter Description"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
                         />

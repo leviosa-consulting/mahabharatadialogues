@@ -13,14 +13,12 @@ export async function PUT(
     const body = await req.json();
     const { 
       title, 
-      subtitle, 
-      eventTitle, 
+      description, 
       venue, 
       youtube_video, 
       photos, 
       day1, 
       day2, 
-      footerNote 
     } = body;
 
     if (!day1?.date || !day2?.date) {
@@ -32,7 +30,6 @@ export async function PUT(
 
     const updateData: any = {
       title: title || "Mahabharata Dialogues",
-      subtitle: subtitle || "",
       day1: {
         date: day1.date,
         dayName: day1.dayName || "",
@@ -43,12 +40,11 @@ export async function PUT(
         dayName: day2.dayName || "",
         schedule: day2.schedule || []
       },
-      footerNote: footerNote || "",
       updated_at: new Date().toISOString(),
     };
 
     // Only add optional fields if they have values
-    if (eventTitle) updateData.eventTitle = eventTitle;
+    if (description) updateData.description = description;
     if (venue) updateData.venue = venue;
     if (youtube_video) updateData.youtube_video = youtube_video;
     if (photos && photos.length > 0) updateData.photos = photos;
