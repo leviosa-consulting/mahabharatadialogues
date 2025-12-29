@@ -125,7 +125,7 @@ const RetreatDetailPage: React.FC = () => {
               {item.description && (
                 <div
                   className={`text-sm text-gray-600 leading-tight mt-0.5 font-merri px-3 md:w-[90%] ${
-                    isLastActivity && itemIndex === section.items!.length - 1
+                    itemIndex === section.items!.length - 1
                       ? 'pb-8'
                       : ''
                   }`}
@@ -335,7 +335,7 @@ const RetreatDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="px-2 py-6 md:px-8 md:py-0 space-y-4">
+          <div className="px-2 py-6 md:px-8 md:py-0 space-y-4 ">
             {retreat.day2.schedule.map((section, index) =>
               renderScheduleSection(section, index, false)
             )}
