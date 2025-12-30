@@ -37,17 +37,18 @@ export async function POST(req: NextRequest) {
       youtube_video, 
       photos, 
       day1, 
-      day2, 
+      day2,
+      day3,
     } = body;
 
     if (!day1?.date || !day2?.date) {
       return NextResponse.json(
-        { success: false, error: "Both day dates are required" },
+        { success: false, error: "Day 1 and Day 2 dates are required" },
         { status: 400 }
       );
     }
 
-    const newRetreat = {
+    const newRetreat: any = {
       title: title || "Mahabharata Dialogues",
       ...(description && { description }),
       ...(venue && { venue }),
@@ -67,6 +68,15 @@ export async function POST(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
+    // Add day3 if it exists
+    if (day3 && day3.date) {
+      newRetreat.day3 = {
+        date: day3.date,
+        dayName: day3.dayName || "",
+        schedule: day3.schedule || []
+      };
+    }
+
     const docRef = await adminDB.collection("retreats").add(newRetreat);
 
     return NextResponse.json({
@@ -81,3 +91,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

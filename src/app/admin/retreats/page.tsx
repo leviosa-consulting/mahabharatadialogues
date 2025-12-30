@@ -16,7 +16,10 @@ import {
 } from 'lucide-react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Navbar from '@/components/Navbar'
-import { uploadImage,deleteFromFirebaseStorage } from '@/utils/firebaseStorageUpload'
+import {
+  uploadImage,
+  deleteFromFirebaseStorage,
+} from '@/utils/firebaseStorageUpload'
 
 interface ScheduleItem {
   title: string
@@ -46,6 +49,7 @@ interface Retreat {
   photos?: string[]
   day1: DaySchedule
   day2: DaySchedule
+  day3?: DaySchedule
   created_at: string
   updated_at: string
 }
@@ -58,8 +62,11 @@ const RetreatsAdminPage = () => {
   const [submitting, setSubmitting] = useState(false)
   const [expandedRetreat, setExpandedRetreat] = useState<string | null>(null)
   const [uploadingPhotos, setUploadingPhotos] = useState(false)
-  
-  const [formData, setFormData] = useState<Omit<Retreat, 'id' | 'created_at' | 'updated_at'>>({
+  const [isThreeDayRetreat, setIsThreeDayRetreat] = useState(false)
+
+  const [formData, setFormData] = useState<
+    Omit<Retreat, 'id' | 'created_at' | 'updated_at'>
+  >({
     title: 'Mahabharata Dialogues',
     description: '',
     venue: '',
@@ -68,14 +75,14 @@ const RetreatsAdminPage = () => {
     day1: {
       date: '',
       dayName: '',
-      schedule: []
+      schedule: [],
     },
     day2: {
       date: '',
       dayName: '',
-      schedule: []
+      schedule: [],
     },
-   
+    day3: undefined,
   })
 
   useEffect(() => {
@@ -97,14 +104,35 @@ const RetreatsAdminPage = () => {
   const getDayName = (dateString: string): string => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ]
     return days[date.getDay()]
   }
 
   const formatDisplayDate = (dateString: string): string => {
     if (!dateString) return ''
     const date = new Date(dateString)
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
     const day = date.getDate().toString().padStart(2, '0')
     const month = months[date.getMonth()]
     const year = date.getFullYear()
@@ -121,17 +149,18 @@ const RetreatsAdminPage = () => {
       day1: {
         date: '',
         dayName: '',
-        schedule: []
+        schedule: [],
       },
       day2: {
         date: '',
         dayName: '',
-        schedule: []
+        schedule: [],
       },
-     
+      day3: undefined,
     })
     setEditingId(null)
     setShowModal(false)
+    setIsThreeDayRetreat(false)
   }
 
   const handleCreate = () => {
@@ -148,7 +177,9 @@ const RetreatsAdminPage = () => {
       photos: retreat.photos || [],
       day1: retreat.day1,
       day2: retreat.day2,
+      day3: retreat.day3,
     })
+    setIsThreeDayRetreat(!!retreat.day3)
     setEditingId(retreat.id)
     setShowModal(true)
   }
@@ -159,13 +190,17 @@ const RetreatsAdminPage = () => {
 
     setUploadingPhotos(true)
     try {
-      const uploadPromises = Array.from(files).map(file => uploadImage(file, 'retreats'))
+      const uploadPromises = Array.from(files).map((file) =>
+        uploadImage(file, 'retreats')
+      )
       const uploadedUrls = await Promise.all(uploadPromises)
-      const validUrls = uploadedUrls.filter((url): url is string => url !== null)
-      
-      setFormData(prev => ({
+      const validUrls = uploadedUrls.filter(
+        (url): url is string => url !== null
+      )
+
+      setFormData((prev) => ({
         ...prev,
-        photos: [...(prev.photos || []), ...validUrls]
+        photos: [...(prev.photos || []), ...validUrls],
       }))
     } catch (error) {
       alert('Failed to upload some photos')
@@ -177,18 +212,44 @@ const RetreatsAdminPage = () => {
   const handleRemovePhoto = async (photoUrl: string, index: number) => {
     try {
       await deleteFromFirebaseStorage(photoUrl)
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        photos: prev.photos?.filter((_, i) => i !== index) || []
+        photos: prev.photos?.filter((_, i) => i !== index) || [],
       }))
     } catch (error) {
       alert('Failed to delete photo')
     }
   }
 
+  const toggleThreeDay = () => {
+    setIsThreeDayRetreat(!isThreeDayRetreat)
+    if (!isThreeDayRetreat) {
+      // Enable 3-day mode
+      setFormData((prev) => ({
+        ...prev,
+        day3: {
+          date: '',
+          dayName: '',
+          schedule: [],
+        },
+      }))
+    } else {
+      // Disable 3-day mode
+      setFormData((prev) => ({
+        ...prev,
+        day3: undefined,
+      }))
+    }
+  }
+
   const handleSubmit = async () => {
     if (!formData.day1.date || !formData.day2.date) {
-      alert('Both day dates are required')
+      alert('Day 1 and Day 2 dates are required')
+      return
+    }
+
+    if (isThreeDayRetreat && !formData.day3?.date) {
+      alert('Day 3 date is required for 3-day retreat')
       return
     }
 
@@ -197,22 +258,33 @@ const RetreatsAdminPage = () => {
     setSubmitting(true)
 
     try {
-      const submitData = {
+      const submitData: any = {
         title: formData.title,
         description: formData.description || undefined,
         venue: formData.venue || undefined,
         youtube_video: formData.youtube_video || undefined,
-        photos: formData.photos && formData.photos.length > 0 ? formData.photos : undefined,
+        photos:
+          formData.photos && formData.photos.length > 0
+            ? formData.photos
+            : undefined,
         day1: {
           date: formatDisplayDate(formData.day1.date),
           dayName: getDayName(formData.day1.date),
-          schedule: formData.day1.schedule
+          schedule: formData.day1.schedule,
         },
         day2: {
           date: formatDisplayDate(formData.day2.date),
           dayName: getDayName(formData.day2.date),
-          schedule: formData.day2.schedule
+          schedule: formData.day2.schedule,
         },
+      }
+
+      if (isThreeDayRetreat && formData.day3) {
+        submitData.day3 = {
+          date: formatDisplayDate(formData.day3.date),
+          dayName: getDayName(formData.day3.date),
+          schedule: formData.day3.schedule,
+        }
       }
 
       const url = editingId ? `/api/retreats/${editingId}` : '/api/retreats'
@@ -262,106 +334,280 @@ const RetreatsAdminPage = () => {
     }
   }
 
-  const addScheduleSection = (day: 'day1' | 'day2', type: 'meal' | 'activities') => {
-    const newSection: ScheduleSection = type === 'meal' 
-      ? { type: 'meal', title: '', time: '' }
-      : { type: 'activities', items: [{ title: '', description: '', time: '' }] }
+  const addScheduleSection = (
+    day: 'day1' | 'day2' | 'day3',
+    type: 'meal' | 'activities'
+  ) => {
+    const newSection: ScheduleSection =
+      type === 'meal'
+        ? { type: 'meal', title: '', time: '' }
+        : {
+            type: 'activities',
+            items: [{ title: '', description: '', time: '' }],
+          }
 
-    setFormData(prev => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        schedule: [...prev[day].schedule, newSection]
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            schedule: [...prev.day3.schedule, newSection],
+          },
+        }
       }
-    }))
-  }
-
-  const removeScheduleSection = (day: 'day1' | 'day2', index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        schedule: prev[day].schedule.filter((_, i) => i !== index)
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          schedule: [...dayData.schedule, newSection],
+        },
       }
-    }))
+    })
   }
 
-  const updateScheduleSection = (day: 'day1' | 'day2', sectionIndex: number, field: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        schedule: prev[day].schedule.map((section, i) => 
-          i === sectionIndex ? { ...section, [field]: value } : section
-        )
+  const removeScheduleSection = (
+    day: 'day1' | 'day2' | 'day3',
+    index: number
+  ) => {
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            schedule: prev.day3.schedule.filter((_, i) => i !== index),
+          },
+        }
       }
-    }))
-  }
-
-  const addActivityItem = (day: 'day1' | 'day2', sectionIndex: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        schedule: prev[day].schedule.map((section, i) => 
-          i === sectionIndex && section.type === 'activities'
-            ? { ...section, items: [...(section.items || []), { title: '', description: '', time: '' }] }
-            : section
-        )
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          schedule: dayData.schedule.filter((_, i) => i !== index),
+        },
       }
-    }))
+    })
   }
 
-  const removeActivityItem = (day: 'day1' | 'day2', sectionIndex: number, itemIndex: number) => {
-    setFormData(prev => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        schedule: prev[day].schedule.map((section, i) => 
-          i === sectionIndex && section.type === 'activities'
-            ? { ...section, items: section.items?.filter((_, j) => j !== itemIndex) }
-            : section
-        )
+  const updateScheduleSection = (
+    day: 'day1' | 'day2' | 'day3',
+    sectionIndex: number,
+    field: string,
+    value: any
+  ) => {
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            schedule: prev.day3.schedule.map((section, i) =>
+              i === sectionIndex ? { ...section, [field]: value } : section
+            ),
+          },
+        }
       }
-    }))
-  }
-
-  const updateActivityItem = (day: 'day1' | 'day2', sectionIndex: number, itemIndex: number, field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        schedule: prev[day].schedule.map((section, i) => 
-          i === sectionIndex && section.type === 'activities'
-            ? { 
-                ...section, 
-                items: section.items?.map((item, j) => 
-                  j === itemIndex ? { ...item, [field]: value } : item
-                ) 
-              }
-            : section
-        )
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          schedule: dayData.schedule.map((section, i) =>
+            i === sectionIndex ? { ...section, [field]: value } : section
+          ),
+        },
       }
-    }))
+    })
   }
 
-  const handleDateChange = (day: 'day1' | 'day2', dateValue: string) => {
-    setFormData(prev => ({ 
-      ...prev, 
-      [day]: { 
-        ...prev[day], 
-        date: dateValue,
-        dayName: getDayName(dateValue)
-      } 
-    }))
+  const addActivityItem = (
+    day: 'day1' | 'day2' | 'day3',
+    sectionIndex: number
+  ) => {
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            schedule: prev.day3.schedule.map((section, i) =>
+              i === sectionIndex && section.type === 'activities'
+                ? {
+                    ...section,
+                    items: [
+                      ...(section.items || []),
+                      { title: '', description: '', time: '' },
+                    ],
+                  }
+                : section
+            ),
+          },
+        }
+      }
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          schedule: dayData.schedule.map((section, i) =>
+            i === sectionIndex && section.type === 'activities'
+              ? {
+                  ...section,
+                  items: [
+                    ...(section.items || []),
+                    { title: '', description: '', time: '' },
+                  ],
+                }
+              : section
+          ),
+        },
+      }
+    })
   }
 
-  const renderDayScheduleForm = (day: 'day1' | 'day2', dayNumber: number) => {
-    const dayData = formData[day]
-    
+  const removeActivityItem = (
+    day: 'day1' | 'day2' | 'day3',
+    sectionIndex: number,
+    itemIndex: number
+  ) => {
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            schedule: prev.day3.schedule.map((section, i) =>
+              i === sectionIndex && section.type === 'activities'
+                ? {
+                    ...section,
+                    items: section.items?.filter((_, j) => j !== itemIndex),
+                  }
+                : section
+            ),
+          },
+        }
+      }
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          schedule: dayData.schedule.map((section, i) =>
+            i === sectionIndex && section.type === 'activities'
+              ? {
+                  ...section,
+                  items: section.items?.filter((_, j) => j !== itemIndex),
+                }
+              : section
+          ),
+        },
+      }
+    })
+  }
+
+  const updateActivityItem = (
+    day: 'day1' | 'day2' | 'day3',
+    sectionIndex: number,
+    itemIndex: number,
+    field: string,
+    value: string
+  ) => {
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            schedule: prev.day3.schedule.map((section, i) =>
+              i === sectionIndex && section.type === 'activities'
+                ? {
+                    ...section,
+                    items: section.items?.map((item, j) =>
+                      j === itemIndex ? { ...item, [field]: value } : item
+                    ),
+                  }
+                : section
+            ),
+          },
+        }
+      }
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          schedule: dayData.schedule.map((section, i) =>
+            i === sectionIndex && section.type === 'activities'
+              ? {
+                  ...section,
+                  items: section.items?.map((item, j) =>
+                    j === itemIndex ? { ...item, [field]: value } : item
+                  ),
+                }
+              : section
+          ),
+        },
+      }
+    })
+  }
+
+  const handleDateChange = (
+    day: 'day1' | 'day2' | 'day3',
+    dateValue: string
+  ) => {
+    setFormData((prev) => {
+      if (day === 'day3') {
+        if (!prev.day3) return prev
+        return {
+          ...prev,
+          day3: {
+            ...prev.day3,
+            date: dateValue,
+            dayName: getDayName(dateValue),
+          },
+        }
+      }
+      
+      const dayData = prev[day as 'day1' | 'day2']
+      return {
+        ...prev,
+        [day]: {
+          ...dayData,
+          date: dateValue,
+          dayName: getDayName(dateValue),
+        },
+      }
+    })
+  }
+
+  const renderDayScheduleForm = (
+    day: 'day1' | 'day2' | 'day3',
+    dayNumber: number
+  ) => {
+    const dayData =
+      day === 'day3' ? formData.day3 : formData[day as 'day1' | 'day2']
+    if (!dayData) return null
+
     return (
       <div className="border-t pt-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Day {dayNumber} Schedule</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Day {dayNumber} Schedule
+        </h3>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Select Date *
@@ -375,9 +621,12 @@ const RetreatsAdminPage = () => {
           />
           {dayData.date && (
             <p className="mt-2 text-sm text-gray-600">
-              Day: <span className="font-medium">{getDayName(dayData.date)}</span>
-              {' '}&middot;{' '}
-              Formatted: <span className="font-medium">{formatDisplayDate(dayData.date)}</span>
+              Day:{' '}
+              <span className="font-medium">{getDayName(dayData.date)}</span>{' '}
+              &middot; Formatted:{' '}
+              <span className="font-medium">
+                {formatDisplayDate(dayData.date)}
+              </span>
             </p>
           )}
         </div>
@@ -397,13 +646,15 @@ const RetreatsAdminPage = () => {
                   <X size={16} />
                 </button>
               </div>
-              
+
               {section.type === 'meal' ? (
                 <div className="grid md:grid-cols-2 gap-3">
                   <input
                     type="text"
                     value={section.title || ''}
-                    onChange={(e) => updateScheduleSection(day, sIdx, 'title', e.target.value)}
+                    onChange={(e) =>
+                      updateScheduleSection(day, sIdx, 'title', e.target.value)
+                    }
                     placeholder="Meal name (e.g., Breakfast)"
                     className="px-3 py-2 border rounded-lg text-sm"
                     disabled={submitting}
@@ -411,7 +662,9 @@ const RetreatsAdminPage = () => {
                   <input
                     type="text"
                     value={section.time || ''}
-                    onChange={(e) => updateScheduleSection(day, sIdx, 'time', e.target.value)}
+                    onChange={(e) =>
+                      updateScheduleSection(day, sIdx, 'time', e.target.value)
+                    }
                     placeholder="Time (e.g., 08:45 - 09:30)"
                     className="px-3 py-2 border rounded-lg text-sm"
                     disabled={submitting}
@@ -420,7 +673,10 @@ const RetreatsAdminPage = () => {
               ) : (
                 <div className="space-y-3">
                   {section.items?.map((item, iIdx) => (
-                    <div key={iIdx} className="grid gap-2 p-3 bg-white rounded border">
+                    <div
+                      key={iIdx}
+                      className="grid gap-2 p-3 bg-white rounded border"
+                    >
                       <div className="flex justify-end">
                         <button
                           onClick={() => removeActivityItem(day, sIdx, iIdx)}
@@ -433,7 +689,15 @@ const RetreatsAdminPage = () => {
                       <input
                         type="text"
                         value={item.title}
-                        onChange={(e) => updateActivityItem(day, sIdx, iIdx, 'title', e.target.value)}
+                        onChange={(e) =>
+                          updateActivityItem(
+                            day,
+                            sIdx,
+                            iIdx,
+                            'title',
+                            e.target.value
+                          )
+                        }
                         placeholder="Activity title"
                         className="px-3 py-2 border rounded-lg text-sm"
                         disabled={submitting}
@@ -441,7 +705,15 @@ const RetreatsAdminPage = () => {
                       <input
                         type="text"
                         value={item.description}
-                        onChange={(e) => updateActivityItem(day, sIdx, iIdx, 'description', e.target.value)}
+                        onChange={(e) =>
+                          updateActivityItem(
+                            day,
+                            sIdx,
+                            iIdx,
+                            'description',
+                            e.target.value
+                          )
+                        }
                         placeholder="Description"
                         className="px-3 py-2 border rounded-lg text-sm"
                         disabled={submitting}
@@ -449,7 +721,15 @@ const RetreatsAdminPage = () => {
                       <input
                         type="text"
                         value={item.time}
-                        onChange={(e) => updateActivityItem(day, sIdx, iIdx, 'time', e.target.value)}
+                        onChange={(e) =>
+                          updateActivityItem(
+                            day,
+                            sIdx,
+                            iIdx,
+                            'time',
+                            e.target.value
+                          )
+                        }
                         placeholder="Time"
                         className="px-3 py-2 border rounded-lg text-sm"
                         disabled={submitting}
@@ -467,7 +747,7 @@ const RetreatsAdminPage = () => {
               )}
             </div>
           ))}
-          
+
           <div className="flex gap-2">
             <button
               onClick={() => addScheduleSection(day, 'meal')}
@@ -491,7 +771,7 @@ const RetreatsAdminPage = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <Navbar currentTab='retreats' />
+      <Navbar currentTab="retreats" />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -537,28 +817,47 @@ const RetreatsAdminPage = () => {
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900">{retreat.title}</h3>
-                        <p className="text-gray-600 text-sm mt-1">{retreat.subtitle}</p>
+                        <h3 className="text-xl font-bold text-gray-900">
+                          {retreat.title}
+                        </h3>
                         {retreat.description && (
-                          <p className="text-purple-600 font-medium text-sm mt-2">Event: {retreat.description}</p>
+                          <p className="text-purple-600 font-medium text-sm mt-2">
+                            Event: {retreat.description}
+                          </p>
                         )}
                         {retreat.venue && (
-                          <p className="text-gray-500 text-sm">Venue: {retreat.venue}</p>
+                          <p className="text-gray-500 text-sm">
+                            Venue: {retreat.venue}
+                          </p>
                         )}
-                        <div className="flex gap-4 mt-3">
+                        <div className="flex gap-4 mt-3 flex-wrap">
                           <div className="flex items-center gap-2 text-sm">
                             <Calendar size={16} className="text-purple-600" />
-                            <span className="font-medium">Day 1:</span> {retreat.day1.date} ({retreat.day1.dayName})
+                            <span className="font-medium">Day 1:</span>{' '}
+                            {retreat.day1.date} ({retreat.day1.dayName})
                           </div>
                           <div className="flex items-center gap-2 text-sm">
                             <Calendar size={16} className="text-purple-600" />
-                            <span className="font-medium">Day 2:</span> {retreat.day2.date} ({retreat.day2.dayName})
+                            <span className="font-medium">Day 2:</span>{' '}
+                            {retreat.day2.date} ({retreat.day2.dayName})
                           </div>
+                          {retreat.day3 && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <Calendar size={16} className="text-purple-600" />
+                              <span className="font-medium">Day 3:</span>{' '}
+                              {retreat.day3.date} ({retreat.day3.dayName})
+                            </div>
+                          )}
                         </div>
                         {retreat.photos && retreat.photos.length > 0 && (
                           <div className="flex gap-2 mt-3">
-                            <ImageIcon size={16} className="text-gray-500 mt-1" />
-                            <span className="text-sm text-gray-600">{retreat.photos.length} photo(s)</span>
+                            <ImageIcon
+                              size={16}
+                              className="text-gray-500 mt-1"
+                            />
+                            <span className="text-sm text-gray-600">
+                              {retreat.photos.length} photo(s)
+                            </span>
                           </div>
                         )}
                       </div>
@@ -581,10 +880,18 @@ const RetreatsAdminPage = () => {
                     </div>
 
                     <button
-                      onClick={() => setExpandedRetreat(expandedRetreat === retreat.id ? null : retreat.id)}
+                      onClick={() =>
+                        setExpandedRetreat(
+                          expandedRetreat === retreat.id ? null : retreat.id
+                        )
+                      }
                       className="flex items-center gap-2 text-purple-600 hover:text-purple-700 text-sm font-medium"
                     >
-                      {expandedRetreat === retreat.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                      {expandedRetreat === retreat.id ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
                       {expandedRetreat === retreat.id ? 'Hide' : 'Show'} Details
                     </button>
 
@@ -592,42 +899,71 @@ const RetreatsAdminPage = () => {
                       <div className="mt-4 border-t pt-4">
                         {retreat.youtube_video && (
                           <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-700 mb-2">YouTube Video:</p>
-                            <a href={retreat.youtube_video} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline">
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              YouTube Video:
+                            </p>
+                            <a
+                              href={retreat.youtube_video}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-blue-600 hover:underline"
+                            >
                               {retreat.youtube_video}
                             </a>
                           </div>
                         )}
-                        
+
                         {retreat.photos && retreat.photos.length > 0 && (
                           <div className="mb-4">
-                            <p className="text-sm font-medium text-gray-700 mb-2">Photos:</p>
+                            <p className="text-sm font-medium text-gray-700 mb-2">
+                              Photos:
+                            </p>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                               {retreat.photos.map((photo, idx) => (
-                                <img key={idx} src={photo} alt={`Photo ${idx + 1}`} className="w-full h-32 object-cover rounded" />
+                                <img
+                                  key={idx}
+                                  src={photo}
+                                  alt={`Photo ${idx + 1}`}
+                                  className="w-full h-32 object-cover rounded"
+                                />
                               ))}
                             </div>
                           </div>
                         )}
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className={`grid ${retreat.day3 ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
                           <div>
-                            <h4 className="font-semibold text-lg mb-3 text-purple-600">Day 1 Schedule</h4>
+                            <h4 className="font-semibold text-lg mb-3 text-purple-600">
+                              Day 1 Schedule
+                            </h4>
                             <div className="space-y-2 text-sm">
                               {retreat.day1.schedule.map((section, idx) => (
-                                <div key={idx} className="border-l-2 border-purple-200 pl-3">
+                                <div
+                                  key={idx}
+                                  className="border-l-2 border-purple-200 pl-3"
+                                >
                                   {section.type === 'meal' ? (
                                     <div className="bg-purple-50 p-2 rounded">
-                                      <div className="font-semibold">{section.title}</div>
-                                      <div className="text-gray-600 text-xs">{section.time}</div>
+                                      <div className="font-semibold">
+                                        {section.title}
+                                      </div>
+                                      <div className="text-gray-600 text-xs">
+                                        {section.time}
+                                      </div>
                                     </div>
                                   ) : (
                                     <div className="space-y-1">
                                       {section.items?.map((item, iIdx) => (
                                         <div key={iIdx} className="py-1">
-                                          <div className="font-medium">{item.title}</div>
-                                          <div className="text-gray-600 text-xs">{item.description}</div>
-                                          <div className="text-purple-600 text-xs">{item.time}</div>
+                                          <div className="font-medium">
+                                            {item.title}
+                                          </div>
+                                          <div className="text-gray-600 text-xs">
+                                            {item.description}
+                                          </div>
+                                          <div className="text-purple-600 text-xs">
+                                            {item.time}
+                                          </div>
                                         </div>
                                       ))}
                                     </div>
@@ -637,22 +973,37 @@ const RetreatsAdminPage = () => {
                             </div>
                           </div>
                           <div>
-                            <h4 className="font-semibold text-lg mb-3 text-purple-600">Day 2 Schedule</h4>
+                            <h4 className="font-semibold text-lg mb-3 text-purple-600">
+                              Day 2 Schedule
+                            </h4>
                             <div className="space-y-2 text-sm">
                               {retreat.day2.schedule.map((section, idx) => (
-                                <div key={idx} className="border-l-2 border-purple-200 pl-3">
+                                <div
+                                  key={idx}
+                                  className="border-l-2 border-purple-200 pl-3"
+                                >
                                   {section.type === 'meal' ? (
                                     <div className="bg-purple-50 p-2 rounded">
-                                      <div className="font-semibold">{section.title}</div>
-                                      <div className="text-gray-600 text-xs">{section.time}</div>
+                                      <div className="font-semibold">
+                                        {section.title}
+                                      </div>
+                                      <div className="text-gray-600 text-xs">
+                                        {section.time}
+                                      </div>
                                     </div>
                                   ) : (
                                     <div className="space-y-1">
                                       {section.items?.map((item, iIdx) => (
                                         <div key={iIdx} className="py-1">
-                                          <div className="font-medium">{item.title}</div>
-                                          <div className="text-gray-600 text-xs">{item.description}</div>
-                                          <div className="text-purple-600 text-xs">{item.time}</div>
+                                          <div className="font-medium">
+                                            {item.title}
+                                          </div>
+                                          <div className="text-gray-600 text-xs">
+                                            {item.description}
+                                          </div>
+                                          <div className="text-purple-600 text-xs">
+                                            {item.time}
+                                          </div>
                                         </div>
                                       ))}
                                     </div>
@@ -661,6 +1012,48 @@ const RetreatsAdminPage = () => {
                               ))}
                             </div>
                           </div>
+                          {retreat.day3 && (
+                            <div>
+                              <h4 className="font-semibold text-lg mb-3 text-purple-600">
+                                Day 3 Schedule
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                {retreat.day3.schedule.map((section, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="border-l-2 border-purple-200 pl-3"
+                                  >
+                                    {section.type === 'meal' ? (
+                                      <div className="bg-purple-50 p-2 rounded">
+                                        <div className="font-semibold">
+                                          {section.title}
+                                        </div>
+                                        <div className="text-gray-600 text-xs">
+                                          {section.time}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div className="space-y-1">
+                                        {section.items?.map((item, iIdx) => (
+                                          <div key={iIdx} className="py-1">
+                                            <div className="font-medium">
+                                              {item.title}
+                                            </div>
+                                            <div className="text-gray-600 text-xs">
+                                              {item.description}
+                                            </div>
+                                            <div className="text-purple-600 text-xs">
+                                              {item.time}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -692,18 +1085,21 @@ const RetreatsAdminPage = () => {
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
                   {/* Optional Fields Section */}
                   <div className="border-b pb-6">
-                  
-                    
                     <div className="space-y-4">
-                       <div>
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                         Title
+                          Title
                         </label>
                         <input
                           type="text"
                           value={formData.title}
-                          onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                          placeholder="Enter Description"
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              title: e.target.value,
+                            }))
+                          }
+                          placeholder="Enter Title"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
                         />
@@ -715,7 +1111,12 @@ const RetreatsAdminPage = () => {
                         <input
                           type="text"
                           value={formData.description}
-                          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              description: e.target.value,
+                            }))
+                          }
                           placeholder="Enter Description"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
@@ -724,12 +1125,17 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Venue 
+                          Venue
                         </label>
                         <input
                           type="text"
                           value={formData.venue}
-                          onChange={(e) => setFormData(prev => ({ ...prev, venue: e.target.value }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              venue: e.target.value,
+                            }))
+                          }
                           placeholder="Enter venue location"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
@@ -738,12 +1144,17 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          YouTube Video URL 
+                          YouTube Video URL
                         </label>
                         <input
                           type="url"
                           value={formData.youtube_video}
-                          onChange={(e) => setFormData(prev => ({ ...prev, youtube_video: e.target.value }))}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              youtube_video: e.target.value,
+                            }))
+                          }
                           placeholder="https://www.youtube.com/watch?v=..."
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
@@ -752,13 +1163,15 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Photos 
+                          Photos
                         </label>
                         <div className="space-y-3">
                           <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors">
                             <Upload size={20} className="text-gray-400" />
                             <span className="text-sm text-gray-600">
-                              {uploadingPhotos ? 'Uploading...' : 'Upload Photos'}
+                              {uploadingPhotos
+                                ? 'Uploading...'
+                                : 'Upload Photos'}
                             </span>
                             <input
                               type="file"
@@ -780,7 +1193,9 @@ const RetreatsAdminPage = () => {
                                     className="w-full h-32 object-cover rounded-lg"
                                   />
                                   <button
-                                    onClick={() => handleRemovePhoto(photo, idx)}
+                                    onClick={() =>
+                                      handleRemovePhoto(photo, idx)
+                                    }
                                     className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                                     type="button"
                                     disabled={submitting}
@@ -793,6 +1208,24 @@ const RetreatsAdminPage = () => {
                           )}
                         </div>
                       </div>
+
+                      {/* 3-Day Toggle */}
+                      <div className="flex items-center gap-3 pt-4">
+                        <input
+                          type="checkbox"
+                          id="threeDayToggle"
+                          checked={isThreeDayRetreat}
+                          onChange={toggleThreeDay}
+                          disabled={submitting}
+                          className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-600"
+                        />
+                        <label
+                          htmlFor="threeDayToggle"
+                          className="text-sm font-medium text-gray-700 cursor-pointer"
+                        >
+                          This is a 3-day retreat
+                        </label>
+                      </div>
                     </div>
                   </div>
 
@@ -801,6 +1234,9 @@ const RetreatsAdminPage = () => {
 
                   {/* Day 2 */}
                   {renderDayScheduleForm('day2', 2)}
+
+                  {/* Day 3 (conditional) */}
+                  {isThreeDayRetreat && renderDayScheduleForm('day3', 3)}
                 </div>
 
                 {/* Submit Buttons */}

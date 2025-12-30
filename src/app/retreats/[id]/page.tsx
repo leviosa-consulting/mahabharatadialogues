@@ -33,7 +33,7 @@ interface Retreat {
   photos?: string[]
   day1: DaySchedule
   day2: DaySchedule
-  footerNote: string
+  day3?: DaySchedule
 }
 
 const RetreatDetailPage: React.FC = () => {
@@ -220,6 +220,12 @@ const RetreatDetailPage: React.FC = () => {
     { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName },
   ]
 
+  if (retreat.day3) {
+    days.push({ day: 3, date: retreat.day3.date, dayName: retreat.day3.dayName })
+  }
+
+  const isThreeDay = !!retreat.day3
+
   const youtubeEmbedUrl = retreat.youtube_video
     ? getYoutubeEmbedUrl(retreat.youtube_video)
     : null
@@ -251,7 +257,7 @@ const RetreatDetailPage: React.FC = () => {
               <Calendar size={18} className="opacity-80" />
               <span className="text-sm md:text-base tracking-wide">
                 {retreat.day1.date} <span className="mx-1">–</span>{' '}
-                {retreat.day2.date}
+                {isThreeDay ? retreat.day3!.date : retreat.day2.date}
               </span>
             </div>
           </div>
@@ -277,7 +283,7 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Day circles - Desktop */}
-      <div className="w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center gap-8 md:gap-84">
+      <div className={`w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center ${isThreeDay ? 'gap-8 md:gap-16' : 'gap-8 md:gap-84'}`}>
         {days.map((dayInfo) => (
           <div
             key={dayInfo.day}
@@ -308,7 +314,7 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Schedule Grid */}
-      <div className="grid grid-cols-1 md:mt-8 md:grid-cols-2 lg:mx-10 xl:mx-25 ">
+      <div className={`grid grid-cols-1 md:mt-8 ${isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'} lg:mx-10 xl:mx-25`}>
         {/* Day 1 Column */}
         <div className="border-b md:border-b-0 md:border-r border-black">
           <div className="px-2 md:px-8 py-6 md:py-0 space-y-4">
@@ -323,7 +329,7 @@ const RetreatDetailPage: React.FC = () => {
         </div>
 
         {/* Day 2 Column */}
-        <div>
+        <div className={isThreeDay ? 'md:border-r border-black' : ''}>
           {/* Day circle Mobile - Day 2 */}
           <div className="md:hidden flex justify-center items-center mt-4 font-merri">
             <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
@@ -335,12 +341,34 @@ const RetreatDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="px-2 py-6 md:px-8 md:py-0 space-y-4 ">
+          <div className={`px-2 py-6 md:px-8 md:py-0 space-y-4 ${isThreeDay ? '' : 'border-b md:border-b-0'}`}>
             {retreat.day2.schedule.map((section, index) =>
               renderScheduleSection(section, index, false)
             )}
           </div>
         </div>
+
+        {/* Day 3 Column (if exists) */}
+        {retreat.day3 && (
+          <div>
+            {/* Day circle Mobile - Day 3 */}
+            <div className="md:hidden flex justify-center items-center mt-4 font-merri">
+              <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+                <div className="text-center leading-tight">
+                  <div className="text-xs tracking-wide mb-1">-DAY 3-</div>
+                  <div className="text-xl font-semibold">{days[2].date}</div>
+                  <div className="text-sm mt-1">{days[2].dayName}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-2 py-6 md:px-8 md:py-0 space-y-4">
+              {retreat.day3.schedule.map((section, index) =>
+                renderScheduleSection(section, index, false)
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer */}

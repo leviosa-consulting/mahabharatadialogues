@@ -1,5 +1,3 @@
-
-
 // app/api/retreats/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
@@ -18,12 +16,13 @@ export async function PUT(
       youtube_video, 
       photos, 
       day1, 
-      day2, 
+      day2,
+      day3,
     } = body;
 
     if (!day1?.date || !day2?.date) {
       return NextResponse.json(
-        { success: false, error: "Both day dates are required" },
+        { success: false, error: "Day 1 and Day 2 dates are required" },
         { status: 400 }
       );
     }
@@ -48,6 +47,18 @@ export async function PUT(
     if (venue) updateData.venue = venue;
     if (youtube_video) updateData.youtube_video = youtube_video;
     if (photos && photos.length > 0) updateData.photos = photos;
+
+    // Add or remove day3
+    if (day3 && day3.date) {
+      updateData.day3 = {
+        date: day3.date,
+        dayName: day3.dayName || "",
+        schedule: day3.schedule || []
+      };
+    } else {
+      // Explicitly remove day3 if it's not provided
+      updateData.day3 = null;
+    }
 
     await adminDB
       .collection("retreats")
