@@ -93,7 +93,8 @@ const RetreatDetailPage: React.FC = () => {
   const renderScheduleSection = (
     section: ScheduleSection,
     index: number,
-    isLastActivity: boolean
+    isLastActivity: boolean,
+    isThreeDayRetreat: boolean
   ) => {
     if (section.type === 'meal') {
       return (
@@ -124,7 +125,11 @@ const RetreatDetailPage: React.FC = () => {
 
               {item.description && (
                 <div
-                  className={`text-sm text-gray-600 leading-tight mt-0.5 font-merri px-3 md:w-[90%] ${
+                  className={`text-sm text-gray-600 leading-tight mt-0.5 font-merri px-3 ${
+                    isThreeDayRetreat 
+                      ? '2xl:w-[90%]' 
+                      : 'md:w-[90%]'
+                  } ${
                     itemIndex === section.items!.length - 1
                       ? 'pb-8'
                       : ''
@@ -322,7 +327,8 @@ const RetreatDetailPage: React.FC = () => {
               renderScheduleSection(
                 section,
                 index,
-                index === retreat.day1.schedule.length - 1
+                index === retreat.day1.schedule.length - 1,
+                isThreeDay
               )
             )}
           </div>
@@ -343,7 +349,7 @@ const RetreatDetailPage: React.FC = () => {
 
           <div className={`px-2 py-6 md:px-8 md:py-0 space-y-4 ${isThreeDay ? '' : 'border-b md:border-b-0'}`}>
             {retreat.day2.schedule.map((section, index) =>
-              renderScheduleSection(section, index, false)
+              renderScheduleSection(section, index, false, isThreeDay)
             )}
           </div>
         </div>
@@ -364,7 +370,7 @@ const RetreatDetailPage: React.FC = () => {
 
             <div className="px-2 py-6 md:px-8 md:py-0 space-y-4">
               {retreat.day3.schedule.map((section, index) =>
-                renderScheduleSection(section, index, false)
+                renderScheduleSection(section, index, false, isThreeDay)
               )}
             </div>
           </div>
