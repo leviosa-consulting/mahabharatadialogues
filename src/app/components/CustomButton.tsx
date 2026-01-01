@@ -17,8 +17,8 @@ const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
         backgroundColor: bgColor,
         color: textColor,
       }}
-      className="inline-flex items-center justify-center py-5.5 px-16 sm:px-18 lg:px-27
-                 font-bold text-[22px] sm:text-[16px] lg:text-[24px] font-merri"
+      className="inline-flex items-center justify-center py-5.5 px-18 lg:px-24 2xl:px-28
+                 font-bold text-[14px] sm:text-[18px] font-merri"
     >
       {text}
     </a>

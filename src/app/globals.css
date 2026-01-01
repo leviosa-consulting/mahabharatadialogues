@@ -5,6 +5,15 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap'); */
 @font-face {
   font-family: "Neco";
+  src: url("/fonts/neco/Neco-Regular.woff2") format("woff2"),
+       url("/fonts/neco/Neco-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neco";
   src: url("/fonts/neco/Neco-Italic.woff2") format("woff2"),
        url("/fonts/neco/Neco-Italic.woff") format("woff");
   font-weight: 400;
@@ -12,10 +21,10 @@
   font-display: swap;
 }
 
+
 @layer utilities {
   .font-neco {
     font-family: "Neco", sans-serif;
-    font-style: italic;
   }
 
   .font-merri {
@@ -25,11 +34,12 @@
 
 
 
-html, body{
+html,
+body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  
+
 }
 
 .merriweather-sans {
@@ -117,4 +127,3 @@ html, body{
 .grad {
   background-image: linear-gradient(to bottom, white, #2d9ccf);
 }
-

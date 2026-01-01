@@ -38,7 +38,7 @@ export default function HeroSection() {
           </div>
 
           {/* text */}
-          <p className="font-neco text-[24px] xl:text-[32px] font-bold text-white italic text-center mt-8 xl:max-w-[600px]">
+          <p className="font-neco italic text-[24px] xl:text-[32px] font-bold text-white  text-center mt-8 xl:max-w-[600px]">
             Mahabharata Dialogues is a collective dadada dad which meets on the
             4th Saturday of every month on new topics dada da da.
           </p>
@@ -101,7 +101,7 @@ export default function HeroSection() {
         {/* text */}
         <div className="flex flex-col gap-2 justify-center items-center text-center py-6 px-1.5">
           {/* text */}
-          <p className="font-neco text-[22px] font-bold text-white italic text-center mt-8">
+          <p className="font-neco italic text-[22px] font-bold text-white  text-center mt-8">
             Mahabharata Dialogues is a collective dadada dad which meets on the
             4th Saturday of every month on new topics dada da da.
           </p>
