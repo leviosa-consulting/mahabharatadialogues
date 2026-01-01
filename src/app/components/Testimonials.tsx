@@ -107,7 +107,7 @@ const Testimonials = () => {
 
   return (
     <div
-      className="w-full  bg-gray-300"
+      className="w-full  pb-30"
       style={{
         backgroundImage: `
       linear-gradient(
