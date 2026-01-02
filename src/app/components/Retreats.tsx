@@ -1,6 +1,7 @@
 import React from 'react'
 import CustomButton from './CustomButton'
 import YouTubeSection from './YouTubeSection'
+import LatestBlogs from '@/lib/LatestBlogs'
 
 const Retreats = () => {
   return (
@@ -108,34 +109,7 @@ const Retreats = () => {
                 ON OUR BLOG
               </h2>
 
-              <div className="flex flex-col w-full mt-12 gap-12">
-                <div className="text-white max-w-[300px] flex flex-col gap-2">
-                  <h2 className="font-merri font-bold text-[18px]">
-                    Dec 25, 2024
-                  </h2>
-                  <p className="font-neco font-bold text-[18px] underline">
-                    Beginning, Middle and End
-                  </p>
-                </div>
-
-                <div className="text-white max-w-[300px] flex flex-col gap-2">
-                  <h2 className="font-merri font-bold text-[18px]">
-                    Dec 25, 2024
-                  </h2>
-                  <p className="font-neco font-bold text-[18px] underline">
-                    Ashvatthama's curse
-                  </p>
-                </div>
-
-                <div className="text-white max-w-[300px] flex flex-col gap-2">
-                  <h2 className="font-merri font-bold text-[18px]">
-                    Dec 25, 2024
-                  </h2>
-                  <p className="font-neco font-bold text-[18px] underline">
-                    The 18 parva classification of Mahabharata
-                  </p>
-                </div>
-              </div>
+              <LatestBlogs />
             </div>
           </div>
         </div>
