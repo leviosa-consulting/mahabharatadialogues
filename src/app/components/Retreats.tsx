@@ -1,5 +1,6 @@
 import React from 'react'
 import CustomButton from './CustomButton'
+import YouTubeSection from './YouTubeSection'
 
 const Retreats = () => {
   return (
@@ -51,45 +52,54 @@ const Retreats = () => {
               <h2 className="font-merri text-[24px] text-white font-bold">
                 LATEST ON YOUTUBE
               </h2>
-              <div className="flex flex-col gap-6">
+              <div className="hidden flex-col gap-6">
                 {/* youtube */}
                 <div className="flex gap-3 items-center">
-                  <div className="w-[284]">
-                    <img
-                      src="/assets/dance1.png"
-                      alt="dance"
-                      className="w-full h-full aspect-284/186"
+                  <div className="w-[284px] aspect-284/186">
+                    <iframe
+                      src="https://www.youtube.com/embed/tw7d2hMHyRY"
+                      title="YouTube video"
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
                     />
                   </div>
+
                   <div className="text-white max-w-[300px]">
                     <h2 className="font-merri font-bold text-[18px]">
-                      Dec 25, 2024
+                      Feb 28, 2025
                     </h2>
                     <p className="font-neco font-bold text-[18px] underline">
-                      The Kurukshetra War: 18 Akshauhinis were destroyed, what
-                      purpose did it serve?
+                      A Weekend of Wisdom: Inside the Mahabharata Retreat
+                      (Second Edition) Experience
                     </p>
                   </div>
                 </div>
                 {/* youtube */}
                 <div className="flex gap-3 items-center">
-                  <div className="w-[284]">
-                    <img
-                      src="/assets/lecture.png"
-                      alt="dance"
-                      className="w-full h-full aspect-284/186"
+                  <div className="w-[284px] aspect-284/186">
+                    <iframe
+                      src="https://www.youtube.com/embed/vzIB3zXqMVk"
+                      title="YouTube video"
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
                     />
                   </div>
                   <div className="text-white max-w-[300px]">
                     <h2 className="font-merri font-bold text-[18px]">
-                      Dec 25, 2024
+                      Jan 24, 2025
                     </h2>
                     <p className="font-neco font-bold text-[18px] underline">
-                      The Forest Years: 12 Years in Exile Plus 1 Year Incognito
+                      Join us for a 2-day Mahabharata Retreat at Fireflies
+                      Ashram!
                     </p>
                   </div>
                 </div>
               </div>
+              <YouTubeSection />
             </div>
           </div>
           <div className="col-start-9 col-span-4 bg-[#47ABD880]">
@@ -132,17 +142,17 @@ const Retreats = () => {
       </div>
 
       {/* footer */}
-      <div className='flex flex-col justify-center items-center text-white text-[32px] font-bold font-neco my-16'>
+      <div className="flex flex-col justify-center items-center text-white text-[32px] font-bold font-neco my-16">
         <p>mahabharatadialogues@gmail.com</p>
         <p>+91 00000 00000</p>
-       <div className='flex gap-3'>
-         <div className="w-8 h-8 bg-[#D9D9D9]"></div>
-        <div className="w-8 h-8 bg-[#D9D9D9]"></div>
-        <div className="w-8 h-8 bg-[#D9D9D9]"></div>
-       </div>
+        <div className="flex gap-3">
+          <div className="w-8 h-8 bg-[#D9D9D9]"></div>
+          <div className="w-8 h-8 bg-[#D9D9D9]"></div>
+          <div className="w-8 h-8 bg-[#D9D9D9]"></div>
+        </div>
       </div>
 
-      <div className='bg-[#1D5C7580] h-12'></div>
+      <div className="bg-[#1D5C7580] h-12"></div>
     </section>
   )
 }
