@@ -15,7 +15,7 @@ const Retreats = () => {
       }}
     >
       <div className="mx-2 xl:mx-36 overflow-hidden bg-[#1D5C7580]">
-        <div className="grid grid-cols-1 sm:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 p-10 ">
+        <div className="grid grid-cols-6 sm:grid-cols-4 lg:grid-cols-10 xl:grid-cols-12 p-10 ">
           <div className="col-start-1 col-span-6 py-10">
             <div className="p-2 flex flex-col gap-6">
               <h2 className="font-neco text-[32px] text-white font-bold">
@@ -48,7 +48,7 @@ const Retreats = () => {
       {/* blogs */}
       <div className="mx-2 xl:mx-36 overflow-hidden bg-[#1D5C7580]">
         <div className="grid grid-cols-1 sm:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 ">
-          <div className="col-start-1 col-span-8  bg-[#D1212780]">
+          <div className="col-start-1 md:col-span-4 lg:col-span-6 xl:col-span-8  bg-[#D1212780]">
             <div className="flex flex-col gap-6 px-6 py-8">
               <h2 className="font-merri text-[24px] text-white font-bold">
                 LATEST ON YOUTUBE
@@ -103,7 +103,7 @@ const Retreats = () => {
               <YouTubeSection />
             </div>
           </div>
-          <div className="col-start-9 col-span-4 bg-[#47ABD880]">
+          <div className="md:col-start-5 lg:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
             <div className="flex flex-col px-6 py-8">
               <h2 className="font-merri text-white font-bold text-[24px]">
                 ON OUR BLOG

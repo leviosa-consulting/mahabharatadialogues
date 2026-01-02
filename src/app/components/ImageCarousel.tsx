@@ -7,7 +7,7 @@ const ImageCarousel = () => {
 
   return (
     <section
-      className=" w-full overflow-hidden flex flex-col justify-center gap-8 pb-20"
+      className=" w-full overflow-hidden flex flex-col justify-center gap-8 pb-20 "
       style={{
         backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
         backgroundSize: 'cover',

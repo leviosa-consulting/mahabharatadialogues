@@ -17,7 +17,7 @@ export default function Home() {
     >
       <Hero />
       <Testimonials />
-      <div className="relative ">
+      <div className="relative -mt-20">
         <ImageCarousel />
       </div>
       <Retreats />
