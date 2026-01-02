@@ -70,14 +70,6 @@ const Testimonials = () => {
             (prev) => (prev - 1 + testimonials.length) % testimonials.length
           )
         }
-      } else {
-        if (e.deltaY > 0) {
-          setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-        } else if (e.deltaY < 0) {
-          setCurrentIndex(
-            (prev) => (prev - 1 + testimonials.length) % testimonials.length
-          )
-        }
       }
     }, 50)
   }
@@ -122,7 +114,7 @@ const Testimonials = () => {
       }}
     >
       <div className="mx-2 xl:mx-16 2xl:mx-30 overflow-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 pt-20  ">
+        <div className="grid grid-cols-1 sm:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 pt-20 ">
           {/* IMAGE */}
           <div className="order-1 sm:order-0 sm:col-start-1 sm:col-span-4 lg:col-start-2 lg:col-span-4 xl:col-start-3 xl:col-span-4 flex">
             <div className="w-full md:max-w-[465px] aspect-auto md:aspect-[465/345.2]">
@@ -136,13 +128,13 @@ const Testimonials = () => {
 
           {/* TEXT */}
           <div className="order-2 sm:order-0 sm:col-start-5 sm:col-span-4 lg:col-start-6 lg:col-span-4 xl:col-start-7 xl:col-span-4 flex">
-            <div className="px-8 py-4 bg-white/30 flex flex-col justify-center items-center text-center sm:text-start">
+            <div className="px-2 sm:px-8 py-4 bg-white/30 flex flex-col justify-center items-center text-center sm:text-start">
               <p className="font-neco text-[22px] sm:text-[32px] text-white font-normal">
                 Join us for the upcoming Dialogue on{' '}
                 <span className="font-bold">23rd January, 2026</span>
               </p>
 
-              <div className="sm:-ml-18 py-6">
+              <div className="sm:-ml-28 2xl:-ml-20 py-6">
                 <CustomButton
                   text="GET YOUR TICKETS"
                   bgColor="#D12127"
@@ -175,12 +167,12 @@ const Testimonials = () => {
           </p>
 
           {/* Navigation Dots */}
-          <div className="flex justify-center gap-2 my-8">
+          <div className="flex justify-center gap-3.5 my-8">
             {testimonials.map((_, index) => (
               <div
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
+                className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
                   index === currentIndex ? 'bg-white' : 'bg-gray-400'
                 }`}
               ></div>

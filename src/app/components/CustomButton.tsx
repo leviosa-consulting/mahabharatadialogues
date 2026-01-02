@@ -11,14 +11,20 @@ const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
   return (
     <a
       href={url}
-      target="_blank"
+      
       rel="noopener noreferrer"
       style={{
         backgroundColor: bgColor,
         color: textColor,
+        width: 'min(449.73px, 90vw)',
+        height: 'clamp(64px, 10vw, 80px)',
       }}
-      className="inline-flex items-center justify-center py-5.5 px-18 lg:px-24 2xl:px-28
-                 font-bold text-[14px] sm:text-[18px] font-merri"
+      className="
+        inline-flex items-center justify-center
+        font-bold font-merri
+        text-[16px] sm:text-[18px]
+        rounded-none
+      "
     >
       {text}
     </a>
