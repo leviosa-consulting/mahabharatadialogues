@@ -6,20 +6,12 @@ import Retreats from './components/Retreats'
 
 export default function Home() {
   return (
-    <div
-      className=""
-      //  style={{
-      //     backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
-      //     backgroundSize: 'cover',
-      //     backgroundRepeat: 'no-repeat',
-      //     backgroundPosition: 'center',
-      //   }}
-    >
+    <div>
       <Hero />
       <Testimonials />
-      <div className="relative -mt-20">
-        <ImageCarousel />
-      </div>
+
+      <ImageCarousel />
+
       <Retreats />
     </div>
   )

@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { merri } from '@/app/fonts/merri'
 interface ButtonProps {
   text: string
   bgColor: string
@@ -19,12 +19,13 @@ const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
         width: 'min(449.73px, 90vw)',
         height: 'clamp(64px, 10vw, 80px)',
       }}
-      className="
-        inline-flex items-center justify-center
-        font-bold font-merri
-        text-[16px] sm:text-[18px]
-        rounded-none
-      "
+     className={`
+    ${merri.className}
+    inline-flex items-center justify-center
+    font-bold
+    text-[16px] sm:text-[18px]
+    rounded-none
+  `}
     >
       {text}
     </a>

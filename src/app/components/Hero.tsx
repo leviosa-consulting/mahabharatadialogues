@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import CustomButton from './CustomButton'
+import { merri } from '../fonts/merri'
 
 export default function HeroSection() {
   return (
@@ -28,10 +29,10 @@ export default function HeroSection() {
           {/* circle */}
           <div className="w-45 h-45 xl:w-60 xl:h-60 rounded-full bg-red-500 flex items-center justify-center text-center">
             <div className="flex flex-col gap-2">
-              <p className="text-white text-lg xl:text-2xl font-merri font-bold italic">
+              <p className={`text-white text-lg xl:text-2xl ${merri.className} font-bold italic`}>
                 Mahabharata Dialogues
               </p>
-              <span className="font-normal font-merri text-sm italic text-white">
+              <span className={`font-normal ${merri.className} text-sm italic text-white`}>
                 Epic stories, Ancient Wisdom
               </span>
             </div>
@@ -70,10 +71,10 @@ export default function HeroSection() {
           {/* circle */}
           <div className="w-54 h-54 rounded-full bg-red-500 flex items-center justify-center text-center">
             <div className="flex flex-col gap-2">
-              <p className="text-white text-2xl font-merri font-bold italic">
+              <p className="text-white text-2xl ${merri.className} font-bold italic">
                 Mahabharata Dialogues
               </p>
-              <span className="font-normal font-merri text-sm italic text-white">
+              <span className="font-normal ${merri.className} text-sm italic text-white">
                 Epic stories, Ancient Wisdom
               </span>
             </div>

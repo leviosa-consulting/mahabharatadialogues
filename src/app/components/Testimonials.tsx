@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from './CustomButton'
+import { merri } from '../fonts/merri'
 interface Testimonial {
   id: string
   quote: string
@@ -158,7 +159,7 @@ const Testimonials = () => {
           <p className="text-white font-neco italic text-[24px] sm:text-[32px] leading-relaxed ">
             {testimonials[currentIndex]?.quote}
           </p>
-          <p className="text-white font-merri mt-4 font-bold text-[24px] sm:[32px]">
+          <p className={`text-white ${merri.className} mt-4 font-bold text-[24px] sm:[32px]`}>
             <span className=" uppercase">
               {' '}
               {testimonials[currentIndex]?.name},{' '}

@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import { Calendar, ArrowRight, MapPin, Image as ImageIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { merri } from '../fonts/merri'
 
 interface DaySchedule {
   date: string
@@ -118,8 +119,8 @@ const RetreatsPage: React.FC = () => {
       {/* Header */}
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="text-lg mb-2 font-merri">Mahabharata Dialogues</div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-merri">Retreats</h1>
+          <div className={`text-lg mb-2 ${merri.className}`}>Mahabharata Dialogues</div>
+          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${merri.className}`}>Retreats</h1>
           <p className="text-lg font-neco italic">
             Explore our immersive residential retreats
           </p>
@@ -127,7 +128,7 @@ const RetreatsPage: React.FC = () => {
       </div>
 
       {/* Retreats Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-12 font-merri">
+      <div className={`max-w-7xl mx-auto px-6 py-12 ${merri.className}`}>
         {retreats.length === 0 ? (
           <div className="text-center py-12">
             <Calendar size={64} className="mx-auto mb-4 text-gray-400" />

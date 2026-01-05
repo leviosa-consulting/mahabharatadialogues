@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, MapPin, Youtube, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { merri } from '@/app/fonts/merri'
 
 interface ScheduleItem {
   title: string
@@ -100,10 +101,10 @@ const RetreatDetailPage: React.FC = () => {
       return (
         <div
           key={index}
-          className="bg-[#60a5fa] text-white font-merri px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center"
+          className={`bg-[#60a5fa] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
         >
-          <span className="font-merri">{section.title}</span>
-          <span className="text-[16px] md:text-lg font-merri">
+          <span className="${merri.className}">{section.title}</span>
+          <span className={`text-[16px] md:text-lg ${merri.className}`}>
             {section.time}
           </span>
         </div>
@@ -118,14 +119,14 @@ const RetreatDetailPage: React.FC = () => {
             className="flex justify-between items-start gap-3"
           >
             <div className="flex-1">
-              <div className="flex items-start font-semibold text-md leading-snug font-merri">
+              <div className={`flex items-start font-semibold text-md leading-snug ${merri.className}`}>
                 <span className="mr-2 text-2xl leading-none">•</span>
                 <span>{item.title}</span>
               </div>
 
               {item.description && (
                 <div
-                  className={`text-sm text-gray-600 leading-tight mt-0.5 font-merri px-3 ${
+                  className={`text-sm text-gray-600 leading-tight mt-0.5 ${merri.className} px-3 ${
                     isThreeDayRetreat 
                       ? '2xl:w-[90%]' 
                       : 'md:w-[90%]'
@@ -139,7 +140,7 @@ const RetreatDetailPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="text-md whitespace-nowrap pt-0.5 pr-2.5 font-merri md:pr-5">
+            <div className={`text-md whitespace-nowrap pt-0.5 pr-2.5 ${merri.className} md:pr-5`}>
               {item.time}
             </div>
           </div>
@@ -254,7 +255,7 @@ const RetreatDetailPage: React.FC = () => {
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Left */}
-          <div className="text-center md:text-left font-merri">
+          <div className={`text-center md:text-left ${merri.className}`}>
             <div className="text-lg mb-2 ">Mahabharata Dialogues</div>
             <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
 
@@ -278,7 +279,7 @@ const RetreatDetailPage: React.FC = () => {
             {retreat.venue && (
               <div className="flex items-center gap-2 mt-3 justify-center md:justify-start">
                 <MapPin size={18} className="text-white/80" />
-                <span className="text-sm md:text-base tracking-wide text-white/90 font-merri">
+                <span className={`text-sm md:text-base tracking-wide text-white/90 ${merri.className}`}>
                   {retreat.venue}
                 </span>
               </div>
@@ -292,7 +293,7 @@ const RetreatDetailPage: React.FC = () => {
         {days.map((dayInfo) => (
           <div
             key={dayInfo.day}
-            className="w-40 font-merri h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center"
+            className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center`}
           >
             <div className="text-center leading-tight">
               <div className="text-xs tracking-wide mb-1">
@@ -308,7 +309,7 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Day circle Mobile - Day 1 */}
-      <div className="md:hidden flex justify-center items-center mt-4 font-merri">
+      <div className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}>
         <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
           <div className="text-center leading-tight">
             <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
@@ -337,7 +338,7 @@ const RetreatDetailPage: React.FC = () => {
         {/* Day 2 Column */}
         <div className={isThreeDay ? 'md:border-r border-black' : ''}>
           {/* Day circle Mobile - Day 2 */}
-          <div className="md:hidden flex justify-center items-center mt-4 font-merri">
+          <div className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}>
             <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
@@ -358,7 +359,7 @@ const RetreatDetailPage: React.FC = () => {
         {retreat.day3 && (
           <div>
             {/* Day circle Mobile - Day 3 */}
-            <div className="md:hidden flex justify-center items-center mt-4 font-merri">
+            <div className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}>
               <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
                 <div className="text-center leading-tight">
                   <div className="text-xs tracking-wide mb-1">-DAY 3-</div>
@@ -378,7 +379,7 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <div className="text-center text-md text-gray-500 py-4 border-t border-black md:mx-10 lg:mx-30 font-merri">
+      <div className={`text-center text-md text-gray-500 py-4 border-t border-black md:mx-10 lg:mx-30 ${merri.className}`}>
         * Optional/Simultaneous events
       </div>
 

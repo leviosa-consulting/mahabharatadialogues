@@ -1,3 +1,4 @@
+import { merri } from "@/app/fonts/merri";
 import Link from "next/link";
 
 interface Blog {
@@ -55,7 +56,7 @@ export default async function LatestBlogs() {
   const blogs = await fetchBlogs();
 
   const latestBlogs = blogs
-    .filter((b) => b.updated_at) // ensure exists
+    .filter((b) => b.updated_at) 
     .sort(
       (a, b) =>
         new Date(b.updated_at).getTime() -
@@ -76,9 +77,9 @@ export default async function LatestBlogs() {
       {latestBlogs.map((blog) => (
         <div
           key={blog.id}
-          className="text-white max-w-[300px] flex flex-col gap-2"
+          className="text-white max-w-[300px] flex flex-col gap-1"
         >
-          <h2 className="font-merri font-bold text-[18px]">
+          <h2 className={`${merri.className} font-bold text-[18px]`}>
             {formatDate(blog.updated_at)}
           </h2>
 
