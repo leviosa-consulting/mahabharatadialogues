@@ -66,7 +66,7 @@ export default async function LatestBlogs() {
         new Date(b.updated_at).getTime() -
         new Date(a.updated_at).getTime()
     )
-    .slice(0, 3);
+    .slice(0, 4);
 
   if (latestBlogs.length === 0) {
     return (
@@ -84,7 +84,7 @@ export default async function LatestBlogs() {
           className="
             text-white
             w-full
-            flex flex-col gap-2
+            flex flex-col 
             text-center
             md:text-left
             md:max-w-[300px]
