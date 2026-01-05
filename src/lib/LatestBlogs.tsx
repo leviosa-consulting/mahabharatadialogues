@@ -6,10 +6,12 @@ interface Blog {
   title: string;
   slug: string;
   created_at?: string;
-  updated_at: string; // ISO string e.g. "2025-12-15T11:08:59.261Z"
+  updated_at: string;
 }
 
-// Safe date formatter (handles undefined / invalid)
+/* ------------------ Utils ------------------ */
+
+// Safe date formatter
 const formatDate = (date?: string) => {
   if (!date) return "";
   const d = new Date(date);
@@ -20,6 +22,8 @@ const formatDate = (date?: string) => {
     year: "numeric",
   });
 };
+
+/* ------------------ Data ------------------ */
 
 async function fetchBlogs(): Promise<Blog[]> {
   let baseUrl = "";
@@ -37,9 +41,7 @@ async function fetchBlogs(): Promise<Blog[]> {
   try {
     const res = await fetch(`${baseUrl}/api/blogs`, {
       cache: "no-store",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     if (!res.ok) return [];
@@ -52,11 +54,13 @@ async function fetchBlogs(): Promise<Blog[]> {
   }
 }
 
+/* ------------------ Component ------------------ */
+
 export default async function LatestBlogs() {
   const blogs = await fetchBlogs();
 
   const latestBlogs = blogs
-    .filter((b) => b.updated_at) 
+    .filter((b) => b.updated_at)
     .sort(
       (a, b) =>
         new Date(b.updated_at).getTime() -
@@ -66,29 +70,48 @@ export default async function LatestBlogs() {
 
   if (latestBlogs.length === 0) {
     return (
-      <p className="text-white/70 mt-12">
+      <p className="text-white/70 mt-12 text-center md:text-left">
         No blogs available yet.
       </p>
     );
   }
 
   return (
-    <div className="flex flex-col w-full mt-12 gap-12">
+    <div className="flex flex-col w-full mt-12 gap-10">
       {latestBlogs.map((blog) => (
         <div
           key={blog.id}
-          className="text-white max-w-[300px] flex flex-col gap-1"
+          className="
+            text-white
+            w-full
+            flex flex-col gap-2
+            text-center
+            md:text-left
+            md:max-w-[300px]
+            mx-auto md:mx-0
+          "
         >
-          <h2 className={`${merri.className} font-bold text-[18px]`}>
+          {/* DATE */}
+          <h2
+            className={`${merri.className} font-bold text-[14px] md:text-[18px]`}
+          >
             {formatDate(blog.updated_at)}
           </h2>
 
+          {/* TITLE */}
           <Link
             href={`/blogs/${blog.slug}`}
-            className="font-neco font-bold text-[18px] underline hover:opacity-80 transition"
+            className="
+              font-neco font-bold
+              text-[16px] md:text-[18px]
+              underline
+              hover:opacity-80
+              transition
+              inline-block
+            "
           >
-            {blog.title.length > 40
-              ? blog.title.slice(0, 40) + "..."
+            {blog.title.length > 48
+              ? blog.title.slice(0, 48) + "..."
               : blog.title}
           </Link>
         </div>
