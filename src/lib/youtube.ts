@@ -37,10 +37,10 @@ export async function getLatestVideos(): Promise<Video[]> {
       `&order=date` +
       `&maxResults=5` +
       `&type=video` +
-      `&videoDuration=medium` // 🔥 removes Shorts
+      `&videoDuration=medium` 
 
     const res = await fetch(url, {
-      next: { revalidate: 3600 }, // cache for 1 hour
+      next: { revalidate: 3600 }, 
     })
 
     if (!res.ok) {

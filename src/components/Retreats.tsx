@@ -3,8 +3,10 @@ import CustomButton from './CustomButton'
 import YouTubeSection from './YouTubeSection'
 import LatestBlogs from '@/lib/LatestBlogs'
 import { merri } from '@/app/fonts/merri'
-
-const Retreats = () => {
+import Footer from './Footer'
+import { getLatestVideos } from '@/lib/youtube'
+export default async function Retreats() {
+   const videos = await getLatestVideos() 
   return (
     <section
       className="relative w-full overflow-hidden flex flex-col justify-center "
@@ -56,7 +58,7 @@ const Retreats = () => {
       {/* blogs */}
       <div className="mx-2 xl:mx-36 overflow-hidden bg-[#1D5C7580]">
         <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
-          {/* YOUTUBE — first on mobile */}
+          {/* YOUTUBE*/}
           <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
             <div className="flex flex-col gap-6 px-6 py-8">
               <h2
@@ -65,11 +67,16 @@ const Retreats = () => {
                 LATEST ON YOUTUBE
               </h2>
 
-              <YouTubeSection />
+             <YouTubeSection
+  videos={videos}
+  count={2}
+  layout="row"
+/>
+
             </div>
           </div>
 
-          {/* BLOG — below on mobile */}
+          {/* BLOG */}
           <div className="order-2 md:order-0 md:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
             <div className="flex flex-col px-6 py-8">
               <h2
@@ -84,33 +91,9 @@ const Retreats = () => {
         </div>
       </div>
 
-      {/* footer */}
-      <div
-        className="
-    flex flex-col justify-center items-center
-    text-white font-bold font-neco
-    my-16
-    text-[18px] sm:text-[22px] md:text-[32px]
-    px-4
-    text-center
-  "
-      >
-        <p className="break-all sm:break-normal">
-          mahabharatadialogues@gmail.com
-        </p>
-
-        <p className="mt-2">+91 00000 00000</p>
-
-        <div className="flex gap-3 mt-4">
-          <div className="w-8 h-8 bg-[#D9D9D9]"></div>
-          <div className="w-8 h-8 bg-[#D9D9D9]"></div>
-          <div className="w-8 h-8 bg-[#D9D9D9]"></div>
-        </div>
-      </div>
-
-      <div className="bg-[#1D5C7580] py-6"></div>
+     <Footer />
     </section>
   )
 }
 
-export default Retreats
+

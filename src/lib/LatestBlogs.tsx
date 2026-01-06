@@ -11,7 +11,6 @@ interface Blog {
 
 /* ------------------ Utils ------------------ */
 
-// Safe date formatter
 const formatDate = (date?: string) => {
   if (!date) return "";
   const d = new Date(date);
@@ -56,7 +55,11 @@ async function fetchBlogs(): Promise<Blog[]> {
 
 /* ------------------ Component ------------------ */
 
-export default async function LatestBlogs() {
+export default async function LatestBlogs({
+  count = 4, // 👈 DEFAULT = 4
+}: {
+  count?: number;
+}) {
   const blogs = await fetchBlogs();
 
   const latestBlogs = blogs
@@ -66,7 +69,7 @@ export default async function LatestBlogs() {
         new Date(b.updated_at).getTime() -
         new Date(a.updated_at).getTime()
     )
-    .slice(0, 4);
+    .slice(0, count); // 👈 USE PROP HERE
 
   if (latestBlogs.length === 0) {
     return (
@@ -92,9 +95,7 @@ export default async function LatestBlogs() {
           "
         >
           {/* DATE */}
-          <h2
-            className={`${merri.className} font-bold text-[14px] md:text-[18px]`}
-          >
+          <h2 className={`${merri.className} font-bold text-[14px] md:text-[18px]`}>
             {formatDate(blog.updated_at)}
           </h2>
 
