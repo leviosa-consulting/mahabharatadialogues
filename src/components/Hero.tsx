@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import CustomButton from './CustomButton'
-import { merri } from '../fonts/merri'
+import { merri } from '@/app/fonts/merri'
 
 export default function HeroSection() {
   return (

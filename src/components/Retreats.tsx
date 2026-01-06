@@ -2,7 +2,7 @@ import React from 'react'
 import CustomButton from './CustomButton'
 import YouTubeSection from './YouTubeSection'
 import LatestBlogs from '@/lib/LatestBlogs'
-import { merri } from '../fonts/merri'
+import { merri } from '@/app/fonts/merri'
 
 const Retreats = () => {
   return (

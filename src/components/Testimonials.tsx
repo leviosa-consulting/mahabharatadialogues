@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from './CustomButton'
-import { merri } from '../fonts/merri'
+import { merri } from '@/app/fonts/merri'
 interface Testimonial {
   id: string
   quote: string
