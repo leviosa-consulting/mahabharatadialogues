@@ -56,7 +56,7 @@ export default async function RetreatHero() {
         "
         >
           {/* upcoming retreats */}
-          <div className="mx-2 2xl:mx-20">
+          <div className="mx-4 2xl:mx-20">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
               <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
                 <div>
@@ -84,7 +84,7 @@ export default async function RetreatHero() {
                     Fireflies, Kanakpura Road, Bengaluru
                   </h4>
                   <p
-                    className={`${merri.className} text-[20px] text-white font-light italic py-6 pr-19`}
+                    className={`${merri.className} text-[20px] text-white font-light italic py-6 lg:pr-19`}
                   >
                     A brief about Retreat dada da dada dadadada Mahabharata
                     Dialogues is a collective dadada dad which meets on the 4th
@@ -93,7 +93,7 @@ export default async function RetreatHero() {
                 </div>
               </div>
               <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4 ">
-                <div className="flex flex-col justify-between gap-6 mt-10">
+                <div className="flex flex-col justify-between gap-6 lg:mt-10">
                   <div className='w-full'>
                     <CustomButton
                       text="EXPERIENCE THE RETREAT"
@@ -116,10 +116,10 @@ export default async function RetreatHero() {
                   </div>
                   <div className="border border-white">
                     <CustomButton
-                      text="SCHEDULE COMING SOON"
+                      text="SCHEDULE"
                       bgColor="#1D5C75"
                       textColor="#FFFFFF"
-                      url="#"
+                      url="/retreats/retreat-30-PX39193730"
                     />
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export default async function RetreatHero() {
         <div className="w-full">
           {/* past retreats */}
           <div className="w-full pt-8 pb-30">
-            <div className="mx-2 sm:mx-4 xl:mx-20">
+            <div className="mx-4 sm:mx-4 xl:mx-20">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 lg:col-span-5">
                   <div className="flex flex-col justify-between gap-3">
@@ -167,7 +167,7 @@ export default async function RetreatHero() {
                   </div>
                   <div>
                     <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 pr-19`}
+                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
                     >
                       A brief about Retreat dada da dada dadadada Mahabharata
                       Dialogues is a collective dadada dad which meets on the
@@ -185,7 +185,7 @@ export default async function RetreatHero() {
                 <div className="w-full order-2 sm:order-0 md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5">
                   <div className="flex flex-col justify-between gap-3">
                     <h3
-                      className={`font-neco text-[28px] text-[#1D5C75] font-bold mt-14`}
+                      className={`font-neco text-[28px] text-[#1D5C75] font-bold mt-8 lg:mt-14`}
                     >
                       Mahabharata Dialogues
                     </h3>
@@ -211,7 +211,7 @@ export default async function RetreatHero() {
                   </div>
                   <div>
                     <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 pr-19`}
+                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
                     >
                       A brief about Retreat dada da dada dadadada Mahabharata
                       Dialogues is a collective dadada dad which meets on the
@@ -231,7 +231,7 @@ export default async function RetreatHero() {
 
           {/* youtube/blogs */}
           <div className=" ">
-            <div className="mx-2 sm:mx-4 xl:mx-20 overflow-hidden bg-[#1D5C7580]">
+            <div className="mx-4 sm:mx-4 xl:mx-20 overflow-hidden bg-[#1D5C7580]">
               <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
                 {/* YOUTUBE*/}
                 <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">

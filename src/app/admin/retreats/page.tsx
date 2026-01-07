@@ -43,6 +43,7 @@ interface DaySchedule {
 interface Retreat {
   id: string
   title: string
+  slug?: string
   description?: string
   venue?: string
   youtube_video?: string
@@ -357,7 +358,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -384,7 +385,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -415,7 +416,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -454,7 +455,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -499,7 +500,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -545,7 +546,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -582,7 +583,7 @@ const RetreatsAdminPage = () => {
           },
         }
       }
-      
+
       const dayData = prev[day as 'day1' | 'day2']
       return {
         ...prev,
@@ -820,6 +821,29 @@ const RetreatsAdminPage = () => {
                         <h3 className="text-xl font-bold text-gray-900">
                           {retreat.title}
                         </h3>
+                        {retreat.slug && (
+                          <div className="mt-2 p-2 bg-blue-50 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">
+                              Public URL:
+                            </p>
+                            <div className="flex items-center gap-2">
+                              <code className="text-sm text-blue-600 font-mono">
+                                /retreats/{retreat.slug}
+                              </code>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(
+                                    `${window.location.origin}/retreats/${retreat.slug}`
+                                  )
+                                  alert('URL copied to clipboard!')
+                                }}
+                                className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded transition-colors"
+                              >
+                                Copy
+                              </button>
+                            </div>
+                          </div>
+                        )}
                         {retreat.description && (
                           <p className="text-purple-600 font-medium text-sm mt-2">
                             Event: {retreat.description}
@@ -931,7 +955,11 @@ const RetreatsAdminPage = () => {
                           </div>
                         )}
 
-                        <div className={`grid ${retreat.day3 ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
+                        <div
+                          className={`grid ${
+                            retreat.day3 ? 'md:grid-cols-3' : 'md:grid-cols-2'
+                          } gap-6`}
+                        >
                           <div>
                             <h4 className="font-semibold text-lg mb-3 text-purple-600">
                               Day 1 Schedule

@@ -1,4 +1,4 @@
-// app/retreats/[id]/page.tsx
+// app/retreats/[slug]/page.tsx
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -27,6 +27,7 @@ interface DaySchedule {
 
 interface Retreat {
   id: string
+  slug?: string  // Added slug field (optional for backwards compatibility)
   title: string
   description?: string
   venue?: string
@@ -46,10 +47,10 @@ const RetreatDetailPage: React.FC = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
 
   useEffect(() => {
-    if (params.id) {
-      fetchRetreat(params.id as string)
+    if (params.slug) {
+      fetchRetreat(params.slug as string)
     }
-  }, [params.id])
+  }, [params.slug])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -68,13 +69,26 @@ const RetreatDetailPage: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedImageIndex])
 
-  const fetchRetreat = async (id: string) => {
+  const fetchRetreat = async (slugOrId: string) => {
     try {
+      // First try to fetch by slug
+      const slugResponse = await fetch(`/api/retreats/by-slug/${slugOrId}`)
+      
+      if (slugResponse.ok) {
+        const slugData = await slugResponse.json()
+        if (slugData.success && slugData.data) {
+          setRetreat(slugData.data)
+          setLoading(false)
+          return
+        }
+      }
+
+      // Fallback: fetch all retreats and find by ID (for backwards compatibility)
       const response = await fetch('/api/retreats')
       const data = await response.json()
 
       if (data.success) {
-        const foundRetreat = data.data.find((r: Retreat) => r.id === id)
+        const foundRetreat = data.data.find((r: Retreat) => r.id === slugOrId)
         if (foundRetreat) {
           setRetreat(foundRetreat)
         } else {

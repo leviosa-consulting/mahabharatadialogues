@@ -1,6 +1,9 @@
-// app/api/retreats/route.ts
+// ========================================
+// FILE 1: app/api/retreats/route.ts
+// ========================================
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { generateFullSlug } from "@/utils/slugUtils";
 
 export const dynamic = "force-dynamic";
 
@@ -48,8 +51,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Generate slug from title
+    const slug = generateFullSlug(title || "Mahabharata Dialogues");
+
     const newRetreat: any = {
       title: title || "Mahabharata Dialogues",
+      slug, // Add slug field
       ...(description && { description }),
       ...(venue && { venue }),
       ...(youtube_video && { youtube_video }),

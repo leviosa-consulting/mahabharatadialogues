@@ -14,6 +14,7 @@ interface DaySchedule {
 
 interface Retreat {
   id: string
+  slug: string 
   title: string
   description?: string
   venue?: string
@@ -99,8 +100,10 @@ const RetreatsPage: React.FC = () => {
     return total
   }
 
-  const handleRetreatClick = (id: string) => {
-    router.push(`/retreats/${id}`)
+  const handleRetreatClick = (retreat: Retreat) => {
+    // Use slug if available, otherwise fallback to id
+    const url = retreat.slug ? `/retreats/${retreat.slug}` : `/retreats/${retreat.id}`
+    router.push(url)
   }
 
   if (loading) {
@@ -144,7 +147,7 @@ const RetreatsPage: React.FC = () => {
               return (
                 <div
                   key={retreat.id}
-                  onClick={() => handleRetreatClick(retreat.id)}
+                  onClick={() => handleRetreatClick(retreat)}
                   className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all cursor-pointer group hover:border-red-600"
                 >
                   {/* Card Header */}

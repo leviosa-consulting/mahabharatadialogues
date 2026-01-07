@@ -1,6 +1,9 @@
-// app/api/retreats/[id]/route.ts
+// ========================================
+// FILE 2: app/api/retreats/[id]/route.ts
+// ========================================
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { generateFullSlug } from "@/utils/slugUtils";
 
 export async function PUT(
   req: NextRequest,
@@ -27,8 +30,19 @@ export async function PUT(
       );
     }
 
+    // Get existing retreat to check if title changed
+    const existingDoc = await adminDB.collection("retreats").doc(id).get();
+    const existingData = existingDoc.data();
+    
+    // Generate new slug if title changed or if slug doesn't exist
+    let slug = existingData?.slug;
+    if (!slug || existingData?.title !== title) {
+      slug = generateFullSlug(title || "Mahabharata Dialogues");
+    }
+
     const updateData: any = {
       title: title || "Mahabharata Dialogues",
+      slug, // Update slug
       day1: {
         date: day1.date,
         dayName: day1.dayName || "",
@@ -99,3 +113,4 @@ export async function DELETE(
     );
   }
 }
+

@@ -56,7 +56,7 @@ async function fetchBlogs(): Promise<Blog[]> {
 /* ------------------ Component ------------------ */
 
 export default async function LatestBlogs({
-  count = 4, // 👈 DEFAULT = 4
+  count = 4, 
 }: {
   count?: number;
 }) {
@@ -69,7 +69,7 @@ export default async function LatestBlogs({
         new Date(b.updated_at).getTime() -
         new Date(a.updated_at).getTime()
     )
-    .slice(0, count); // 👈 USE PROP HERE
+    .slice(0, count); 
 
   if (latestBlogs.length === 0) {
     return (

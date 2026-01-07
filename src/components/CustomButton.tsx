@@ -20,7 +20,7 @@ const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
       className={`
         ${merri.className}
         inline-flex items-center justify-center text-center
-        font-bold
+        font-bold cursor-pointer
         w-full max-w-[450px]
         px-6 sm:px-10
         py-4 sm:py-5
