@@ -46,7 +46,7 @@ export default function YouTubeVideoCard({
           ${isRow ? 'text-center md:text-left md:max-w-[300px]' : 'text-left'}
         `}
       >
-        <h2 className={`${merri.className} font-bold text-[14px] md:text-[18px]`}>
+        <h2 className={`${merri.className} font-bold text-[14px] md:text-[16px]`}>
           {new Date(video.publishedAt).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
@@ -60,7 +60,7 @@ export default function YouTubeVideoCard({
           rel="noopener noreferrer"
           className="
             font-neco font-bold
-            text-[16px] md:text-[18px]
+            text-[16px] md:text-[20px]
             underline
             hover:text-gray-300
             transition

@@ -95,7 +95,7 @@ export default async function LatestBlogs({
           "
         >
           {/* DATE */}
-          <h2 className={`${merri.className} font-bold text-[14px] md:text-[18px]`}>
+          <h2 className={`${merri.className} font-bold text-[14px] md:text-[16px]`}>
             {formatDate(blog.updated_at)}
           </h2>
 
@@ -104,7 +104,7 @@ export default async function LatestBlogs({
             href={`/blogs/${blog.slug}`}
             className="
               font-neco font-bold
-              text-[16px] md:text-[18px]
+              text-[16px] md:text-[20px]
               underline
               hover:opacity-80
               transition

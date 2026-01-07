@@ -5,9 +5,106 @@ import LatestBlogs from '@/lib/LatestBlogs'
 import YouTubeSection from './YouTubeSection'
 import { getLatestVideos } from '@/lib/youtube'
 import Footer from './Footer'
+import { adminDB } from '@/firebase/firebaseAdmin'
+
+interface DaySchedule {
+  date: string
+  dayName: string
+  schedule: any[]
+}
+
+interface Retreat {
+  id: string
+  slug?: string
+  title: string
+  description?: string
+  venue?: string
+  youtube_video?: string
+  photos?: string[]
+  day1: DaySchedule
+  day2: DaySchedule
+  day3?: DaySchedule
+  created_at: string
+}
+
+// Helper to parse "03 Aug 2024" format to Date
+const parseDate = (dateStr: string): Date => {
+  const months: { [key: string]: number } = {
+    'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+    'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+  }
+  const parts = dateStr.split(' ')
+  const day = parseInt(parts[0])
+  const month = months[parts[1]]
+  const year = parseInt(parts[2])
+  return new Date(year, month, day)
+}
+
+const isUpcoming = (dateStr: string): boolean => {
+  const retreatDate = parseDate(dateStr)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return retreatDate >= today
+}
+
+async function getRetreats() {
+  try {
+    const snapshot = await adminDB
+      .collection('retreats')
+      .orderBy('created_at', 'desc')
+      .get()
+
+    const retreats: Retreat[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Retreat[]
+
+    // Sort: upcoming first, then past
+    const sorted = retreats.sort((a, b) => {
+      const dateA = parseDate(a.day1.date)
+      const dateB = parseDate(b.day1.date)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      const isUpcomingA = dateA >= today
+      const isUpcomingB = dateB >= today
+
+      if (isUpcomingA && !isUpcomingB) return -1
+      if (!isUpcomingA && isUpcomingB) return 1
+
+      if (isUpcomingA && isUpcomingB) {
+        return dateA.getTime() - dateB.getTime()
+      } else {
+        return dateB.getTime() - dateA.getTime()
+      }
+    })
+
+    return sorted
+  } catch (error) {
+    console.error('Error fetching retreats:', error)
+    return []
+  }
+}
 
 export default async function RetreatHero() {
   const videos = await getLatestVideos()
+  const retreats = await getRetreats()
+
+  // Get upcoming retreat (only the first one)
+  const upcomingRetreat = retreats.find(r => isUpcoming(r.day1.date))
+  
+  // Get past retreats
+  const pastRetreats = retreats.filter(r => !isUpcoming(r.day1.date))
+
+  const getRetreatUrl = (retreat: Retreat) => {
+    return retreat.slug ? `/retreats/${retreat.slug}` : `/retreats/${retreat.id}`
+  }
+
+  const getDateRange = (retreat: Retreat) => {
+    const endDate = retreat.day3 ? retreat.day3.date : retreat.day2.date
+    return `${retreat.day1.date} - ${endDate}`
+  }
+
   return (
     <div>
       <div
@@ -44,9 +141,10 @@ export default async function RetreatHero() {
           </div>
         </div>
 
-        {/* BLUE SECTION */}
-        <div
-          className="
+        {/* BLUE SECTION - UPCOMING RETREATS */}
+        {upcomingRetreat && (
+          <div
+            className="
           w-full
           bg-[#1D5C75]
           -mt-[5vh]
@@ -54,180 +152,155 @@ export default async function RetreatHero() {
           pt-[20vh]
           pb-[5vh]
         "
-        >
-          {/* upcoming retreats */}
-          <div className="mx-4 2xl:mx-20">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
-              <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
-                <div>
-                  <p
-                    className={`${merri.className} text-[20px] text-[#78B0C7] font-bold`}
-                  >
-                    UPCOMING RETREATS
-                  </p>
-                  <h2 className={`font-neco text-[28px] text-white font-bold`}>
-                    Mahabharata Dialogues
-                  </h2>
-                  <h1
-                    className={`${merri.className} text-[44px] text-white font-extrabold italic`}
-                  >
-                    The Retreat 3.0
-                  </h1>
-                  <p
-                    className={`${merri.className} text-[20px] text-white italic font-bold`}
-                  >
-                    10 - 11 February. 2026
-                  </p>
-                  <h4
-                    className={`${merri.className} text-[20px] text-white font-normal italic`}
-                  >
-                    Fireflies, Kanakpura Road, Bengaluru
-                  </h4>
-                  <p
-                    className={`${merri.className} text-[20px] text-white font-light italic py-6 lg:pr-19`}
-                  >
-                    A brief about Retreat dada da dada dadadada Mahabharata
-                    Dialogues is a collective dadada dad which meets on the 4th
-                    Saturday of every month on new topics dada da da.{' '}
-                  </p>
-                </div>
-              </div>
-              <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4 ">
-                <div className="flex flex-col justify-between gap-6 lg:mt-10">
-                  <div className='w-full'>
-                    <CustomButton
-                      text="EXPERIENCE THE RETREAT"
-                      bgColor="#D12127"
-                      textColor="#FFFFFF"
-                      url="#"
-                    />
-                  </div>
-
+          >
+            <div className="mx-4 2xl:mx-20">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
+                <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
                   <div>
-                    <p className="font-neco font-bold text-[18px] text-white">
-                      21,ooo/- Early Bird offer
+                    <p
+                      className={`${merri.className} text-[20px] text-[#78B0C7] font-bold`}
+                    >
+                      UPCOMING RETREATS
                     </p>
-                    <p className="font-neco font-normal text-[18px] text-white">
-                      25,000/- January onwards
+                    <h2 className={`font-neco text-[28px] text-white font-bold`}>
+                      Mahabharata Dialogues
+                    </h2>
+                    <h1
+                      className={`${merri.className} text-[44px] text-white font-extrabold italic`}
+                    >
+                      {upcomingRetreat.title}
+                    </h1>
+                    <p
+                      className={`${merri.className} text-[20px] text-white italic font-bold`}
+                    >
+                      {getDateRange(upcomingRetreat)}
                     </p>
-                    <p className="font-neco font-normal text-[18px] text-white">
-                      Includes stay, 2 meals and 2 snacks
+                    <h4
+                      className={`${merri.className} text-[20px] text-white font-normal italic`}
+                    >
+                      {upcomingRetreat.venue || 'Fireflies, Kanakpura Road, Bengaluru'}
+                    </h4>
+                    <p
+                      className={`${merri.className} text-[20px] text-white font-light italic py-6 lg:pr-19`}
+                    >
+                      {upcomingRetreat.description || 'Join us for an immersive retreat experience.'}
                     </p>
                   </div>
-                  <div className="border border-white">
-                    <CustomButton
-                      text="SCHEDULE"
-                      bgColor="#1D5C75"
-                      textColor="#FFFFFF"
-                      url="/retreats/retreat-30-PX39193730"
-                    />
+                </div>
+                <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4 ">
+                  <div className="flex flex-col justify-between gap-6 lg:mt-10">
+                    <div className='w-full'>
+                      <CustomButton
+                        text="EXPERIENCE THE RETREAT"
+                        bgColor="#D12127"
+                        textColor="#FFFFFF"
+                        url="#"
+                      />
+                    </div>
+
+                    <div>
+                      <p className="font-neco font-bold text-[18px] text-white">
+                        21,000/- Early Bird offer
+                      </p>
+                      <p className="font-neco font-normal text-[18px] text-white">
+                        25,000/- January onwards
+                      </p>
+                      <p className="font-neco font-normal text-[18px] text-white">
+                        Includes stay, 2 meals and 2 snacks
+                      </p>
+                    </div>
+                    <div className="border border-white">
+                      <CustomButton
+                        text="SCHEDULE"
+                        bgColor="#1D5C75"
+                        textColor="#FFFFFF"
+                        url={getRetreatUrl(upcomingRetreat)}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="w-full">
-          {/* past retreats */}
-          <div className="w-full pt-8 pb-30">
-            <div className="mx-4 sm:mx-4 xl:mx-20">
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
-                <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 lg:col-span-5">
-                  <div className="flex flex-col justify-between gap-3">
-                    <p
-                      className={`${merri.className} text-[20px] text-[#4298BA] font-bold `}
+          {/* PAST RETREATS */}
+          {pastRetreats.length > 0 && (
+            <div className="w-full pt-8 pb-30">
+              <div className="mx-4 sm:mx-4 xl:mx-20">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
+                  {pastRetreats.slice(0, 2).map((retreat, index) => (
+                    <div
+                      key={retreat.id}
+                      className={`w-full order-${index + 1} sm:order-0 ${
+                        index === 0
+                          ? 'md:col-start-1 lg:col-start-2 col-span-6 lg:col-span-5'
+                          : 'md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5'
+                      }`}
                     >
-                      PAST RETREATS
-                    </p>
-                    <h3
-                      className={`font-neco text-[28px] text-[#1D5C75] font-bold`}
-                    >
-                      Mahabharata Dialogues
-                    </h3>
-                    <h2
-                      className={`${merri.className} text-[44px] text-[#1D5C75] font-extrabold italic`}
-                    >
-                      The Retreat 2.0
-                    </h2>
-                    <h3
-                      className={`${merri.className} text-[20px] text-[#1D5C75] italic font-bold`}
-                    >
-                      10 - 11 February. 2026
-                    </h3>
-                    <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
-                    >
-                      Fireflies, Kanakpura Road, Bengaluru
-                    </p>
-                  </div>
+                      <div className="flex flex-col justify-between gap-3">
+                        {index === 0 && (
+                          <p
+                            className={`${merri.className} text-[20px] text-[#4298BA] font-bold `}
+                          >
+                            PAST RETREATS
+                          </p>
+                        )}
+                        <h3
+                          className={`font-neco text-[28px] text-[#1D5C75] font-bold ${
+                            index === 1 ? 'mt-8 lg:mt-14' : ''
+                          }`}
+                        >
+                          Mahabharata Dialogues
+                        </h3>
+                        <h2
+                          className={`${merri.className} text-[44px] text-[#1D5C75] font-extrabold italic`}
+                        >
+                          {retreat.title}
+                        </h2>
+                        <h3
+                          className={`${merri.className} text-[20px] text-[#1D5C75] italic font-bold`}
+                        >
+                          {getDateRange(retreat)}
+                        </h3>
+                        <p
+                          className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
+                        >
+                          {retreat.venue || 'Fireflies, Kanakpura Road, Bengaluru'}
+                        </p>
+                      </div>
 
-                  <div>
-                    <img src="/assets/eight.png" alt="" />
-                  </div>
-                  <div>
-                    <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
-                    >
-                      A brief about Retreat dada da dada dadadada Mahabharata
-                      Dialogues is a collective dadada dad which meets on the
-                      4th Saturday of every month on new topics dada da da
-                    </p>
-                    <CustomButton
-                      text="SEE THE MAGIC WE CREATED"
-                      bgColor="#1D5C75"
-                      textColor="#FFFFFF"
-                      url="#"
-                    />
-                  </div>
-                </div>
-
-                <div className="w-full order-2 sm:order-0 md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5">
-                  <div className="flex flex-col justify-between gap-3">
-                    <h3
-                      className={`font-neco text-[28px] text-[#1D5C75] font-bold mt-8 lg:mt-14`}
-                    >
-                      Mahabharata Dialogues
-                    </h3>
-                    <h2
-                      className={`${merri.className} text-[44px] text-[#1D5C75] font-extrabold italic`}
-                    >
-                      The Retreat 1.0
-                    </h2>
-                    <h3
-                      className={`${merri.className} text-[20px] text-[#1D5C75] italic font-bold`}
-                    >
-                      10 - 11 February. 2026
-                    </h3>
-                    <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
-                    >
-                      Fireflies, Kanakpura Road, Bengaluru
-                    </p>
-                  </div>
-
-                  <div>
-                    <img src="/assets/eight.png" alt="" />
-                  </div>
-                  <div>
-                    <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
-                    >
-                      A brief about Retreat dada da dada dadadada Mahabharata
-                      Dialogues is a collective dadada dad which meets on the
-                      4th Saturday of every month on new topics dada da da
-                    </p>
-                    <CustomButton
-                      text="SEE THE MAGIC WE CREATED"
-                      bgColor="#1D5C75"
-                      textColor="#FFFFFF"
-                      url="#"
-                    />
-                  </div>
+                      <div>
+                        {retreat.photos && retreat.photos.length > 0 ? (
+                          <img 
+                            src={retreat.photos[0]} 
+                            alt={retreat.title}
+                            className="w-full h-auto object-cover"
+                          />
+                        ) : (
+                          <img src="/assets/eight.png" alt="" />
+                        )}
+                      </div>
+                      <div>
+                        <p
+                          className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
+                        >
+                          {retreat.description || 'A memorable retreat experience.'}
+                        </p>
+                        <CustomButton
+                          text="SEE THE MAGIC WE CREATED"
+                          bgColor="#1D5C75"
+                          textColor="#FFFFFF"
+                          url={getRetreatUrl(retreat)}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* youtube/blogs */}
           <div className=" ">
