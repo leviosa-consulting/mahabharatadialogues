@@ -93,7 +93,7 @@ export default async function RetreatHero() {
   // Get upcoming retreat (only the first one)
   const upcomingRetreat = retreats.find(r => isUpcoming(r.day1.date))
   
-  // Get past retreats
+  // Get past retreats (already sorted with most recent past first)
   const pastRetreats = retreats.filter(r => !isUpcoming(r.day1.date))
 
   const getRetreatUrl = (retreat: Retreat) => {
@@ -230,11 +230,11 @@ export default async function RetreatHero() {
             <div className="w-full pt-8 pb-30">
               <div className="mx-4 sm:mx-4 xl:mx-20">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
-                  {pastRetreats.slice(0, 2).map((retreat, index) => (
+                  {pastRetreats.map((retreat, index) => (
                     <div
                       key={retreat.id}
-                      className={`w-full order-${index + 1} sm:order-0 ${
-                        index === 0
+                      className={`w-full ${
+                        index % 2 === 0
                           ? 'md:col-start-1 lg:col-start-2 col-span-6 lg:col-span-5'
                           : 'md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5'
                       }`}
@@ -249,7 +249,7 @@ export default async function RetreatHero() {
                         )}
                         <h3
                           className={`font-neco text-[28px] text-[#1D5C75] font-bold ${
-                            index === 1 ? 'mt-8 lg:mt-14' : ''
+                            index % 2 === 1 ? 'mt-8 lg:mt-14' : ''
                           }`}
                         >
                           Mahabharata Dialogues

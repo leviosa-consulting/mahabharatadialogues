@@ -117,8 +117,8 @@ const RetreatDetailPage: React.FC = () => {
           key={index}
           className={`bg-[#60a5fa] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
         >
-          <span className="${merri.className}">{section.title}</span>
-          <span className={`text-[16px] md:text-lg ${merri.className}`}>
+          <span className={`${merri.className} font-bold text-[16px] md:text-[18px]`}>{section.title}</span>
+          <span className={`text-md whitespace-nowrap pt-0.5 ${merri.className}  text-[16px] md:text-[18px] font-bold`}>
             {section.time}
           </span>
         </div>
@@ -130,20 +130,20 @@ const RetreatDetailPage: React.FC = () => {
         {section.items?.map((item, itemIndex) => (
           <div
             key={itemIndex}
-            className="flex justify-between items-start gap-3"
+            className="flex justify-between items-start gap-3 px-[7px] pt-4"
           >
             <div className="flex-1">
-              <div className={`flex items-start font-semibold text-md leading-snug ${merri.className}`}>
+              <div className={`flex items-start  leading-snug ${merri.className}`}>
                 <span className="mr-2 text-2xl leading-none">•</span>
-                <span>{item.title}</span>
+                <span className={`${merri.className} font-bold text-[16px] md:text-[18px]`}>{item.title}</span>
               </div>
 
               {item.description && (
                 <div
-                  className={`text-sm text-gray-600 leading-tight mt-0.5 ${merri.className} px-3 ${
+                  className={`text-sm text-gray-600  mt-0.5 ${merri.className} px-[19px] ${
                     isThreeDayRetreat 
                       ? '2xl:w-[90%]' 
-                      : 'md:w-[90%]'
+                      : 'md:w-full'
                   } ${
                     itemIndex === section.items!.length - 1
                       ? 'pb-8'
@@ -154,7 +154,7 @@ const RetreatDetailPage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className={`text-md whitespace-nowrap pt-0.5 pr-2.5 ${merri.className} md:pr-5`}>
+            <div className={`text-md whitespace-nowrap pt-0.5 ${merri.className}  text-[16px] md:text-[18px] font-bold`}>
               {item.time}
             </div>
           </div>
@@ -303,20 +303,24 @@ const RetreatDetailPage: React.FC = () => {
       </div>
 
       {/* Day circles - Desktop */}
-      <div className={`w-full hidden relative z-10 mx-auto -mt-18 md:flex flex-col md:flex-row items-center justify-center ${isThreeDay ? 'gap-8 md:gap-16' : 'gap-8 md:gap-84'}`}>
+      <div className={`hidden md:grid ${isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'} relative z-10 -mt-18 lg:mx-10 xl:mx-25`}>
         {days.map((dayInfo) => (
           <div
             key={dayInfo.day}
-            className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center`}
+            className="flex items-center justify-center"
           >
-            <div className="text-center leading-tight">
-              <div className="text-xs tracking-wide mb-1">
-                -DAY {dayInfo.day}-
+            <div
+              className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center`}
+            >
+              <div className="text-center leading-tight">
+                <div className="text-xs tracking-wide mb-1">
+                  -DAY {dayInfo.day}-
+                </div>
+                <div className="text-xl md:text-2xl font-semibold">
+                  {dayInfo.date}
+                </div>
+                <div className="text-sm mt-1">{dayInfo.dayName}</div>
               </div>
-              <div className="text-xl md:text-2xl font-semibold">
-                {dayInfo.date}
-              </div>
-              <div className="text-sm mt-1">{dayInfo.dayName}</div>
             </div>
           </div>
         ))}
@@ -337,7 +341,7 @@ const RetreatDetailPage: React.FC = () => {
       <div className={`grid grid-cols-1 md:mt-8 ${isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'} lg:mx-10 xl:mx-25`}>
         {/* Day 1 Column */}
         <div className="border-b md:border-b-0 md:border-r border-black">
-          <div className="px-2 md:px-8 py-6 md:py-0 space-y-4">
+          <div className="px-2 md:px-8 py-6 md:py-0 ">
             {retreat.day1.schedule.map((section, index) =>
               renderScheduleSection(
                 section,
@@ -362,7 +366,7 @@ const RetreatDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className={`px-2 py-6 md:px-8 md:py-0 space-y-4 ${isThreeDay ? '' : 'border-b md:border-b-0'}`}>
+          <div className={`px-2 py-6 md:px-8 md:py-0  ${isThreeDay ? '' : 'border-b md:border-b-0'}`}>
             {retreat.day2.schedule.map((section, index) =>
               renderScheduleSection(section, index, false, isThreeDay)
             )}
@@ -383,7 +387,7 @@ const RetreatDetailPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-2 py-6 md:px-8 md:py-0 space-y-4">
+            <div className="px-2 py-6 md:px-8 md:py-0 ">
               {retreat.day3.schedule.map((section, index) =>
                 renderScheduleSection(section, index, false, isThreeDay)
               )}
