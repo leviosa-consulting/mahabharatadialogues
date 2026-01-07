@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
       venue, 
       youtube_video, 
       photos, 
+      footerNotes,
       day1, 
       day2,
       day3,
@@ -56,11 +57,12 @@ export async function POST(req: NextRequest) {
 
     const newRetreat: any = {
       title: title || "Mahabharata Dialogues",
-      slug, // Add slug field
+      slug,
       ...(description && { description }),
       ...(venue && { venue }),
       ...(youtube_video && { youtube_video }),
       ...(photos && photos.length > 0 && { photos }),
+      ...(footerNotes && { footerNotes }),
       day1: {
         date: day1.date,
         dayName: day1.dayName || "",

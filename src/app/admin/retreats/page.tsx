@@ -48,6 +48,7 @@ interface Retreat {
   venue?: string
   youtube_video?: string
   photos?: string[]
+  footerNotes?: string
   day1: DaySchedule
   day2: DaySchedule
   day3?: DaySchedule
@@ -68,11 +69,12 @@ const RetreatsAdminPage = () => {
   const [formData, setFormData] = useState<
     Omit<Retreat, 'id' | 'created_at' | 'updated_at'>
   >({
-    title: 'Mahabharata Dialogues',
+    title: '',
     description: '',
     venue: '',
     youtube_video: '',
     photos: [],
+    footerNotes: '',
     day1: {
       date: '',
       dayName: '',
@@ -142,11 +144,12 @@ const RetreatsAdminPage = () => {
 
   const resetForm = () => {
     setFormData({
-      title: 'Mahabharata Dialogues',
+      title: '',
       description: '',
       venue: '',
       youtube_video: '',
       photos: [],
+      footerNotes: '',
       day1: {
         date: '',
         dayName: '',
@@ -176,6 +179,7 @@ const RetreatsAdminPage = () => {
       venue: retreat.venue || '',
       youtube_video: retreat.youtube_video || '',
       photos: retreat.photos || [],
+      footerNotes: retreat.footerNotes || '',
       day1: retreat.day1,
       day2: retreat.day2,
       day3: retreat.day3,
@@ -225,7 +229,6 @@ const RetreatsAdminPage = () => {
   const toggleThreeDay = () => {
     setIsThreeDayRetreat(!isThreeDayRetreat)
     if (!isThreeDayRetreat) {
-      // Enable 3-day mode
       setFormData((prev) => ({
         ...prev,
         day3: {
@@ -235,7 +238,6 @@ const RetreatsAdminPage = () => {
         },
       }))
     } else {
-      // Disable 3-day mode
       setFormData((prev) => ({
         ...prev,
         day3: undefined,
@@ -268,6 +270,7 @@ const RetreatsAdminPage = () => {
           formData.photos && formData.photos.length > 0
             ? formData.photos
             : undefined,
+        footerNotes: formData.footerNotes || undefined,
         day1: {
           date: formatDisplayDate(formData.day1.date),
           dayName: getDayName(formData.day1.date),
@@ -884,6 +887,16 @@ const RetreatsAdminPage = () => {
                             </span>
                           </div>
                         )}
+                        {retreat.footerNotes && (
+                          <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                            <p className="text-xs font-medium text-amber-800 mb-1">
+                              Footer Notes:
+                            </p>
+                            <p className="text-sm text-amber-900">
+                              {retreat.footerNotes}
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <button
@@ -1111,7 +1124,6 @@ const RetreatsAdminPage = () => {
                 </div>
 
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
-                  {/* Optional Fields Section */}
                   <div className="border-b pb-6">
                     <div className="space-y-4">
                       <div>
@@ -1127,7 +1139,7 @@ const RetreatsAdminPage = () => {
                               title: e.target.value,
                             }))
                           }
-                          placeholder="Enter Title"
+                          placeholder="Eg: Retreat 3.0"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
                         />
@@ -1237,7 +1249,28 @@ const RetreatsAdminPage = () => {
                         </div>
                       </div>
 
-                      {/* 3-Day Toggle */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Footer Notes
+                        </label>
+                        <textarea
+                          value={formData.footerNotes}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              footerNotes: e.target.value,
+                            }))
+                          }
+                          placeholder="Enter any additional notes or information to display at the bottom of the retreat page"
+                          rows={1}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent resize-none"
+                          disabled={submitting}
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                          This text will appear at the bottom of the retreat schedule page
+                        </p>
+                      </div>
+
                       <div className="flex items-center gap-3 pt-4">
                         <input
                           type="checkbox"
@@ -1257,17 +1290,11 @@ const RetreatsAdminPage = () => {
                     </div>
                   </div>
 
-                  {/* Day 1 */}
                   {renderDayScheduleForm('day1', 1)}
-
-                  {/* Day 2 */}
                   {renderDayScheduleForm('day2', 2)}
-
-                  {/* Day 3 (conditional) */}
                   {isThreeDayRetreat && renderDayScheduleForm('day3', 3)}
                 </div>
 
-                {/* Submit Buttons */}
                 <div className="flex gap-4 p-6 border-t bg-white">
                   <button
                     onClick={() => {

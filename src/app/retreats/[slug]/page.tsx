@@ -27,12 +27,13 @@ interface DaySchedule {
 
 interface Retreat {
   id: string
-  slug?: string  // Added slug field (optional for backwards compatibility)
+  slug?: string  
   title: string
   description?: string
   venue?: string
   youtube_video?: string
   photos?: string[]
+  footerNotes?: string
   day1: DaySchedule
   day2: DaySchedule
   day3?: DaySchedule
@@ -398,7 +399,7 @@ const RetreatDetailPage: React.FC = () => {
 
       {/* Footer */}
       <div className={`text-center text-md text-gray-500 py-4 border-t border-black md:mx-10 lg:mx-30 ${merri.className}`}>
-        * Optional/Simultaneous events
+        {retreat.footerNotes}
       </div>
 
       {/* YouTube Video Section */}

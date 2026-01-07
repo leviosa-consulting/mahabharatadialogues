@@ -18,6 +18,7 @@ export async function PUT(
       venue, 
       youtube_video, 
       photos, 
+      footerNotes,
       day1, 
       day2,
       day3,
@@ -42,7 +43,7 @@ export async function PUT(
 
     const updateData: any = {
       title: title || "Mahabharata Dialogues",
-      slug, // Update slug
+      slug,
       day1: {
         date: day1.date,
         dayName: day1.dayName || "",
@@ -61,6 +62,7 @@ export async function PUT(
     if (venue) updateData.venue = venue;
     if (youtube_video) updateData.youtube_video = youtube_video;
     if (photos && photos.length > 0) updateData.photos = photos;
+    if (footerNotes) updateData.footerNotes = footerNotes;
 
     // Add or remove day3
     if (day3 && day3.date) {
