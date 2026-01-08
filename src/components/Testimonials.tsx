@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
+import TestimonialsShimmer from './TestimonialsShimmer'
 
 interface Testimonial {
   id: string
@@ -105,8 +106,18 @@ const Testimonials = () => {
     // Parse "DD MMM YYYY" format
     const [day, month, year] = dateStr.split(' ')
     const monthMap: { [key: string]: number } = {
-      Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
-      Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+      Jan: 0,
+      Feb: 1,
+      Mar: 2,
+      Apr: 3,
+      May: 4,
+      Jun: 5,
+      Jul: 6,
+      Aug: 7,
+      Sep: 8,
+      Oct: 9,
+      Nov: 10,
+      Dec: 11,
     }
     return new Date(parseInt(year), monthMap[month], parseInt(day))
   }
@@ -114,7 +125,20 @@ const Testimonials = () => {
   const formatDate = (dateStr: string): string => {
     const date = parseDate(dateStr)
     const day = date.getDate()
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
     const month = months[date.getMonth()]
     const year = date.getFullYear()
     return `${day} ${month}, ${year}`
@@ -152,7 +176,9 @@ const Testimonials = () => {
               time: '', // Retreats don't have specific time
               venue: retreat.venue || 'Venue TBA',
               slug: retreat.slug,
+              bookingUrl: retreat.bookingUrl
             })
+
           }
         })
       }
@@ -248,31 +274,11 @@ const Testimonials = () => {
     return '#'
   }
 
- 
   if (loading) {
-    return (
-      <div
-        className="w-full pb-30 flex items-center justify-center min-h-screen"
-        style={{
-          backgroundImage: `
-            linear-gradient(
-              rgba(29, 92, 117, 0.5),
-              rgba(29, 92, 117, 0.5)
-            ),
-            url('/Blue_Background_with_Texture-01.png')
-          `,
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="text-white text-2xl">Loading upcoming events...</div>
-      </div>
-    )
+    return <TestimonialsShimmer />
   }
 
-
-   console.log("featuredItems : ", featuredItem)
+  console.log('featuredItems : ', featuredItem)
   return (
     <div
       className="w-full pb-30"
@@ -291,7 +297,7 @@ const Testimonials = () => {
     >
       {/* Featured Event/Retreat */}
       {featuredItem && (
-        <div className="flex flex-col max-w-84 md:max-w-xl mx-auto justify-center items-center bg-[#1D5C75CC]">
+        <div className="flex flex-col max-w-84 md:max-w-[480px] mx-auto justify-center items-center bg-[#1D5C75CC] py-2">
           <p
             className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
           >
@@ -345,15 +351,17 @@ const Testimonials = () => {
       {/* Multiple Upcoming Events/Retreats */}
       {upcomingItems.length > 0 && (
         <div
-          className="flex gap-4 md:gap-16 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4"
+          className={`flex gap-6 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4 ${
+            upcomingItems.length < 4 ? 'justify-center' : ''
+          }`}
           style={{
             backgroundImage: `
-              linear-gradient(
-                rgba(29, 92, 117, 0.5),
-                rgba(29, 92, 117, 0.5)
-              ),
-              url('/Blue_Background_with_Texture-01.png')
-            `,
+        linear-gradient(
+          rgba(29, 92, 117, 0.5),
+          rgba(29, 92, 117, 0.5)
+        ),
+        url('/Blue_Background_with_Texture-01.png')
+      `,
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
@@ -362,20 +370,24 @@ const Testimonials = () => {
           {upcomingItems.map((item) => (
             <div
               key={item.id}
-              className="min-w-[280px] sm:min-w-[320px] md:min-w-[360px] lg:min-w-[380px] flex flex-col gap-3 snap-start"
+              className=" snap-start shrink-0 flex flex-col gap-3
+    w-[85%]        
+    md:w-[40%]    
+    lg:w-[30%]    
+    xl:w-[440px] "
             >
               {/* Image */}
               <div className="relative">
                 <img
                   src={item.coverImage}
                   alt={item.title}
-                  className="w-full h-[300px] object-cover"
+                  className="aspect-465/285 object-cover"
                 />
               </div>
 
               <div className="flex flex-col justify-center items-center text-center gap-2">
                 <h2
-                  className={`${merri.className} text-white font-bold px-[2px] text-[20px] md:text-[26px] italic leading-tight`}
+                  className={`${merri.className} text-white font-bold px-[2px] h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
                 >
                   {item.title}
                 </h2>

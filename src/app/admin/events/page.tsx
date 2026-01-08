@@ -17,6 +17,7 @@ import {
   MapPin
 } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
+import { generateFullSlug } from '@/utils/slugUtils'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Navbar from '@/components/Navbar'
 
@@ -71,16 +72,6 @@ const EventsAdminPage = () => {
     }
   }
 
-  // Generate slug from title
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-  }
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -90,7 +81,7 @@ const EventsAdminPage = () => {
       
       // Auto-generate slug when title changes (only for new events)
       if (name === 'title' && !editingId) {
-        updated.slug = generateSlug(value)
+        updated.slug = generateFullSlug(value)
       }
       
       return updated
@@ -367,7 +358,7 @@ const EventsAdminPage = () => {
                       )}
                       {event.slug && (
                         <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
-                          <span>/{event.slug}</span>
+                          <span className="truncate">/{event.slug}</span>
                         </div>
                       )}
                     </div>
@@ -452,20 +443,25 @@ const EventsAdminPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slug * <span className="text-xs text-gray-500">(Auto-generated from title, can be edited)</span>
+                      Slug * <span className="text-xs text-gray-500">(Auto-generated with unique ID)</span>
                     </label>
                     <input
                       type="text"
                       name="slug"
                       value={formData.slug}
                       onChange={handleInputChange}
-                      disabled={submitting}
+                      disabled={submitting || !!editingId}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed font-mono text-sm"
-                      placeholder="event-slug-here"
+                      placeholder="event-slug-here-AB12345678"
                     />
                     {formData.slug && (
                       <p className="text-xs text-gray-500 mt-1">
                         URL will be: /events/{formData.slug}
+                      </p>
+                    )}
+                    {editingId && (
+                      <p className="text-xs text-amber-600 mt-1">
+                        ⚠️ Slug cannot be changed when editing an event
                       </p>
                     )}
                   </div>
@@ -510,7 +506,7 @@ const EventsAdminPage = () => {
                       value={formData.eventDate}
                       onChange={handleInputChange}
                       disabled={submitting}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      className=" px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                     />
                   </div>
 
