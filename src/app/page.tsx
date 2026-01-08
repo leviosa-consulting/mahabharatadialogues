@@ -6,7 +6,12 @@ import Retreats from '@/components/Retreats'
 
 export default function Home() {
   return (
-    <div>
+    <div className='w-full h-full overflow-hidden'  style={{
+        backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}>
       <HeroSection />
       <Testimonials />
 

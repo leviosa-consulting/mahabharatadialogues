@@ -6,12 +6,12 @@ export default function HeroSection() {
   return (
     <section
       className="relative w-full sm:h-screen overflow-hidden"
-      style={{
-        backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}
+      // style={{
+      //   backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
+      //   backgroundSize: 'cover',
+      //   backgroundRepeat: 'no-repeat',
+      //   backgroundPosition: 'center',
+      // }}
     >
       {/* ipad/desktop */}
       <div className="hidden sm:flex w-full overflow-hidden items-center">
@@ -29,10 +29,6 @@ export default function HeroSection() {
           <div className='w-45 h-45 xl:w-60 xl:h-60 rounded-full'>
              <img src="Web_Assets-08.png" alt="webAssets9" className=""/>
           </div>
-         
-
-        
-
         
         </div>
 

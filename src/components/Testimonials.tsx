@@ -109,20 +109,20 @@ const Testimonials = () => {
       ),
       url('/Blue_Background_with_Texture-01.png')
     `,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
+        // backgroundSize: 'cover',
+        // backgroundRepeat: 'no-repeat',
+        // backgroundPosition: 'center',
       }}
     >
       {/* single event */}
-      <div className="flex flex-col max-w-xl mx-auto justify-center items-center bg-[#1D5C75CC]">
+      <div className="flex flex-col max-w-84 md:max-w-xl mx-auto justify-center items-center bg-[#1D5C75CC]">
         <p
           className={`$${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
         >
           COMING UP NEXT
         </p>
         <h2
-          className={`$${merri.className} text-white font-extrabold text-[28px] italic px-18 text-center leading-relaxed`}
+          className={`$${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-18 text-center leading-relaxed`}
         >
           Is Arjuna the real protagonist of Mahabharata?
         </h2>
@@ -143,7 +143,7 @@ const Testimonials = () => {
         </div>
 
         <p
-          className={`$${merri.className} text-white font-light text-[18px] px-18 italic py-6 text-center`}
+          className={`$${merri.className} text-white font-light text-[18px] md:px-18 italic py-6 text-center`}
         >
           Mahabharata Dialogues is a collective dadada dad which meets on the
           4th Saturday of every month on new topics dada da da. Mahabharata
@@ -158,7 +158,7 @@ const Testimonials = () => {
               url="#"
             />
           </div>
-          <div className="bg-[#78B0C7] p-[13px] cursor-pointer">
+          <div className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer">
             <img src="/share.png" alt="share" />
           </div>
         </div>
