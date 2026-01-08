@@ -13,7 +13,8 @@ import {
   Upload,
   Link as LinkIcon,
   MessageSquare,
-  Youtube
+  Youtube,
+  MapPin
 } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 import ProtectedRoute from '@/components/ProtectedRoute'
@@ -29,6 +30,8 @@ interface Event {
   bookingUrl?: string
   youtubeUrl?: string
   eventDate: string
+  slug: string
+  venue: string
 }
 
 const EventsAdminPage = () => {
@@ -48,6 +51,8 @@ const EventsAdminPage = () => {
     bookingUrl: '',
     youtubeUrl: '',
     eventDate: '',
+    slug: '',
+    venue: '',
   })
 
   useEffect(() => {
@@ -66,11 +71,30 @@ const EventsAdminPage = () => {
     }
   }
 
+  // Generate slug from title
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+  }
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value }
+      
+      // Auto-generate slug when title changes (only for new events)
+      if (name === 'title' && !editingId) {
+        updated.slug = generateSlug(value)
+      }
+      
+      return updated
+    })
   }
 
   const handleCoverImageUpload = async (
@@ -139,6 +163,8 @@ const EventsAdminPage = () => {
       bookingUrl: '',
       youtubeUrl: '',
       eventDate: '',
+      slug: '',
+      venue: '',
     })
     setEditingId(null)
     setShowModal(false)
@@ -159,6 +185,8 @@ const EventsAdminPage = () => {
       bookingUrl: event.bookingUrl || '',
       youtubeUrl: event.youtubeUrl || '',
       eventDate: event.eventDate || '',
+      slug: event.slug || '',
+      venue: event.venue || '',
     })
     setEditingId(event.id)
     setShowModal(true)
@@ -166,13 +194,18 @@ const EventsAdminPage = () => {
 
   const handleSubmit = async () => {
     // Validation
-    if (!formData.title || !formData.description || !formData.eventDate) {
-      alert('Title, description, and event date are required')
+    if (!formData.title || !formData.description || !formData.eventDate || !formData.venue) {
+      alert('Title, description, event date, and venue are required')
       return
     }
 
     if (!formData.coverImage) {
       alert('Please upload a cover image before creating the event')
+      return
+    }
+
+    if (!formData.slug) {
+      alert('Slug is required')
       return
     }
 
@@ -247,7 +280,9 @@ const EventsAdminPage = () => {
       formData.title.trim() !== '' &&
       formData.description.trim() !== '' &&
       formData.eventDate !== '' &&
-      formData.coverImage !== ''
+      formData.coverImage !== '' &&
+      formData.slug.trim() !== '' &&
+      formData.venue.trim() !== ''
     )
   }
 
@@ -319,9 +354,22 @@ const EventsAdminPage = () => {
                       {event.description}
                     </p>
                     
-                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
-                      <Calendar size={14} />
-                      <span>{formatDate(event.eventDate)}</span>
+                    <div className="space-y-2 mb-3">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Calendar size={14} />
+                        <span>{formatDate(event.eventDate)}</span>
+                      </div>
+                      {event.venue && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <MapPin size={14} />
+                          <span className="line-clamp-1">{event.venue}</span>
+                        </div>
+                      )}
+                      {event.slug && (
+                        <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                          <span>/{event.slug}</span>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="space-y-1 mb-4 flex-grow">
@@ -399,6 +447,41 @@ const EventsAdminPage = () => {
                       disabled={submitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                       placeholder="Enter event title"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Slug * <span className="text-xs text-gray-500">(Auto-generated from title, can be edited)</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="slug"
+                      value={formData.slug}
+                      onChange={handleInputChange}
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed font-mono text-sm"
+                      placeholder="event-slug-here"
+                    />
+                    {formData.slug && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        URL will be: /events/{formData.slug}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Venue *
+                    </label>
+                    <input
+                      type="text"
+                      name="venue"
+                      value={formData.venue}
+                      onChange={handleInputChange}
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="e.g., Fireflies, Kanakpura Road, Bengaluru"
                     />
                   </div>
 
@@ -609,7 +692,7 @@ const EventsAdminPage = () => {
                     <div className="text-sm text-red-600 text-center">
                       {!formData.coverImage 
                         ? '⚠️ Cover image is required to create event' 
-                        : '⚠️ Please fill all required fields (Title, Description, Date, Cover Image)'}
+                        : '⚠️ Please fill all required fields (Title, Slug, Venue, Description, Date, Cover Image)'}
                     </div>
                   )}
                 </div>
@@ -623,44 +706,3 @@ const EventsAdminPage = () => {
 }
 
 export default EventsAdminPage
-
-
-
-
-
-
-
-
-
-/*
-
-interface FAQ {
-  question: string
-  answer: string
-}
-
-interface Retreat {
-  id: string
-  retreatstartData: string
-  retreatendData: string
-  title: string
-  description?: string
-  coverImage: string
-  gallery?: string[]
-  testimonial?: string
-  bookingUrl?: string
-  youtubeUrl?: string
-  faqs?: FAQ[]
-}
-
-
-
-
-
-
-
-
-
-
-
-*/

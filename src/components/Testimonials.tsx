@@ -20,7 +20,7 @@ interface Event {
   time: string
   venue: string
   description?: string
-  ticketUrl?: string
+  bookingUrl?: string
   slug?: string
 }
 
@@ -34,6 +34,8 @@ interface RetreatData {
     dayName: string
   }
   slug?: string
+  bookingUrl: string
+  coverImage: string
 }
 
 interface EventData {
@@ -44,7 +46,7 @@ interface EventData {
   eventTime: string
   venue: string
   description?: string
-  ticketUrl?: string
+  bookingUrl?: string
   slug?: string
 }
 
@@ -145,7 +147,7 @@ const Testimonials = () => {
               id: retreat.id,
               type: 'retreat',
               title: retreat.title,
-              coverImage: retreat.photos?.[0] || '/abhilash.png',
+              coverImage: retreat.coverImage || '/abhilash.png',
               date: retreat.day1.date,
               time: '', // Retreats don't have specific time
               venue: retreat.venue || 'Venue TBA',
@@ -169,7 +171,7 @@ const Testimonials = () => {
               time: event.eventTime || '',
               venue: event.venue || 'Venue TBA',
               description: event.description,
-              ticketUrl: event.ticketUrl,
+              bookingUrl: event.bookingUrl,
               slug: event.slug,
             })
           }
@@ -246,6 +248,7 @@ const Testimonials = () => {
     return '#'
   }
 
+ 
   if (loading) {
     return (
       <div
@@ -268,6 +271,8 @@ const Testimonials = () => {
     )
   }
 
+
+   console.log("featuredItems : ", featuredItem)
   return (
     <div
       className="w-full pb-30"
@@ -321,13 +326,13 @@ const Testimonials = () => {
               {featuredItem.description}
             </p>
           )}
-          <div className="flex justify-center items-center gap-2 pb-6">
+          <div className="flex justify-center items-center gap-2 py-6">
             <div>
               <CustomButton
                 text="GET YOUR TICKETS"
                 bgColor="#D12127"
                 textColor="#FFFFFF"
-                url={featuredItem.ticketUrl || getItemUrl(featuredItem)}
+                url={featuredItem.bookingUrl}
               />
             </div>
             <div className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer">
@@ -364,7 +369,7 @@ const Testimonials = () => {
                 <img
                   src={item.coverImage}
                   alt={item.title}
-                  className="w-full h-[300px] object-cover rounded-lg"
+                  className="w-full h-[300px] object-cover"
                 />
               </div>
 
@@ -394,7 +399,7 @@ const Testimonials = () => {
                     text="LEARN MORE"
                     bgColor="#1D5C75"
                     textColor="#FFFFFF"
-                    url={getItemUrl(item)}
+                    url={item.bookingUrl || getItemUrl(item)}
                   />
                 </div>
                 <a

@@ -4,6 +4,29 @@ import { adminDB } from "@/firebase/firebaseAdmin";
 
 export const dynamic = "force-dynamic";
 
+// Helper function to generate unique slug
+async function generateUniqueSlug(baseSlug: string, excludeId?: string): Promise<string> {
+  let slug = baseSlug;
+  let counter = 1;
+  
+  while (true) {
+    // Check if slug exists
+    const snapshot = await adminDB
+      .collection("events")
+      .where("slug", "==", slug)
+      .get();
+    
+    // If no documents found, or only the current document (when editing), slug is unique
+    if (snapshot.empty || (excludeId && snapshot.docs.length === 1 && snapshot.docs[0].id === excludeId)) {
+      return slug;
+    }
+    
+    // Slug exists, append counter and try again
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+}
+
 export async function GET() {
   try {
     const snapshot = await adminDB
@@ -30,14 +53,24 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { title, description, eventDate } = body;
+    const { title, description, eventDate, venue, slug } = body;
 
-    if (!title || !description || !eventDate) {
+    if (!title || !description || !eventDate || !venue) {
       return NextResponse.json(
-        { success: false, error: "Title, description, and event date are required" },
+        { success: false, error: "Title, description, event date, and venue are required" },
         { status: 400 }
       );
     }
+
+    if (!slug) {
+      return NextResponse.json(
+        { success: false, error: "Slug is required" },
+        { status: 400 }
+      );
+    }
+
+    // Generate unique slug
+    const uniqueSlug = await generateUniqueSlug(slug);
 
     const newEvent = {
       title,
@@ -48,6 +81,8 @@ export async function POST(req: NextRequest) {
       bookingUrl: body.bookingUrl || "",
       youtubeUrl: body.youtubeUrl || "",
       eventDate,
+      slug: uniqueSlug,
+      venue,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };

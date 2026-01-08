@@ -14,6 +14,29 @@ async function deleteFirebaseImage(url: string) {
   }
 }
 
+// Helper function to generate unique slug
+async function generateUniqueSlug(baseSlug: string, excludeId: string): Promise<string> {
+  let slug = baseSlug;
+  let counter = 1;
+  
+  while (true) {
+    // Check if slug exists (excluding current document)
+    const snapshot = await adminDB
+      .collection("events")
+      .where("slug", "==", slug)
+      .get();
+    
+    // If no documents found, or only the current document, slug is unique
+    if (snapshot.empty || (snapshot.docs.length === 1 && snapshot.docs[0].id === excludeId)) {
+      return slug;
+    }
+    
+    // Slug exists in another document, append counter and try again
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+}
+
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -77,6 +100,20 @@ export async function PUT(
 
     const existing = docSnap.data();
 
+    // Validate required fields
+    if (!body.venue) {
+      return NextResponse.json(
+        { success: false, error: "Venue is required" },
+        { status: 400 }
+      );
+    }
+
+    // Handle slug update - ensure uniqueness if slug changed
+    let finalSlug = body.slug || existing?.slug || "";
+    if (body.slug && body.slug !== existing?.slug) {
+      finalSlug = await generateUniqueSlug(body.slug, id);
+    }
+
     // Delete old cover image if it's being replaced
     if (body.coverImage && body.coverImage !== existing?.coverImage) {
       await deleteFirebaseImage(existing?.coverImage || "");
@@ -95,6 +132,7 @@ export async function PUT(
     const updated = {
       ...existing,
       ...body,
+      slug: finalSlug,
       updated_at: new Date().toISOString(),
     };
 
