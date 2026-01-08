@@ -100,7 +100,7 @@ const Testimonials = () => {
 
   return (
     <div
-      className="w-full  pb-30"
+      className="w-full pb-30"
       style={{
         backgroundImage: `
       linear-gradient(
@@ -114,6 +114,56 @@ const Testimonials = () => {
         backgroundPosition: 'center',
       }}
     >
+      {/* single event */}
+      <div className="flex flex-col max-w-xl mx-auto justify-center items-center bg-[#1D5C75CC]">
+        <p
+          className={`$${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
+        >
+          COMING UP NEXT
+        </p>
+        <h2
+          className={`$${merri.className} text-white font-extrabold text-[28px] italic px-18 text-center leading-relaxed`}
+        >
+          Is Arjuna the real protagonist of Mahabharata?
+        </h2>
+        <h3 className={`$${merri.className} text-white font-bold text-[20px] `}>
+          11 Feb, 2026 | 4pm - 6pm
+        </h3>
+        <h4
+          className={`$${merri.className} text-white font-normal text-[18px] pb-2`}
+        >
+          Fireflies, Kanakpura Road, Bengaluru
+        </h4>
+        <div className="">
+          <img
+            src="/arjuna.png"
+            alt="arjuna"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <p
+          className={`$${merri.className} text-white font-light text-[18px] px-18 italic py-6 text-center`}
+        >
+          Mahabharata Dialogues is a collective dadada dad which meets on the
+          4th Saturday of every month on new topics dada da da. Mahabharata
+          Dialogues is a collective dadada dad which meets on the
+        </p>
+        <div className="flex justify-center items-center gap-2 pb-6">
+          <div>
+            <CustomButton
+              text="GET YOUR TICKETS"
+              bgColor="#D12127"
+              textColor="#FFFFFF"
+              url="#"
+            />
+          </div>
+          <div className="bg-[#78B0C7] p-[13px] cursor-pointer">
+            <img src="/share.png" alt="share" />
+          </div>
+        </div>
+      </div>
+
       <div className="mx-2 xl:mx-16 2xl:mx-30 overflow-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 pt-20 ">
           {/* IMAGE */}
@@ -159,7 +209,9 @@ const Testimonials = () => {
           <p className="text-white font-neco italic text-[24px] sm:text-[32px] leading-relaxed ">
             {testimonials[currentIndex]?.quote}
           </p>
-          <p className={`text-white ${merri.className} mt-4 font-bold text-[24px] sm:[32px]`}>
+          <p
+            className={`text-white ${merri.className} mt-4 font-bold text-[24px] sm:[32px]`}
+          >
             <span className=" uppercase">
               {' '}
               {testimonials[currentIndex]?.name},{' '}
