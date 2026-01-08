@@ -22,7 +22,7 @@ const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
         inline-flex items-center justify-center text-center
         font-bold cursor-pointer
         w-full max-w-[450px]
-        px-6 sm:px-10
+        px-6 sm:px-25
         py-4 sm:py-5
         text-[16px] lg:text-[18px]
         leading-tight

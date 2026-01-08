@@ -3,16 +3,56 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
+
 interface Testimonial {
   id: string
   quote: string
   name: string
   designation: string
 }
+
+interface Event {
+  id: string
+  type: 'event' | 'retreat'
+  title: string
+  coverImage: string
+  date: string
+  time: string
+  venue: string
+  description?: string
+  ticketUrl?: string
+  slug?: string
+}
+
+interface RetreatData {
+  id: string
+  title: string
+  photos?: string[]
+  venue?: string
+  day1: {
+    date: string
+    dayName: string
+  }
+  slug?: string
+}
+
+interface EventData {
+  id: string
+  title: string
+  coverImage: string
+  eventDate: string
+  eventTime: string
+  venue: string
+  description?: string
+  ticketUrl?: string
+  slug?: string
+}
+
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [upcomingItems, setUpcomingItems] = useState<Event[]>([])
+  const [featuredItem, setFeaturedItem] = useState<Event | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [retreatText, setRetreatText] = useState('')
   const [loading, setLoading] = useState(true)
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
@@ -20,7 +60,9 @@ const Testimonials = () => {
 
   useEffect(() => {
     fetchTestimonials()
+    fetchUpcomingItems()
   }, [])
+
   const fetchTestimonials = async () => {
     try {
       const response = await fetch('/api/testimonials')
@@ -39,10 +81,8 @@ const Testimonials = () => {
           },
         ])
       }
-      setLoading(false)
     } catch (error) {
       console.error('Error fetching testimonials:', error)
-
       setTestimonials([
         {
           id: '1',
@@ -52,12 +92,111 @@ const Testimonials = () => {
           designation: 'President of Rotary Club, Bengaluru',
         },
       ])
+    }
+  }
+
+  const parseDate = (dateStr: string): Date => {
+    // Handle formats like "11 Feb 2026" or "2026-02-11"
+    if (dateStr.includes('-')) {
+      return new Date(dateStr)
+    }
+    // Parse "DD MMM YYYY" format
+    const [day, month, year] = dateStr.split(' ')
+    const monthMap: { [key: string]: number } = {
+      Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+      Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+    }
+    return new Date(parseInt(year), monthMap[month], parseInt(day))
+  }
+
+  const formatDate = (dateStr: string): string => {
+    const date = parseDate(dateStr)
+    const day = date.getDate()
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    return `${day} ${month}, ${year}`
+  }
+
+  const fetchUpcomingItems = async () => {
+    try {
+      setLoading(true)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      const thirtyDaysLater = new Date(today)
+      thirtyDaysLater.setDate(today.getDate() + 30)
+
+      // Fetch retreats
+      const retreatsResponse = await fetch('/api/retreats')
+      const retreatsData = await retreatsResponse.json()
+
+      // Fetch events
+      const eventsResponse = await fetch('/api/events')
+      const eventsData = await eventsResponse.json()
+
+      const allItems: Event[] = []
+
+      // Process retreats
+      if (retreatsData.success && retreatsData.data) {
+        retreatsData.data.forEach((retreat: RetreatData) => {
+          const retreatDate = parseDate(retreat.day1.date)
+          if (retreatDate >= today && retreatDate <= thirtyDaysLater) {
+            allItems.push({
+              id: retreat.id,
+              type: 'retreat',
+              title: retreat.title,
+              coverImage: retreat.photos?.[0] || '/abhilash.png',
+              date: retreat.day1.date,
+              time: '', // Retreats don't have specific time
+              venue: retreat.venue || 'Venue TBA',
+              slug: retreat.slug,
+            })
+          }
+        })
+      }
+
+      // Process events
+      if (eventsData.success && eventsData.data) {
+        eventsData.data.forEach((event: EventData) => {
+          const eventDate = parseDate(event.eventDate)
+          if (eventDate >= today && eventDate <= thirtyDaysLater) {
+            allItems.push({
+              id: event.id,
+              type: 'event',
+              title: event.title,
+              coverImage: event.coverImage || '/abhilash.png',
+              date: event.eventDate,
+              time: event.eventTime || '',
+              venue: event.venue || 'Venue TBA',
+              description: event.description,
+              ticketUrl: event.ticketUrl,
+              slug: event.slug,
+            })
+          }
+        })
+      }
+
+      // Sort by date (earliest first)
+      allItems.sort((a, b) => {
+        const dateA = parseDate(a.date)
+        const dateB = parseDate(b.date)
+        return dateA.getTime() - dateB.getTime()
+      })
+
+      // Set featured item (earliest) and rest
+      if (allItems.length > 0) {
+        setFeaturedItem(allItems[0])
+        setUpcomingItems(allItems.slice(1))
+      }
+
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching upcoming items:', error)
       setLoading(false)
     }
   }
-  const handleWheel = (e: React.WheelEvent) => {
-    // e.preventDefault()
 
+  const handleWheel = (e: React.WheelEvent) => {
     if (wheelTimeout.current) {
       clearTimeout(wheelTimeout.current)
     }
@@ -98,124 +237,209 @@ const Testimonials = () => {
     }
   }
 
+  const getItemUrl = (item: Event) => {
+    if (item.type === 'event' && item.slug) {
+      return `/events/${item.slug}`
+    } else if (item.type === 'retreat' && item.slug) {
+      return `/retreats/${item.slug}`
+    }
+    return '#'
+  }
+
+  if (loading) {
+    return (
+      <div
+        className="w-full pb-30 flex items-center justify-center min-h-screen"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              rgba(29, 92, 117, 0.5),
+              rgba(29, 92, 117, 0.5)
+            ),
+            url('/Blue_Background_with_Texture-01.png')
+          `,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="text-white text-2xl">Loading upcoming events...</div>
+      </div>
+    )
+  }
+
   return (
     <div
       className="w-full pb-30"
       style={{
         backgroundImage: `
-      linear-gradient(
-        rgba(29, 92, 117, 0.5),
-        rgba(29, 92, 117, 0.5)
-      ),
-      url('/Blue_Background_with_Texture-01.png')
-    `,
-        // backgroundSize: 'cover',
-        // backgroundRepeat: 'no-repeat',
-        // backgroundPosition: 'center',
+          linear-gradient(
+            rgba(29, 92, 117, 0.5),
+            rgba(29, 92, 117, 0.5)
+          ),
+          url('/Blue_Background_with_Texture-01.png')
+        `,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
       }}
     >
-      {/* single event */}
-      <div className="flex flex-col max-w-84 md:max-w-xl mx-auto justify-center items-center bg-[#1D5C75CC]">
-        <p
-          className={`$${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
-        >
-          COMING UP NEXT
-        </p>
-        <h2
-          className={`$${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-18 text-center leading-relaxed`}
-        >
-          Is Arjuna the real protagonist of Mahabharata?
-        </h2>
-        <h3 className={`$${merri.className} text-white font-bold text-[20px] `}>
-          11 Feb, 2026 | 4pm - 6pm
-        </h3>
-        <h4
-          className={`$${merri.className} text-white font-normal text-[18px] pb-2`}
-        >
-          Fireflies, Kanakpura Road, Bengaluru
-        </h4>
-        <div className="">
-          <img
-            src="/arjuna.png"
-            alt="arjuna"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <p
-          className={`$${merri.className} text-white font-light text-[18px] md:px-18 italic py-6 text-center`}
-        >
-          Mahabharata Dialogues is a collective dadada dad which meets on the
-          4th Saturday of every month on new topics dada da da. Mahabharata
-          Dialogues is a collective dadada dad which meets on the
-        </p>
-        <div className="flex justify-center items-center gap-2 pb-6">
-          <div>
-            <CustomButton
-              text="GET YOUR TICKETS"
-              bgColor="#D12127"
-              textColor="#FFFFFF"
-              url="#"
+      {/* Featured Event/Retreat */}
+      {featuredItem && (
+        <div className="flex flex-col max-w-84 md:max-w-xl mx-auto justify-center items-center bg-[#1D5C75CC]">
+          <p
+            className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
+          >
+            COMING UP NEXT
+          </p>
+          <h2
+            className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-18 text-center leading-relaxed`}
+          >
+            {featuredItem.title}
+          </h2>
+          <h3 className={`${merri.className} text-white font-bold text-[20px]`}>
+            {formatDate(featuredItem.date)}
+            {featuredItem.time && ` | ${featuredItem.time}`}
+          </h3>
+          <h4
+            className={`${merri.className} text-white font-normal text-[18px] pb-2`}
+          >
+            {featuredItem.venue}
+          </h4>
+          <div className="">
+            <img
+              src={featuredItem.coverImage}
+              alt={featuredItem.title}
+              className="w-full h-full object-cover"
             />
           </div>
-          <div className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer">
-            <img src="/share.png" alt="share" />
-          </div>
-        </div>
-      </div>
 
-      <div className="mx-2 xl:mx-16 2xl:mx-30 overflow-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 pt-20 ">
-          {/* IMAGE */}
-          <div className="order-1 sm:order-0 sm:col-start-1 sm:col-span-4 lg:col-start-2 lg:col-span-4 xl:col-start-3 xl:col-span-4 flex">
-            <div className="w-full md:max-w-[465px] aspect-auto md:aspect-[465/345.2]">
-              <img
-                src="/abhilash.png"
-                alt="Abhilash"
-                className="w-full h-full object-cover"
+          {featuredItem.description && (
+            <p
+              className={`${merri.className} text-white font-light text-[18px] md:px-18 italic py-6 text-center`}
+            >
+              {featuredItem.description}
+            </p>
+          )}
+          <div className="flex justify-center items-center gap-2 pb-6">
+            <div>
+              <CustomButton
+                text="GET YOUR TICKETS"
+                bgColor="#D12127"
+                textColor="#FFFFFF"
+                url={featuredItem.ticketUrl || getItemUrl(featuredItem)}
               />
             </div>
-          </div>
-
-          {/* TEXT */}
-          <div className="order-2 sm:order-0 sm:col-start-5 sm:col-span-4 lg:col-start-6 lg:col-span-4 xl:col-start-7 xl:col-span-4 flex">
-            <div className="px-2 sm:px-8 py-4 bg-white/30 flex flex-col justify-center items-center text-center sm:text-start">
-              <p className="font-neco text-[22px] sm:text-[32px] text-white font-normal">
-                Join us for the upcoming Dialogue on{' '}
-                <span className="font-bold">23rd January, 2026</span>
-              </p>
-
-              <div className="sm:-ml-28 2xl:-ml-20 py-6">
-                <CustomButton
-                  text="GET YOUR TICKETS"
-                  bgColor="#D12127"
-                  textColor="#FFFFFF"
-                  url="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
-                />
-              </div>
+            <div className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer">
+              <img src="/share.png" alt="share" />
             </div>
           </div>
         </div>
-      </div>
+      )}
 
+      {/* Multiple Upcoming Events/Retreats */}
+      {upcomingItems.length > 0 && (
+        <div
+          className="flex gap-4 md:gap-16 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4"
+          style={{
+            backgroundImage: `
+              linear-gradient(
+                rgba(29, 92, 117, 0.5),
+                rgba(29, 92, 117, 0.5)
+              ),
+              url('/Blue_Background_with_Texture-01.png')
+            `,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}
+        >
+          {upcomingItems.map((item) => (
+            <div
+              key={item.id}
+              className="min-w-[280px] sm:min-w-[320px] md:min-w-[360px] lg:min-w-[380px] flex flex-col gap-3 snap-start"
+            >
+              {/* Image */}
+              <div className="relative">
+                <img
+                  src={item.coverImage}
+                  alt={item.title}
+                  className="w-full h-[300px] object-cover rounded-lg"
+                />
+              </div>
+
+              <div className="flex flex-col justify-center items-center text-center gap-2">
+                <h2
+                  className={`${merri.className} text-white font-bold px-[2px] text-[20px] md:text-[26px] italic leading-tight`}
+                >
+                  {item.title}
+                </h2>
+                <p
+                  className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
+                >
+                  {formatDate(item.date)}
+                  {item.time && ` | ${item.time}`}
+                </p>
+                <p
+                  className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                >
+                  {item.venue}
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-2 md:justify-start mt-2">
+                <div className="w-[80%] md:w-full">
+                  <CustomButton
+                    text="LEARN MORE"
+                    bgColor="#1D5C75"
+                    textColor="#FFFFFF"
+                    url={getItemUrl(item)}
+                  />
+                </div>
+                <a
+                  href={getItemUrl(item)}
+                  className="bg-[#D12127] p-2.5 md:p-3 cursor-pointer flex items-center justify-center"
+                >
+                  <img
+                    src="/Arrow_up-right.png"
+                    alt="Arrow_up"
+                    className="w-5 h-5 md:w-6 md:h-6"
+                  />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* No Upcoming Events Message */}
+      {!featuredItem && upcomingItems.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20">
+          <p className={`${merri.className} text-white text-2xl text-center`}>
+            No upcoming events in the next 30 days
+          </p>
+        </div>
+      )}
+
+      {/* Testimonials Section */}
       <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
         <div
-          className="bg-opacity-60  rounded-lg p-6 text-center"
+          className="bg-opacity-60 rounded-lg p-6 text-center"
           onWheel={handleWheel}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <p className="text-white font-neco italic text-[24px] sm:text-[32px] leading-relaxed ">
+          <p className="text-white font-neco italic text-[24px] sm:text-[32px] leading-relaxed">
             {testimonials[currentIndex]?.quote}
           </p>
           <p
             className={`text-white ${merri.className} mt-4 font-bold text-[24px] sm:[32px]`}
           >
-            <span className=" uppercase">
-              {' '}
+            <span className="uppercase">
               {testimonials[currentIndex]?.name},{' '}
-            </span>{' '}
+            </span>
             {testimonials[currentIndex]?.designation}
           </p>
 

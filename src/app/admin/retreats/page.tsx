@@ -13,6 +13,7 @@ import {
   ChevronUp,
   Upload,
   Image as ImageIcon,
+  ExternalLink,
 } from 'lucide-react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import Navbar from '@/components/Navbar'
@@ -46,6 +47,8 @@ interface Retreat {
   slug?: string
   description?: string
   venue?: string
+  coverImage?: string
+  bookingUrl?: string
   youtube_video?: string
   photos?: string[]
   footerNotes?: string
@@ -64,6 +67,7 @@ const RetreatsAdminPage = () => {
   const [submitting, setSubmitting] = useState(false)
   const [expandedRetreat, setExpandedRetreat] = useState<string | null>(null)
   const [uploadingPhotos, setUploadingPhotos] = useState(false)
+  const [uploadingCover, setUploadingCover] = useState(false)
   const [isThreeDayRetreat, setIsThreeDayRetreat] = useState(false)
 
   const [formData, setFormData] = useState<
@@ -72,6 +76,8 @@ const RetreatsAdminPage = () => {
     title: '',
     description: '',
     venue: '',
+    coverImage: '',
+    bookingUrl: '',
     youtube_video: '',
     photos: [],
     footerNotes: '',
@@ -147,6 +153,8 @@ const RetreatsAdminPage = () => {
       title: '',
       description: '',
       venue: '',
+      coverImage: '',
+      bookingUrl: '',
       youtube_video: '',
       photos: [],
       footerNotes: '',
@@ -177,6 +185,8 @@ const RetreatsAdminPage = () => {
       title: retreat.title,
       description: retreat.description || '',
       venue: retreat.venue || '',
+      coverImage: retreat.coverImage || '',
+      bookingUrl: retreat.bookingUrl || '',
       youtube_video: retreat.youtube_video || '',
       photos: retreat.photos || [],
       footerNotes: retreat.footerNotes || '',
@@ -187,6 +197,46 @@ const RetreatsAdminPage = () => {
     setIsThreeDayRetreat(!!retreat.day3)
     setEditingId(retreat.id)
     setShowModal(true)
+  }
+
+  const handleCoverImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingCover(true)
+    try {
+      const uploadedUrl = await uploadImage(file, 'retreats')
+      if (uploadedUrl) {
+        // Delete old cover image if exists
+        if (formData.coverImage) {
+          await deleteFromFirebaseStorage(formData.coverImage)
+        }
+        setFormData((prev) => ({
+          ...prev,
+          coverImage: uploadedUrl,
+        }))
+      }
+    } catch (error) {
+      alert('Failed to upload cover image')
+    } finally {
+      setUploadingCover(false)
+    }
+  }
+
+  const handleRemoveCoverImage = async () => {
+    if (!formData.coverImage) return
+
+    try {
+      await deleteFromFirebaseStorage(formData.coverImage)
+      setFormData((prev) => ({
+        ...prev,
+        coverImage: '',
+      }))
+    } catch (error) {
+      alert('Failed to delete cover image')
+    }
   }
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -265,6 +315,8 @@ const RetreatsAdminPage = () => {
         title: formData.title,
         description: formData.description || undefined,
         venue: formData.venue || undefined,
+        coverImage: formData.coverImage || undefined,
+        bookingUrl: formData.bookingUrl || undefined,
         youtube_video: formData.youtube_video || undefined,
         photos:
           formData.photos && formData.photos.length > 0
@@ -857,6 +909,28 @@ const RetreatsAdminPage = () => {
                             Venue: {retreat.venue}
                           </p>
                         )}
+                        {retreat.coverImage && (
+                          <div className="mt-3">
+                            <img
+                              src={retreat.coverImage}
+                              alt="Cover"
+                              className="w-48 h-32 object-cover rounded-lg border-2 border-purple-200"
+                            />
+                          </div>
+                        )}
+                        {retreat.bookingUrl && (
+                          <div className="mt-3">
+                            <a
+                              href={retreat.bookingUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                            >
+                              <ExternalLink size={14} />
+                              Book My Show Link
+                            </a>
+                          </div>
+                        )}
                         <div className="flex gap-4 mt-3 flex-wrap">
                           <div className="flex items-center gap-2 text-sm">
                             <Calendar size={16} className="text-purple-600" />
@@ -1177,6 +1251,66 @@ const RetreatsAdminPage = () => {
                             }))
                           }
                           placeholder="Enter venue location"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Cover Image
+                        </label>
+                        <div className="space-y-3">
+                          {formData.coverImage ? (
+                            <div className="relative group w-64">
+                              <img
+                                src={formData.coverImage}
+                                alt="Cover"
+                                className="w-full h-48 object-cover rounded-lg border-2 border-purple-200"
+                              />
+                              <button
+                                onClick={handleRemoveCoverImage}
+                                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                type="button"
+                                disabled={submitting}
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+                          ) : (
+                            <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors w-64">
+                              <Upload size={20} className="text-gray-400" />
+                              <span className="text-sm text-gray-600">
+                                {uploadingCover
+                                  ? 'Uploading...'
+                                  : 'Upload Cover Image'}
+                              </span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleCoverImageUpload}
+                                className="hidden"
+                                disabled={submitting || uploadingCover}
+                              />
+                            </label>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Booking URL (Book My Show)
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.bookingUrl}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              bookingUrl: e.target.value,
+                            }))
+                          }
+                          placeholder="https://in.bookmyshow.com/..."
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
                         />

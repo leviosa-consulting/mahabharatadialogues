@@ -15,7 +15,9 @@ export async function PUT(
     const { 
       title, 
       description, 
-      venue, 
+      venue,
+      coverImage,
+      bookingUrl,
       youtube_video, 
       photos, 
       footerNotes,
@@ -60,6 +62,8 @@ export async function PUT(
     // Only add optional fields if they have values
     if (description) updateData.description = description;
     if (venue) updateData.venue = venue;
+    if (coverImage) updateData.coverImage = coverImage;
+    if (bookingUrl) updateData.bookingUrl = bookingUrl;
     if (youtube_video) updateData.youtube_video = youtube_video;
     if (photos && photos.length > 0) updateData.photos = photos;
     if (footerNotes) updateData.footerNotes = footerNotes;
