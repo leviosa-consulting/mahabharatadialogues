@@ -72,7 +72,7 @@ const RetreatDetailPage: React.FC = () => {
 
   const fetchRetreat = async (slugOrId: string) => {
     try {
-      // First try to fetch by slug
+     
       const slugResponse = await fetch(`/api/retreats/by-slug/${slugOrId}`)
       
       if (slugResponse.ok) {
@@ -84,7 +84,7 @@ const RetreatDetailPage: React.FC = () => {
         }
       }
 
-      // Fallback: fetch all retreats and find by ID (for backwards compatibility)
+     
       const response = await fetch('/api/retreats')
       const data = await response.json()
 
@@ -106,64 +106,63 @@ const RetreatDetailPage: React.FC = () => {
     }
   }
 
-  const renderScheduleSection = (
-    section: ScheduleSection,
-    index: number,
-    isLastActivity: boolean,
-    isThreeDayRetreat: boolean
-  ) => {
-    if (section.type === 'meal') {
-      return (
-        <div
-          key={index}
-          className={`bg-[#60a5fa] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
-        >
-          <span className={`${merri.className} font-bold text-[16px] md:text-[18px]`}>{section.title}</span>
-          <span className={`text-md whitespace-nowrap pt-0.5 ${merri.className}  text-[16px] md:text-[18px] font-bold`}>
-            {section.time}
-          </span>
-        </div>
-      )
-    }
-
+const renderScheduleSection = (
+  section: ScheduleSection,
+  index: number,
+  isLastActivity: boolean,
+  isThreeDayRetreat: boolean
+) => {
+  if (section.type === 'meal') {
     return (
-      <div key={index} className="space-y-2">
-        {section.items?.map((item, itemIndex) => (
-          <div
-            key={itemIndex}
-            className="flex justify-between items-start gap-3 px-[7px] pt-4"
-          >
-            <div className="flex-1">
-              <div className={`flex items-start  leading-snug ${merri.className}`}>
-                <span className="mr-2 text-2xl leading-none">•</span>
-                <span className={`${merri.className} font-bold text-[16px] md:text-[18px]`}>{item.title}</span>
-              </div>
-
-              {item.description && (
-                <div
-                  className={`text-sm text-gray-600  mt-0.5 ${merri.className} px-[19px] ${
-                    isThreeDayRetreat 
-                      ? '2xl:w-[90%]' 
-                      : 'md:w-full'
-                  } ${
-                    itemIndex === section.items!.length - 1
-                      ? 'pb-8'
-                      : ''
-                  }`}
-                >
-                  {item.description}
-                </div>
-              )}
-            </div>
-            <div className={`text-md whitespace-nowrap pt-0.5 ${merri.className}  text-[16px] md:text-[18px] font-bold`}>
-              {item.time}
-            </div>
-          </div>
-        ))}
+      <div
+        key={index}
+        className={`bg-[#60a5fa] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
+      >
+        <span className={`${merri.className} font-bold text-[16px] md:text-[18px]`}>{section.title}</span>
+        <span className={`${merri.className} text-[16px] md:text-[18px] font-bold leading-none`}>
+          {section.time}
+        </span>
       </div>
     )
   }
 
+  return (
+    <div key={index} className="space-y-2">
+      {section.items?.map((item, itemIndex) => (
+        <div
+          key={itemIndex}
+          className="flex justify-between items-start px-2 pt-4"
+        >
+          <div className="flex-1">
+            <div className={`flex items-start ${merri.className}`}>
+              <span className="text-2xl leading-none">•</span>
+              <span className={`${merri.className} font-bold text-[16px] md:text-[18px] pl-2 leading-none`}>{item.title}</span>
+            </div>
+
+            {item.description && (
+              <div
+                className={`text-sm text-gray-600 mt-0.5 ${merri.className} px-[19px] ${
+                  isThreeDayRetreat 
+                    ? '2xl:w-[90%]' 
+                    : 'md:w-full'
+                } ${
+                  itemIndex === section.items!.length - 1
+                    ? 'pb-8'
+                    : ''
+                }`}
+              >
+                {item.description}
+              </div>
+            )}
+          </div>
+          <div className={`${merri.className} text-[16px] md:text-[18px] font-bold whitespace-nowrap ml-4 leading-none`}>
+            {item.time}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
   const getYoutubeEmbedUrl = (url: string): string | null => {
     try {
       const urlObj = new URL(url)

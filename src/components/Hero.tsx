@@ -26,33 +26,14 @@ export default function HeroSection() {
 
         {/* mid content */}
         <div className="flex-[1.5] flex flex-col items-center justify-center my-20 px-12">
-          {/* circle */}
-          <div className="w-45 h-45 xl:w-60 xl:h-60 rounded-full bg-red-500 flex items-center justify-center text-center">
-            <div className="flex flex-col gap-2">
-              <p className={`text-white text-lg xl:text-2xl ${merri.className} font-bold italic`}>
-                Mahabharata Dialogues
-              </p>
-              <span className={`font-normal ${merri.className} text-sm italic text-white`}>
-                Epic stories, Ancient Wisdom
-              </span>
-            </div>
+          <div className='w-45 h-45 xl:w-60 xl:h-60 rounded-full'>
+             <img src="Web_Assets-08.png" alt="webAssets9" className=""/>
           </div>
+         
 
-          {/* text */}
-          <p className="font-neco italic text-[24px] xl:text-[32px] font-bold text-white  text-center mt-8 xl:max-w-[600px]">
-            Mahabharata Dialogues is a collective dadada dad which meets on the
-            4th Saturday of every month on new topics dada da da.
-          </p>
+        
 
-          {/* button */}
-          <div className="py-6">
-           <CustomButton
-              text="GET YOUR TICKETS"
-              bgColor="#1D5C75"
-              textColor="#ffffff"
-              url="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
-            />
-          </div>
+        
         </div>
 
         {/* right image */}
@@ -70,14 +51,8 @@ export default function HeroSection() {
         <div className="flex flex-col items-center justify-center my-4 px-12">
           {/* circle */}
           <div className="w-54 h-54 rounded-full bg-red-500 flex items-center justify-center text-center">
-            <div className="flex flex-col gap-2">
-              <p className="text-white text-2xl ${merri.className} font-bold italic">
-                Mahabharata Dialogues
-              </p>
-              <span className="font-normal ${merri.className} text-sm italic text-white">
-                Epic stories, Ancient Wisdom
-              </span>
-            </div>
+             <img src="Web_Assets-08.png" alt="webAssets9" className=""/>
+
           </div>
         </div>
 
@@ -99,23 +74,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* text */}
-        <div className="flex flex-col gap-2 justify-center items-center text-center py-6 px-1.5">
-          {/* text */}
-          <p className="font-neco italic text-[22px] font-bold text-white  text-center mt-8">
-            Mahabharata Dialogues is a collective dadada dad which meets on the
-            4th Saturday of every month on new topics dada da da.
-          </p>
-          {/* button */}
-          <div className="py-6">
-            <CustomButton
-              text="GET YOUR TICKETS"
-              bgColor="#1D5C75"
-              textColor="#ffffff"
-              url="https://in.bookmyshow.com/plays/mahabharatha-dialogues-koramangala/ET00357289"
-            />
-          </div>
-        </div>
+       
       </div>
     </section>
   )
