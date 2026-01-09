@@ -419,7 +419,7 @@ const Testimonials = () => {
           >
             {featuredItem.title}
           </h2>
-          <h3 className={`${merri.className} text-white font-bold text-[20px]`}>
+          <h3 className={`${merri.className} text-white font-bold text-[20px] text-center`}>
             {getDisplayDate(featuredItem)}
           </h3>
           <h4
