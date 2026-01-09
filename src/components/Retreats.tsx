@@ -43,10 +43,7 @@ export default async function Retreats() {
               </h2>
 
               <p className="font-merii italic font-light text-[18px] lg:text-[24px] text-white">
-                Mahabharata Dialogues is a collective dadada dad which meets on
-                the 4th Saturday of every month on new topics dada da da.
-                Mahabharata Dialogues is a collective dadada dad which meets on
-                the
+               We come together to listen, question, play, and reflect using the Mahabharata as our guide. Each retreat is a shared journey of stories, insights, and warm connections.
               </p>
 
               <div className="flex justify-center md:justify-start">
