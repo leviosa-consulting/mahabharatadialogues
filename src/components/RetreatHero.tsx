@@ -351,8 +351,6 @@ export default async function RetreatHero() {
           </div>
         </div>
       </div>
-      {/* bg */}
-      <div className="bg-[#124056] py-6 w-full"></div>
     </div>
   )
 }

@@ -10,7 +10,8 @@ import {
 
 const Footer = () => {
   return (
-    <div
+    <div>
+       <div
       className="
         flex flex-col justify-center items-center
         text-white font-bold font-neco
@@ -57,8 +58,13 @@ const Footer = () => {
         >
           <Linkedin className="w-5 h-5 text-black" />
         </a>
+        
       </div>
+      
     </div>
+         <div className="bg-[#124056] py-6 w-full"></div>
+    </div>
+   
   )
 }
 

@@ -6,15 +6,22 @@ import { merri } from '@/app/fonts/merri'
 import Footer from './Footer'
 import { getLatestVideos } from '@/lib/youtube'
 export default async function Retreats() {
-   const videos = await getLatestVideos() 
+  const videos = await getLatestVideos()
   return (
     <section
       className="relative w-full overflow-hidden flex flex-col justify-center "
       style={{
-        backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
+        backgroundImage: `
+    linear-gradient(
+      to bottom,
+      #47ABD880 50%,
+      #1D5C75 100%
+    ),
+    url('/Blue_Background_with_Texture-01.png')
+  `,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center ',
+        backgroundPosition: 'center',
       }}
     >
       <div className="mx-2 xl:mx-36 overflow-hidden bg-[#1D5C7580]">
@@ -67,12 +74,7 @@ export default async function Retreats() {
                 LATEST ON YOUTUBE
               </h2>
 
-             <YouTubeSection
-  videos={videos}
-  count={2}
-  layout="row"
-/>
-
+              <YouTubeSection videos={videos} count={2} layout="row" />
             </div>
           </div>
 
@@ -91,9 +93,7 @@ export default async function Retreats() {
         </div>
       </div>
 
-     <Footer />
+      <Footer />
     </section>
   )
 }
-
-

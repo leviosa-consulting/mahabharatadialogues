@@ -6,12 +6,10 @@ import Retreats from '@/components/Retreats'
 
 export default function Home() {
   return (
-    <div className='w-full h-full '>
+    <div className='w-full h-full ' >
       <HeroSection />
       <Testimonials />
-
       <ImageCarousel />
-
       <Retreats />
     </div>
   )

@@ -87,7 +87,7 @@ const ImageCarousel = () => {
       </div>
 
       {/* button */}
-      <div className="flex justify-center items-center mt-2">
+      <div className="flex justify-center items-center mt-2 mx-4">
         <CustomButton
           text="MORE CLIPS OF OUR DIALOGUES"
           bgColor="#1D5C75"
