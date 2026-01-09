@@ -29,6 +29,7 @@ interface Event {
 interface RetreatData {
   id: string
   title: string
+  description: string
   photos?: string[]
   venue?: string
   day1: {
@@ -240,6 +241,7 @@ const Testimonials = () => {
               id: retreat.id,
               type: 'retreat',
               title: retreat.title,
+              description: retreat.description,
               coverImage: retreat.coverImage || '/abhilash.png',
               date: retreat.day1.date,
               endDate: endDate,
@@ -440,7 +442,7 @@ const Testimonials = () => {
               {featuredItem.description}
             </p>
           )}
-          <div className="flex justify-center items-center gap-2 py-6">
+          <div className="flex justify-center items-center gap-2 pb-8">
             <div>
               <CustomButton
                 text="GET YOUR TICKETS"
