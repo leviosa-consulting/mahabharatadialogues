@@ -22,23 +22,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Check cookies first for quick validation
         const authToken = Cookies.get('authToken')
         const userRole = Cookies.get('userRole')
-        
+
         if (!authToken) {
           console.log('No auth token found, redirecting to login')
           router.replace('/login')
           return
         }
 
-        // Verify with Firebase Auth
         const auth = getAuth()
-        
+
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (!user) {
             console.log('No Firebase user found, redirecting to login')
-            // Clear invalid cookies
+
             Cookies.remove('authToken')
             Cookies.remove('userEmail')
             Cookies.remove('userDisplayName')
@@ -48,10 +46,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             return
           }
 
-          // User is authenticated
           console.log('User authenticated:', user.email)
-          
-          // Check admin status
+
           const isUserAdmin = userRole === 'admin'
           setIsAdmin(isUserAdmin)
 
@@ -62,13 +58,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             return
           }
 
-          // User is authorized
           console.log('User is authorized')
           setIsAuthorized(true)
           setLoading(false)
         })
 
-        // Cleanup subscription
         return () => unsubscribe()
       } catch (error) {
         console.error('Auth check error:', error)
@@ -82,18 +76,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const handleLogout = () => {
     const auth = getAuth()
     auth.signOut()
-    
-    // Clear all cookies
+
     Cookies.remove('authToken')
     Cookies.remove('userEmail')
     Cookies.remove('userDisplayName')
     Cookies.remove('userRole')
     Cookies.remove('userId')
-    
+
     router.replace('/login')
   }
 
-  // Show loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -105,15 +97,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     )
   }
 
-  // Show access denied for non-admin users
   if (requireAdmin && !isAdmin && !loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
         <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center">
           <AlertCircle className="mx-auto text-red-600 mb-4" size={48} />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Access Denied
+          </h1>
           <p className="text-gray-600 mb-6">
-            You do not have permission to access this page. Only admin users can access the admin panel.
+            You do not have permission to access this page. Only admin users can
+            access the admin panel.
           </p>
           <div className="flex gap-4">
             <button
@@ -135,12 +129,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     )
   }
 
-  // User is not authorized (shouldn't reach here but just in case)
   if (!isAuthorized && !loading) {
     return null
   }
 
-  // User is authorized, render children
   return <>{children}</>
 }
 

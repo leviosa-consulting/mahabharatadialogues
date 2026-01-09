@@ -498,6 +498,7 @@ const Testimonials = () => {
               key={item.id}
               className=" snap-start shrink-0 flex flex-col gap-3
     w-[95%]        
+    
     md:w-[50%]    
     xl:w-[30%] "
             >
@@ -516,13 +517,13 @@ const Testimonials = () => {
                 >
                   {item.title}
                 </h2>
-                <p
+                <p 
                   className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
                 >
                   {getDisplayDate(item)}
                 </p>
                 <p
-                  className={`${merri.className} text-white font-normal h-12 md:h-16  text-[15px] md:text-[17px]`}
+                  className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
                 >
                   {item.venue}
                 </p>
@@ -554,7 +555,7 @@ const Testimonials = () => {
         </div>
       )}
 
-      {/* No Upcoming Events Message */}
+      {/* No Upcoming Events */}
       {!featuredItem && upcomingItems.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20">
           <p className={`${merri.className} text-white text-2xl text-center`}>

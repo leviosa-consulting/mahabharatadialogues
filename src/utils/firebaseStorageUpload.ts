@@ -111,9 +111,6 @@ export async function deleteFromFirebaseStorage(
 }
 
 
-/**
- * Wrapper function for image upload
- */
 export const uploadImage = async (
   file: File,
   folder: "blogs" | "events" | "retreats"

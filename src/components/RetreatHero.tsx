@@ -30,8 +30,18 @@ interface Retreat {
 // Helper to parse "03 Aug 2024" format to Date
 const parseDate = (dateStr: string): Date => {
   const months: { [key: string]: number } = {
-    'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-    'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
   }
   const parts = dateStr.split(' ')
   const day = parseInt(parts[0])
@@ -90,14 +100,14 @@ export default async function RetreatHero() {
   const videos = await getLatestVideos()
   const retreats = await getRetreats()
 
-  // Get upcoming retreat (only the first one)
-  const upcomingRetreat = retreats.find(r => isUpcoming(r.day1.date))
-  
-  // Get past retreats (already sorted with most recent past first)
-  const pastRetreats = retreats.filter(r => !isUpcoming(r.day1.date))
+  const upcomingRetreat = retreats.find((r) => isUpcoming(r.day1.date))
+
+  const pastRetreats = retreats.filter((r) => !isUpcoming(r.day1.date))
 
   const getRetreatUrl = (retreat: Retreat) => {
-    return retreat.slug ? `/retreats/${retreat.slug}` : `/retreats/${retreat.id}`
+    return retreat.slug
+      ? `/retreats/${retreat.slug}`
+      : `/retreats/${retreat.id}`
   }
 
   const getDateRange = (retreat: Retreat) => {
@@ -120,7 +130,6 @@ export default async function RetreatHero() {
     `,
         }}
       >
-        {/* WHITE SECTION */}
         <div className="w-full ">
           <div className="mx-2 xl:mx-0 2xl:mx-20">
             <div className="grid  grid-cols-12 gap-3">
@@ -141,7 +150,6 @@ export default async function RetreatHero() {
           </div>
         </div>
 
-        {/* BLUE SECTION - UPCOMING RETREATS */}
         {upcomingRetreat && (
           <div
             className="
@@ -162,7 +170,9 @@ export default async function RetreatHero() {
                     >
                       UPCOMING RETREATS
                     </p>
-                    <h2 className={`font-neco text-[28px] text-white font-bold`}>
+                    <h2
+                      className={`font-neco text-[28px] text-white font-bold`}
+                    >
                       Mahabharata Dialogues
                     </h2>
                     <h1
@@ -178,18 +188,20 @@ export default async function RetreatHero() {
                     <h4
                       className={`${merri.className} text-[20px] text-white font-normal italic`}
                     >
-                      {upcomingRetreat.venue || 'Fireflies, Kanakpura Road, Bengaluru'}
+                      {upcomingRetreat.venue ||
+                        'Fireflies, Kanakpura Road, Bengaluru'}
                     </h4>
                     <p
                       className={`${merri.className} text-[20px] text-white font-light italic py-6 lg:pr-19`}
                     >
-                      {upcomingRetreat.description || 'Join us for an immersive retreat experience.'}
+                      {upcomingRetreat.description ||
+                        'Join us for an immersive retreat experience.'}
                     </p>
                   </div>
                 </div>
                 <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4 ">
                   <div className="flex flex-col justify-between gap-6 lg:mt-10">
-                    <div className='w-full'>
+                    <div className="w-full">
                       <CustomButton
                         text="EXPERIENCE THE RETREAT"
                         bgColor="#D12127"
@@ -267,14 +279,15 @@ export default async function RetreatHero() {
                         <p
                           className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
                         >
-                          {retreat.venue || 'Fireflies, Kanakpura Road, Bengaluru'}
+                          {retreat.venue ||
+                            'Fireflies, Kanakpura Road, Bengaluru'}
                         </p>
                       </div>
 
                       <div>
                         {retreat.photos && retreat.photos.length > 0 ? (
-                          <img 
-                            src={retreat.photos[0]} 
+                          <img
+                            src={retreat.photos[0]}
                             alt={retreat.title}
                             className="w-full h-auto object-cover"
                           />
@@ -286,7 +299,8 @@ export default async function RetreatHero() {
                         <p
                           className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
                         >
-                          {retreat.description || 'A memorable retreat experience.'}
+                          {retreat.description ||
+                            'A memorable retreat experience.'}
                         </p>
                         <CustomButton
                           text="SEE THE MAGIC WE CREATED"
