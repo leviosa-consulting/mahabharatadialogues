@@ -23,6 +23,7 @@ interface Event {
   description?: string
   bookingUrl?: string
   slug?: string
+  endDate?: string
 }
 
 interface RetreatData {
@@ -31,6 +32,14 @@ interface RetreatData {
   photos?: string[]
   venue?: string
   day1: {
+    date: string
+    dayName: string
+  }
+  day2?: {
+    date: string
+    dayName: string
+  }
+  day3?: {
     date: string
     dayName: string
   }
@@ -44,7 +53,7 @@ interface EventData {
   title: string
   coverImage: string
   eventDate: string
-  eventTime: string
+  eventTime?: string
   venue: string
   description?: string
   bookingUrl?: string
@@ -144,6 +153,63 @@ const Testimonials = () => {
     return `${day} ${month}, ${year}`
   }
 
+  const formatDateRange = (startDate: string, endDate: string): string => {
+    const start = parseDate(startDate)
+    const end = parseDate(endDate)
+    
+    const startDay = start.getDate()
+    const endDay = end.getDate()
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+    const month = months[start.getMonth()]
+    const year = start.getFullYear()
+    
+    return `${startDay} ${month} - ${endDay} ${month}, ${year}`
+  }
+
+  const formatEventDateTime = (dateTimeStr: string): string => {
+    const date = new Date(dateTimeStr)
+    const day = date.getDate()
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    
+    // Format time
+    let hours = date.getHours()
+    const minutes = date.getMinutes()
+    const ampm = hours >= 12 ? 'pm' : 'am'
+    hours = hours % 12
+    hours = hours ? hours : 12 // 0 should be 12
+    const timeStr = `${hours}${minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''}${ampm}`
+    
+    return `${day} ${month}, ${year} | ${timeStr}`
+  }
+
   const fetchUpcomingItems = async () => {
     try {
       setLoading(true)
@@ -167,18 +233,21 @@ const Testimonials = () => {
         retreatsData.data.forEach((retreat: RetreatData) => {
           const retreatDate = parseDate(retreat.day1.date)
           if (retreatDate >= today && retreatDate <= thirtyDaysLater) {
+            // Get end date - check for day3, then day2
+            const endDate = retreat.day3?.date || retreat.day2?.date || retreat.day1.date
+            
             allItems.push({
               id: retreat.id,
               type: 'retreat',
               title: retreat.title,
               coverImage: retreat.coverImage || '/abhilash.png',
               date: retreat.day1.date,
+              endDate: endDate,
               time: '', // Retreats don't have specific time
               venue: retreat.venue || 'Venue TBA',
               slug: retreat.slug,
               bookingUrl: retreat.bookingUrl
             })
-
           }
         })
       }
@@ -186,8 +255,10 @@ const Testimonials = () => {
       // Process events
       if (eventsData.success && eventsData.data) {
         eventsData.data.forEach((event: EventData) => {
-          const eventDate = parseDate(event.eventDate)
-          if (eventDate >= today && eventDate <= thirtyDaysLater) {
+          const eventDate = new Date(event.eventDate)
+          const eventDateOnly = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate())
+          
+          if (eventDateOnly >= today && eventDateOnly <= thirtyDaysLater) {
             allItems.push({
               id: event.id,
               type: 'event',
@@ -206,8 +277,8 @@ const Testimonials = () => {
 
       // Sort by date (earliest first)
       allItems.sort((a, b) => {
-        const dateA = parseDate(a.date)
-        const dateB = parseDate(b.date)
+        const dateA = a.type === 'event' ? new Date(a.date) : parseDate(a.date)
+        const dateB = b.type === 'event' ? new Date(b.date) : parseDate(b.date)
         return dateA.getTime() - dateB.getTime()
       })
 
@@ -274,6 +345,44 @@ const Testimonials = () => {
     return '#'
   }
 
+  const getDisplayDate = (item: Event): string => {
+    if (item.type === 'retreat' && item.endDate && item.endDate !== item.date) {
+      return formatDateRange(item.date, item.endDate)
+    } else if (item.type === 'event') {
+      return formatEventDateTime(item.date)
+    }
+    return formatDate(item.date)
+  }
+
+  const handleShare = async (bookingUrl?: string) => {
+    if (!bookingUrl) {
+      alert('No booking URL available')
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(bookingUrl)
+      alert('Booking URL copied to clipboard!')
+    } catch (err) {
+      console.error('Failed to copy:', err)
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = bookingUrl
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        alert('Booking URL copied to clipboard!')
+      } catch (err) {
+        alert('Failed to copy URL')
+      }
+      document.body.removeChild(textArea)
+    }
+  }
+
   if (loading) {
     return <TestimonialsShimmer />
   }
@@ -304,16 +413,15 @@ const Testimonials = () => {
             COMING UP NEXT
           </p>
           <h2
-            className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-18 text-center leading-relaxed`}
+            className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-10 text-center leading-relaxed`}
           >
             {featuredItem.title}
           </h2>
           <h3 className={`${merri.className} text-white font-bold text-[20px]`}>
-            {formatDate(featuredItem.date)}
-            {featuredItem.time && ` | ${featuredItem.time}`}
+            {getDisplayDate(featuredItem)}
           </h3>
           <h4
-            className={`${merri.className} text-white font-normal text-[18px] pb-2`}
+            className={`${merri.className} text-white font-normal md:text-[18px] py-2 px-1`}
           >
             {featuredItem.venue}
           </h4>
@@ -341,7 +449,10 @@ const Testimonials = () => {
                 url={featuredItem.bookingUrl}
               />
             </div>
-            <div className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer">
+            <div 
+              className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer"
+              onClick={() => handleShare(featuredItem.bookingUrl)}
+            >
               <img src="/share.png" alt="share" />
             </div>
           </div>
@@ -372,9 +483,9 @@ const Testimonials = () => {
               key={item.id}
               className=" snap-start shrink-0 flex flex-col gap-3
     w-[85%]        
-    md:w-[40%]    
-    lg:w-[30%]    
-    xl:w-[440px] "
+    
+    md:w-[50%]    
+    xl:w-[30%] "
             >
               {/* Image */}
               <div className="relative">
@@ -394,8 +505,7 @@ const Testimonials = () => {
                 <p
                   className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
                 >
-                  {formatDate(item.date)}
-                  {item.time && ` | ${item.time}`}
+                  {getDisplayDate(item)}
                 </p>
                 <p
                   className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
