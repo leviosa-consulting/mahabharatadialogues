@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
 import TestimonialsShimmer from './TestimonialsShimmer'
+import Link from 'next/link'
 
 interface Testimonial {
   id: string
@@ -109,11 +110,10 @@ const Testimonials = () => {
   }
 
   const parseDate = (dateStr: string): Date => {
-    
     if (dateStr.includes('-')) {
       return new Date(dateStr)
     }
-   
+
     const [day, month, year] = dateStr.split(' ')
     const monthMap: { [key: string]: number } = {
       Jan: 0,
@@ -157,7 +157,7 @@ const Testimonials = () => {
   const formatDateRange = (startDate: string, endDate: string): string => {
     const start = parseDate(startDate)
     const end = parseDate(endDate)
-    
+
     const startDay = start.getDate()
     const endDay = end.getDate()
     const months = [
@@ -176,7 +176,7 @@ const Testimonials = () => {
     ]
     const month = months[start.getMonth()]
     const year = start.getFullYear()
-    
+
     return `${startDay} ${month} - ${endDay} ${month}, ${year}`
   }
 
@@ -199,15 +199,16 @@ const Testimonials = () => {
     ]
     const month = months[date.getMonth()]
     const year = date.getFullYear()
-    
-  
+
     let hours = date.getHours()
     const minutes = date.getMinutes()
     const ampm = hours >= 12 ? 'pm' : 'am'
     hours = hours % 12
-    hours = hours ? hours : 12 
-    const timeStr = `${hours}${minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''}${ampm}`
-    
+    hours = hours ? hours : 12
+    const timeStr = `${hours}${
+      minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
+    }${ampm}`
+
     return `${day} ${month}, ${year} | ${timeStr}`
   }
 
@@ -219,24 +220,21 @@ const Testimonials = () => {
       const thirtyDaysLater = new Date(today)
       thirtyDaysLater.setDate(today.getDate() + 30)
 
-      
       const retreatsResponse = await fetch('/api/retreats')
       const retreatsData = await retreatsResponse.json()
 
-      
       const eventsResponse = await fetch('/api/events')
       const eventsData = await eventsResponse.json()
 
       const allItems: Event[] = []
 
-      
       if (retreatsData.success && retreatsData.data) {
         retreatsData.data.forEach((retreat: RetreatData) => {
           const retreatDate = parseDate(retreat.day1.date)
           if (retreatDate >= today && retreatDate <= thirtyDaysLater) {
-          
-            const endDate = retreat.day3?.date || retreat.day2?.date || retreat.day1.date
-            
+            const endDate =
+              retreat.day3?.date || retreat.day2?.date || retreat.day1.date
+
             allItems.push({
               id: retreat.id,
               type: 'retreat',
@@ -245,21 +243,24 @@ const Testimonials = () => {
               coverImage: retreat.coverImage || '/abhilash.png',
               date: retreat.day1.date,
               endDate: endDate,
-              time: '', 
+              time: '',
               venue: retreat.venue || 'Venue TBA',
               slug: retreat.slug,
-              bookingUrl: retreat.bookingUrl
+              bookingUrl: retreat.bookingUrl,
             })
           }
         })
       }
 
-    
       if (eventsData.success && eventsData.data) {
         eventsData.data.forEach((event: EventData) => {
           const eventDate = new Date(event.eventDate)
-          const eventDateOnly = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate())
-          
+          const eventDateOnly = new Date(
+            eventDate.getFullYear(),
+            eventDate.getMonth(),
+            eventDate.getDate()
+          )
+
           if (eventDateOnly >= today && eventDateOnly <= thirtyDaysLater) {
             allItems.push({
               id: event.id,
@@ -429,7 +430,9 @@ const Testimonials = () => {
           >
             {featuredItem.title}
           </h2>
-          <h3 className={`${merri.className} text-white font-bold text-[20px] text-center`}>
+          <h3
+            className={`${merri.className} text-white font-bold text-[20px] text-center`}
+          >
             {getDisplayDate(featuredItem)}
           </h3>
           <h4
@@ -447,7 +450,7 @@ const Testimonials = () => {
 
           {featuredItem.description && (
             <p
-              className={`${merri.className} text-white font-light text-[18px] md:px-10 italic py-6 text-center whitespace-pre-line`}
+              className={`${merri.className} text-white font-light text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
             >
               {renderTextWithLineBreaks(featuredItem.description)}
             </p>
@@ -462,7 +465,7 @@ const Testimonials = () => {
                 isArrow
               />
             </div>
-            <div 
+            <div
               className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
               onClick={() => handleShare(featuredItem.bookingUrl)}
             >
@@ -560,6 +563,21 @@ const Testimonials = () => {
           </p>
         </div>
       )}
+
+      {/* button */}
+      <div className="flex justify-center items-center text-center">
+        <Link
+          href="https://www.instagram.com/mahabharatadialogues"
+        
+          rel="noopener noreferrer"
+        >
+          <h2
+            className={`text-white ${merri.className} font-bold text-[18px] md:text-[24px] cursor-pointer hover:opacity-80`}
+          >
+            MORE CLIPS OF OUR DIALOGUES
+          </h2>
+        </Link>
+      </div>
 
       {/* Testimonials Section */}
       <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
