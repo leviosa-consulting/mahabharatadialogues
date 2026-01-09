@@ -261,7 +261,7 @@ export default async function RetreatHero() {
                         )}
                         <h3
                           className={`font-neco text-[28px] text-[#1D5C75] font-bold ${
-                            index % 2 === 1 ? 'mt-8 lg:mt-14' : ''
+                            index % 2 === 1 ? 'mt-8 lg:mt-[42px]' : ''
                           }`}
                         >
                           Mahabharata Dialogues
@@ -297,7 +297,7 @@ export default async function RetreatHero() {
                       </div>
                       <div>
                         <p
-                          className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-19`}
+                          className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-12`}
                         >
                           {retreat.description ||
                             'A memorable retreat experience.'}
