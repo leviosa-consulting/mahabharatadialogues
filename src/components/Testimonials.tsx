@@ -461,11 +461,10 @@ const Testimonials = () => {
         </div>
       )}
 
-      {/* Multiple Upcoming Events/Retreats */}
       {upcomingItems.length > 0 && (
         <div
           className={`flex gap-6 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4 ${
-            upcomingItems.length < 4 ? 'justify-center' : ''
+            upcomingItems.length < 4 ? 'md:justify-center' : ''
           }`}
           style={{
             backgroundImage: `
@@ -484,7 +483,7 @@ const Testimonials = () => {
             <div
               key={item.id}
               className=" snap-start shrink-0 flex flex-col gap-3
-    w-[85%]        
+    w-[95%]        
     
     md:w-[50%]    
     xl:w-[30%] "
@@ -523,7 +522,7 @@ const Testimonials = () => {
                     text="LEARN MORE"
                     bgColor="#1D5C75"
                     textColor="#FFFFFF"
-                    url={item.bookingUrl || getItemUrl(item)}
+                    url={getItemUrl(item)}
                   />
                 </div>
                 <a

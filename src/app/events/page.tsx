@@ -1,4 +1,3 @@
-
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -22,6 +21,8 @@ interface Event {
   bookingUrl?: string
   youtubeUrl?: string
   eventDate: string
+  slug: string
+  venue: string
 }
 
 const EventsPage = () => {
@@ -61,14 +62,13 @@ const EventsPage = () => {
       }
     })
 
-   
     return filtered.sort((a, b) => {
       const dateA = new Date(a.eventDate).getTime()
       const dateB = new Date(b.eventDate).getTime()
       if (type === 'upcoming') {
         return dateA - dateB
       } else {
-        return dateB - dateA 
+        return dateB - dateA
       }
     })
   }
@@ -102,13 +102,13 @@ const EventsPage = () => {
     })
   }
 
-  const handleEventClick = (eventId: string) => {
-    router.push(`/events/${eventId}`)
+  const handleEventClick = (slug: string) => {
+    router.push(`/events/${slug}`)
   }
 
   const EventCard = ({ event }: { event: Event }) => (
     <div
-      onClick={() => handleEventClick(event.id)}
+      onClick={() => handleEventClick(event.slug)}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
     >
       <div className="relative h-56 overflow-hidden">
@@ -145,9 +145,14 @@ const EventsPage = () => {
           <span>{formatDate(event.eventDate)}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
           <Clock size={16} />
           <span>{formatTime(event.eventDate)}</span>
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+          <MapPin size={16} />
+          <span className="line-clamp-1">{event.venue}</span>
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
@@ -238,7 +243,6 @@ const EventsPage = () => {
           </div>
         ) : (
           <>
-           
             {(activeTab === 'upcoming' || !showTabs) &&
               upcomingEvents.length > 0 && (
                 <div>
@@ -255,7 +259,6 @@ const EventsPage = () => {
                 </div>
               )}
 
-          
             {(activeTab === 'past' ||
               (upcomingEvents.length === 0 && !showTabs)) && (
               <>
@@ -289,7 +292,6 @@ const EventsPage = () => {
               </>
             )}
 
-           
             {upcomingEvents.length === 0 && pastEvents.length === 0 && (
               <div className="text-center py-20">
                 <Calendar size={64} className="mx-auto mb-4 text-gray-400" />

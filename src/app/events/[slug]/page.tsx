@@ -1,4 +1,4 @@
-// app/events/[id]/page.tsx
+// app/events/[slug]/page.tsx
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -12,6 +12,7 @@ import {
   Youtube,
   Image as ImageIcon,
   X,
+  MapPin,
 } from 'lucide-react'
 
 interface Event {
@@ -24,6 +25,8 @@ interface Event {
   bookingUrl?: string
   youtubeUrl?: string
   eventDate: string
+  slug: string
+  venue: string
 }
 
 const EventDetailPage = () => {
@@ -34,14 +37,14 @@ const EventDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (params.id) {
-      fetchEvent(params.id as string)
+    if (params.slug) {
+      fetchEvent(params.slug as string)
     }
-  }, [params.id])
+  }, [params.slug])
 
-  const fetchEvent = async (id: string) => {
+  const fetchEvent = async (slug: string) => {
     try {
-      const response = await fetch(`/api/events/${id}`)
+      const response = await fetch(`/api/events/slug/${slug}`)
       const data = await response.json()
       if (data.success) {
         setEvent(data.data)
@@ -131,6 +134,12 @@ const EventDetailPage = () => {
               <Clock size={20} />
               <span>{formatTime(event.eventDate)}</span>
             </div>
+            {event.venue && (
+              <div className="flex items-center gap-2">
+                <MapPin size={20} />
+                <span>{event.venue}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -238,6 +247,13 @@ const EventDetailPage = () => {
                     {formatTime(event.eventDate)}
                   </p>
                 </div>
+
+                {event.venue && (
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Venue</p>
+                    <p className="text-gray-900 font-semibold">{event.venue}</p>
+                  </div>
+                )}
 
                 {event.gallery && event.gallery.length > 0 && (
                   <div>
