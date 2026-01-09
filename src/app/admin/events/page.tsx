@@ -64,7 +64,13 @@ const EventsAdminPage = () => {
     try {
       const response = await fetch('/api/events')
       const data = await response.json()
-      setEvents(data.data || [])
+      // Sort events by date in descending order (most recent first)
+      const sortedEvents = (data.data || []).sort((a: Event, b: Event) => {
+        const dateA = new Date(a.eventDate).getTime()
+        const dateB = new Date(b.eventDate).getTime()
+        return dateA - dateB
+      })
+      setEvents(sortedEvents)
       setLoading(false)
     } catch (err) {
       alert('Failed to fetch events')

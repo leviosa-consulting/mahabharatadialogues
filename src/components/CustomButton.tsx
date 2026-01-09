@@ -5,10 +5,17 @@ interface ButtonProps {
   text: string
   bgColor: string
   textColor: string
+  isArrow?: boolean
   url: string
 }
 
-const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
+const CustomButton = ({
+  text,
+  bgColor,
+  textColor,
+  url,
+  isArrow,
+}: ButtonProps) => {
   return (
     <a
       href={url}
@@ -30,6 +37,13 @@ const CustomButton = ({ text, bgColor, textColor, url }: ButtonProps) => {
       `}
     >
       {text}
+      {isArrow && (
+        <img
+          src="/Arrow_up-right.png"
+          alt="Arrow_up"
+          className=" w-6 h-6 md:w-8 md:h-8"
+        />
+      )}
     </a>
   )
 }

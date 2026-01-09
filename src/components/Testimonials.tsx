@@ -109,11 +109,11 @@ const Testimonials = () => {
   }
 
   const parseDate = (dateStr: string): Date => {
-    // Handle formats like "11 Feb 2026" or "2026-02-11"
+    
     if (dateStr.includes('-')) {
       return new Date(dateStr)
     }
-    // Parse "DD MMM YYYY" format
+   
     const [day, month, year] = dateStr.split(' ')
     const monthMap: { [key: string]: number } = {
       Jan: 0,
@@ -200,12 +200,12 @@ const Testimonials = () => {
     const month = months[date.getMonth()]
     const year = date.getFullYear()
     
-    // Format time
+  
     let hours = date.getHours()
     const minutes = date.getMinutes()
     const ampm = hours >= 12 ? 'pm' : 'am'
     hours = hours % 12
-    hours = hours ? hours : 12 // 0 should be 12
+    hours = hours ? hours : 12 
     const timeStr = `${hours}${minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''}${ampm}`
     
     return `${day} ${month}, ${year} | ${timeStr}`
@@ -219,22 +219,22 @@ const Testimonials = () => {
       const thirtyDaysLater = new Date(today)
       thirtyDaysLater.setDate(today.getDate() + 30)
 
-      // Fetch retreats
+      
       const retreatsResponse = await fetch('/api/retreats')
       const retreatsData = await retreatsResponse.json()
 
-      // Fetch events
+      
       const eventsResponse = await fetch('/api/events')
       const eventsData = await eventsResponse.json()
 
       const allItems: Event[] = []
 
-      // Process retreats
+      
       if (retreatsData.success && retreatsData.data) {
         retreatsData.data.forEach((retreat: RetreatData) => {
           const retreatDate = parseDate(retreat.day1.date)
           if (retreatDate >= today && retreatDate <= thirtyDaysLater) {
-            // Get end date - check for day3, then day2
+          
             const endDate = retreat.day3?.date || retreat.day2?.date || retreat.day1.date
             
             allItems.push({
@@ -245,7 +245,7 @@ const Testimonials = () => {
               coverImage: retreat.coverImage || '/abhilash.png',
               date: retreat.day1.date,
               endDate: endDate,
-              time: '', // Retreats don't have specific time
+              time: '', 
               venue: retreat.venue || 'Venue TBA',
               slug: retreat.slug,
               bookingUrl: retreat.bookingUrl
@@ -254,7 +254,7 @@ const Testimonials = () => {
         })
       }
 
-      // Process events
+    
       if (eventsData.success && eventsData.data) {
         eventsData.data.forEach((event: EventData) => {
           const eventDate = new Date(event.eventDate)
@@ -408,7 +408,7 @@ const Testimonials = () => {
     >
       {/* Featured Event/Retreat */}
       {featuredItem && (
-        <div className="flex flex-col max-w-84 md:max-w-[480px] mx-auto justify-center items-center bg-[#1D5C75CC] py-2">
+        <div className="flex flex-col max-w-84 sm:max-w-[520px] mx-auto justify-center items-center bg-[#1D5C75CC] py-2">
           <p
             className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
           >
@@ -423,7 +423,7 @@ const Testimonials = () => {
             {getDisplayDate(featuredItem)}
           </h3>
           <h4
-            className={`${merri.className} text-white font-normal md:text-[18px] py-2 px-1`}
+            className={`${merri.className} text-white font-normal text-center md:text-[18px] py-2 px-1`}
           >
             {featuredItem.venue}
           </h4>
@@ -437,22 +437,23 @@ const Testimonials = () => {
 
           {featuredItem.description && (
             <p
-              className={`${merri.className} text-white font-light text-[18px] md:px-18 italic py-6 text-center`}
+              className={`${merri.className} text-white font-light text-[18px] md:px-10 italic py-6 text-center`}
             >
               {featuredItem.description}
             </p>
           )}
-          <div className="flex justify-center items-center gap-2 pb-8">
+          <div className="flex justify-center items-center gap-2 pb-8 px-4">
             <div>
               <CustomButton
                 text="GET YOUR TICKETS"
                 bgColor="#D12127"
                 textColor="#FFFFFF"
                 url={featuredItem.bookingUrl}
+                isArrow
               />
             </div>
             <div 
-              className="bg-[#78B0C7] p-[7px] md:p-3 cursor-pointer"
+              className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
               onClick={() => handleShare(featuredItem.bookingUrl)}
             >
               <img src="/share.png" alt="share" />
@@ -517,7 +518,7 @@ const Testimonials = () => {
 
               {/* Buttons */}
               <div className="flex gap-2 md:justify-start mt-2">
-                <div className="w-[80%] md:w-full">
+                <div className="w-[90%] md:w-full">
                   <CustomButton
                     text="LEARN MORE"
                     bgColor="#1D5C75"
@@ -527,12 +528,12 @@ const Testimonials = () => {
                 </div>
                 <a
                   href={getItemUrl(item)}
-                  className="bg-[#D12127] p-2.5 md:p-3 cursor-pointer flex items-center justify-center"
+                  className="bg-[#D12127] p-3.5 md:p-4 cursor-pointer flex items-center justify-center"
                 >
                   <img
                     src="/Arrow_up-right.png"
                     alt="Arrow_up"
-                    className="w-5 h-5 md:w-6 md:h-6"
+                    className="w-6 h-6 md:w-7.5 md:h-7.5 object-cover"
                   />
                 </a>
               </div>
