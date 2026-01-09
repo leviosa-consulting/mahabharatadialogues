@@ -5,6 +5,7 @@ import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
 import TestimonialsShimmer from './TestimonialsShimmer'
 import Link from 'next/link'
+import { Calendar, MapPin } from 'lucide-react'
 
 interface Testimonial {
   id: string
@@ -419,27 +420,29 @@ const Testimonials = () => {
     >
       {/* Featured Event/Retreat */}
       {featuredItem && (
-        <div className="flex flex-col max-w-84 sm:max-w-[520px] mx-auto justify-center items-center bg-[#1D5C75CC] py-2">
+        <div className="flex relative flex-col max-w-84 sm:max-w-[520px] mx-auto justify-center items-center bg-[#1D5C75CC] py-2 md:-mt-[25%]">
           <p
             className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
           >
             COMING UP NEXT
           </p>
           <h2
-            className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-10 text-center leading-relaxed`}
+            className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
           >
             {featuredItem.title}
           </h2>
-          <h3
-            className={`${merri.className} text-white font-bold text-[20px] text-center`}
-          >
-            {getDisplayDate(featuredItem)}
-          </h3>
-          <h4
-            className={`${merri.className} text-white font-normal text-center md:text-[18px] py-2 px-1`}
-          >
-            {featuredItem.venue}
-          </h4>
+          <div className='flex flex-col justify-center items-center my-2'>
+            <h3
+              className={`${merri.className} text-white font-bold text-[20px] text-center`}
+            >
+              {getDisplayDate(featuredItem)}
+            </h3>
+            <h4
+              className={`${merri.className} text-white font-normal text-center px-2 md:text-[18px]`}
+            >
+              {featuredItem.venue}
+            </h4>
+          </div>
           <div className="">
             <img
               src={featuredItem.coverImage}
@@ -517,7 +520,7 @@ const Testimonials = () => {
                 >
                   {item.title}
                 </h2>
-                <p 
+                <p
                   className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
                 >
                   {getDisplayDate(item)}
@@ -568,7 +571,6 @@ const Testimonials = () => {
       <div className="flex justify-center items-center text-center">
         <Link
           href="https://www.instagram.com/mahabharatadialogues"
-        
           rel="noopener noreferrer"
         >
           <h2
@@ -580,7 +582,7 @@ const Testimonials = () => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
+      <div className="flex flex-col justify-center items-center gap-2 max-w-4xl mx-auto pt-6">
         <div
           className="bg-opacity-60 rounded-lg p-6 text-center"
           onWheel={handleWheel}
@@ -588,11 +590,11 @@ const Testimonials = () => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <p className="text-white font-neco italic text-[24px] sm:text-[32px] leading-relaxed">
+          <p className="text-white font-neco italic text-[22px] sm:text-[32px] leading-relaxed">
             {testimonials[currentIndex]?.quote}
           </p>
           <p
-            className={`text-white ${merri.className} mt-4 font-bold text-[24px] sm:[32px]`}
+            className={`text-white ${merri.className} mt-4 font-bold text-[22px] sm:[32px]`}
           >
             <span className="uppercase">
               {testimonials[currentIndex]?.name},{' '}

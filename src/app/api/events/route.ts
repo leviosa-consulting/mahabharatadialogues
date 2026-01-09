@@ -4,24 +4,24 @@ import { adminDB } from "@/firebase/firebaseAdmin";
 
 export const dynamic = "force-dynamic";
 
-// Helper function to generate unique slug
+
 async function generateUniqueSlug(baseSlug: string, excludeId?: string): Promise<string> {
   let slug = baseSlug;
   let counter = 1;
   
   while (true) {
-    // Check if slug exists
+    
     const snapshot = await adminDB
       .collection("events")
       .where("slug", "==", slug)
       .get();
     
-    // If no documents found, or only the current document (when editing), slug is unique
+   
     if (snapshot.empty || (excludeId && snapshot.docs.length === 1 && snapshot.docs[0].id === excludeId)) {
       return slug;
     }
     
-    // Slug exists, append counter and try again
+
     slug = `${baseSlug}-${counter}`;
     counter++;
   }

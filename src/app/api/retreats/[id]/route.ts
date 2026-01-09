@@ -1,6 +1,4 @@
-// ========================================
-// FILE 2: app/api/retreats/[id]/route.ts
-// ========================================
+//  app/api/retreats/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { generateFullSlug } from "@/utils/slugUtils";

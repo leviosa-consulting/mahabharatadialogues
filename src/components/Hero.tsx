@@ -25,7 +25,7 @@ export default function HeroSection() {
         </div>
 
         {/* mid content */}
-        <div className="flex-[1.5] flex flex-col items-center justify-center my-20 px-12">
+        <div className="flex-[1.5] flex flex-col items-center justify-center my-20 px-12 lg:-mt-40 xl:-mt-68">
           <div className='w-45 h-45 xl:w-60 xl:h-60 rounded-full'>
              <img src="Web_Assets-08.png" alt="webAssets9" className=""/>
           </div>

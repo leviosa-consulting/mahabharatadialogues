@@ -1,7 +1,4 @@
-// ============================================================
 // app/api/testimonials/[id]/route.ts
-// ============================================================
-
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 
