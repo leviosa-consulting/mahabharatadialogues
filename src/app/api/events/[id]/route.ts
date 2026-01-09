@@ -85,9 +85,28 @@ export async function PUT(
       );
     }
 
-    // Slug cannot be changed when editing (since it's used in URLs)
-    // So we keep the existing slug
-    const finalSlug = existing?.slug || body.slug;
+    if (!body.slug) {
+      return NextResponse.json(
+        { success: false, error: "Slug is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if slug is being changed and if it's already taken by another event
+    if (body.slug !== existing?.slug) {
+      const slugCheck = await adminDB
+        .collection("events")
+        .where("slug", "==", body.slug)
+        .get();
+      
+      // If slug exists and belongs to a different event
+      if (!slugCheck.empty && slugCheck.docs[0].id !== id) {
+        return NextResponse.json(
+          { success: false, error: "This slug is already taken by another event. Please choose a different title or slug." },
+          { status: 400 }
+        );
+      }
+    }
 
     // Delete old cover image if it's being replaced
     if (body.coverImage && body.coverImage !== existing?.coverImage) {
@@ -107,7 +126,6 @@ export async function PUT(
     const updated = {
       ...existing,
       ...body,
-      slug: finalSlug, // Keep original slug
       updated_at: new Date().toISOString(),
     };
 

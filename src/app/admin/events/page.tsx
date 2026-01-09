@@ -85,8 +85,8 @@ const EventsAdminPage = () => {
     setFormData((prev) => {
       const updated = { ...prev, [name]: value }
       
-      // Auto-generate slug when title changes (only for new events)
-      if (name === 'title' && !editingId) {
+      // Auto-generate slug when title changes (for both new and existing events)
+      if (name === 'title') {
         updated.slug = generateFullSlug(value)
       }
       
@@ -459,14 +459,14 @@ const EventsAdminPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slug * <span className="text-xs text-gray-500">(Auto-generated with unique ID)</span>
+                      Slug * <span className="text-xs text-gray-500">(Auto-generated from title)</span>
                     </label>
                     <input
                       type="text"
                       name="slug"
                       value={formData.slug}
                       onChange={handleInputChange}
-                      disabled={submitting || !!editingId}
+                      disabled={submitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed font-mono text-sm"
                       placeholder="event-slug-here-AB12345678"
                     />
@@ -477,7 +477,7 @@ const EventsAdminPage = () => {
                     )}
                     {editingId && (
                       <p className="text-xs text-amber-600 mt-1">
-                        ⚠️ Slug cannot be changed when editing an event
+                        ⚠️ Updating the slug will change the event URL. Make sure to update any existing links.
                       </p>
                     )}
                   </div>

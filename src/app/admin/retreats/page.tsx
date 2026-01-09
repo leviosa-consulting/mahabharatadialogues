@@ -47,7 +47,7 @@ interface Retreat {
   slug?: string
   description?: string
   venue?: string
-  coverImage?: string
+  coverImage: string
   bookingUrl?: string
   youtube_video?: string
   photos?: string[]
@@ -1220,10 +1220,10 @@ const RetreatsAdminPage = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Description
+                          Description * (Press Enter for new line)
                         </label>
-                        <input
-                          type="text"
+                        <textarea
+                          name="description"
                           value={formData.description}
                           onChange={(e) =>
                             setFormData((prev) => ({
@@ -1231,6 +1231,7 @@ const RetreatsAdminPage = () => {
                               description: e.target.value,
                             }))
                           }
+                          rows={4}
                           placeholder="Enter Description"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
@@ -1258,7 +1259,7 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Cover Image
+                          Cover Image(Required)
                         </label>
                         <div className="space-y-3">
                           {formData.coverImage ? (

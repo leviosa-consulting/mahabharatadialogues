@@ -498,7 +498,6 @@ const Testimonials = () => {
               key={item.id}
               className=" snap-start shrink-0 flex flex-col gap-3
     w-[95%]        
-    
     md:w-[50%]    
     xl:w-[30%] "
             >
@@ -523,7 +522,7 @@ const Testimonials = () => {
                   {getDisplayDate(item)}
                 </p>
                 <p
-                  className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                  className={`${merri.className} text-white font-normal h-12 md:h-16  text-[15px] md:text-[17px]`}
                 >
                   {item.venue}
                 </p>
