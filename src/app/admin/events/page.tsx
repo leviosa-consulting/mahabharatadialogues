@@ -283,6 +283,16 @@ const EventsAdminPage = () => {
     )
   }
 
+  // Helper function to render description with line breaks
+  const renderDescriptionWithLineBreaks = (text: string) => {
+    return text.split('\n').map((line, index, array) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < array.length - 1 && <br />}
+      </React.Fragment>
+    ))
+  }
+
   return (
     <ProtectedRoute requireAdmin={true}>
        <Navbar currentTab={'events'}/>
@@ -348,7 +358,7 @@ const EventsAdminPage = () => {
                       {event.title}
                     </h3>
                     <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
-                      {event.description}
+                      {renderDescriptionWithLineBreaks(event.description)}
                     </p>
                     
                     <div className="space-y-2 mb-3">
@@ -489,17 +499,21 @@ const EventsAdminPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description *
+                      Description * <span className="text-xs text-gray-500">(Press Enter for new line)</span>
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
-                      rows={4}
+                      rows={6}
                       disabled={submitting}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      placeholder="Enter event description"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed whitespace-pre-wrap"
+                      placeholder="Enter event description&#10;Press Enter to add a new line&#10;Multiple paragraphs are supported"
+                      style={{ fontFamily: 'inherit' }}
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      💡 Tip: Line breaks will be preserved when displayed
+                    </p>
                   </div>
 
                   <div>

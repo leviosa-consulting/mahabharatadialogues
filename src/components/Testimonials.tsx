@@ -385,6 +385,16 @@ const Testimonials = () => {
     }
   }
 
+  // Helper function to render text with line breaks
+  const renderTextWithLineBreaks = (text: string) => {
+    return text.split('\n').map((line, index, array) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < array.length - 1 && <br />}
+      </React.Fragment>
+    ))
+  }
+
   if (loading) {
     return <TestimonialsShimmer />
   }
@@ -437,9 +447,9 @@ const Testimonials = () => {
 
           {featuredItem.description && (
             <p
-              className={`${merri.className} text-white font-light text-[18px] md:px-10 italic py-6 text-center`}
+              className={`${merri.className} text-white font-light text-[18px] md:px-10 italic py-6 text-center whitespace-pre-line`}
             >
-              {featuredItem.description}
+              {renderTextWithLineBreaks(featuredItem.description)}
             </p>
           )}
           <div className="flex justify-center items-center gap-2 pb-8 px-4">
