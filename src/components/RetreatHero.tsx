@@ -137,7 +137,7 @@ export default async function RetreatHero() {
                 {/* Video */}
                 <div className="w-full aspect-video relative z-10">
                   <iframe
-                    src="https://www.youtube.com/embed/vzIB3zXqMVk?start=64"
+                    src="https://www.youtube.com/embed/tw7d2hMHyRY?start=0"
                     title="Join us for a 2-day Mahabharata Retreat at Fireflies Ashram!"
                     className="w-full h-full shadow-xl"
                     frameBorder="0"
@@ -212,11 +212,11 @@ export default async function RetreatHero() {
 
                     <div>
                       <p className="font-neco font-bold text-[18px] text-white">
-                        21,000/- Early Bird offer
+                       11,999/- Early Bird offer
                       </p>
-                      <p className="font-neco font-normal text-[18px] text-white">
+                      {/* <p className="font-neco font-normal text-[18px] text-white">
                         25,000/- January onwards
-                      </p>
+                      </p> */}
                       <p className="font-neco font-normal text-[18px] text-white">
                         Includes stay, 2 meals and 2 snacks
                       </p>
