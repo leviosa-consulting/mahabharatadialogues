@@ -431,7 +431,7 @@ const Testimonials = () => {
           >
             {featuredItem.title}
           </h2>
-          <div className='flex flex-col justify-center items-center my-2'>
+          <div className="flex flex-col justify-center items-center my-2">
             <h3
               className={`${merri.className} text-white font-bold text-[20px] text-center`}
             >
@@ -569,16 +569,12 @@ const Testimonials = () => {
 
       {/* button */}
       <div className="flex justify-center items-center text-center">
-        <Link
-          href="https://www.instagram.com/mahabharatadialogues"
-          rel="noopener noreferrer"
-        >
-          <h2
-            className={`text-white ${merri.className} font-bold text-[18px] md:text-[24px] cursor-pointer hover:opacity-80`}
-          >
-            MORE CLIPS OF OUR DIALOGUES
-          </h2>
-        </Link>
+        <CustomButton
+          text="SEE ALL EVENTS"
+          bgColor="#1D5C75"
+          textColor="#FFFFFF"
+          url={'/events'}
+        />
       </div>
 
       {/* Testimonials Section */}
