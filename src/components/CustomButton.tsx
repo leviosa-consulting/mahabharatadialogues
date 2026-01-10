@@ -29,7 +29,7 @@ const CustomButton = ({
         inline-flex items-center justify-center text-center
         font-bold cursor-pointer
         w-full max-w-[450px]
-        px-6 sm:px-20
+        px-6 sm:px-0 lg:px-12
         py-4 sm:py-5
         text-[16px] lg:text-[18px]
         leading-tight

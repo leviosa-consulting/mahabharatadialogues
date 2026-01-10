@@ -458,7 +458,7 @@ const Testimonials = () => {
               {renderTextWithLineBreaks(featuredItem.description)}
             </p>
           )}
-          <div className="flex justify-center items-center gap-2 pb-8 px-4">
+          <div className="flex justify-center items-center gap-2 pb-8 ">
             <div>
               <CustomButton
                 text="GET YOUR TICKETS"
@@ -501,8 +501,8 @@ const Testimonials = () => {
               key={item.id}
               className=" snap-start shrink-0 flex flex-col gap-3
     w-[95%]        
-    md:w-[50%]    
-    xl:w-[35%] "
+    md:w-[40%]    
+    xl:w-[30%] "
             >
               {/* Image */}
               <div className="relative">
@@ -515,7 +515,7 @@ const Testimonials = () => {
 
               <div className="flex flex-col justify-center items-center text-center gap-2">
                 <h2
-                  className={`${merri.className} text-white font-bold px-[2px] h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
+                  className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
                 >
                   {item.title}
                 </h2>
@@ -572,9 +572,9 @@ const Testimonials = () => {
       )}
 
       {/* button */}
-      <div className="flex justify-center gap-6 italic items-center text-left bg-[#D9D9D9] p-10 md:px-40">
+      <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] p-10 xl:px-40">
         <p
-          className={`text-[#1D5C75] ${merri.className} font-bold text-[24px]`}
+          className={`text-[#1D5C75] ${merri.className} font-bold text-[20px] md:text-[24px]`}
         >
           Dialogues, Retreats, and Evenings with Mahabharata, celebrating art,
           music, dance, and stories.
@@ -596,11 +596,11 @@ const Testimonials = () => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <p className="text-white font-neco italic text-[22px] sm:text-[24px] leading-relaxed">
+          <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
             {testimonials[currentIndex]?.quote}
           </p>
           <p
-            className={`text-white ${merri.className} mt-4 font-bold text-[18px]`}
+            className={`text-white ${merri.className} mt-4 font-bold text-[16px] md:text-[18px]`}
           >
             <span className="uppercase">
               {testimonials[currentIndex]?.name},{' '}
