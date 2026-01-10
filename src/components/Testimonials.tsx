@@ -501,9 +501,8 @@ const Testimonials = () => {
               key={item.id}
               className=" snap-start shrink-0 flex flex-col gap-3
     w-[95%]        
-    
     md:w-[50%]    
-    xl:w-[30%] "
+    xl:w-[35%] "
             >
               {/* Image */}
               <div className="relative">
@@ -542,23 +541,21 @@ const Testimonials = () => {
                     url={getItemUrl(item)}
                   /> */}
 
-
                   <CustomButton
-                text="GET YOUR TICKETS"
-                bgColor="#D12127"
-                textColor="#FFFFFF"
-                url={item.bookingUrl}
-                isArrow
-              />
+                    text="GET YOUR TICKETS"
+                    bgColor="#D12127"
+                    textColor="#FFFFFF"
+                    url={item.bookingUrl}
+                    isArrow
+                  />
                 </div>
-               
 
-                 <div
-              className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
-              onClick={() => handleShare(item.bookingUrl)}
-            >
-              <img src="/share.png" alt="share" />
-            </div>
+                <div
+                  className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
+                  onClick={() => handleShare(item.bookingUrl)}
+                >
+                  <img src="/share.png" alt="share" />
+                </div>
               </div>
             </div>
           ))}
@@ -576,7 +573,12 @@ const Testimonials = () => {
 
       {/* button */}
       <div className="flex justify-center gap-6 italic items-center text-left bg-[#D9D9D9] p-10 md:px-40">
-        <p className={`text-[#1D5C75] ${merri.className} font-bold text-[24px]`}>Dialogues, Retreats, and Evenings with Mahabharata, celebrating art, music, dance, and stories.</p>
+        <p
+          className={`text-[#1D5C75] ${merri.className} font-bold text-[24px]`}
+        >
+          Dialogues, Retreats, and Evenings with Mahabharata, celebrating art,
+          music, dance, and stories.
+        </p>
         <CustomButton
           text="Explore our events here"
           bgColor="#1D5C75"
