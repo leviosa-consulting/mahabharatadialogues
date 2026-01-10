@@ -590,11 +590,11 @@ const Testimonials = () => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <p className="text-white font-neco italic text-[22px] sm:text-[32px] leading-relaxed">
+          <p className="text-white font-neco italic text-[22px] sm:text-[24px] leading-relaxed">
             {testimonials[currentIndex]?.quote}
           </p>
           <p
-            className={`text-white ${merri.className} mt-4 font-bold text-[22px] sm:[32px]`}
+            className={`text-white ${merri.className} mt-4 font-bold text-[18px]`}
           >
             <span className="uppercase">
               {testimonials[currentIndex]?.name},{' '}
