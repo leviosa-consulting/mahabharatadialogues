@@ -570,7 +570,7 @@ const Testimonials = () => {
       {/* button */}
       <div className="flex justify-center items-center text-center">
         <CustomButton
-          text="SEE ALL EVENTS"
+          text="Explore our events here"
           bgColor="#1D5C75"
           textColor="#FFFFFF"
           url={'/events'}
