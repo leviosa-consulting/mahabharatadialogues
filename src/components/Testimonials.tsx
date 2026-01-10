@@ -568,7 +568,8 @@ const Testimonials = () => {
       )}
 
       {/* button */}
-      <div className="flex justify-center items-center text-center">
+      <div className="flex justify-center gap-6 italic items-center text-left bg-[#D9D9D9] p-10 md:px-40">
+        <p className={`text-[#1D5C75] ${merri.className} font-bold text-[24px]`}>Dialogues, Retreats, and Evenings with Mahabharata, celebrating art, music, dance, and stories.</p>
         <CustomButton
           text="Explore our events here"
           bgColor="#1D5C75"
