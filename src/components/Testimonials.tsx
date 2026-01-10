@@ -535,23 +535,30 @@ const Testimonials = () => {
               {/* Buttons */}
               <div className="flex gap-2 md:justify-start mt-2">
                 <div className="w-[90%] md:w-full">
-                  <CustomButton
+                  {/* <CustomButton
                     text="LEARN MORE"
                     bgColor="#1D5C75"
                     textColor="#FFFFFF"
                     url={getItemUrl(item)}
-                  />
+                  /> */}
+
+
+                  <CustomButton
+                text="GET YOUR TICKETS"
+                bgColor="#D12127"
+                textColor="#FFFFFF"
+                url={item.bookingUrl}
+                isArrow
+              />
                 </div>
-                <a
-                  href={getItemUrl(item)}
-                  className="bg-[#D12127] p-3.5 md:p-4 cursor-pointer flex items-center justify-center"
-                >
-                  <img
-                    src="/Arrow_up-right.png"
-                    alt="Arrow_up"
-                    className="w-6 h-6 md:w-7.5 md:h-7.5 object-cover"
-                  />
-                </a>
+               
+
+                 <div
+              className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
+              onClick={() => handleShare(item.bookingUrl)}
+            >
+              <img src="/share.png" alt="share" />
+            </div>
               </div>
             </div>
           ))}
