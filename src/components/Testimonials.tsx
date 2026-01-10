@@ -578,7 +578,7 @@ const Testimonials = () => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="flex flex-col justify-center items-center gap-2 max-w-4xl mx-auto pt-6">
+      <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
         <div
           className="bg-opacity-60 rounded-lg p-6 text-center"
           onWheel={handleWheel}
