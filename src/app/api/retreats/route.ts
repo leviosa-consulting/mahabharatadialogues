@@ -1,4 +1,6 @@
-// app/api/retreats/route.ts
+// ========================================
+// FILE 1: app/api/retreats/route.ts
+// ========================================
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { generateFullSlug } from "@/utils/slugUtils";
@@ -34,12 +36,12 @@ export async function POST(req: NextRequest) {
     const { 
       title, 
       description, 
-      venue,
+      venue, 
       coverImage,
-      bookingUrl,
       youtube_video, 
       photos, 
       footerNotes,
+      bookingUrl,
       day1, 
       day2,
       day3,
@@ -61,10 +63,10 @@ export async function POST(req: NextRequest) {
       ...(description && { description }),
       ...(venue && { venue }),
       ...(coverImage && { coverImage }),
-      ...(bookingUrl && { bookingUrl }),
       ...(youtube_video && { youtube_video }),
       ...(photos && photos.length > 0 && { photos }),
       ...(footerNotes && { footerNotes }),
+      ...(bookingUrl && { bookingUrl }),
       day1: {
         date: day1.date,
         dayName: day1.dayName || "",
@@ -102,4 +104,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

@@ -1,3 +1,4 @@
+// app/retreats/page.tsx
 import { merri } from '@/app/fonts/merri'
 import React from 'react'
 import CustomButton from './CustomButton'
@@ -22,6 +23,7 @@ interface Retreat {
   venue?: string
   youtube_video?: string
   photos?: string[]
+  bookingUrl?: string
   day1: DaySchedule
   day2: DaySchedule
   day3?: DaySchedule
@@ -102,13 +104,18 @@ export default async function RetreatHero() {
   const retreats = await getRetreats()
 
   const upcomingRetreat = retreats.find((r) => isUpcoming(r.day1.date))
-
   const pastRetreats = retreats.filter((r) => !isUpcoming(r.day1.date))
 
-  const getRetreatUrl = (retreat: Retreat) => {
+  const getScheduleUrl = (retreat: Retreat) => {
     return retreat.slug
-      ? `/retreats/${retreat.slug}`
-      : `/retreats/${retreat.id}`
+      ? `/retreats/schedule/${retreat.slug}`
+      : `/retreats/schedule/${retreat.id}`
+  }
+
+  const getPastRetreatUrl = (retreat: Retreat) => {
+    return retreat.slug
+      ? `/retreats/past/${retreat.slug}`
+      : `/retreats/past/${retreat.id}`
   }
 
   const getDateRange = (retreat: Retreat) => {
@@ -122,16 +129,16 @@ export default async function RetreatHero() {
         className="w-full"
         style={{
           background: `
-      linear-gradient(
-        to bottom,
-        #FFFFFF 0%,
-        #47ABD880 50%,
-        #1D5C75 100%
-      )
-    `,
+            linear-gradient(
+              to bottom,
+              #FFFFFF 0%,
+              #47ABD880 50%,
+              #1D5C75 100%
+            )
+          `,
         }}
       >
-        <div className="w-full ">
+        <div className="w-full">
           {/* Web Asset */}
           <Link
             href="/"
@@ -163,16 +170,7 @@ export default async function RetreatHero() {
         </div>
 
         {upcomingRetreat && (
-          <div
-            className="
-          w-full
-          bg-[#1D5C75]
-          -mt-[5vh]
-          md:-mt-[20vh]
-          pt-[20vh]
-          pb-[5vh]
-        "
-          >
+          <div className="w-full bg-[#1D5C75] -mt-[5vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
             <div className="mx-4 2xl:mx-20">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
@@ -182,9 +180,7 @@ export default async function RetreatHero() {
                     >
                       UPCOMING RETREATS
                     </p>
-                    <h2
-                      className={`font-neco text-[28px] text-white font-bold`}
-                    >
+                    <h2 className={`font-neco text-[28px] text-white font-bold`}>
                       Mahabharata Dialogues
                     </h2>
                     <h1
@@ -211,14 +207,14 @@ export default async function RetreatHero() {
                     </p>
                   </div>
                 </div>
-                <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4 ">
+                <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4">
                   <div className="flex flex-col justify-between gap-6 lg:mt-10">
                     <div className="w-full">
                       <CustomButton
                         text="EXPERIENCE THE RETREAT"
                         bgColor="#D12127"
                         textColor="#FFFFFF"
-                        url="#"
+                        url={upcomingRetreat.bookingUrl || '#'}
                       />
                     </div>
 
@@ -226,9 +222,6 @@ export default async function RetreatHero() {
                       <p className="font-neco font-bold text-[18px] text-white">
                         11,999/- Early Bird offer
                       </p>
-                      {/* <p className="font-neco font-normal text-[18px] text-white">
-                        25,000/- January onwards
-                      </p> */}
                       <p className="font-neco font-normal text-[18px] text-white">
                         Includes stay, 2 meals and 2 snacks
                       </p>
@@ -238,7 +231,7 @@ export default async function RetreatHero() {
                         text="SCHEDULE"
                         bgColor="#1D5C75"
                         textColor="#FFFFFF"
-                        url={getRetreatUrl(upcomingRetreat)}
+                        url={getScheduleUrl(upcomingRetreat)}
                       />
                     </div>
                   </div>
@@ -266,7 +259,7 @@ export default async function RetreatHero() {
                       <div className="flex flex-col justify-between gap-3">
                         {index === 0 && (
                           <p
-                            className={`${merri.className} text-[20px] text-[#4298BA] font-bold `}
+                            className={`${merri.className} text-[20px] text-[#4298BA] font-bold`}
                           >
                             PAST RETREATS
                           </p>
@@ -318,7 +311,7 @@ export default async function RetreatHero() {
                           text="SEE THE MAGIC WE CREATED"
                           bgColor="#1D5C75"
                           textColor="#FFFFFF"
-                          url={getRetreatUrl(retreat)}
+                          url={getPastRetreatUrl(retreat)}
                         />
                       </div>
                     </div>
@@ -329,7 +322,7 @@ export default async function RetreatHero() {
           )}
 
           {/* youtube/blogs */}
-          <div className=" ">
+          <div>
             <div className="mx-4 sm:mx-4 xl:mx-20 overflow-hidden bg-[#1D5C7580]">
               <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
                 {/* YOUTUBE*/}

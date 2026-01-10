@@ -16,8 +16,8 @@ export default async function Retreats() {
       to bottom,
       #47ABD880 50%,
       #1D5C75 100%
-    ),
-    url('/Blue_Background_with_Texture-01.png')
+    )
+ 
   `,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',

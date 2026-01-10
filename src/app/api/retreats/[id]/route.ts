@@ -1,4 +1,7 @@
-//  app/api/retreats/[id]/route.ts
+
+// ========================================
+// FILE 2: app/api/retreats/[id]/route.ts
+// ========================================
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { generateFullSlug } from "@/utils/slugUtils";
@@ -13,12 +16,12 @@ export async function PUT(
     const { 
       title, 
       description, 
-      venue,
+      venue, 
       coverImage,
-      bookingUrl,
       youtube_video, 
       photos, 
       footerNotes,
+      bookingUrl,
       day1, 
       day2,
       day3,
@@ -61,10 +64,10 @@ export async function PUT(
     if (description) updateData.description = description;
     if (venue) updateData.venue = venue;
     if (coverImage) updateData.coverImage = coverImage;
-    if (bookingUrl) updateData.bookingUrl = bookingUrl;
     if (youtube_video) updateData.youtube_video = youtube_video;
     if (photos && photos.length > 0) updateData.photos = photos;
     if (footerNotes) updateData.footerNotes = footerNotes;
+    if (bookingUrl) updateData.bookingUrl = bookingUrl;
 
     // Add or remove day3
     if (day3 && day3.date) {

@@ -403,222 +403,223 @@ const Testimonials = () => {
 
   console.log('featuredItems : ', featuredItem)
   return (
-    <div
-      className="w-full pb-30"
-      style={{
-        backgroundImage: `
-          linear-gradient(
-            rgba(29, 92, 117, 0.5),
-            rgba(29, 92, 117, 0.5)
-          ),
-          url('/Blue_Background_with_Texture-01.png')
-        `,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Featured Event/Retreat */}
-      {featuredItem && (
-        <div className="flex relative flex-col max-w-84 sm:max-w-[520px] mx-auto justify-center items-center bg-[#1D5C75CC] py-2 md:-mt-[25%]">
-          <p
-            className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
-          >
-            COMING UP NEXT
-          </p>
-          <h2
-            className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
-          >
-            {featuredItem.title}
-          </h2>
-          <div className="flex flex-col justify-center items-center my-2">
-            <h3
-              className={`${merri.className} text-white font-bold text-[20px] text-center`}
-            >
-              {getDisplayDate(featuredItem)}
-            </h3>
-            <h4
-              className={`${merri.className} text-white font-normal text-center px-2 md:text-[18px]`}
-            >
-              {featuredItem.venue}
-            </h4>
-          </div>
-          <div className="">
-            <img
-              src={featuredItem.coverImage}
-              alt={featuredItem.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {featuredItem.description && (
-            <p
-              className={`${merri.className} text-white font-light text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
-            >
-              {renderTextWithLineBreaks(featuredItem.description)}
-            </p>
-          )}
-          <div className="flex justify-center items-center gap-2 pb-8 ">
-            <div>
-              <CustomButton
-                text="GET YOUR TICKETS"
-                bgColor="#D12127"
-                textColor="#FFFFFF"
-                url={featuredItem.bookingUrl}
-                isArrow
-              />
-            </div>
-            <div
-              className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
-              onClick={() => handleShare(featuredItem.bookingUrl)}
-            >
-              <img src="/share.png" alt="share" />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {upcomingItems.length > 0 && (
-        <div
-          className={`flex gap-6 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4 ${
-            upcomingItems.length < 4 ? 'md:justify-center' : ''
-          }`}
-          style={{
-            backgroundImage: `
+    <div className="w-full pb-30">
+      {/* BACKGROUND SECTION */}
+      <div
+        className="w-full pt-[30%] md:pt-[25%]"
+        style={{
+          backgroundImage: `
         linear-gradient(
           rgba(29, 92, 117, 0.5),
           rgba(29, 92, 117, 0.5)
         ),
-        url('/Blue_Background_with_Texture-01.png')
+        url('/images/bg.jpg')
       `,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-          }}
-        >
-          {upcomingItems.map((item) => (
-            <div
-              key={item.id}
-              className=" snap-start shrink-0 flex flex-col gap-3
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {featuredItem && (
+          <div className="flex relative flex-col max-w-84 sm:max-w-[520px] mx-auto justify-center items-center bg-[#1D5C75CC] -mt-[20%]">
+            <p
+              className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
+            >
+              COMING UP NEXT
+            </p>
+            <h2
+              className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
+            >
+              {featuredItem.title}
+            </h2>
+            <div className="flex flex-col justify-center items-center my-2">
+              <h3
+                className={`${merri.className} text-white font-bold text-[20px] text-center`}
+              >
+                {getDisplayDate(featuredItem)}
+              </h3>
+              <h4
+                className={`${merri.className} text-white font-normal text-center px-2 md:text-[18px]`}
+              >
+                {featuredItem.venue}
+              </h4>
+            </div>
+            <div className="">
+              <img
+                src={featuredItem.coverImage}
+                alt={featuredItem.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {featuredItem.description && (
+              <p
+                className={`${merri.className} text-white font-light text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
+              >
+                {renderTextWithLineBreaks(featuredItem.description)}
+              </p>
+            )}
+            <div className="flex justify-center items-center gap-2 pb-8 ">
+              <div>
+                <CustomButton
+                  text="GET YOUR TICKETS"
+                  bgColor="#D12127"
+                  textColor="#FFFFFF"
+                  url={featuredItem.bookingUrl}
+                  isArrow
+                />
+              </div>
+              <div
+                className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
+                onClick={() => handleShare(featuredItem.bookingUrl)}
+              >
+                <img src="/share.png" alt="share" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {upcomingItems.length > 0 && (
+          <div
+            className={`flex gap-6 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4 ${
+              upcomingItems.length < 4 ? 'md:justify-center' : ''
+            }`}
+            style={{
+              backgroundImage: `
+        linear-gradient(
+          rgba(29, 92, 117, 0.5),
+          rgba(29, 92, 117, 0.5)
+        ),
+        url('/MD-Texture_BG_Blue-01-04.png')
+      `,
+
+              backgroundRepeat: 'repeat',
+               backgroundSize: '256px 256px',
+            }}
+          >
+            {upcomingItems.map((item) => (
+              <div
+                key={item.id}
+                className=" snap-start shrink-0 flex flex-col gap-3
     w-[95%]        
     md:w-[40%]    
     xl:w-[30%] "
-            >
-              {/* Image */}
-              <div className="relative">
-                <img
-                  src={item.coverImage}
-                  alt={item.title}
-                  className="aspect-465/285 object-cover"
-                />
-              </div>
+              >
+                {/* Image */}
+                <div className="relative">
+                  <img
+                    src={item.coverImage}
+                    alt={item.title}
+                    className="aspect-465/285 object-cover"
+                  />
+                </div>
 
-              <div className="flex flex-col justify-center items-center text-center gap-2">
-                <h2
-                  className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
-                >
-                  {item.title}
-                </h2>
-                <p
-                  className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
-                >
-                  {getDisplayDate(item)}
-                </p>
-                <p
-                  className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
-                >
-                  {item.venue}
-                </p>
-              </div>
+                <div className="flex flex-col justify-center items-center text-center gap-2">
+                  <h2
+                    className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
+                  >
+                    {item.title}
+                  </h2>
+                  <p
+                    className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
+                  >
+                    {getDisplayDate(item)}
+                  </p>
+                  <p
+                    className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                  >
+                    {item.venue}
+                  </p>
+                </div>
 
-              {/* Buttons */}
-              <div className="flex gap-2 md:justify-start mt-2">
-                <div className="w-[90%] md:w-full">
-                  {/* <CustomButton
+                {/* Buttons */}
+                <div className="flex gap-2 md:justify-start mt-2">
+                  <div className="w-[90%] md:w-full">
+                    {/* <CustomButton
                     text="LEARN MORE"
                     bgColor="#1D5C75"
                     textColor="#FFFFFF"
                     url={getItemUrl(item)}
                   /> */}
 
-                  <CustomButton
-                    text="GET YOUR TICKETS"
-                    bgColor="#D12127"
-                    textColor="#FFFFFF"
-                    url={item.bookingUrl}
-                    isArrow
-                  />
-                </div>
+                    <CustomButton
+                      text="GET YOUR TICKETS"
+                      bgColor="#D12127"
+                      textColor="#FFFFFF"
+                      url={item.bookingUrl}
+                      isArrow
+                    />
+                  </div>
 
-                <div
-                  className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
-                  onClick={() => handleShare(item.bookingUrl)}
-                >
-                  <img src="/share.png" alt="share" />
+                  <div
+                    className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
+                    onClick={() => handleShare(item.bookingUrl)}
+                  >
+                    <img src="/share.png" alt="share" />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* No Upcoming Events */}
-      {!featuredItem && upcomingItems.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20">
-          <p className={`${merri.className} text-white text-2xl text-center`}>
-            No upcoming events in the next 30 days
-          </p>
-        </div>
-      )}
-
-      {/* button */}
-      <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] p-10 xl:px-40">
-        <p
-          className={`text-[#1D5C75] ${merri.className} font-bold text-[20px] md:text-[24px]`}
-        >
-          Dialogues, Retreats, and Evenings with Mahabharata, celebrating art,
-          music, dance, and stories.
-        </p>
-        <CustomButton
-          text="Explore our events here"
-          bgColor="#1D5C75"
-          textColor="#FFFFFF"
-          url={'/events'}
-        />
-      </div>
-
-      {/* Testimonials Section */}
-      <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
-        <div
-          className="bg-opacity-60 rounded-lg p-6 text-center"
-          onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
-            {testimonials[currentIndex]?.quote}
-          </p>
-          <p
-            className={`text-white ${merri.className} mt-4 font-bold text-[16px] md:text-[18px]`}
-          >
-            <span className="uppercase">
-              {testimonials[currentIndex]?.name},{' '}
-            </span>
-            {testimonials[currentIndex]?.designation}
-          </p>
-
-          {/* Navigation Dots */}
-          <div className="flex justify-center gap-3.5 my-8">
-            {testimonials.map((_, index) => (
-              <div
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
-                  index === currentIndex ? 'bg-white' : 'bg-gray-400'
-                }`}
-              ></div>
             ))}
+          </div>
+        )}
+
+        {/* No Upcoming Events */}
+        {!featuredItem && upcomingItems.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <p className={`${merri.className} text-white text-2xl text-center`}>
+              No upcoming events in the next 30 days
+            </p>
+          </div>
+        )}
+
+        {/* button */}
+        <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] p-10 xl:px-40">
+          <p
+            className={`text-[#1D5C75] ${merri.className} font-bold text-[20px] md:text-[24px]`}
+          >
+            Dialogues, Retreats, and Evenings with Mahabharata, celebrating art,
+            music, dance, and stories.
+          </p>
+          <CustomButton
+            text="Explore our events here"
+            bgColor="#1D5C75"
+            textColor="#FFFFFF"
+            url={'/events'}
+          />
+        </div>
+
+        {/* Testimonials Section */}
+        <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
+          <div
+            className="bg-opacity-60 rounded-lg p-6 text-center"
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
+              {testimonials[currentIndex]?.quote}
+            </p>
+            <p
+              className={`text-white ${merri.className} mt-4 font-bold text-[16px] md:text-[18px]`}
+            >
+              <span className="uppercase">
+                {testimonials[currentIndex]?.name},{' '}
+              </span>
+              {testimonials[currentIndex]?.designation}
+            </p>
+
+            {/* Navigation Dots */}
+            <div className="flex justify-center gap-3.5 my-8">
+              {testimonials.map((_, index) => (
+                <div
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
+                    index === currentIndex ? 'bg-white' : 'bg-gray-400'
+                  }`}
+                ></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
