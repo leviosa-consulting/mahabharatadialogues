@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   ArrowRight,
 } from 'lucide-react'
+import Link from 'next/link'
 
 interface Event {
   id: string
@@ -180,131 +181,142 @@ const EventsPage = () => {
   const showTabs = upcomingEvents.length > 0 && pastEvents.length > 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Events</h1>
-          <p className="text-lg md:text-xl text-purple-100 max-w-2xl">
-            {upcomingEvents.length > 0
-              ? 'Discover our upcoming events and relive the memories from past gatherings'
-              : 'Relive the memories from our past events'}
-          </p>
-        </div>
-      </div>
+    <div className='min-h-screen bg-gray-50'>
+      {/* Web Asset – TOP CENTER */}
+      <Link href="/" className="flex justify-center items-center z-20 mt-10">
+        <img
+          src="/Web_Assets-08.png"
+          alt="Home"
+          className="w-28 h-28 md:w-44 md:h-44 cursor-pointer"
+        />
+      </Link>
 
-      {/* Tabs - Only show if both upcoming and past events exist */}
-      {showTabs && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-          <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
-            <button
-              onClick={() => setActiveTab('upcoming')}
-              className={`px-6 py-3 rounded-md font-semibold transition-all ${
-                activeTab === 'upcoming'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Upcoming Events
-              {upcomingEvents.length > 0 && (
-                <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                  {upcomingEvents.length}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('past')}
-              className={`px-6 py-3 rounded-md font-semibold transition-all ${
-                activeTab === 'past'
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              Past Events
-              {pastEvents.length > 0 && (
-                <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                  {pastEvents.length}
-                </span>
-              )}
-            </button>
+      <div className="-mt-20">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Events</h1>
+            <p className="text-lg md:text-xl text-purple-100 max-w-2xl">
+              {upcomingEvents.length > 0
+                ? 'Discover our upcoming events and relive the memories from past gatherings'
+                : 'Relive the memories from our past events'}
+            </p>
           </div>
         </div>
-      )}
 
-      {/* Events Grid */}
-      <div
-        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
-          showTabs ? 'py-12' : 'py-8'
-        }`}
-      >
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+        {/* Tabs - Only show if both upcoming and past events exist */}
+        {showTabs && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+            <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
+              <button
+                onClick={() => setActiveTab('upcoming')}
+                className={`px-6 py-3 rounded-md font-semibold transition-all ${
+                  activeTab === 'upcoming'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                Upcoming Events
+                {upcomingEvents.length > 0 && (
+                  <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
+                    {upcomingEvents.length}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab('past')}
+                className={`px-6 py-3 rounded-md font-semibold transition-all ${
+                  activeTab === 'past'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                Past Events
+                {pastEvents.length > 0 && (
+                  <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
+                    {pastEvents.length}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
-        ) : (
-          <>
-            {(activeTab === 'upcoming' || !showTabs) &&
-              upcomingEvents.length > 0 && (
-                <div>
-                  {!showTabs && (
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      Upcoming Events
-                    </h2>
-                  )}
-                  <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {upcomingEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
-                    ))}
-                  </div>
-                </div>
-              )}
+        )}
 
-            {(activeTab === 'past' ||
-              (upcomingEvents.length === 0 && !showTabs)) && (
-              <>
-                {pastEvents.length === 0 ? (
-                  <div className="text-center py-20">
-                    <Calendar
-                      size={64}
-                      className="mx-auto mb-4 text-gray-400"
-                    />
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                      No Past Events
-                    </h3>
-                    <p className="text-gray-500">
-                      Past events will appear here once they conclude.
-                    </p>
-                  </div>
-                ) : (
+        {/* Events Grid */}
+        <div
+          className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+            showTabs ? 'py-12' : 'py-8'
+          }`}
+        >
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+            </div>
+          ) : (
+            <>
+              {(activeTab === 'upcoming' || !showTabs) &&
+                upcomingEvents.length > 0 && (
                   <div>
                     {!showTabs && (
                       <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                        Past Events
+                        Upcoming Events
                       </h2>
                     )}
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                      {pastEvents.map((event) => (
+                      {upcomingEvents.map((event) => (
                         <EventCard key={event.id} event={event} />
                       ))}
                     </div>
                   </div>
                 )}
-              </>
-            )}
 
-            {upcomingEvents.length === 0 && pastEvents.length === 0 && (
-              <div className="text-center py-20">
-                <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                  No Events Yet
-                </h3>
-                <p className="text-gray-500">
-                  Check back soon for upcoming events!
-                </p>
-              </div>
-            )}
-          </>
-        )}
+              {(activeTab === 'past' ||
+                (upcomingEvents.length === 0 && !showTabs)) && (
+                <>
+                  {pastEvents.length === 0 ? (
+                    <div className="text-center py-20">
+                      <Calendar
+                        size={64}
+                        className="mx-auto mb-4 text-gray-400"
+                      />
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                        No Past Events
+                      </h3>
+                      <p className="text-gray-500">
+                        Past events will appear here once they conclude.
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      {!showTabs && (
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                          Past Events
+                        </h2>
+                      )}
+                      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                        {pastEvents.map((event) => (
+                          <EventCard key={event.id} event={event} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {upcomingEvents.length === 0 && pastEvents.length === 0 && (
+                <div className="text-center py-20">
+                  <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    No Events Yet
+                  </h3>
+                  <p className="text-gray-500">
+                    Check back soon for upcoming events!
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

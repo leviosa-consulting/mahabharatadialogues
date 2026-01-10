@@ -6,7 +6,14 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, MapPin, Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import {
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 
 interface ScheduleItem {
@@ -30,7 +37,7 @@ interface DaySchedule {
 
 interface Retreat {
   id: string
-  slug?: string  
+  slug?: string
   title: string
   description?: string
   venue?: string
@@ -48,7 +55,9 @@ const RetreatSchedulePage: React.FC = () => {
   const [retreat, setRetreat] = useState<Retreat | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  )
 
   useEffect(() => {
     if (params.slug) {
@@ -59,7 +68,7 @@ const RetreatSchedulePage: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedImageIndex === null) return
-      
+
       if (e.key === 'ArrowLeft') {
         navigateImage('prev')
       } else if (e.key === 'ArrowRight') {
@@ -76,7 +85,7 @@ const RetreatSchedulePage: React.FC = () => {
   const fetchRetreat = async (slugOrId: string) => {
     try {
       const slugResponse = await fetch(`/api/retreats/by-slug/${slugOrId}`)
-      
+
       if (slugResponse.ok) {
         const slugData = await slugResponse.json()
         if (slugData.success && slugData.data) {
@@ -119,8 +128,14 @@ const RetreatSchedulePage: React.FC = () => {
           key={index}
           className={`bg-[#60a5fa] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
         >
-          <span className={`${merri.className} font-bold text-[16px] md:text-[18px]`}>{section.title}</span>
-          <span className={`${merri.className} text-[16px] md:text-[18px] font-bold leading-none`}>
+          <span
+            className={`${merri.className} font-bold text-[16px] md:text-[18px]`}
+          >
+            {section.title}
+          </span>
+          <span
+            className={`${merri.className} text-[16px] md:text-[18px] font-bold leading-none`}
+          >
             {section.time}
           </span>
         </div>
@@ -137,26 +152,28 @@ const RetreatSchedulePage: React.FC = () => {
             <div className="flex-1">
               <div className={`flex items-start ${merri.className}`}>
                 <span className="text-2xl leading-none">•</span>
-                <span className={`${merri.className} font-bold text-[16px] md:text-[18px] pl-2 leading-none`}>{item.title}</span>
+                <span
+                  className={`${merri.className} font-bold text-[16px] md:text-[18px] pl-2 leading-none`}
+                >
+                  {item.title}
+                </span>
               </div>
 
               {item.description && (
                 <div
-                  className={`text-sm text-gray-600 mt-0.5 ${merri.className} px-[19px] ${
-                    isThreeDayRetreat 
-                      ? '2xl:w-[90%]' 
-                      : 'md:w-full'
-                  } ${
-                    itemIndex === section.items!.length - 1
-                      ? 'pb-8'
-                      : ''
-                  }`}
+                  className={`text-sm text-gray-600 mt-0.5 ${
+                    merri.className
+                  } px-[19px] ${
+                    isThreeDayRetreat ? '2xl:w-[90%]' : 'md:w-full'
+                  } ${itemIndex === section.items!.length - 1 ? 'pb-8' : ''}`}
                 >
                   {item.description}
                 </div>
               )}
             </div>
-            <div className={`${merri.className} text-[16px] md:text-[18px] font-bold whitespace-nowrap ml-4 leading-none`}>
+            <div
+              className={`${merri.className} text-[16px] md:text-[18px] font-bold whitespace-nowrap ml-4 leading-none`}
+            >
               {item.time}
             </div>
           </div>
@@ -192,14 +209,18 @@ const RetreatSchedulePage: React.FC = () => {
 
   const navigateImage = (direction: 'prev' | 'next') => {
     if (selectedImageIndex === null || !retreat?.photos) return
-    
+
     if (direction === 'prev') {
       setSelectedImageIndex(
-        selectedImageIndex === 0 ? retreat.photos.length - 1 : selectedImageIndex - 1
+        selectedImageIndex === 0
+          ? retreat.photos.length - 1
+          : selectedImageIndex - 1
       )
     } else {
       setSelectedImageIndex(
-        selectedImageIndex === retreat.photos.length - 1 ? 0 : selectedImageIndex + 1
+        selectedImageIndex === retreat.photos.length - 1
+          ? 0
+          : selectedImageIndex + 1
       )
     }
   }
@@ -243,7 +264,11 @@ const RetreatSchedulePage: React.FC = () => {
   ]
 
   if (retreat.day3) {
-    days.push({ day: 3, date: retreat.day3.date, dayName: retreat.day3.dayName })
+    days.push({
+      day: 3,
+      date: retreat.day3.date,
+      dayName: retreat.day3.dayName,
+    })
   }
 
   const isThreeDay = !!retreat.day3
@@ -276,7 +301,7 @@ const RetreatSchedulePage: React.FC = () => {
             <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
 
             <div className="flex items-center justify-center md:justify-start gap-3 mt-4 text-white/90">
-              <Calendar size={18} className="opacity-80" />
+             
               <span className="text-sm md:text-base tracking-wide">
                 {retreat.day1.date} <span className="mx-1">–</span>{' '}
                 {isThreeDay ? retreat.day3!.date : retreat.day2.date}
@@ -293,10 +318,11 @@ const RetreatSchedulePage: React.FC = () => {
               {retreat.description}
             </p>
             {retreat.venue && (
-              <div className="flex items-center gap-2 mt-3 justify-center md:justify-start">
-                <MapPin size={18} className="text-white/80" />
-                <span className={`text-sm md:text-base tracking-wide text-white/90 ${merri.className}`}>
-                  {retreat.venue}
+              <div className="flex items-center gap-2 mt-3 justify-center md:justify-start pt-2 md:pt-0">
+                <span
+                  className={`text-sm  md:text-base text-white/90 ${merri.className}`}
+                >
+                 {retreat.venue}
                 </span>
               </div>
             )}
@@ -305,12 +331,13 @@ const RetreatSchedulePage: React.FC = () => {
       </div>
 
       {/* Day circles - Desktop */}
-      <div className={`hidden md:grid ${isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'} relative z-10 -mt-18 lg:mx-10 xl:mx-25`}>
+      <div
+        className={`hidden md:grid ${
+          isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'
+        } relative z-10 -mt-18 lg:mx-10 xl:mx-25`}
+      >
         {days.map((dayInfo) => (
-          <div
-            key={dayInfo.day}
-            className="flex items-center justify-center"
-          >
+          <div key={dayInfo.day} className="flex items-center justify-center">
             <div
               className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center`}
             >
@@ -329,7 +356,9 @@ const RetreatSchedulePage: React.FC = () => {
       </div>
 
       {/* Day circle Mobile - Day 1 */}
-      <div className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}>
+      <div
+        className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
+      >
         <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
           <div className="text-center leading-tight">
             <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
@@ -340,7 +369,11 @@ const RetreatSchedulePage: React.FC = () => {
       </div>
 
       {/* Schedule Grid */}
-      <div className={`grid grid-cols-1 md:mt-8 ${isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'} lg:mx-10 xl:mx-25`}>
+      <div
+        className={`grid grid-cols-1 md:mt-8 ${
+          isThreeDay ? 'md:grid-cols-3' : 'md:grid-cols-2'
+        } lg:mx-10 xl:mx-25`}
+      >
         {/* Day 1 Column */}
         <div className="border-b md:border-b-0 md:border-r border-black">
           <div className="px-2 md:px-8 py-6 md:py-0">
@@ -358,7 +391,9 @@ const RetreatSchedulePage: React.FC = () => {
         {/* Day 2 Column */}
         <div className={isThreeDay ? 'md:border-r border-black' : ''}>
           {/* Day circle Mobile - Day 2 */}
-          <div className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}>
+          <div
+            className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
+          >
             <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
@@ -368,7 +403,11 @@ const RetreatSchedulePage: React.FC = () => {
             </div>
           </div>
 
-          <div className={`px-2 py-6 md:px-8 md:py-0 ${isThreeDay ? '' : 'border-b md:border-b-0'}`}>
+          <div
+            className={`px-2 py-6 md:px-8 md:py-0 ${
+              isThreeDay ? '' : 'border-b md:border-b-0'
+            }`}
+          >
             {retreat.day2.schedule.map((section, index) =>
               renderScheduleSection(section, index, false, isThreeDay)
             )}
@@ -379,7 +418,9 @@ const RetreatSchedulePage: React.FC = () => {
         {retreat.day3 && (
           <div>
             {/* Day circle Mobile - Day 3 */}
-            <div className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}>
+            <div
+              className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
+            >
               <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
                 <div className="text-center leading-tight">
                   <div className="text-xs tracking-wide mb-1">-DAY 3-</div>
@@ -399,14 +440,16 @@ const RetreatSchedulePage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <div className={`text-center text-md text-gray-500 py-4 border-t border-black md:mx-10 lg:mx-30 ${merri.className}`}>
+      <div
+        className={`text-center text-md text-gray-500 py-4 border-t border-black md:mx-10 lg:mx-30 ${merri.className}`}
+      >
         {retreat.footerNotes}
       </div>
 
       {/* YouTube Video Section */}
       {youtubeEmbedUrl && (
         <div className="max-w-5xl mx-auto px-6 py-8">
-          <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+          <div className="aspect-video w-full  overflow-hidden shadow-lg">
             <iframe
               src={youtubeEmbedUrl}
               title="Retreat Video"
@@ -425,7 +468,7 @@ const RetreatSchedulePage: React.FC = () => {
             {retreat.photos.map((photo, idx) => (
               <div
                 key={idx}
-                className="aspect-square overflow-hidden rounded-lg shadow-md cursor-pointer"
+                className="aspect-square overflow-hidden  shadow-md cursor-pointer"
                 onClick={() => openLightbox(idx)}
               >
                 <img
@@ -441,7 +484,7 @@ const RetreatSchedulePage: React.FC = () => {
 
       {/* Lightbox Modal */}
       {selectedImageIndex !== null && retreat.photos && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center"
           onClick={closeLightbox}
         >
@@ -465,7 +508,7 @@ const RetreatSchedulePage: React.FC = () => {
           </button>
 
           {/* Image */}
-          <div 
+          <div
             className="max-w-7xl max-h-[90vh] px-16"
             onClick={(e) => e.stopPropagation()}
           >

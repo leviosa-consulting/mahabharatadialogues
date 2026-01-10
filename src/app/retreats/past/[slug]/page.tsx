@@ -43,15 +43,15 @@ const PastRetreatPage: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [retreat, setRetreat] = useState<Retreat | null>(null)
   const [loading, setLoading] = useState(true)
-    const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [error, setError] = useState(false)
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
     null
   )
 
-    const touchStartX = useRef(0)
-    const touchEndX = useRef(0)
-    const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
+  const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     fetchTestimonials()
@@ -146,47 +146,46 @@ const PastRetreatPage: React.FC = () => {
     }
   }
 
+  const handleWheel = (e: React.WheelEvent) => {
+    if (wheelTimeout.current) {
+      clearTimeout(wheelTimeout.current)
+    }
 
-    const handleWheel = (e: React.WheelEvent) => {
-      if (wheelTimeout.current) {
-        clearTimeout(wheelTimeout.current)
-      }
-  
-      wheelTimeout.current = setTimeout(() => {
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-          if (e.deltaX > 0) {
-            setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-          } else if (e.deltaX < 0) {
-            setCurrentIndex(
-              (prev) => (prev - 1 + testimonials.length) % testimonials.length
-            )
-          }
-        }
-      }, 50)
-    }
-  
-    const handleTouchStart = (e: React.TouchEvent) => {
-      touchStartX.current = e.touches[0].clientX
-    }
-  
-    const handleTouchMove = (e: React.TouchEvent) => {
-      touchEndX.current = e.touches[0].clientX
-    }
-  
-    const handleTouchEnd = () => {
-      const swipeDistance = touchStartX.current - touchEndX.current
-      const minSwipeDistance = 50
-  
-      if (Math.abs(swipeDistance) > minSwipeDistance) {
-        if (swipeDistance > 0) {
+    wheelTimeout.current = setTimeout(() => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        if (e.deltaX > 0) {
           setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-        } else {
+        } else if (e.deltaX < 0) {
           setCurrentIndex(
             (prev) => (prev - 1 + testimonials.length) % testimonials.length
           )
         }
       }
+    }, 50)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = () => {
+    const swipeDistance = touchStartX.current - touchEndX.current
+    const minSwipeDistance = 50
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+      } else {
+        setCurrentIndex(
+          (prev) => (prev - 1 + testimonials.length) % testimonials.length
+        )
+      }
     }
+  }
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
     try {
@@ -236,7 +235,6 @@ const PastRetreatPage: React.FC = () => {
     const endDate = retreat.day3 ? retreat.day3.date : retreat.day2.date
     return `${retreat.day1.date} - ${endDate}`
   }
-
 
   const getScheduleUrl = (retreat: Retreat) => {
     return retreat.slug
@@ -318,11 +316,11 @@ const PastRetreatPage: React.FC = () => {
         </div>
 
         {/* Retreat Details Section */}
-        <div className="w-full  -mt-[5vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
-          <div className="mx-4 xl:mx-30 bg-white">
+        <div className="w-full  -mt-[25vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
+          <div className="sm:mx-4 xl:mx-30 bg-white p-3">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 overflow-hidden">
               <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 md:my-6">
-                <div className="text-left">
+                <div className="text-left mt-16">
                   <p
                     className={`${merri.className} text-[20px] text-[#78B0C7] font-bold`}
                   >
@@ -356,7 +354,7 @@ const PastRetreatPage: React.FC = () => {
                     </p>
                   )}
 
-                 {/* Testimonials Section */}
+                  {/* Testimonials Section */}
                   <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
                     <div
                       className="bg-opacity-60 rounded-lg p-6 text-center"
@@ -395,18 +393,15 @@ const PastRetreatPage: React.FC = () => {
                   </div>
 
                   {/* button */}
-
                   <div className='flex justify-center items-center'>
-                     <CustomButton
-                        text="VIEW SCHEDULE"
-                        bgColor="#1D5C75"
-                        textColor="#FFFFFF"
-                        url={getScheduleUrl(retreat)}
-                      />
+                    <CustomButton
+                      text="VIEW SCHEDULE"
+                      bgColor="#1D5C75"
+                      textColor="#FFFFFF"
+                      url={getScheduleUrl(retreat)}
+                    />
                   </div>
                 </div>
-
-                 
               </div>
             </div>
           </div>
@@ -441,20 +436,18 @@ const PastRetreatPage: React.FC = () => {
             </div>
           </div>
         )}
-
-      
       </div>
 
       {/* Lightbox Modal */}
       {selectedImageIndex !== null && retreat.photos && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
           onClick={closeLightbox}
         >
           {/* Close Button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 text-[#1D5C75] hover:text-gray-300 transition-colors z-10"
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
           >
             <X size={36} />
           </button>
@@ -465,7 +458,7 @@ const PastRetreatPage: React.FC = () => {
               e.stopPropagation()
               navigateImage('prev')
             }}
-            className="absolute left-4 text-[#1D5C75] hover:text-gray-300 transition-colors z-10"
+            className="absolute left-4 text-white hover:text-gray-300 transition-colors z-10"
           >
             <ChevronLeft size={48} />
           </button>
@@ -481,7 +474,7 @@ const PastRetreatPage: React.FC = () => {
               className="max-w-full max-h-[90vh] object-contain"
             />
             {/* Image Counter */}
-            <div className="text-center text-[#1D5C75] mt-4 text-sm">
+            <div className="text-center text-white mt-4 text-sm">
               {selectedImageIndex + 1} / {retreat.photos.length}
             </div>
           </div>
@@ -492,7 +485,7 @@ const PastRetreatPage: React.FC = () => {
               e.stopPropagation()
               navigateImage('next')
             }}
-            className="absolute right-4 text-[#1D5C75] hover:text-gray-300 transition-colors z-10"
+            className="absolute right-4 text-white hover:text-gray-300 transition-colors z-10"
           >
             <ChevronRight size={48} />
           </button>
