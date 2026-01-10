@@ -6,6 +6,7 @@ import YouTubeSection from './YouTubeSection'
 import { getLatestVideos } from '@/lib/youtube'
 import Footer from './Footer'
 import { adminDB } from '@/firebase/firebaseAdmin'
+import Link from 'next/link'
 
 interface DaySchedule {
   date: string
@@ -131,17 +132,28 @@ export default async function RetreatHero() {
         }}
       >
         <div className="w-full ">
+          {/* Web Asset */}
+          <Link
+            href="/"
+            className="flex justify-center items-center mt-8 relative z-20"
+          >
+            <img
+              src="/Web_Assets-08.png"
+              alt="Home"
+              className="w-30 h-30 md:w-50 md:h-50 -mb-16 md:-mb-24 cursor-pointer"
+            />
+          </Link>
+
+          {/* Video */}
           <div className="mx-2 xl:mx-0 2xl:mx-20">
-            <div className="grid  grid-cols-12 gap-3">
+            <div className="grid grid-cols-12 gap-3">
               <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
-                {/* Video */}
                 <div className="w-full aspect-video relative z-10">
                   <iframe
-                    src="https://www.youtube.com/embed/tw7d2hMHyRY?start=0"
-                    title="Join us for a 2-day Mahabharata Retreat at Fireflies Ashram!"
+                    src="https://www.youtube.com/embed/tw7d2hMHyRY"
+                    title="Join us for a 2-day Mahabharata Retreat"
                     className="w-full h-full shadow-xl"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                 </div>
@@ -212,7 +224,7 @@ export default async function RetreatHero() {
 
                     <div>
                       <p className="font-neco font-bold text-[18px] text-white">
-                       11,999/- Early Bird offer
+                        11,999/- Early Bird offer
                       </p>
                       {/* <p className="font-neco font-normal text-[18px] text-white">
                         25,000/- January onwards
