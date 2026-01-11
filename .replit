@@ -41,4 +41,7 @@ build = ["npm", "run", "build"]
 [userenv]
 
 [userenv.development]
-NEXT_PUBLIC_BASE_URL = "https://9356875b-bc7f-4236-8850-8d84259cfa06-00-v5vdtugc7gqi.pike.replit.dev"
+NEXT_PUBLIC_BASE_URL = "https://mahabharatadialogues.com"
+
+[userenv.production]
+NEXT_PUBLIC_BASE_URL = "https://mahabharatadialogues.com"
