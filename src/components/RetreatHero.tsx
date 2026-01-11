@@ -223,7 +223,7 @@ export default async function RetreatHero() {
                         12,249/-
                       </p>
                       <p className="font-neco font-normal text-[18px] text-white">
-                        Includes stay, 2 meals and 2 snacks
+                        Includes stay, 5 meals, and 4 high teas
                       </p>
                     </div>
                     <div className="border border-white">
