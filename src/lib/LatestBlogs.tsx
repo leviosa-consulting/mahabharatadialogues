@@ -31,8 +31,10 @@ async function fetchBlogs(): Promise<Blog[]> {
     baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   } else if (process.env.VERCEL_URL) {
     baseUrl = `https://${process.env.VERCEL_URL}`;
+  } else if (process.env.REPLIT_DEV_DOMAIN) {
+    baseUrl = `https://${process.env.REPLIT_DEV_DOMAIN}`;
   } else if (process.env.NODE_ENV === "development") {
-    baseUrl = "http://localhost:3000";
+    baseUrl = "http://localhost:5000";
   } else {
     baseUrl = "https://mahabharatadialogues.com";
   }
