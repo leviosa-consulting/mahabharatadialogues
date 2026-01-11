@@ -220,7 +220,7 @@ export default async function RetreatHero() {
 
                     <div>
                       <p className="font-neco font-bold text-[18px] text-white">
-                        11,999/- Early Bird offer
+                        12,249/-
                       </p>
                       <p className="font-neco font-normal text-[18px] text-white">
                         Includes stay, 2 meals and 2 snacks
