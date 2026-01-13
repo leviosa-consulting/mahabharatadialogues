@@ -332,7 +332,7 @@ const BlogDetailPage = () => {
   return (
     <div onClick={handleBackgroundClick}>
       <div className="w-full min-h-screen bg-[#1D5C75CC]">
-        <div className="md:mx-1 lg:mx-4 xl:mx-16 2xl:mx-20">
+        <div className="md:mx-1 lg:mx-4 xl:mx-30 2xl:mx-40">
           <div className="grid grid-cols-12">
             <div
               className="col-span-12 md:col-start-2 md:col-span-10"
