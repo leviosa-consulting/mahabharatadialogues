@@ -170,7 +170,7 @@ export default async function RetreatHero() {
         </div>
 
         {upcomingRetreat && (
-          <div className="w-full bg-[#1D5C75] -mt-[5vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
+          <div className="w-full bg-[#1D5C75] -mt-[5vh] md:-mt-[20vh] pt-[10vh] md:pt-[20vh] pb-[5vh]">
             <div className="mx-4 2xl:mx-20">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
