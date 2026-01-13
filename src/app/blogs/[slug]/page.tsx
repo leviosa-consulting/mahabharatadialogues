@@ -461,6 +461,22 @@ const BlogDetailPage = () => {
                    .blog-content ol {
                      list-style-type: decimal;
                     }
+                     .blog-content [data-youtube-video] {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  margin: 1.5em auto;
+}
+
+.blog-content [data-youtube-video] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  border: none;
+}
 
                     .blog-content li {
                       margin: 0.6em 0;
