@@ -4,13 +4,20 @@ import { adminDB } from "@/firebase/firebaseAdmin";
 
 export const dynamic = "force-dynamic";
 
-// GET — fetch all blogs
-export async function GET() {
+// GET — fetch all blogs with optional category filter
+export async function GET(request: NextRequest) {
   try {
-    const snapshot = await adminDB
-      .collection("blogs")
-      .orderBy("created_at", "desc")
-      .get();
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get("category");
+
+    let query = adminDB.collection("blogs").orderBy("created_at", "desc");
+
+    // If category filter is provided, filter by category
+    if (category) {
+      query = query.where("categories", "array-contains", category) as any;
+    }
+
+    const snapshot = await query.get();
     
     const blogs = snapshot.docs.map((doc) => ({
       id: doc.id,

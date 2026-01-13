@@ -620,13 +620,26 @@ const BlogAdminPage = () => {
             .ProseMirror ul,
             .ProseMirror ol {
               padding-left: 1.5em;
-              margin-top: 0.5em;
-              margin-bottom: 0.5em;
+              margin: 0.75em 0;
+            }
+
+            .ProseMirror ul {
+              list-style: disc outside;
+            }
+
+            .ProseMirror ol {
+              list-style: decimal outside;
             }
 
             .ProseMirror li {
-              margin-top: 0.25em;
-              margin-bottom: 0.25em;
+              margin: 0.25em 0;
+              line-height: 1.7;
+              display: list-item;
+            }
+
+            /* Optional: improve marker visibility */
+            .ProseMirror li::marker {
+              color: #4a4a4a;
             }
 
             .ProseMirror img {

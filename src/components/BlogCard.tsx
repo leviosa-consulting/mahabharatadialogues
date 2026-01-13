@@ -32,16 +32,23 @@ export default function BlogCard({
   return (
     <div className="flex gap-4 flex-col md:flex-row md:items-center">
       {/* IMAGE */}
-      <Link
-        href={`/blogs/${blog.slug}`}
-        className="w-full aspect-video overflow-hidden md:w-[284px] md:aspect-[284/186]"
-      >
-        <img
-          src={blog.image_url}
-          alt={blog.title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-        />
-      </Link>
+     <Link
+  href={`/blogs/${blog.slug}`}
+  className="
+    w-full
+    aspect-[284/186]
+    overflow-hidden
+    md:w-[264px]
+    lg:w-[284px]
+  "
+>
+  <img
+    src={blog.image_url}
+    alt={blog.title}
+    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+  />
+</Link>
+
 
       {/* TEXT */}
       <div className="text-white text-center md:text-left md:max-w-[300px]">

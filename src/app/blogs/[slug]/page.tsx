@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import Head from 'next/head'
 import { merri } from '@/app/fonts/merri'
-import BlogCard from '@/components/BlogCard' // Adjust the import path as needed
+import BlogCard from '@/components/BlogCard'
 
 interface Blog {
   id: string
@@ -60,7 +60,6 @@ const BlogDetailPage = () => {
       setLoading(true)
       setError(false)
 
-      // Fetch current blog
       const response = await fetch(`/api/blogs/${slug}`)
       const data = await response.json()
 
@@ -72,12 +71,10 @@ const BlogDetailPage = () => {
 
       setBlog(data.data)
 
-      // Fetch all blogs for related posts
       const allBlogsResponse = await fetch('/api/blogs')
       const allBlogsData = await allBlogsResponse.json()
 
       if (allBlogsData.success) {
-        // Filter blogs by same author, excluding current blog
         const sameAuthorBlogs = allBlogsData.data.filter(
           (b: Blog) => b.slug !== slug && b.author === data.data.author
         )
@@ -96,10 +93,8 @@ const BlogDetailPage = () => {
   const updateMetaTags = () => {
     if (!blog) return
 
-    // Update document title
     document.title = `${blog.title} | Mahabharata Dialogues`
 
-    // Helper function to update or create meta tags
     const setMetaTag = (
       property: string,
       content: string,
@@ -117,16 +112,13 @@ const BlogDetailPage = () => {
       element.setAttribute('content', content)
     }
 
-    // Get excerpt from content (first 160 characters)
     const contentText = blog.content.replace(/<[^>]*>/g, '').trim()
     const description = blog.subtitle || contentText.substring(0, 160) + '...'
 
-    // Basic meta tags
     setMetaTag('description', description)
     setMetaTag('keywords', blog.categories?.join(', ') || '')
     setMetaTag('author', blog.author)
 
-    // Open Graph meta tags
     setMetaTag('og:title', blog.title, true)
     setMetaTag('og:description', description, true)
     setMetaTag('og:image', blog.image_url, true)
@@ -149,21 +141,18 @@ const BlogDetailPage = () => {
       })
     }
 
-    // Twitter Card meta tags
     setMetaTag('twitter:card', 'summary_large_image')
     setMetaTag('twitter:title', blog.title)
     setMetaTag('twitter:description', description)
     setMetaTag('twitter:image', blog.image_url)
     setMetaTag('twitter:creator', `@${blog.author.replace(/\s+/g, '')}`)
 
-    // Additional SEO meta tags
     setMetaTag(
       'robots',
       'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
     )
     setMetaTag('googlebot', 'index, follow')
 
-    // Canonical URL
     let canonicalLink = document.querySelector('link[rel="canonical"]')
     if (!canonicalLink) {
       canonicalLink = document.createElement('link')
@@ -179,7 +168,6 @@ const BlogDetailPage = () => {
   const updateStructuredData = () => {
     if (!blog) return
 
-    // Remove existing structured data
     const existingScript = document.querySelector(
       'script[type="application/ld+json"]'
     )
@@ -191,7 +179,6 @@ const BlogDetailPage = () => {
     const wordCount = contentText.split(/\s+/).length
     const readTime = Math.ceil(wordCount / 200)
 
-    // Create Article structured data
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -222,7 +209,6 @@ const BlogDetailPage = () => {
       timeRequired: `PT${readTime}M`,
     }
 
-    // Create BreadcrumbList structured data
     const breadcrumbData = {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -248,7 +234,6 @@ const BlogDetailPage = () => {
       ],
     }
 
-    // Add both structured data to the page
     const script = document.createElement('script')
     script.type = 'application/ld+json'
     script.text = JSON.stringify([structuredData, breadcrumbData])
@@ -290,7 +275,6 @@ const BlogDetailPage = () => {
         console.log('Share cancelled or failed:', err)
       }
     } else {
-      // Fallback: copy URL to clipboard
       try {
         await navigator.clipboard.writeText(currentUrl)
         setShareTooltip(true)
@@ -306,10 +290,13 @@ const BlogDetailPage = () => {
   }
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Check if click is outside the content area
     if (contentRef.current && !contentRef.current.contains(e.target as Node)) {
       handleClose()
     }
+  }
+
+  const handleCategoryClick = (category: string) => {
+    router.push(`/blogs?category=${encodeURIComponent(category)}`)
   }
 
   if (loading) {
@@ -345,9 +332,8 @@ const BlogDetailPage = () => {
   return (
     <div onClick={handleBackgroundClick}>
       <div className="w-full min-h-screen bg-[#1D5C75CC]">
-        <div className="md:mx-10 lg:mx-12 xl:mx-16 2xl:mx-20">
+        <div className="md:mx-1 lg:mx-4 xl:mx-16 2xl:mx-20">
           <div className="grid grid-cols-12">
-            {/* IMAGE */} 
             <div
               className="col-span-12 md:col-start-2 md:col-span-10"
               ref={contentRef}
@@ -362,14 +348,11 @@ const BlogDetailPage = () => {
                 </figure>
               )}
 
-              {/* BELOW IMAGE CONTENT */}
               <div className="bg-white">
                 <div className="grid grid-cols-12">
-                  <div className="col-span-12 md:col-start-2 md:col-span-10 p-4 sm:p-6 md:p-8">
+                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4 lg:p-8">
                     <div className="w-full">
-                      {/* left */}
                       <div className="flex flex-col items-start text-start  w-full">
-                        {/* TITLE + X */}
                         <div className="flex justify-between items-start w-full gap-4">
                           <span className="font-neco font-bold text-[#1D5C75] text-xl sm:text-2xl md:text-3xl lg:text-[40px] leading-6 md:leading-10 mb-4 md:mb-8">
                             {blog.title}
@@ -384,7 +367,6 @@ const BlogDetailPage = () => {
                           </button>
                         </div>
 
-                        {/* AUTHOR + SHARE */}
                         <div className="flex  justify-between items-start sm:items-center w-full gap-3 mb-6 sm:mb-10">
                           <div>
                             <div>
@@ -394,7 +376,6 @@ const BlogDetailPage = () => {
                                 {blog.author}
                               </h3>
                             </div>
-                            {/* DATE */}
                             <div
                               className={`${merri.className} flex items-center font-normal gap-2 text-[#1D5C75] text-sm sm:text-base md:text-lg`}
                             >
@@ -425,35 +406,37 @@ const BlogDetailPage = () => {
                         </div>
 
                         <div>
-                          {/* META */}
                           {blog.categories?.length > 0 && (
-                            <div className="flex flex-wrap text-center items-center gap-2 mb-8 sm:mb-10">
+                            <div className="flex flex-wrap text-center items-center  mb-8 sm:mb-10">
                               <span
-                                className={`${merri.className} flex items-center font-bold gap-2 text-[#1D5C75] text-sm sm:text-base md:text-lg`}
+                                className={`${merri.className} flex items-center font-bold gap-2 text-[#1D5C75] text-sm sm:text-base md:text-lg mr-4 md:mr-6`}
                               >
                                 {estimateReadTime(blog.content)} min read
                               </span>
 
                               {blog.categories.map((cat, index) => (
-                                <span
+                                <div
                                   key={cat}
                                   className={`${merri.className} flex items-center font-normal text-[#1D5C75] text-sm sm:text-base md:text-lg`}
                                 >
-                                  {cat}
+                                  <button
+                                    onClick={() => handleCategoryClick(cat)}
+                                    className="hover:underline hover:text-[#47ABD8] transition-colors cursor-pointer"
+                                  >
+                                    {cat}
+                                  </button>
 
-                                  {/* separator */}
                                   {index !== blog.categories.length - 1 && (
-                                    <span className="mx-2 text-[#1D5C75]">
+                                    <span className=" flex items-center mx-2">
                                       |
                                     </span>
                                   )}
-                                </span>
+                                </div>
                               ))}
                             </div>
                           )}
                         </div>
                       </div>
-                      {/* subtitle */}
                       <div className="mb-4 sm:mb-6">
                         <p className="font-neco font-bold italic text-lg sm:text-xl md:text-[22px] text-[#1D5C75]">
                           {blog.subtitle}
@@ -465,6 +448,33 @@ const BlogDetailPage = () => {
                         font-size: 16px;
                         line-height: 1.8;
                       }
+                      .blog-content ul,
+                      .blog-content ol {
+                       padding-left: 2rem;
+                       margin: 1.25em 0;
+                      }
+
+                    .blog-content ul {
+                    list-style-type: disc;
+                    }
+
+                   .blog-content ol {
+                     list-style-type: decimal;
+                    }
+
+                    .blog-content li {
+                      margin: 0.6em 0;
+                      line-height: 1.8;
+                      display: list-item;
+                  }
+                   .blog-content ul li p {
+  font-size: 1em;
+}
+.blog-content .font-hindi {
+  font-family: var(--font-merri), serif;
+  font-weight: 400;
+  line-height: 1.9;
+}
 
                       @media (min-width: 640px) {
                         .blog-content {
@@ -478,9 +488,8 @@ const BlogDetailPage = () => {
                         }
                       }
 
-                      /* Headings */
                       .blog-content h1 {
-                        font-size: 1.75em; /* ~28px on mobile */
+                        font-size: 1em;
                         font-weight: 700;
                         line-height: 1.2;
                         margin-top: 1.6em;
@@ -489,13 +498,13 @@ const BlogDetailPage = () => {
 
                       @media (min-width: 768px) {
                         .blog-content h1 {
-                          font-size: 2.25em; /* ~40px */
+                          font-size: 2.25em;
                         }
                       }
 
                       .blog-content h2 {
-                        font-size: 1.5em; /* ~24px on mobile */
-                        font-weight: 700;
+                        font-size: 1em;
+                        font-weight: 400;
                         line-height: 1.3;
                         margin-top: 1.6em;
                         margin-bottom: 0.7em;
@@ -505,12 +514,12 @@ const BlogDetailPage = () => {
 
                       @media (min-width: 768px) {
                         .blog-content h2 {
-                          font-size: 1.75em; /* ~31px */
+                          font-size: 1.75em;
                         }
                       }
 
                       .blog-content h3 {
-                        font-size: 1.25em; /* ~20px on mobile */
+                        font-size: 1.25em;
                         font-weight: 600;
                         line-height: 1.4;
                         margin-top: 1.4em;
@@ -519,38 +528,37 @@ const BlogDetailPage = () => {
 
                       @media (min-width: 768px) {
                         .blog-content h3 {
-                          font-size: 1.4em; /* ~25px */
+                          font-size: 1.4em;
                         }
                       }
 
-                      /* Paragraphs */
-                      .blog-content p {
-                        font-size: 1em;
-                        line-height: 1.8;
-                        margin: 1em 0;
-                      }
-
-                      /* Lists */
-                      .blog-content ul,
-                      .blog-content ol {
-                        font-size: 1em;
-                        padding-left: 1.5em;
-                        margin: 1em 0;
-                      }
+                     .blog-content p:not(:where(ul li p, ol li p)) {
+                   font-size: 1em;
+                   line-height: 1.8;
+                   margin: 1em 0;
+                  }
 
                       @media (min-width: 768px) {
-                        .blog-content ul,
-                        .blog-content ol {
-                          padding-left: 2em;
-                        }
-                      }
+                      .blog-content ul,
+                     .blog-content ol {
+                      padding-left: 2rem;
+                       margin: 1.25em 0;
+                    }
 
-                      .blog-content li {
-                        margin: 0.5em 0;
-                        line-height: 1.8;
-                      }
+                    .blog-content ul {
+                     list-style-type: disc;
+                    }
 
-                      /* Media */
+                   .blog-content ol {
+                     list-style-type: decimal;
+                    }
+
+                    .blog-content li {
+                     margin: 0.1em 0;
+                     line-height: 1.8;
+                     display: list-item;
+                    }
+
                       .blog-content img {
                         max-width: 100%;
                         height: auto;
@@ -586,7 +594,6 @@ const BlogDetailPage = () => {
                         }
                       }
 
-                      /* Inline styles */
                       .blog-content em {
                         font-style: italic;
                       }
@@ -623,7 +630,7 @@ const BlogDetailPage = () => {
                         padding: 0;
                       }
                     `}</style>
-                    <div className={`${merri.className} text-black`}>
+                    <div className={`font-roboto text-black`}>
                       <div
                         className="blog-content font-light"
                         dangerouslySetInnerHTML={{ __html: blog.content }}
@@ -631,16 +638,15 @@ const BlogDetailPage = () => {
                     </div>
                   </div>
 
-                  {/* Related blogs */}
                   {relatedBlogs.length > 0 && (
-                    <div className="bg-[#47ABD8B2] col-span-12 md:col-start-2 md:col-span-10 p-4 sm:m-6 md:m-8">
+                    <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10  m-4 sm:my-4 lg:m-8">
                       <h2
-                        className={`${merri.className} text-center text-white text-2xl md:text-3xl font-bold mb-6`}
+                        className={`${merri.className} text-center text-white text-2xl md:text-3xl font-bold p-4 mb-12`}
                       >
                         Next Story
                       </h2>
 
-                      <div className="flex flex-col gap-6 ">
+                      <div className="flex flex-col gap-6 p-2 pb-10">
                         {relatedBlogs.map((relatedBlog) => (
                           <BlogCard key={relatedBlog.id} blog={relatedBlog} />
                         ))}

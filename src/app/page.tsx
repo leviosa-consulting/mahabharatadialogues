@@ -5,6 +5,7 @@ import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
 
 export default function Home() {
+  
   return (
     <div
       className="w-full"

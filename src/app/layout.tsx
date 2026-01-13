@@ -1,7 +1,7 @@
 import localFont from 'next/font/local'
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Fira_Sans, Lato, Bellota } from 'next/font/google'
-
+import { Geist, Roboto } from 'next/font/google'
+import { merri } from '@/app/fonts/merri'
 import './globals.css'
 import { AuthProvider } from '@/lib/authContext'
 
@@ -9,6 +9,12 @@ const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
 })
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['100','300','400','500','700','900'],
+  variable: '--font-roboto',
+});
 
 export const metadata: Metadata = {
   title: 'Mahabharata Dailogues',
@@ -35,7 +41,7 @@ export default function RootLayout({
        
       `}
     >
-      <body className={`${geistSans.variable}  antialiased`}>
+      <body className={`${geistSans.variable} ${roboto.variable} ${merri.variable} antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
