@@ -646,7 +646,7 @@ const BlogDetailPage = () => {
                         padding: 0;
                       }
                     `}</style>
-                    <div className={`font-roboto text-black`}>
+                    <div  className={`${merri.className} text-black`}>
                       <div
                         className="blog-content font-light"
                         dangerouslySetInnerHTML={{ __html: blog.content }}
