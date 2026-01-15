@@ -11,11 +11,7 @@ type Blog = {
   created_at: string
 }
 
-export default function BlogCard({
-  blog
-}: {
-  blog: Blog
-}) {
+export default function BlogCard({ blog }: { blog: Blog }) {
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -32,27 +28,28 @@ export default function BlogCard({
   return (
     <div className="flex gap-4 flex-col md:flex-row md:items-center">
       {/* IMAGE */}
-     <Link
-  href={`/blogs/${blog.slug}`}
-  className="
+      <Link
+        href={`/blogs/${blog.slug}`}
+        className="
     w-full
     aspect-[284/186]
     overflow-hidden
     md:w-[264px]
     lg:w-[284px]
   "
->
-  <img
-    src={blog.image_url}
-    alt={blog.title}
-    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-  />
-</Link>
-
+      >
+        <img
+          src={blog.image_url}
+          alt={blog.title}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+        />
+      </Link>
 
       {/* TEXT */}
       <div className="text-white text-center md:text-left md:max-w-[300px]">
-        <h2 className={`${merri.className} font-bold text-[14px] md:text-[16px]`}>
+        <h2
+          className={`${merri.className} font-bold text-[14px] md:text-[16px]`}
+        >
           {formatDate(blog.created_at)}
         </h2>
 

@@ -316,9 +316,9 @@ const PastRetreatPage: React.FC = () => {
         </div>
 
         {/* Retreat Details Section */}
-        <div className="w-full  -mt-[25vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
+        <div className="w-full -mt-[25vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
           <div className="sm:mx-4 xl:mx-30 bg-white p-3">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-1 overflow-hidden">
               <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 md:my-6">
                 <div className="text-left mt-16">
                   <p

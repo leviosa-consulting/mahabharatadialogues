@@ -445,7 +445,7 @@ const Testimonials = () => {
             </div>
             <div className="">
               <img
-                src={featuredItem.coverImage}
+                src={featuredItem.coverImage || '/abhilash.png'}
                 alt={featuredItem.title}
                 className="w-full h-full object-cover"
               />
@@ -493,7 +493,7 @@ const Testimonials = () => {
       `,
 
               backgroundRepeat: 'repeat',
-               backgroundSize: '256px 256px',
+              backgroundSize: '256px 256px',
             }}
           >
             {upcomingItems.map((item) => (
@@ -507,7 +507,7 @@ const Testimonials = () => {
                 {/* Image */}
                 <div className="relative">
                   <img
-                    src={item.coverImage}
+                    src={item.coverImage || '/abhilash.png'}
                     alt={item.title}
                     className="aspect-465/285 object-cover"
                   />
@@ -572,7 +572,7 @@ const Testimonials = () => {
         )}
 
         {/* button */}
-        <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] p-10 xl:px-40">
+        <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] py-30 sm:px-10 xl:px-40">
           <p
             className={`text-[#1D5C75] ${merri.className} font-bold text-[20px] md:text-[24px]`}
           >
@@ -580,7 +580,7 @@ const Testimonials = () => {
             music, dance, and stories.
           </p>
           <CustomButton
-            text="Explore our events here"
+            text="EXPLORE OUR EVENTS HERE"
             bgColor="#1D5C75"
             textColor="#FFFFFF"
             url={'/events'}

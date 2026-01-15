@@ -417,7 +417,7 @@ const BlogDetailPage = () => {
                               {blog.categories.map((cat, index) => (
                                 <div
                                   key={cat}
-                                  className={`${merri.className} flex items-center font-normal text-[#1D5C75] text-sm sm:text-base md:text-lg`}
+                                  className={`${merri.className} flex items-center font-normal text-[78B0C7] text-sm sm:text-base md:text-lg`}
                                 >
                                   <button
                                     onClick={() => handleCategoryClick(cat)}
@@ -657,12 +657,12 @@ const BlogDetailPage = () => {
                   {relatedBlogs.length > 0 && (
                     <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10  m-4 sm:my-4 lg:m-8">
                       <h2
-                        className={`${merri.className} text-center text-white text-2xl md:text-3xl font-bold p-4 mb-12`}
+                        className={`${merri.className} text-center text-white text-2xl  font-bold p-4 mb-12 uppercase`}
                       >
                         Next Story
                       </h2>
 
-                      <div className="flex flex-col gap-6 p-2 pb-10">
+                      <div className="flex flex-col gap-6 px-24 pb-10">
                         {relatedBlogs.map((relatedBlog) => (
                           <BlogCard key={relatedBlog.id} blog={relatedBlog} />
                         ))}

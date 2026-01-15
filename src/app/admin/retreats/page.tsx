@@ -52,6 +52,8 @@ interface Retreat {
   youtube_video?: string
   photos?: string[]
   footerNotes?: string
+  price?: string
+  inclusions?: string
   day1: DaySchedule
   day2: DaySchedule
   day3?: DaySchedule
@@ -81,6 +83,8 @@ const RetreatsAdminPage = () => {
     youtube_video: '',
     photos: [],
     footerNotes: '',
+    price: '',
+    inclusions: '',
     day1: {
       date: '',
       dayName: '',
@@ -155,6 +159,8 @@ const RetreatsAdminPage = () => {
       venue: '',
       coverImage: '',
       bookingUrl: '',
+      price: '',
+      inclusions: '',
       youtube_video: '',
       photos: [],
       footerNotes: '',
@@ -189,6 +195,8 @@ const RetreatsAdminPage = () => {
       bookingUrl: retreat.bookingUrl || '',
       youtube_video: retreat.youtube_video || '',
       photos: retreat.photos || [],
+      price: retreat.price || '',
+      inclusions: retreat.inclusions || '',
       footerNotes: retreat.footerNotes || '',
       day1: retreat.day1,
       day2: retreat.day2,
@@ -318,6 +326,8 @@ const RetreatsAdminPage = () => {
         coverImage: formData.coverImage || undefined,
         bookingUrl: formData.bookingUrl || undefined,
         youtube_video: formData.youtube_video || undefined,
+        price: formData.price || undefined,
+        inclusions: formData.inclusions || undefined,
         photos:
           formData.photos && formData.photos.length > 0
             ? formData.photos
@@ -353,7 +363,7 @@ const RetreatsAdminPage = () => {
       })
 
       const data = await response.json()
-
+        console.log(data);
       if (!data.success) {
         throw new Error(data.error || 'Failed to save retreat')
       }
@@ -1220,7 +1230,7 @@ const RetreatsAdminPage = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Description * (Press Enter for new line)
+                          Description
                         </label>
                         <textarea
                           name="description"
@@ -1335,7 +1345,42 @@ const RetreatsAdminPage = () => {
                           disabled={submitting}
                         />
                       </div>
-
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.price}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              price: e.target.value,
+                            }))
+                          }
+                          placeholder="Eg: 12,249/-"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Inclusions
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.inclusions}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              inclusions: e.target.value,
+                            }))
+                          }
+                          placeholder="Eg: Includes stay, 5 meals, and 4 high teas"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Photos
@@ -1402,7 +1447,8 @@ const RetreatsAdminPage = () => {
                           disabled={submitting}
                         />
                         <p className="mt-1 text-xs text-gray-500">
-                          This text will appear at the bottom of the retreat schedule page
+                          This text will appear at the bottom of the retreat
+                          schedule page
                         </p>
                       </div>
 

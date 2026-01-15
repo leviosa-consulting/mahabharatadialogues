@@ -21,6 +21,8 @@ interface Retreat {
   title: string
   description?: string
   venue?: string
+  price?: string
+  inclusions?: string
   youtube_video?: string
   photos?: string[]
   bookingUrl?: string
@@ -220,10 +222,10 @@ export default async function RetreatHero() {
 
                     <div>
                       <p className="font-neco font-bold text-[18px] text-white">
-                        12,249/-
+                        {upcomingRetreat.price}
                       </p>
                       <p className="font-neco font-normal text-[18px] text-white">
-                        Includes stay, 5 meals, and 4 high teas
+                        {upcomingRetreat.inclusions}
                       </p>
                     </div>
                     <div className="border border-white">
