@@ -75,11 +75,15 @@ const BlogDetailPage = () => {
       const allBlogsData = await allBlogsResponse.json()
 
       if (allBlogsData.success) {
-        const sameAuthorBlogs = allBlogsData.data.filter(
-          (b: Blog) => b.slug !== slug && b.author === data.data.author
+        // Filter blogs by matching categories (excluding current blog)
+        const relatedByCategory = allBlogsData.data.filter(
+          (b: Blog) => 
+            b.slug !== slug && 
+            b.categories?.some(cat => data.data.categories?.includes(cat))
         )
 
-        setRelatedBlogs(sameAuthorBlogs)
+        // Take only the first 3 related blogs
+        setRelatedBlogs(relatedByCategory.slice(0, 3))
       }
 
       setLoading(false)
@@ -655,16 +659,18 @@ const BlogDetailPage = () => {
                   </div>
 
                   {relatedBlogs.length > 0 && (
-                    <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10  m-4 sm:my-4 lg:m-8">
+                    <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10 m-4 sm:my-4 lg:m-8">
                       <h2
-                        className={`${merri.className} text-center text-white text-2xl  font-bold p-4 mb-12 uppercase`}
+                        className={`${merri.className} text-center text-white text-2xl font-bold p-4 mb-8 md:mb-12 uppercase`}
                       >
                         Next Story
                       </h2>
 
-                      <div className="flex flex-col gap-6 px-24 pb-10">
+                      <div className="flex flex-col items-center gap-6 px-4 sm:px-8 md:px-16 lg:px-24 pb-10">
                         {relatedBlogs.map((relatedBlog) => (
-                          <BlogCard key={relatedBlog.id} blog={relatedBlog} />
+                          <div key={relatedBlog.id} className="w-full max-w-2xl">
+                            <BlogCard blog={relatedBlog} />
+                          </div>
                         ))}
                       </div>
                     </div>

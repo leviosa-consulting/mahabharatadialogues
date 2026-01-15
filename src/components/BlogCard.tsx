@@ -26,27 +26,23 @@ export default function BlogCard({ blog }: { blog: Blog }) {
   }
 
   return (
-    <div className="flex gap-4 flex-col md:flex-row md:items-center">
+    <div className="flex gap-4 flex-col md:flex-row md:items-center justify-center">
       {/* IMAGE */}
       <Link
         href={`/blogs/${blog.slug}`}
-        className="
-    w-full
-    aspect-[284/186]
-    overflow-hidden
-    md:w-[264px]
-    lg:w-[284px]
-  "
+        className="w-full md:w-[284px] flex-shrink-0"
       >
-        <img
-          src={blog.image_url}
-          alt={blog.title}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-        />
+        <div className="w-full aspect-[284/186] overflow-hidden">
+          <img
+            src={blog.image_url}
+            alt={blog.title}
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          />
+        </div>
       </Link>
 
       {/* TEXT */}
-      <div className="text-white text-center md:text-left md:max-w-[300px]">
+      <div className="text-white text-center md:text-left flex-1 md:max-w-[400px]">
         <h2
           className={`${merri.className} font-bold text-[14px] md:text-[16px]`}
         >
@@ -55,14 +51,7 @@ export default function BlogCard({ blog }: { blog: Blog }) {
 
         <Link
           href={`/blogs/${blog.slug}`}
-          className="
-            font-neco font-bold
-            text-[16px] md:text-[20px]
-            underline
-            hover:text-gray-300
-            transition
-            block mt-2
-          "
+          className="font-neco font-bold text-[16px] md:text-[20px] underline hover:text-gray-300 transition block mt-2"
         >
           {blog.title}
         </Link>
