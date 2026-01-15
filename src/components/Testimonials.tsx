@@ -572,7 +572,7 @@ const Testimonials = () => {
         )}
 
         {/* button */}
-        <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] py-30 sm:px-10 xl:px-40">
+        <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] py-12 px-4 sm:px-10 xl:px-40">
           <p
             className={`text-[#1D5C75] ${merri.className} font-bold text-[20px] md:text-[24px]`}
           >
@@ -588,7 +588,7 @@ const Testimonials = () => {
         </div>
 
         {/* Testimonials Section */}
-        <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
+        <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto py-16">
           <div
             className="bg-opacity-60 rounded-lg p-6 text-center"
             onWheel={handleWheel}

@@ -75,14 +75,14 @@ const BlogDetailPage = () => {
       const allBlogsData = await allBlogsResponse.json()
 
       if (allBlogsData.success) {
-        // Filter blogs by matching categories (excluding current blog)
+       
         const relatedByCategory = allBlogsData.data.filter(
           (b: Blog) => 
             b.slug !== slug && 
             b.categories?.some(cat => data.data.categories?.includes(cat))
         )
 
-        // Take only the first 3 related blogs
+       
         setRelatedBlogs(relatedByCategory.slice(0, 3))
       }
 
@@ -375,7 +375,7 @@ const BlogDetailPage = () => {
                           <div>
                             <div>
                               <h3
-                                className={`${merri.className} italic text-[#1D5C75] text-lg sm:text-xl md:text-2xl font-extrabold`}
+                                className={`${merri.className} italic text-[#1D5C75] text-lg sm:text-[22px] font-bold`}
                               >
                                 {blog.author}
                               </h3>
@@ -661,7 +661,7 @@ const BlogDetailPage = () => {
                   {relatedBlogs.length > 0 && (
                     <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10 m-4 sm:my-4 lg:m-8">
                       <h2
-                        className={`${merri.className} text-center text-white text-2xl font-bold p-4 mb-8 md:mb-12 uppercase`}
+                        className={`${merri.className} text-center text-white text-2xl font-bold  my-6 uppercase`}
                       >
                         Next Story
                       </h2>
