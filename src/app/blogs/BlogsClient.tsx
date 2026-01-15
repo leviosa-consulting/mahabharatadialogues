@@ -233,7 +233,7 @@ export default function BlogsClient({
     <div className="min-h-screen bg-[#1D5C75CC]">
       {/* Hero Section */}
       <header className="bg-white ">
-        <Link href="/" className="flex justify-center items-center mt-1">
+        <Link href="/" className="flex justify-center items-center mt-10">
           <img
             src="/Web_Assets-08.png"
             alt="Home"
@@ -241,7 +241,7 @@ export default function BlogsClient({
           />
         </Link>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="text-center">
             <h1 className="font-neco font-bold text-[#1D5C75] text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
               Mahabharata Dialogues

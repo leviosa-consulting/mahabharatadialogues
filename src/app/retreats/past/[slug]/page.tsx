@@ -286,18 +286,18 @@ const PastRetreatPage: React.FC = () => {
           {/* Web Asset */}
           <Link
             href="/"
-            className="flex justify-center items-center  relative z-20"
+            className="flex justify-center items-center relative z-20"
           >
             <img
               src="/Web_Assets-08.png"
               alt="Home"
-              className="w-30 h-30 md:w-50 md:h-50 -mb-16 md:-mb-24 cursor-pointer"
+              className="w-30 h-30 md:w-50 md:h-50 -mb-13 md:-mb-21 mt-3 cursor-pointer"
             />
           </Link>
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-2 xl:mx-0 2xl:mx-20">
+            <div className="md:mx-1 lg:mx-4 xl:mx-30 2xl:mx-40">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video relative z-10">
@@ -316,9 +316,9 @@ const PastRetreatPage: React.FC = () => {
         </div>
 
         {/* Retreat Details Section */}
-        <div className="w-full -mt-[25vh] md:-mt-[20vh] pt-[20vh] pb-[5vh]">
-          <div className="sm:mx-4 xl:mx-30 bg-white p-3">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-1 overflow-hidden">
+        <div className="w-full">
+          <div className="md:mx-1 lg:mx-4 xl:mx-30 2xl:mx-40 bg-white ">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-1 overflow-hidden p-3 lg:p-0">
               <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 md:my-6">
                 <div className="text-left mt-16">
                   <p
@@ -410,7 +410,7 @@ const PastRetreatPage: React.FC = () => {
         {/* Photos Gallery */}
         {retreat.photos && retreat.photos.length > 0 && (
           <div className="w-full py-16">
-            <div className="mx-4 2xl:mx-20">
+            <div className="md:mx-1 lg:mx-4 xl:mx-30 2xl:mx-40">
               <div className="max-w-7xl mx-auto">
                 <h2
                   className={`${merri.className} text-[32px] md:text-[44px] text-[#fff] font-bold text-center mb-12`}
