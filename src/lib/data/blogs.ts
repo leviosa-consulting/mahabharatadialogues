@@ -1,5 +1,7 @@
 import { adminDB } from "@/firebase/firebaseAdmin";
 
+export const runtime = "nodejs";
+
 export interface Blog {
   id: string;
   title: string;

@@ -4,6 +4,9 @@ import Testimonials from '@/components/Testimonials'
 import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   
   return (
