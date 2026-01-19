@@ -1310,7 +1310,7 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Booking URL (Book My Show)
+                          Booking URL 
                         </label>
                         <input
                           type="url"

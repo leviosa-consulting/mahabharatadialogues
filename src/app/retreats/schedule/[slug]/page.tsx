@@ -38,6 +38,7 @@ interface Retreat {
   title: string
   description?: string
   venue?: string
+  city?: string
   youtube_video?: string
   photos?: string[]
   footerNotes?: string
@@ -321,7 +322,7 @@ const RetreatSchedulePage: React.FC = () => {
                 <span
                   className={`text-sm  md:text-base text-white/90 ${merri.className}`}
                 >
-                 {retreat.venue}
+                 {retreat.venue}, {retreat.city}
                 </span>
               </div>
             )}

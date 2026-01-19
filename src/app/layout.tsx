@@ -17,8 +17,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'Mahabharata Dailogues',
-  description: 'Mahabharata Dailogues',
+  title: 'Mahabharata Dialogues',
+  description: 'Mahabharata Dialogues',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },

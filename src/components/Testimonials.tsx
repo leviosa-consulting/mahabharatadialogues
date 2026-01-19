@@ -88,7 +88,7 @@ const Testimonials = () => {
     if (featuredCardRef.current && featuredItem) {
       const updateHeight = () => {
         const height = featuredCardRef.current?.offsetHeight || 0
-        setFeaturedCardHeight(prevHeight => {
+        setFeaturedCardHeight((prevHeight) => {
           // Only update if height actually changed (prevents infinite loop)
           if (prevHeight !== height) {
             return height
@@ -310,7 +310,7 @@ const Testimonials = () => {
               description: event.description,
               bookingUrl: event.bookingUrl,
               slug: event.slug,
-              city: event.city
+              city: event.city,
             })
           }
         })
@@ -461,7 +461,7 @@ const Testimonials = () => {
           <div
             style={
               {
-                '--card-height-mobile': `${featuredCardHeight * 1.1}px`,
+                '--card-height-mobile': `${featuredCardHeight * 1.0}px`,
                 '--card-height-md': `${featuredCardHeight * 0.8}px`,
               } as React.CSSProperties
             }
@@ -517,7 +517,7 @@ const Testimonials = () => {
                   // Recalculate height when image loads
                   if (featuredCardRef.current) {
                     const newHeight = featuredCardRef.current.offsetHeight
-                    setFeaturedCardHeight(prevHeight => {
+                    setFeaturedCardHeight((prevHeight) => {
                       // Only update if height actually changed
                       if (prevHeight !== newHeight) {
                         return newHeight
@@ -557,11 +557,16 @@ const Testimonials = () => {
         )}
 
         {upcomingItems.length > 0 && (
-          <div
-            className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-8  ${upcomingItems.length < 2 ? 'justify-center' : ''}
-    ${upcomingItems.length < 4 ? 'md:justify-center' : ''}` }
-            style={{
-              backgroundImage: `
+          <div className="text-center">
+            <h2 className="font-neco text-[32px] text-white font-bold">
+              COMING UP
+            </h2>
+
+            <div
+              className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-8  ${upcomingItems.length < 2 ? 'justify-center' : ''}
+    ${upcomingItems.length < 4 ? 'md:justify-center' : ''}`}
+              style={{
+                backgroundImage: `
         linear-gradient(
           rgba(29, 92, 117, 0.5),
           rgba(29, 92, 117, 0.5)
@@ -569,77 +574,78 @@ const Testimonials = () => {
         url('/MD-Texture_BG_Blue-01-04.png')
       `,
 
-              backgroundRepeat: 'repeat',
-              backgroundSize: '256px 256px',
-            }}
-          >
-            {upcomingItems.map((item) => (
-              <div
-                key={item.id}
-                className="snap-start shrink-0 flex flex-col gap-3
+                backgroundRepeat: 'repeat',
+                backgroundSize: '256px 256px',
+              }}
+            >
+              {upcomingItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="snap-start shrink-0 flex flex-col gap-3
     w-[85%]        
-    md:w-[30%]"
-              >
-                {/* Image */}
-                <div className="relative">
-                  <img
-                    src={item.coverImage || '/abhilash.png'}
-                    alt={item.title}
-                    className="aspect-465/285 object-cover"
-                  />
-                </div>
+    md:w-[40%] xl:w-[30%]"
+                >
+                  {/* Image */}
+                  <div className="relative">
+                    <img
+                      src={item.coverImage || '/abhilash.png'}
+                      alt={item.title}
+                      className="aspect-465/285 object-cover"
+                    />
+                  </div>
 
-                <div className="flex flex-col justify-center items-center text-center ">
-                  <h2
-                    className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
-                  >
-                    {item.title}
-                  </h2>
-                  <p
-                    className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
-                  >
-                    {getDisplayDate(item)}
-                  </p>
-                  <p
-                    className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
-                  >
-                    {`${item.venue},`}
-                  </p>
-                   <p
-                    className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
-                  >
-                    {item.city}
-                  </p>
-                </div>
+                  <div className="flex flex-col justify-center items-center text-center ">
+                    <h2
+                      className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
+                    >
+                      {item.title}
+                    </h2>
+                    <p
+                      className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
+                    >
+                      {getDisplayDate(item)}
+                    </p>
+                    <p
+                      className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                    >
+                      {`${item.venue},`}
+                    </p>
+                    <p
+                      className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                    >
+                      {item.city}
+                    </p>
+                  </div>
 
-                {/* Buttons */}
-                <div className="flex gap-2 md:justify-start mt-2">
-                  <div className="w-full md:w-full">
-                    {/* <CustomButton
+                  {/* Buttons */}
+                  <div className="flex gap-2 md:justify-start mt-2">
+                    <div className="w-full md:w-full">
+                      {/* <CustomButton
                     text="LEARN MORE"
                     bgColor="#1D5C75"
                     textColor="#FFFFFF"
                     url={getItemUrl(item)}
                   /> */}
 
-                    <CustomButton
-                      text="GET YOUR TICKETS"
-                      bgColor="#D12127"
-                      textColor="#FFFFFF"
-                      url={item.bookingUrl}
-                      isArrow
-                    />
-                  </div>
+                      <CustomButton
+                        text="GET YOUR TICKETS"
+                        bgColor="#D12127"
+                        textColor="#FFFFFF"
+                        url={item.bookingUrl}
+                        isArrow
+                      />
+                    </div>
 
-                  <div
-                    className="bg-[#78B0C7] p-[9px] md:p-4 cursor-pointer"
-                    onClick={() => handleShare(item.bookingUrl)}
-                  >
-                    <img src="/share.png" alt="share" />
+                    <div
+                      className="bg-[#78B0C7] p-[9px] md:p-4 cursor-pointer"
+                      onClick={() => handleShare(item.bookingUrl)}
+                    >
+                      <img src="/share.png" alt="share" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 

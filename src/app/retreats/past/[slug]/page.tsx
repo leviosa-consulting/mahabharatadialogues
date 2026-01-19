@@ -21,6 +21,7 @@ interface Retreat {
   title: string
   description?: string
   venue?: string
+  city?: string
   youtube_video?: string
   photos?: string[]
   day1: {
@@ -344,7 +345,7 @@ const PastRetreatPage: React.FC = () => {
                   <h4
                     className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic`}
                   >
-                    {retreat.venue || 'Fireflies, Kanakpura Road, Bengaluru'}
+                    {retreat.venue}, {retreat.city}
                   </h4>
                   {retreat.description && (
                     <p

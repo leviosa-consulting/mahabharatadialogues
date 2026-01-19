@@ -24,6 +24,7 @@ interface Event {
   eventDate: string
   slug: string
   venue: string
+  city?: string
 }
 
 const EventsPage = () => {
@@ -153,7 +154,7 @@ const EventsPage = () => {
 
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
           <MapPin size={16} />
-          <span className="line-clamp-1">{event.venue}</span>
+          <span className="line-clamp-1">{event.venue}, {event.city}</span>
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">

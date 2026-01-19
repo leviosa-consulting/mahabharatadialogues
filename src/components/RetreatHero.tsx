@@ -21,6 +21,7 @@ interface Retreat {
   title: string
   description?: string
   venue?: string
+  city?: string
   price?: string
   inclusions?: string
   youtube_video?: string
@@ -223,8 +224,7 @@ export default async function RetreatHero() {
                     <h4
                       className={`${merri.className} text-[20px] text-white font-normal italic`}
                     >
-                      {upcomingRetreat.venue ||
-                        'Fireflies, Kanakpura Road, Bengaluru'}
+                      {upcomingRetreat.venue}, {upcomingRetreat.city}
                     </h4>
                     <p
                       className={`${merri.className} text-[20px] text-white font-light italic py-6 lg:pr-19`}
@@ -272,6 +272,7 @@ export default async function RetreatHero() {
           {/* PAST RETREATS */}
           {pastRetreats.length > 0 && (
             <div className="w-full pt-8 pb-30">
+              
               <div className="mx-4 sm:mx-4 xl:mx-20">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                   {pastRetreats.map((retreat, index) => (
@@ -311,8 +312,7 @@ export default async function RetreatHero() {
                         <p
                           className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
                         >
-                          {retreat.venue ||
-                            'Fireflies, Kanakpura Road, Bengaluru'}
+                          {retreat.venue},{retreat.city}
                         </p>
                       </div>
 
