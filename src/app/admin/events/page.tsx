@@ -33,6 +33,7 @@ interface Event {
   eventDate: string
   slug: string
   venue: string
+  city: string
 }
 
 const EventsAdminPage = () => {
@@ -54,6 +55,7 @@ const EventsAdminPage = () => {
     eventDate: '',
     slug: '',
     venue: '',
+    city: '',
   })
 
   useEffect(() => {
@@ -162,6 +164,7 @@ const EventsAdminPage = () => {
       eventDate: '',
       slug: '',
       venue: '',
+      city: '',
     })
     setEditingId(null)
     setShowModal(false)
@@ -184,6 +187,7 @@ const EventsAdminPage = () => {
       eventDate: event.eventDate || '',
       slug: event.slug || '',
       venue: event.venue || '',
+      city: event.city || '',
     })
     setEditingId(event.id)
     setShowModal(true)
@@ -191,8 +195,8 @@ const EventsAdminPage = () => {
 
   const handleSubmit = async () => {
     // Validation
-    if (!formData.title || !formData.description || !formData.eventDate || !formData.venue) {
-      alert('Title, description, event date, and venue are required')
+    if (!formData.title || !formData.description || !formData.eventDate || !formData.venue || !formData.city) {
+      alert('Title, description, event date, venue and city are required')
       return
     }
 
@@ -279,7 +283,8 @@ const EventsAdminPage = () => {
       formData.eventDate !== '' &&
       formData.coverImage !== '' &&
       formData.slug.trim() !== '' &&
-      formData.venue.trim() !== ''
+      formData.venue.trim() !== '' &&
+      formData.city.trim() !== ''
     )
   }
 
@@ -370,6 +375,12 @@ const EventsAdminPage = () => {
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <MapPin size={14} />
                           <span className="line-clamp-1">{event.venue}</span>
+                        </div>
+                      )}
+                      {event.city && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <MapPin size={14} />
+                          <span className="line-clamp-1">{event.city}</span>
                         </div>
                       )}
                       {event.slug && (
@@ -493,10 +504,23 @@ const EventsAdminPage = () => {
                       onChange={handleInputChange}
                       disabled={submitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      placeholder="e.g., Fireflies, Kanakpura Road, Bengaluru"
+                      placeholder="e.g., Fireflies, Kanakpura Road"
                     />
                   </div>
-
+<div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      City *
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="e.g., Bengaluru"
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Description * <span className="text-xs text-gray-500">(Press Enter for new line)</span>

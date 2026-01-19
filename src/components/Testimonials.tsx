@@ -558,9 +558,8 @@ const Testimonials = () => {
 
         {upcomingItems.length > 0 && (
           <div
-            className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-8 ${
-              upcomingItems.length < 4 ? 'md:justify-center' : ''
-            }`}
+            className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-8  ${upcomingItems.length < 2 ? 'justify-center' : ''}
+    ${upcomingItems.length < 4 ? 'md:justify-center' : ''}` }
             style={{
               backgroundImage: `
         linear-gradient(
@@ -577,7 +576,7 @@ const Testimonials = () => {
             {upcomingItems.map((item) => (
               <div
                 key={item.id}
-                className=" snap-start shrink-0 flex flex-col gap-3
+                className="snap-start shrink-0 flex flex-col gap-3
     w-[85%]        
     md:w-[30%]"
               >
@@ -614,8 +613,8 @@ const Testimonials = () => {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex md:justify-start mt-2">
-                  <div className="w-[90%] md:w-full">
+                <div className="flex gap-2 md:justify-start mt-2">
+                  <div className="w-full md:w-full">
                     {/* <CustomButton
                     text="LEARN MORE"
                     bgColor="#1D5C75"

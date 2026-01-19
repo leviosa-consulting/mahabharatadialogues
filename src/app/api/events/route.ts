@@ -53,11 +53,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { title, description, eventDate, venue, slug } = body;
+    const { title, description, eventDate, venue, city, slug } = body;
 
-    if (!title || !description || !eventDate || !venue) {
+    if (!title || !description || !eventDate || !venue || !city) {
       return NextResponse.json(
-        { success: false, error: "Title, description, event date, and venue are required" },
+        { success: false, error: "Title, description, event date, venue and city are required" },
         { status: 400 }
       );
     }
@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
       eventDate,
       slug: uniqueSlug,
       venue,
+      city,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
