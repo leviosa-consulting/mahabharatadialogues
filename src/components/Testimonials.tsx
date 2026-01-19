@@ -558,7 +558,7 @@ const Testimonials = () => {
 
         {upcomingItems.length > 0 && (
           <div className="text-center">
-            <h2 className="font-neco text-[32px] text-white font-bold">
+            <h2 className="font-neco text-[32px] text-white font-bold mb-12">
               COMING UP
             </h2>
 
