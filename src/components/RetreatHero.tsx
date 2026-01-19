@@ -125,6 +125,27 @@ export default async function RetreatHero() {
     return `${retreat.day1.date} - ${endDate}`
   }
 
+  const getYoutubeEmbedUrl = (url: string): string | null => {
+    try {
+      const urlObj = new URL(url)
+      let videoId = ''
+
+      if (urlObj.hostname.includes('youtube.com')) {
+        videoId = urlObj.searchParams.get('v') || ''
+      } else if (urlObj.hostname.includes('youtu.be')) {
+        videoId = urlObj.pathname.slice(1)
+      }
+
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : null
+    } catch {
+      return null
+    }
+  }
+
+  const youtubeEmbedUrl = upcomingRetreat.youtube_video
+    ? getYoutubeEmbedUrl(upcomingRetreat.youtube_video)
+    : null
+
   return (
     <div>
       <div
@@ -154,21 +175,23 @@ export default async function RetreatHero() {
           </Link>
 
           {/* Video */}
-          <div className="mx-2 xl:mx-0 2xl:mx-20">
-            <div className="grid grid-cols-12 gap-3">
-              <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
-                <div className="w-full aspect-video relative z-10">
-                  <iframe
-                    src="https://www.youtube.com/embed/tw7d2hMHyRY"
-                    title="Join us for a 2-day Mahabharata Retreat"
-                    className="w-full h-full shadow-xl"
-                    frameBorder="0"
-                    allowFullScreen
-                  />
+          {youtubeEmbedUrl && (
+            <div className="mx-2 xl:mx-0 2xl:mx-20">
+              <div className="grid grid-cols-12 gap-3">
+                <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
+                  <div className="w-full aspect-video relative z-10">
+                    <iframe
+                      src={youtubeEmbedUrl}
+                      title="Join us for a 2-day Mahabharata Retreat"
+                      className="w-full h-full shadow-xl"
+                      frameBorder="0"
+                      allowFullScreen
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {upcomingRetreat && (
@@ -180,9 +203,11 @@ export default async function RetreatHero() {
                     <p
                       className={`${merri.className} text-[20px] text-[#78B0C7] font-bold`}
                     >
-                      UPCOMING RETREATS
+                      UPCOMING RETREAT
                     </p>
-                    <h2 className={`font-neco text-[28px] text-white font-bold`}>
+                    <h2
+                      className={`font-neco text-[28px] text-white font-bold`}
+                    >
                       Mahabharata Dialogues
                     </h2>
                     <h1

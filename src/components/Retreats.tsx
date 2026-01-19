@@ -42,7 +42,7 @@ export default async function Retreats() {
                 Our Retreats
               </h2>
 
-              <p className={`${merri.className} italic font-light text-[18px] lg:text-[24px] text-white`}>
+              <p className={`${merri.className} italic font-light text-[16px] md:text-[18px] text-white`}>
                We come together to listen, question, play, and reflect using the Mahabharata as our guide. Each retreat is a shared journey of stories, insights, and warm connections.
               </p>
 

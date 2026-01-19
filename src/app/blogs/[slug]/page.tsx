@@ -661,7 +661,7 @@ const BlogDetailPage = () => {
                   {relatedBlogs.length > 0 && (
                     <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10 m-4 sm:my-4 lg:m-8">
                       <h2
-                        className={`${merri.className} text-center text-white text-2xl font-bold  my-6 uppercase`}
+                        className={`${merri.className} text-center text-white text-[20px] font-bold  my-6 uppercase`}
                       >
                         Next Story
                       </h2>

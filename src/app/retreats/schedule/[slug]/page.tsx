@@ -1,7 +1,3 @@
-// app/retreats/schedule/[slug]/page.tsx
-// This is the renamed version of app/retreats/[slug]/page.tsx
-// Just move the existing file from app/retreats/[slug]/page.tsx to app/retreats/schedule/[slug]/page.tsx
-
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -15,6 +11,7 @@ import {
   X,
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
+import Link from 'next/link'
 
 interface ScheduleItem {
   title: string
@@ -280,17 +277,19 @@ const RetreatSchedulePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Back Button */}
-      <div className="bg-gray-100 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <button
-            onClick={() => router.push('/retreats')}
-            className="inline-flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors"
+     <div>
+       {/* Web Asset */}
+          <Link
+            href="/"
+            className="flex justify-center items-center relative z-20"
           >
-            <ArrowLeft size={20} />
-            <span className="font-medium">Back to All Retreats</span>
-          </button>
-        </div>
-      </div>
+            <img
+              src="/Web_Assets-08.png"
+              alt="Home"
+              className="w-30 h-30 md:w-50 md:h-50 -mb-13 md:-mb-21 mt-3 cursor-pointer"
+            />
+          </Link>
+     </div>
 
       {/* Header */}
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">

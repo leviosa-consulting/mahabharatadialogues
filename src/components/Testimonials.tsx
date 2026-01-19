@@ -26,6 +26,7 @@ interface Event {
   bookingUrl?: string
   slug?: string
   endDate?: string
+  city?: string
 }
 
 interface RetreatData {
@@ -34,6 +35,7 @@ interface RetreatData {
   description: string
   photos?: string[]
   venue?: string
+  city?: string
   day1: {
     date: string
     dayName: string
@@ -58,6 +60,7 @@ interface EventData {
   eventDate: string
   eventTime?: string
   venue: string
+  city?: string
   description?: string
   bookingUrl?: string
   slug?: string
@@ -69,14 +72,46 @@ const Testimonials = () => {
   const [featuredItem, setFeaturedItem] = useState<Event | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
+  const featuredCardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetchTestimonials()
     fetchUpcomingItems()
   }, [])
+
+  useEffect(() => {
+    // Calculate featured card height after it renders
+    if (featuredCardRef.current && featuredItem) {
+      const updateHeight = () => {
+        const height = featuredCardRef.current?.offsetHeight || 0
+        setFeaturedCardHeight(prevHeight => {
+          // Only update if height actually changed (prevents infinite loop)
+          if (prevHeight !== height) {
+            return height
+          }
+          return prevHeight
+        })
+      }
+
+      // Update height after images load
+      updateHeight()
+
+      // Also update on window resize
+      window.addEventListener('resize', updateHeight)
+
+      // Use setTimeout to ensure images are loaded
+      const timeoutId = setTimeout(updateHeight, 100)
+
+      return () => {
+        window.removeEventListener('resize', updateHeight)
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [featuredItem])
 
   const fetchTestimonials = async () => {
     try {
@@ -219,7 +254,7 @@ const Testimonials = () => {
       const today = new Date()
       today.setHours(0, 0, 0, 0)
       const thirtyDaysLater = new Date(today)
-      thirtyDaysLater.setDate(today.getDate() + 30)
+      thirtyDaysLater.setDate(today.getDate() + 300)
 
       const retreatsResponse = await fetch('/api/retreats')
       const retreatsData = await retreatsResponse.json()
@@ -246,6 +281,7 @@ const Testimonials = () => {
               endDate: endDate,
               time: '',
               venue: retreat.venue || 'Venue TBA',
+              city: retreat.city,
               slug: retreat.slug,
               bookingUrl: retreat.bookingUrl,
             })
@@ -274,6 +310,7 @@ const Testimonials = () => {
               description: event.description,
               bookingUrl: event.bookingUrl,
               slug: event.slug,
+              city: event.city
             })
           }
         })
@@ -406,7 +443,7 @@ const Testimonials = () => {
     <div className="w-full pb-30">
       {/* BACKGROUND SECTION */}
       <div
-        className="w-full pt-[30%] md:pt-[25%]"
+        className="w-full relative"
         style={{
           backgroundImage: `
         linear-gradient(
@@ -419,28 +456,56 @@ const Testimonials = () => {
           backgroundPosition: 'center',
         }}
       >
+        {/* Dynamic spacer based on featured card height */}
+        {featuredItem && featuredCardHeight > 0 && (
+          <div
+            style={
+              {
+                '--card-height-mobile': `${featuredCardHeight * 1.1}px`,
+                '--card-height-md': `${featuredCardHeight * 0.8}px`,
+              } as React.CSSProperties
+            }
+            className="h-[var(--card-height-mobile)] md:h-[var(--card-height-md)]"
+          ></div>
+        )}
+
         {featuredItem && (
-          <div className="flex relative flex-col max-w-84 sm:max-w-[520px] mx-auto justify-center items-center bg-[#1D5C75CC] -mt-[20%]">
+          <div
+            ref={featuredCardRef}
+            className="
+    absolute top-0 left-1/2 -translate-x-1/2
+    flex flex-col max-w-84 w-[calc(100%-2rem)] sm:max-w-100 sm:mx-0 lg:max-w-[520px]
+    justify-center items-center
+    -mt-[20%] sm:-mt-[30%] lg:-mt-[20%]
+    bg-[#1D5C75CC]
+    z-10
+  "
+          >
             <p
-              className={`${merri.className} text-[#78B0C7] font-bold text-[20px] pt-6`}
+              className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] pt-6`}
             >
               COMING UP NEXT
             </p>
             <h2
-              className={`${merri.className} text-white font-extrabold text-[20px] md:text-[28px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
+              className={`${merri.className} text-white font-extrabold text-[32px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
             >
               {featuredItem.title}
             </h2>
             <div className="flex flex-col justify-center items-center my-2">
               <h3
-                className={`${merri.className} text-white font-bold text-[20px] text-center`}
+                className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] text-center pb-3`}
               >
                 {getDisplayDate(featuredItem)}
               </h3>
               <h4
-                className={`${merri.className} text-white font-normal text-center px-2 md:text-[18px]`}
+                className={`${merri.className} text-white font-normal text-center px-2 text-[16px] md:text-[18px]`}
               >
-                {featuredItem.venue}
+                {`${featuredItem.venue},`}
+              </h4>
+              <h4
+                className={`${merri.className} text-white font-normal text-center px-2 text-[16px] md:text-[18px] pb-4`}
+              >
+                {featuredItem.city}
               </h4>
             </div>
             <div className="">
@@ -448,18 +513,31 @@ const Testimonials = () => {
                 src={featuredItem.coverImage || '/abhilash.png'}
                 alt={featuredItem.title}
                 className="w-full h-full object-cover"
+                onLoad={() => {
+                  // Recalculate height when image loads
+                  if (featuredCardRef.current) {
+                    const newHeight = featuredCardRef.current.offsetHeight
+                    setFeaturedCardHeight(prevHeight => {
+                      // Only update if height actually changed
+                      if (prevHeight !== newHeight) {
+                        return newHeight
+                      }
+                      return prevHeight
+                    })
+                  }
+                }}
               />
             </div>
 
             {featuredItem.description && (
               <p
-                className={`${merri.className} text-white font-light text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
+                className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
               >
                 {renderTextWithLineBreaks(featuredItem.description)}
               </p>
             )}
-            <div className="flex justify-center items-center gap-2 pb-8 ">
-              <div>
+            <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
+              <div className="sm:w-[280px]">
                 <CustomButton
                   text="GET YOUR TICKETS"
                   bgColor="#D12127"
@@ -469,7 +547,7 @@ const Testimonials = () => {
                 />
               </div>
               <div
-                className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
+                className="bg-[#78B0C7] p-[9px] md:p-[13px] cursor-pointer"
                 onClick={() => handleShare(featuredItem.bookingUrl)}
               >
                 <img src="/share.png" alt="share" />
@@ -480,7 +558,7 @@ const Testimonials = () => {
 
         {upcomingItems.length > 0 && (
           <div
-            className={`flex gap-6 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory my-20 px-4 ${
+            className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-8 ${
               upcomingItems.length < 4 ? 'md:justify-center' : ''
             }`}
             style={{
@@ -500,9 +578,8 @@ const Testimonials = () => {
               <div
                 key={item.id}
                 className=" snap-start shrink-0 flex flex-col gap-3
-    w-[95%]        
-    md:w-[40%]    
-    xl:w-[30%] "
+    w-[85%]        
+    md:w-[30%]"
               >
                 {/* Image */}
                 <div className="relative">
@@ -513,26 +590,31 @@ const Testimonials = () => {
                   />
                 </div>
 
-                <div className="flex flex-col justify-center items-center text-center gap-2">
+                <div className="flex flex-col justify-center items-center text-center ">
                   <h2
                     className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
                   >
                     {item.title}
                   </h2>
                   <p
-                    className={`${merri.className} text-white font-bold text-[16px] md:text-[18px]`}
+                    className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
                   >
                     {getDisplayDate(item)}
                   </p>
                   <p
                     className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
                   >
-                    {item.venue}
+                    {`${item.venue},`}
+                  </p>
+                   <p
+                    className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                  >
+                    {item.city}
                   </p>
                 </div>
 
                 {/* Buttons */}
-                <div className="flex gap-2 md:justify-start mt-2">
+                <div className="flex md:justify-start mt-2">
                   <div className="w-[90%] md:w-full">
                     {/* <CustomButton
                     text="LEARN MORE"
@@ -551,7 +633,7 @@ const Testimonials = () => {
                   </div>
 
                   <div
-                    className="bg-[#78B0C7] p-[9px] md:p-[17px] cursor-pointer"
+                    className="bg-[#78B0C7] p-[9px] md:p-4 cursor-pointer"
                     onClick={() => handleShare(item.bookingUrl)}
                   >
                     <img src="/share.png" alt="share" />
@@ -562,63 +644,71 @@ const Testimonials = () => {
           </div>
         )}
 
-        {/* No Upcoming Events */}
-        {!featuredItem && upcomingItems.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <p className={`${merri.className} text-white text-2xl text-center`}>
-              No upcoming events in the next 30 days
-            </p>
-          </div>
-        )}
+        <div
+          className={`relative ${
+            featuredItem ? 'mt-[20%] md:mt-[10%]' : 'mt-0'
+          }`}
+        >
+          {/* No Upcoming Events */}
+          {!featuredItem && upcomingItems.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20">
+              <p
+                className={`${merri.className} text-white text-2xl text-center`}
+              >
+                No upcoming events in the next 30 days
+              </p>
+            </div>
+          )}
 
-        {/* button */}
-        <div className="flex flex-col md:flex-row justify-center gap-6 italic items-center text-center md:text-left bg-[#D9D9D9] py-12 px-4 sm:px-10 xl:px-40">
-          <p
-            className={`text-[#1D5C75] ${merri.className} font-bold text-[20px] md:text-[24px]`}
-          >
-            Dialogues, Retreats, and Evenings with Mahabharata, celebrating art,
-            music, dance, and stories.
-          </p>
-          <CustomButton
-            text="EXPLORE OUR EVENTS HERE"
-            bgColor="#1D5C75"
-            textColor="#FFFFFF"
-            url={'/events'}
-          />
-        </div>
-
-        {/* Testimonials Section */}
-        <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto py-16">
-          <div
-            className="bg-opacity-60 rounded-lg p-6 text-center"
-            onWheel={handleWheel}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
-              {testimonials[currentIndex]?.quote}
-            </p>
+          {/* button */}
+          <div className="flex flex-col md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-12 px-4 sm:px-10 xl:px-40">
             <p
-              className={`text-white ${merri.className} mt-4 font-bold text-[16px] md:text-[18px]`}
+              className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
             >
-              <span className="uppercase">
-                {testimonials[currentIndex]?.name},{' '}
-              </span>
-              {testimonials[currentIndex]?.designation}
+              Dialogues, Retreats, and Evenings with Mahabharata, celebrating
+              art, music, dance, and stories.
             </p>
+            <CustomButton
+              text="EXPLORE MORE EVENTS"
+              bgColor="#1D5C75"
+              textColor="#FFFFFF"
+              url={'/events'}
+            />
+          </div>
 
-            {/* Navigation Dots */}
-            <div className="flex justify-center gap-3.5 my-8">
-              {testimonials.map((_, index) => (
-                <div
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
-                    index === currentIndex ? 'bg-white' : 'bg-gray-400'
-                  }`}
-                ></div>
-              ))}
+          {/* Testimonials Section */}
+          <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto py-16">
+            <div
+              className="bg-opacity-60 rounded-lg p-6 text-center"
+              onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
+                {testimonials[currentIndex]?.quote}
+              </p>
+              <p
+                className={`text-white ${merri.className} mt-4 font-bold text-[14px] md:text-[16px]`}
+              >
+                <span className="uppercase">
+                  {testimonials[currentIndex]?.name},{' '}
+                </span>
+                {testimonials[currentIndex]?.designation}
+              </p>
+
+              {/* Navigation Dots */}
+              <div className="flex justify-center gap-3.5 mt-8">
+                {testimonials.map((_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
+                      index === currentIndex ? 'bg-white' : 'bg-gray-400'
+                    }`}
+                  ></div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

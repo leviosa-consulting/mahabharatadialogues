@@ -28,10 +28,10 @@ const CustomButton = ({
         ${merri.className}
         inline-flex items-center justify-center text-center
         font-bold cursor-pointer
-        w-full max-w-[450px]
+        w-full max-w-[350px]
         px-6 sm:px-0 lg:px-12
         py-4 sm:py-5
-        text-[16px] lg:text-[18px]
+        text-[14px] lg:text-[16px]
         leading-tight
        wrap-break-word
       `}
@@ -41,7 +41,7 @@ const CustomButton = ({
         <img
           src="/Arrow_up-right.png"
           alt="Arrow_up"
-          className=" w-6 h-6 md:w-8 md:h-8"
+          className=" w-6 h-6 ml-2"
         />
       )}
     </a>
