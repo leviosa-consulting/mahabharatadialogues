@@ -1,15 +1,6 @@
 import { merri } from "@/app/fonts/merri";
 import Link from "next/link";
-
-interface Blog {
-  id: string;
-  title: string;
-  slug: string;
-  created_at?: string;
-  updated_at: string;
-}
-
-/* ------------------ Utils ------------------ */
+import { getBlogs } from "@/lib/data/blogs";
 
 const formatDate = (date?: string) => {
   if (!date) return "";
@@ -22,47 +13,12 @@ const formatDate = (date?: string) => {
   });
 };
 
-/* ------------------ Data ------------------ */
-
-async function fetchBlogs(): Promise<Blog[]> {
-  let baseUrl = "";
-
-  if (process.env.NEXT_PUBLIC_BASE_URL) {
-    baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  } else if (process.env.VERCEL_URL) {
-    baseUrl = `https://${process.env.VERCEL_URL}`;
-  } else if (process.env.REPLIT_DEV_DOMAIN) {
-    baseUrl = `https://${process.env.REPLIT_DEV_DOMAIN}`;
-  } else if (process.env.NODE_ENV === "development") {
-    baseUrl = "http://localhost:3000";
-  } else {
-    baseUrl = "https://mahabharatadialogues.com";
-  }
-
-  try {
-    const res = await fetch(`${baseUrl}/api/blogs`, {
-      cache: "no-store",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!res.ok) return [];
-
-    const data = await res.json();
-    return data.data || data.blogs || [];
-  } catch (error) {
-    console.error("❌ Error fetching blogs:", error);
-    return [];
-  }
-}
-
-/* ------------------ Component ------------------ */
-
 export default async function LatestBlogs({
-  count = 4, 
+  count = 4,
 }: {
   count?: number;
 }) {
-  const blogs = await fetchBlogs();
+  const blogs = await getBlogs();
 
   const latestBlogs = blogs
     .filter((b) => b.updated_at)
@@ -71,7 +27,7 @@ export default async function LatestBlogs({
         new Date(b.updated_at).getTime() -
         new Date(a.updated_at).getTime()
     )
-    .slice(0, count); 
+    .slice(0, count);
 
   if (latestBlogs.length === 0) {
     return (
@@ -96,12 +52,10 @@ export default async function LatestBlogs({
             mx-auto md:mx-0
           "
         >
-          {/* DATE */}
           <h2 className={`${merri.className} font-bold text-[14px] md:text-[16px]`}>
             {formatDate(blog.updated_at)}
           </h2>
 
-          {/* TITLE */}
           <Link
             href={`/blogs/${blog.slug}`}
             className="

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BlogsClient from "./BlogsClient";
+import { getBlogs } from "@/lib/data/blogs";
 
 export const metadata: Metadata = {
   title: "Blogs | Mahabharata Dialogues",
@@ -24,71 +25,11 @@ export const metadata: Metadata = {
   },
 };
 
-async function fetchBlogs() {
-  try {
-   
-    let baseUrl = "";
-    
-   
-    if (process.env.NEXT_PUBLIC_BASE_URL) {
-      baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    }
-   
-    else if (process.env.VERCEL_URL) {
-      baseUrl = `https://${process.env.VERCEL_URL}`;
-    }
-    
-    else if (process.env.NODE_ENV === "development") {
-      baseUrl = "http://localhost:3000";
-    }
-    
-    else {
-      baseUrl = "https://mahabharatadialogues.com";
-    }
-
-    console.log("🔍 Fetching blogs from:", `${baseUrl}/api/blogs`);
-    console.log("Environment:", process.env.NODE_ENV);
-
-    const res = await fetch(`${baseUrl}/api/blogs`, {
-      cache: 'no-store', 
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log("📡 Response status:", res.status);
-
-    if (!res.ok) {
-      console.error(`❌ Failed to fetch blogs: ${res.status} ${res.statusText}`);
-      return [];
-    }
-
-    const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error("❌ API did not return JSON:", contentType);
-      const text = await res.text();
-      console.error("Response preview:", text.substring(0, 300));
-      return [];
-    }
-
-    const data = await res.json();
-    // console.log("✅ Blogs fetched successfully:", data?.data?.length || 0);
-    
-    return data.data || data.blogs || [];
-  } catch (error) {
-    console.error("❌ Error fetching blogs:", error);
-    return [];
-  }
-}
-
 export default async function BlogsPage() {
-  const blogs = await fetchBlogs();
-  
-  console.log("📊 Rendering BlogsPage with", blogs.length, "blogs");
+  const blogs = await getBlogs();
   
   return <BlogsClient initialBlogs={blogs} />;
 }
 
-
 export const dynamic = 'force-dynamic';
-export const revalidate = 60; 
+export const runtime = 'nodejs';
