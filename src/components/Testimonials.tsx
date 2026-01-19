@@ -251,10 +251,9 @@ const Testimonials = () => {
   const fetchUpcomingItems = async () => {
     try {
       setLoading(true)
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      const thirtyDaysLater = new Date(today)
-      thirtyDaysLater.setDate(today.getDate() + 300)
+      const now = new Date() // Current date and time
+      const thirtyDaysLater = new Date(now)
+      thirtyDaysLater.setDate(now.getDate() + 300)
 
       const retreatsResponse = await fetch('/api/retreats')
       const retreatsData = await retreatsResponse.json()
@@ -267,7 +266,10 @@ const Testimonials = () => {
       if (retreatsData.success && retreatsData.data) {
         retreatsData.data.forEach((retreat: RetreatData) => {
           const retreatDate = parseDate(retreat.day1.date)
-          if (retreatDate >= today && retreatDate <= thirtyDaysLater) {
+          // For retreats, set time to end of day (23:59:59) so they show all day
+          retreatDate.setHours(23, 59, 59, 999)
+          
+          if (retreatDate >= now && retreatDate <= thirtyDaysLater) {
             const endDate =
               retreat.day3?.date || retreat.day2?.date || retreat.day1.date
 
@@ -276,7 +278,7 @@ const Testimonials = () => {
               type: 'retreat',
               title: retreat.title,
               description: retreat.description,
-              coverImage: retreat.coverImage || '/abhilash.png',
+              coverImage: retreat.coverImage || '/assets/videoImg.png',
               date: retreat.day1.date,
               endDate: endDate,
               time: '',
@@ -291,19 +293,15 @@ const Testimonials = () => {
 
       if (eventsData.success && eventsData.data) {
         eventsData.data.forEach((event: EventData) => {
-          const eventDate = new Date(event.eventDate)
-          const eventDateOnly = new Date(
-            eventDate.getFullYear(),
-            eventDate.getMonth(),
-            eventDate.getDate()
-          )
-
-          if (eventDateOnly >= today && eventDateOnly <= thirtyDaysLater) {
+          const eventDateTime = new Date(event.eventDate)
+          
+          // Only show event if it hasn't started yet (event start time is in the future)
+          if (eventDateTime >= now && eventDateTime <= thirtyDaysLater) {
             allItems.push({
               id: event.id,
               type: 'event',
               title: event.title,
-              coverImage: event.coverImage || '/abhilash.png',
+              coverImage: event.coverImage || '/assets/videoImg.png',
               date: event.eventDate,
               time: event.eventTime || '',
               venue: event.venue || 'Venue TBA',
@@ -510,7 +508,7 @@ const Testimonials = () => {
             </div>
             <div className="">
               <img
-                src={featuredItem.coverImage || '/abhilash.png'}
+                src={featuredItem.coverImage || '/assets/videoImg.png'}
                 alt={featuredItem.title}
                 className="w-full h-full object-cover"
                 onLoad={() => {
@@ -539,15 +537,15 @@ const Testimonials = () => {
             <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
               <div className="sm:w-[280px]">
                 <CustomButton
-                  text="GET YOUR TICKETS"
+                  text={featuredItem.type === 'retreat' ? 'LEARN MORE' : 'GET YOUR TICKETS'}
                   bgColor="#D12127"
                   textColor="#FFFFFF"
-                  url={featuredItem.bookingUrl}
+                  url={featuredItem.type === 'retreat' ? '/retreats' : featuredItem.bookingUrl}
                   isArrow
                 />
               </div>
               <div
-                className="bg-[#78B0C7] p-[9px] md:p-[13px] cursor-pointer"
+                className="bg-[#78B0C7] p-[9px]  cursor-pointer"
                 onClick={() => handleShare(featuredItem.bookingUrl)}
               >
                 <img src="/share.png" alt="share" />
@@ -618,26 +616,19 @@ const Testimonials = () => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-2 md:justify-start mt-2">
+                  <div className="flex gap-12 md:justify-start mt-2">
                     <div className="w-full md:w-full">
-                      {/* <CustomButton
-                    text="LEARN MORE"
-                    bgColor="#1D5C75"
-                    textColor="#FFFFFF"
-                    url={getItemUrl(item)}
-                  /> */}
-
                       <CustomButton
-                        text="GET YOUR TICKETS"
+                        text={item.type === 'retreat' ? 'LEARN MORE' : 'GET YOUR TICKETS'}
                         bgColor="#D12127"
                         textColor="#FFFFFF"
-                        url={item.bookingUrl}
+                        url={item.type === 'retreat' ? '/retreats' : item.bookingUrl}
                         isArrow
                       />
                     </div>
 
                     <div
-                      className="bg-[#78B0C7] p-[9px] md:p-4 cursor-pointer"
+                      className="bg-[#78B0C7] px-3 py-[9px] flex justify-center items-center cursor-pointer"
                       onClick={() => handleShare(item.bookingUrl)}
                     >
                       <img src="/share.png" alt="share" />

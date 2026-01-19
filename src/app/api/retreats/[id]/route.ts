@@ -16,6 +16,7 @@ export async function PUT(
       title, 
       description, 
       venue, 
+      city,
       coverImage,
       youtube_video, 
       photos, 
@@ -64,6 +65,7 @@ export async function PUT(
     // Only add optional fields if they have values
     if (description) updateData.description = description;
     if (venue) updateData.venue = venue;
+    if (city) updateData.city = city;
     if(price) updateData.price = price;
     if(inclusions) updateData.inclusions = inclusions;
     if (coverImage) updateData.coverImage = coverImage;

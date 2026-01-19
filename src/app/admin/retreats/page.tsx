@@ -47,6 +47,7 @@ interface Retreat {
   slug?: string
   description?: string
   venue?: string
+  city?: string
   coverImage: string
   bookingUrl?: string
   youtube_video?: string
@@ -78,6 +79,7 @@ const RetreatsAdminPage = () => {
     title: '',
     description: '',
     venue: '',
+    city: '',
     coverImage: '',
     bookingUrl: '',
     youtube_video: '',
@@ -157,6 +159,7 @@ const RetreatsAdminPage = () => {
       title: '',
       description: '',
       venue: '',
+      city: '',
       coverImage: '',
       bookingUrl: '',
       price: '',
@@ -191,6 +194,7 @@ const RetreatsAdminPage = () => {
       title: retreat.title,
       description: retreat.description || '',
       venue: retreat.venue || '',
+      city: retreat.city || '',
       coverImage: retreat.coverImage || '',
       bookingUrl: retreat.bookingUrl || '',
       youtube_video: retreat.youtube_video || '',
@@ -323,6 +327,7 @@ const RetreatsAdminPage = () => {
         title: formData.title,
         description: formData.description || undefined,
         venue: formData.venue || undefined,
+        city: formData.city || undefined,
         coverImage: formData.coverImage || undefined,
         bookingUrl: formData.bookingUrl || undefined,
         youtube_video: formData.youtube_video || undefined,
@@ -363,7 +368,7 @@ const RetreatsAdminPage = () => {
       })
 
       const data = await response.json()
-        console.log(data);
+      console.log(data)
       if (!data.success) {
         throw new Error(data.error || 'Failed to save retreat')
       }
@@ -914,10 +919,15 @@ const RetreatsAdminPage = () => {
                             Event: {retreat.description}
                           </p>
                         )}
-                        {retreat.venue && (
-                          <p className="text-gray-500 text-sm">
-                            Venue: {retreat.venue}
-                          </p>
+                        {retreat.venue && retreat.city && (
+                          <div>
+                            <p className="text-gray-500 text-sm">
+                              Venue: {retreat.venue}
+                            </p>
+                            <p className="text-gray-500 text-sm">
+                              Venue: {retreat.city}
+                            </p>
+                          </div>
                         )}
                         {retreat.coverImage && (
                           <div className="mt-3">
@@ -1261,7 +1271,26 @@ const RetreatsAdminPage = () => {
                               venue: e.target.value,
                             }))
                           }
-                          placeholder="Enter venue location"
+                          placeholder="Eg: Fireflies Intercultural Centre, Kaggalipura"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.city}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              city: e.target.value,
+                            }))
+                          }
+                          placeholder="Eg: Bengaluru"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
                         />
@@ -1310,7 +1339,7 @@ const RetreatsAdminPage = () => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Booking URL 
+                          Booking URL
                         </label>
                         <input
                           type="url"
