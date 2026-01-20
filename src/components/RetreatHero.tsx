@@ -245,9 +245,12 @@ export default async function RetreatHero() {
                     </div>
 
                     <div>
-                      <p className="font-neco font-bold text-[18px] text-white">
-                        {upcomingRetreat.price}
-                      </p>
+                     <p className="font-neco font-bold text-[18px] text-white flex items-center gap-1">
+  <span>₹</span>
+  <span>{upcomingRetreat.price.toLocaleString('en-IN')}</span>
+</p>
+
+
                       <p className="font-neco font-normal text-[18px] text-white">
                         {upcomingRetreat.inclusions}
                       </p>

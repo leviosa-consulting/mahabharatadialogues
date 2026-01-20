@@ -84,12 +84,10 @@ const Testimonials = () => {
   }, [])
 
   useEffect(() => {
-    
     if (featuredCardRef.current && featuredItem) {
       const updateHeight = () => {
         const height = featuredCardRef.current?.offsetHeight || 0
         setFeaturedCardHeight((prevHeight) => {
-          
           if (prevHeight !== height) {
             return height
           }
@@ -97,13 +95,10 @@ const Testimonials = () => {
         })
       }
 
-     
       updateHeight()
 
-      
       window.addEventListener('resize', updateHeight)
 
-     
       const timeoutId = setTimeout(updateHeight, 100)
 
       return () => {
@@ -251,7 +246,7 @@ const Testimonials = () => {
   const fetchUpcomingItems = async () => {
     try {
       setLoading(true)
-      const now = new Date() 
+      const now = new Date()
       const thirtyDaysLater = new Date(now)
       thirtyDaysLater.setDate(now.getDate() + 300)
 
@@ -266,9 +261,9 @@ const Testimonials = () => {
       if (retreatsData.success && retreatsData.data) {
         retreatsData.data.forEach((retreat: RetreatData) => {
           const retreatDate = parseDate(retreat.day1.date)
-          
+
           retreatDate.setHours(23, 59, 59, 999)
-          
+
           if (retreatDate >= now && retreatDate <= thirtyDaysLater) {
             const endDate =
               retreat.day3?.date || retreat.day2?.date || retreat.day1.date
@@ -294,8 +289,7 @@ const Testimonials = () => {
       if (eventsData.success && eventsData.data) {
         eventsData.data.forEach((event: EventData) => {
           const eventDateTime = new Date(event.eventDate)
-          
-          
+
           if (eventDateTime >= now && eventDateTime <= thirtyDaysLater) {
             allItems.push({
               id: event.id,
@@ -321,7 +315,6 @@ const Testimonials = () => {
         return dateA.getTime() - dateB.getTime()
       })
 
-      
       if (allItems.length > 0) {
         setFeaturedItem(allItems[0])
         setUpcomingItems(allItems.slice(1))
@@ -422,7 +415,6 @@ const Testimonials = () => {
     }
   }
 
- 
   const renderTextWithLineBreaks = (text: string) => {
     return text.split('\n').map((line, index, array) => (
       <React.Fragment key={index}>
@@ -451,21 +443,24 @@ const Testimonials = () => {
         url('/MD-Texture_BG_Blue-01-04.png')
         
       `,
-         backgroundRepeat: 'repeat',
-        backgroundSize: '256px 256px',
+          backgroundRepeat: 'repeat',
+          backgroundSize: '256px 256px',
         }}
       >
-        
         {featuredItem && featuredCardHeight > 0 && (
           <div
             style={
               {
-                '--card-height-mobile': `${featuredCardHeight * 1.0}px`,
-                '--card-height-md': `${featuredCardHeight * 1.0}px`,
+                '--card-height-mobile': `${featuredCardHeight}px`,
+                '--card-height-md': `${featuredCardHeight}px`,
                 '--card-height-xl': `${featuredCardHeight * 0.8}px`,
               } as React.CSSProperties
             }
-            className="h-[var(--card-height-mobile)] md:h-[var(--card-height-md)]"
+            className="
+      h-[var(--card-height-mobile)]
+      md:h-[var(--card-height-md)]
+      xl:h-[var(--card-height-xl)]
+    "
           ></div>
         )}
 
@@ -514,11 +509,9 @@ const Testimonials = () => {
                 alt={featuredItem.title}
                 className="w-full h-full object-cover"
                 onLoad={() => {
-                  
                   if (featuredCardRef.current) {
                     const newHeight = featuredCardRef.current.offsetHeight
                     setFeaturedCardHeight((prevHeight) => {
-                      
                       if (prevHeight !== newHeight) {
                         return newHeight
                       }
@@ -539,10 +532,18 @@ const Testimonials = () => {
             <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
               <div className="sm:w-[280px]">
                 <CustomButton
-                  text={featuredItem.type === 'retreat' ? 'LEARN MORE' : 'GET YOUR TICKETS'}
+                  text={
+                    featuredItem.type === 'retreat'
+                      ? 'LEARN MORE'
+                      : 'GET YOUR TICKETS'
+                  }
                   bgColor="#D12127"
                   textColor="#FFFFFF"
-                  url={featuredItem.type === 'retreat' ? '/retreats' : featuredItem.bookingUrl}
+                  url={
+                    featuredItem.type === 'retreat'
+                      ? '/retreats'
+                      : featuredItem.bookingUrl
+                  }
                   isArrow
                 />
               </div>
@@ -558,12 +559,12 @@ const Testimonials = () => {
 
         {upcomingItems.length > 0 && (
           <div className="text-center">
-            <h2 className="font-neco text-[32px] text-white font-bold mb-12">
+            <h2 className="font-neco text-[32px] text-[#78B0C7] font-bold mb-12">
               COMING UP
             </h2>
 
             <div
-              className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory px-4 py-8  ${upcomingItems.length < 2 ? 'justify-center' : ''}
+              className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:px-4 py-8  ${upcomingItems.length < 2 ? 'justify-center' : ''}
     ${upcomingItems.length < 4 ? 'md:justify-center' : ''}`}
               style={{
                 backgroundImage: `
@@ -600,12 +601,8 @@ const Testimonials = () => {
                     >
                       {item.title}
                     </h2>
-                    <h2
-                      className={`${merri.className} text-white font-normal px-[2px] mb-4 text-[20px] md:text-[26px] italic leading-tight`}
-                    >
-                      {item.description}
-                    </h2>
-                    <p
+
+                     <p
                       className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
                     >
                       {getDisplayDate(item)}
@@ -620,27 +617,70 @@ const Testimonials = () => {
                     >
                       {item.city}
                     </p>
+
+
+                    <h2
+                      className={`${merri.className} text-white font-normal px-[2px] my-4 text-[16px] md:text-[18px] italic leading-tight`}
+                    >
+                      {item.description}
+                    </h2>
+                   
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-12 md:justify-start mt-2">
+                  <div className="hidden gap-2 md:justify-start mt-2">
                     <div className="w-full md:w-full">
                       <CustomButton
-                        text={item.type === 'retreat' ? 'LEARN MORE' : 'GET YOUR TICKETS'}
+                        text={
+                          item.type === 'retreat'
+                            ? 'LEARN MORE'
+                            : 'GET YOUR TICKETS'
+                        }
                         bgColor="#D12127"
                         textColor="#FFFFFF"
-                        url={item.type === 'retreat' ? '/retreats' : item.bookingUrl}
+                        url={
+                          item.type === 'retreat'
+                            ? '/retreats'
+                            : item.bookingUrl
+                        }
                         isArrow
                       />
                     </div>
 
                     <div
-                      className="bg-[#78B0C7] px-3 py-[9px] flex justify-center items-center cursor-pointer"
+                      className="bg-[#78B0C7] p-[9px] flex justify-center items-center cursor-pointer"
                       onClick={() => handleShare(item.bookingUrl)}
                     >
                       <img src="/share.png" alt="share" />
                     </div>
                   </div>
+
+
+                   <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
+              <div className="sm:w-[280px]">
+                <CustomButton
+                  text={
+                    item.type === 'retreat'
+                      ? 'LEARN MORE'
+                      : 'GET YOUR TICKETS'
+                  }
+                  bgColor="#D12127"
+                  textColor="#FFFFFF"
+                  url={
+                    item.type === 'retreat'
+                      ? '/retreats'
+                      : item.bookingUrl
+                  }
+                  isArrow
+                />
+              </div>
+              <div
+                className="bg-[#78B0C7] p-[9px]  cursor-pointer"
+                onClick={() => handleShare(item.bookingUrl)}
+              >
+                <img src="/share.png" alt="share" />
+              </div>
+            </div>
                 </div>
               ))}
             </div>
