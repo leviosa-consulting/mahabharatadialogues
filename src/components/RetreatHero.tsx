@@ -32,7 +32,6 @@ interface Retreat {
   created_at: string
 }
 
-
 const parseDate = (dateStr: string): Date => {
   const months: { [key: string]: number } = {
     Jan: 0,
@@ -74,7 +73,6 @@ async function getRetreats() {
       ...doc.data(),
     })) as Retreat[]
 
-   
     const sorted = retreats.sort((a, b) => {
       const dateA = parseDate(a.day1.date)
       const dateB = parseDate(b.day1.date)
@@ -245,11 +243,12 @@ export default async function RetreatHero() {
                     </div>
 
                     <div>
-                     <p className="font-neco font-bold text-[18px] text-white flex items-center gap-1">
-  <span>₹</span>
-  <span>{upcomingRetreat.price.toLocaleString('en-IN')}</span>
-</p>
-
+                      <p className="font-neco font-bold text-[18px] text-white flex items-center gap-1">
+                        <span>₹</span>
+                        <span>
+                          {upcomingRetreat.price.toLocaleString('en-IN')}
+                        </span>
+                      </p>
 
                       <p className="font-neco font-normal text-[18px] text-white">
                         {upcomingRetreat.inclusions}
@@ -274,7 +273,6 @@ export default async function RetreatHero() {
           {/* PAST RETREATS */}
           {pastRetreats.length > 0 && (
             <div className="w-full pt-8 pb-30">
-              
               <div className="mx-4 sm:mx-4 xl:mx-20">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                   {pastRetreats.map((retreat, index) => (

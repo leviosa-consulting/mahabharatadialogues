@@ -16,7 +16,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import Navbar from '@/components/Navbar'
+import AdminNavbar from '@/components/AdminNavbar'
 import {
   uploadImage,
   deleteFromFirebaseStorage,
@@ -842,7 +842,7 @@ const RetreatsAdminPage = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <Navbar currentTab="retreats" />
+      <AdminNavbar currentTab="retreats" />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">

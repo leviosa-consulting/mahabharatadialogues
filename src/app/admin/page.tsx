@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import db from "@/firebase/firebaseServices";
 import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <Navbar currentTab="admin" />
+      <AdminNavbar currentTab="admin" />
 
       <div className="min-h-screen bg-gray-50 p-8 flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>

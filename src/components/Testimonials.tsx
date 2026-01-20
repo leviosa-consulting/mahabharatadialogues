@@ -73,10 +73,12 @@ const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
+  const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false)
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
   const featuredCardRef = useRef<HTMLDivElement>(null)
+  const autoScrollInterval = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     fetchTestimonials()
@@ -107,6 +109,20 @@ const Testimonials = () => {
       }
     }
   }, [featuredItem])
+
+  // Auto-scroll effect
+  useEffect(() => {
+    if (testimonials.length > 0 && !isAutoScrollPaused) {
+      autoScrollInterval.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+      }, 3000) 
+      return () => {
+        if (autoScrollInterval.current) {
+          clearInterval(autoScrollInterval.current)
+        }
+      }
+    }
+  }, [testimonials.length, isAutoScrollPaused])
 
   const fetchTestimonials = async () => {
     try {
@@ -366,6 +382,10 @@ const Testimonials = () => {
         )
       }
     }
+  }
+
+  const handleTestimonialClick = () => {
+    setIsAutoScrollPaused((prev) => !prev)
   }
 
   const getItemUrl = (item: Event) => {
@@ -722,30 +742,36 @@ const Testimonials = () => {
           {/* Testimonials Section */}
           <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto py-16">
             <div
-              className="bg-opacity-60 rounded-lg p-6 text-center"
+              className="bg-opacity-60 rounded-lg p-6 text-center cursor-pointer"
               onWheel={handleWheel}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              onClick={handleTestimonialClick}
             >
-              <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
-                {testimonials[currentIndex]?.quote}
-              </p>
-              <p
-                className={`text-white ${merri.className} mt-4 font-bold text-[14px] md:text-[16px]`}
-              >
-                <span className="uppercase">
-                  {testimonials[currentIndex]?.name},{' '}
-                </span>
-                {testimonials[currentIndex]?.designation}
-              </p>
+              <div className="h-[280px] flex flex-col justify-center items-center">
+                <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7">
+                  {testimonials[currentIndex]?.quote}
+                </p>
+                <p
+                  className={`text-white ${merri.className} mt-4 font-bold text-[14px] md:text-[16px]`}
+                >
+                  <span className="uppercase">
+                    {testimonials[currentIndex]?.name},{' '}
+                  </span>
+                  {testimonials[currentIndex]?.designation}
+                </p>
+              </div>
 
               {/* Navigation Dots */}
               <div className="flex justify-center gap-3.5 mt-8">
                 {testimonials.map((_, index) => (
                   <div
                     key={index}
-                    onClick={() => setCurrentIndex(index)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCurrentIndex(index)
+                    }}
                     className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
                       index === currentIndex ? 'bg-white' : 'bg-gray-400'
                     }`}

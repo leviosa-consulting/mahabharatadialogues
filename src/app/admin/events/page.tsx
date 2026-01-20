@@ -19,7 +19,7 @@ import {
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 import { generateFullSlug } from '@/utils/slugUtils'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import Navbar from '@/components/Navbar'
+import AdminNavbar from '@/components/AdminNavbar'
 
 interface Event {
   id: string
@@ -300,7 +300,7 @@ const EventsAdminPage = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
-       <Navbar currentTab={'events'}/>
+       <AdminNavbar currentTab={'events'}/>
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
        
         <div className="max-w-7xl mx-auto">
