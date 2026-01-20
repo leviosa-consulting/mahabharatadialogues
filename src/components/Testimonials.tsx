@@ -115,7 +115,7 @@ const Testimonials = () => {
     if (testimonials.length > 0 && !isAutoScrollPaused) {
       autoScrollInterval.current = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-      }, 3000) 
+      }, 3000)
       return () => {
         if (autoScrollInterval.current) {
           clearInterval(autoScrollInterval.current)
@@ -552,20 +552,22 @@ const Testimonials = () => {
             <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
               <div className="sm:w-[280px]">
                 <CustomButton
-                  text={
-                    featuredItem.type === 'retreat'
-                      ? 'LEARN MORE'
-                      : 'GET YOUR TICKETS'
-                  }
-                  bgColor="#D12127"
-                  textColor="#FFFFFF"
-                  url={
-                    featuredItem.type === 'retreat'
-                      ? '/retreats'
-                      : featuredItem.bookingUrl
-                  }
-                  isArrow
-                />
+  text={
+    featuredItem.type === 'retreat'
+      ? 'LEARN MORE'
+      : 'GET YOUR TICKETS'
+  }
+  bgColor="#D12127"
+  textColor="#FFFFFF"
+  url={
+    featuredItem.type === 'retreat'
+      ? '/retreats'
+      : featuredItem.bookingUrl
+  }
+  isOutSideLink={featuredItem.type !== 'retreat'}
+  isArrow
+/>
+
               </div>
               <div
                 className="bg-[#78B0C7] p-[9px]  cursor-pointer"
@@ -622,7 +624,7 @@ const Testimonials = () => {
                       {item.title}
                     </h2>
 
-                     <p
+                    <p
                       className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
                     >
                       {getDisplayDate(item)}
@@ -638,13 +640,11 @@ const Testimonials = () => {
                       {item.city}
                     </p>
 
-
                     <h2
                       className={`${merri.className} text-white font-normal px-[2px] my-4 text-[16px] md:text-[18px] italic leading-tight`}
                     >
                       {item.description}
                     </h2>
-                   
                   </div>
 
                   {/* Buttons */}
@@ -675,32 +675,31 @@ const Testimonials = () => {
                     </div>
                   </div>
 
-
-                   <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
-              <div className="sm:w-[280px]">
-                <CustomButton
-                  text={
-                    item.type === 'retreat'
-                      ? 'LEARN MORE'
-                      : 'GET YOUR TICKETS'
-                  }
-                  bgColor="#D12127"
-                  textColor="#FFFFFF"
-                  url={
-                    item.type === 'retreat'
-                      ? '/retreats'
-                      : item.bookingUrl
-                  }
-                  isArrow
-                />
-              </div>
-              <div
-                className="bg-[#78B0C7] p-[9px]  cursor-pointer"
-                onClick={() => handleShare(item.bookingUrl)}
-              >
-                <img src="/share.png" alt="share" />
-              </div>
-            </div>
+                  <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
+                    <div className="sm:w-[280px]">
+                      <CustomButton
+                        text={
+                          item.type === 'retreat'
+                            ? 'LEARN MORE'
+                            : 'GET YOUR TICKETS'
+                        }
+                        bgColor="#D12127"
+                        textColor="#FFFFFF"
+                        url={
+                          item.type === 'retreat'
+                            ? '/retreats'
+                            : item.bookingUrl
+                        }
+                        isArrow
+                      />
+                    </div>
+                    <div
+                      className="bg-[#78B0C7] p-[9px]  cursor-pointer"
+                      onClick={() => handleShare(item.bookingUrl)}
+                    >
+                      <img src="/share.png" alt="share" />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

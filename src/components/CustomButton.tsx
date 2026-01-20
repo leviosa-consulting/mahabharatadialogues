@@ -7,6 +7,7 @@ interface ButtonProps {
   textColor: string
   isArrow?: boolean
   url: string
+  isOutSideLink?: boolean
 }
 
 const CustomButton = ({
@@ -15,12 +16,13 @@ const CustomButton = ({
   textColor,
   url,
   isArrow,
+  isOutSideLink
 }: ButtonProps) => {
   return (
    <a
   href={url}
-  target="_blank"
-  rel="noopener noreferrer"
+  target={isOutSideLink ? "_blank" : undefined}
+  rel={isOutSideLink ? "noopener noreferrer" : undefined}
   style={{ backgroundColor: bgColor, color: textColor }}
   className={`
     ${merri.className}

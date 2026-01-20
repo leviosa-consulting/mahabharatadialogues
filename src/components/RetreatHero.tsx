@@ -238,6 +238,7 @@ export default async function RetreatHero() {
                         text="EXPERIENCE THE RETREAT"
                         bgColor="#D12127"
                         textColor="#FFFFFF"
+                        isOutSideLink
                         url={upcomingRetreat.bookingUrl || '#'}
                       />
                     </div>
@@ -259,6 +260,7 @@ export default async function RetreatHero() {
                         text="SCHEDULE"
                         bgColor="#1D5C75"
                         textColor="#FFFFFF"
+                        
                         url={getScheduleUrl(upcomingRetreat)}
                       />
                     </div>
