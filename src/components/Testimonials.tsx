@@ -600,6 +600,11 @@ const Testimonials = () => {
                     >
                       {item.title}
                     </h2>
+                    <h2
+                      className={`${merri.className} text-white font-normal px-[2px] mb-4 text-[20px] md:text-[26px] italic leading-tight`}
+                    >
+                      {item.description}
+                    </h2>
                     <p
                       className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
                     >
