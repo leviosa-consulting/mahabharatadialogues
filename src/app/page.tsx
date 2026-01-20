@@ -11,12 +11,12 @@ export default function Home() {
   
   return (
     <div
-      className="w-full"
-      style={{
-        backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
-        backgroundRepeat: 'repeat',
-        backgroundSize: '256px 256px',
-      }}
+      className="relative w-full bg-texture"
+      // style={{
+      //   backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
+      //   backgroundRepeat: 'repeat',
+      //   backgroundSize: '256px 256px',
+      // }} 
     >
       <HeroSection />
       <Testimonials />

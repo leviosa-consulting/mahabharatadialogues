@@ -5,7 +5,7 @@ import { merri } from '@/app/fonts/merri'
 export default function HeroSection() {
   return (
     <section
-      className="relative w-full sm:h-screen overflow-hidden"
+      className="relative w-full xl:h-screen overflow-hidden"
       // style={{
       //   backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
       //   backgroundSize: 'cover',
@@ -25,7 +25,7 @@ export default function HeroSection() {
         </div>
 
         {/* mid content */}
-        <div className="flex-[1.5] flex flex-col items-center justify-center my-20 px-12 lg:-mt-40 xl:-mt-52 2xl:-mt-56">
+        <div className="flex-[1.5] flex flex-col items-center justify-center my-20 px-12  xl:-mt-52 2xl:-mt-56">
           <div className="w-[50%] h-[50%]  rounded-full">
             <img src="Web_Assets-08.png" alt="webAssets9" className="" />
           </div>

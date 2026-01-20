@@ -1,4 +1,3 @@
-// app/retreats/page.tsx
 import { merri } from '@/app/fonts/merri'
 import React from 'react'
 import CustomButton from './CustomButton'
@@ -33,7 +32,7 @@ interface Retreat {
   created_at: string
 }
 
-// Helper to parse "03 Aug 2024" format to Date
+
 const parseDate = (dateStr: string): Date => {
   const months: { [key: string]: number } = {
     Jan: 0,
@@ -75,7 +74,7 @@ async function getRetreats() {
       ...doc.data(),
     })) as Retreat[]
 
-    // Sort: upcoming first, then past
+   
     const sorted = retreats.sort((a, b) => {
       const dateA = parseDate(a.day1.date)
       const dateB = parseDate(b.day1.date)
@@ -312,7 +311,7 @@ export default async function RetreatHero() {
                         <p
                           className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
                         >
-                          {retreat.venue},{retreat.city}
+                          {retreat.venue}, {retreat.city}
                         </p>
                       </div>
 

@@ -84,12 +84,12 @@ const Testimonials = () => {
   }, [])
 
   useEffect(() => {
-    // Calculate featured card height after it renders
+    
     if (featuredCardRef.current && featuredItem) {
       const updateHeight = () => {
         const height = featuredCardRef.current?.offsetHeight || 0
         setFeaturedCardHeight((prevHeight) => {
-          // Only update if height actually changed (prevents infinite loop)
+          
           if (prevHeight !== height) {
             return height
           }
@@ -97,13 +97,13 @@ const Testimonials = () => {
         })
       }
 
-      // Update height after images load
+     
       updateHeight()
 
-      // Also update on window resize
+      
       window.addEventListener('resize', updateHeight)
 
-      // Use setTimeout to ensure images are loaded
+     
       const timeoutId = setTimeout(updateHeight, 100)
 
       return () => {
@@ -251,7 +251,7 @@ const Testimonials = () => {
   const fetchUpcomingItems = async () => {
     try {
       setLoading(true)
-      const now = new Date() // Current date and time
+      const now = new Date() 
       const thirtyDaysLater = new Date(now)
       thirtyDaysLater.setDate(now.getDate() + 300)
 
@@ -266,7 +266,7 @@ const Testimonials = () => {
       if (retreatsData.success && retreatsData.data) {
         retreatsData.data.forEach((retreat: RetreatData) => {
           const retreatDate = parseDate(retreat.day1.date)
-          // For retreats, set time to end of day (23:59:59) so they show all day
+          
           retreatDate.setHours(23, 59, 59, 999)
           
           if (retreatDate >= now && retreatDate <= thirtyDaysLater) {
@@ -295,7 +295,7 @@ const Testimonials = () => {
         eventsData.data.forEach((event: EventData) => {
           const eventDateTime = new Date(event.eventDate)
           
-          // Only show event if it hasn't started yet (event start time is in the future)
+          
           if (eventDateTime >= now && eventDateTime <= thirtyDaysLater) {
             allItems.push({
               id: event.id,
@@ -321,7 +321,7 @@ const Testimonials = () => {
         return dateA.getTime() - dateB.getTime()
       })
 
-      // Set featured item (earliest) and rest
+      
       if (allItems.length > 0) {
         setFeaturedItem(allItems[0])
         setUpcomingItems(allItems.slice(1))
@@ -422,7 +422,7 @@ const Testimonials = () => {
     }
   }
 
-  // Helper function to render text with line breaks
+ 
   const renderTextWithLineBreaks = (text: string) => {
     return text.split('\n').map((line, index, array) => (
       <React.Fragment key={index}>
@@ -448,19 +448,21 @@ const Testimonials = () => {
           rgba(29, 92, 117, 0.5),
           rgba(29, 92, 117, 0.5)
         ),
-        url('/images/bg.jpg')
+        url('/MD-Texture_BG_Blue-01-04.png')
+        
       `,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+         backgroundRepeat: 'repeat',
+        backgroundSize: '256px 256px',
         }}
       >
-        {/* Dynamic spacer based on featured card height */}
+        
         {featuredItem && featuredCardHeight > 0 && (
           <div
             style={
               {
                 '--card-height-mobile': `${featuredCardHeight * 1.0}px`,
-                '--card-height-md': `${featuredCardHeight * 0.8}px`,
+                '--card-height-md': `${featuredCardHeight * 1.0}px`,
+                '--card-height-xl': `${featuredCardHeight * 0.8}px`,
               } as React.CSSProperties
             }
             className="h-[var(--card-height-mobile)] md:h-[var(--card-height-md)]"
@@ -474,7 +476,7 @@ const Testimonials = () => {
     absolute top-0 left-1/2 -translate-x-1/2
     flex flex-col max-w-84 w-[calc(100%-2rem)] sm:max-w-100 sm:mx-0 lg:max-w-[520px]
     justify-center items-center
-    -mt-[20%] sm:-mt-[30%] lg:-mt-[20%]
+    -mt-[20%] sm:-mt-[10%] xl:-mt-[20%]
     bg-[#1D5C75CC]
     z-10
   "
@@ -512,11 +514,11 @@ const Testimonials = () => {
                 alt={featuredItem.title}
                 className="w-full h-full object-cover"
                 onLoad={() => {
-                  // Recalculate height when image loads
+                  
                   if (featuredCardRef.current) {
                     const newHeight = featuredCardRef.current.offsetHeight
                     setFeaturedCardHeight((prevHeight) => {
-                      // Only update if height actually changed
+                      
                       if (prevHeight !== newHeight) {
                         return newHeight
                       }
