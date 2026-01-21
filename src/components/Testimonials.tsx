@@ -518,23 +518,44 @@ const Testimonials = () => {
                 {getDisplayDate(featuredItem)}
               </h3>
               {featuredItem.venue && featuredItem.mapUrl && (
-                <a
-                  href={featuredItem.mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-center"
-                >
-                  <h4
-                    className={`${merri.className} text-white font-normal px-2 text-[16px] md:text-[18px]`}
+                <div className="flex justify-center pb-4">
+                  <div
+                    className="
+      flex items-start gap-2
+      md:gap-2
+      max-w-xl
+    "
                   >
-                    {featuredItem.venue},
-                  </h4>
-                  <h4
-                    className={`${merri.className} text-white font-normal px-2 text-[16px] md:text-[18px] pb-4`}
-                  >
-                    {featuredItem.city}
-                  </h4>
-                </a>
+                    {/* Clickable map icon */}
+                    <a
+                      href={featuredItem.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+          text-white hover:text-blue-300 transition-colors shrink-0
+          mt-[3px]
+          md:mt-[4px]
+        "
+                      title="Open in Google Maps"
+                    >
+                      <MapPin size={18} />
+                    </a>
+
+                    {/* Text block */}
+                    <div className="text-center md:text-center max-w-[85vw] md:max-w-none">
+                      <h4
+                        className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
+                      >
+                        {featuredItem.venue}
+                      </h4>
+                      <h4
+                        className={`${merri.className} text-white font-normal text-[15px] md:text-[18px] leading-snug`}
+                      >
+                        {featuredItem.city}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
             <div className="">
@@ -643,23 +664,32 @@ const Testimonials = () => {
                       {getDisplayDate(item)}
                     </p>
                     {item.venue && item.mapUrl && (
-                      <a
-                        href={item.mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block"
-                      >
-                        <p
-                          className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                      <div className="flex items-start gap-2">
+                        {/* Clickable map icon */}
+                        <a
+                          href={item.mapUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1 text-white hover:text-blue-300 transition-colors cursor-pointer"
+                          title="Open in Google Maps"
                         >
-                          {item.venue},
-                        </p>
-                        <p
-                          className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
-                        >
-                          {item.city}
-                        </p>
-                      </a>
+                          <MapPin size={18} />
+                        </a>
+
+                        {/* Text (not clickable) */}
+                        <div>
+                          <p
+                            className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                          >
+                            {item.venue},
+                          </p>
+                          <p
+                            className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                          >
+                            {item.city}
+                          </p>
+                        </div>
+                      </div>
                     )}
 
                     <h2

@@ -172,7 +172,7 @@ export default async function RetreatHero() {
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-2 xl:mx-0 2xl:mx-20">
+            <div className="mx-2 xl:mx-0 2xl:mx-30">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video relative z-10">
@@ -192,12 +192,12 @@ export default async function RetreatHero() {
 
         {upcomingRetreat && (
           <div className="w-full bg-[#1D5C75] -mt-[5vh] md:-mt-[20vh] pt-[10vh] md:pt-[20vh] pb-[5vh]">
-            <div className="mx-4 2xl:mx-20">
+            <div className="mx-4 2xl:mx-30">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
                   <div>
                     <p
-                      className={`${merri.className} text-[20px] text-[#78B0C7] font-bold`}
+                      className={`${merri.className} text-[20px] text-[#78B0C7] font-bold my-4`}
                     >
                       UPCOMING RETREAT
                     </p>
@@ -215,7 +215,7 @@ export default async function RetreatHero() {
                       className={`${merri.className} text-[20px] text-white italic font-bold`}
                     >
                       {getDateRange(upcomingRetreat)}
-                    </p>
+                    </p> 
                     <h4
                       className={`${merri.className} text-[20px] text-white font-normal italic`}
                     >
@@ -229,9 +229,9 @@ export default async function RetreatHero() {
                     </p>
                   </div>
                 </div>
-                <div className="w-full order-2 sm:order-0 md:col-start-8 col-span-5 lg:col-span-4">
-                  <div className="flex flex-col justify-between gap-6 lg:mt-10">
-                    <div className="w-full">
+                <div className="w-full order-2 sm:order-0 lg:col-start-9 col-span-5 lg:col-span-3">
+                  <div className="flex flex-col justify-between gap-6 md:mt-24">
+                    <div className="">
                       <CustomButton
                         text="EXPERIENCE THE RETREAT"
                         bgColor="#D12127"
@@ -272,7 +272,7 @@ export default async function RetreatHero() {
           {/* PAST RETREATS */}
           {pastRetreats.length > 0 && (
             <div className="w-full pt-8 pb-30">
-              <div className="mx-4 sm:mx-4 xl:mx-20">
+              <div className="mx-4 2xl:mx-30">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
                   {pastRetreats.map((retreat, index) => (
                     <div
@@ -349,7 +349,7 @@ export default async function RetreatHero() {
 
           {/* youtube/blogs */}
           <div>
-            <div className="mx-4 sm:mx-4 xl:mx-20 overflow-hidden bg-[#1D5C7580]">
+            <div className="mx-4 sm:mx-4 xl:mx-30 overflow-hidden bg-[#1D5C7580]">
               <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
                 {/* YOUTUBE*/}
                 <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
