@@ -1,4 +1,3 @@
-
 // app/api/retreats/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
@@ -38,6 +37,7 @@ export async function POST(req: NextRequest) {
       description, 
       venue, 
       city,
+      mapUrl,
       coverImage,
       youtube_video, 
       photos, 
@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
       ...(description && { description }),
       ...(venue && { venue }),
       ...(city && { city }),
+      ...(mapUrl && { mapUrl }),
       ...(coverImage && { coverImage }),
       ...(youtube_video && { youtube_video }),
       ...(price && {price}),

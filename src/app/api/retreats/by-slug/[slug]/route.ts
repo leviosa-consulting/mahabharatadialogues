@@ -1,4 +1,3 @@
-
 // app/api/retreats/by-slug/[slug]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";

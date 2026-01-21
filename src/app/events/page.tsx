@@ -11,6 +11,8 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import Link from 'next/link'
+import Navbar from '@/components/Navbar'
+import { merri } from '../fonts/merri'
 
 interface Event {
   id: string
@@ -136,28 +138,28 @@ const EventsPage = () => {
       </div>
 
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors h-16 overflow-hidden">
+        <h3 className={`font-neco text-xl font-bold transition-colors h-16 overflow-hidden`}>
           {event?.title?.length > 60
             ? event.title.substring(0, 60) + '...'
             : event?.title}
         </h3>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+        <div className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-3`}>
           <Calendar size={16} />
           <span>{formatDate(event.eventDate)}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+        <div className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-2`}>
           <Clock size={16} />
           <span>{formatTime(event.eventDate)}</span>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+        <div className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-4`}>
           <MapPin size={16} />
           <span className="line-clamp-1">{event.venue}, {event.city}</span>
         </div>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+        <p className={`text-gray-600 ${merri.className} text-sm mb-4 line-clamp-3`}>
           {event?.description?.length > 80
             ? event.description.substring(0, 80) + '...'
             : event?.description}
@@ -170,7 +172,7 @@ const EventsPage = () => {
               <span>{event.gallery.length} photos</span>
             </div>
           )}
-          <div className="flex items-center gap-2 text-purple-600 font-semibold group-hover:gap-3 transition-all">
+          <div className={`flex ${merri.className} items-center gap-2 text-purple-600 font-semibold group-hover:gap-3 transition-all`}>
             <span>View Details</span>
             <ArrowRight size={18} />
           </div>
@@ -184,20 +186,13 @@ const EventsPage = () => {
   return (
     <div className='min-h-screen bg-gray-50'>
       {/* Web Asset – TOP CENTER */}
-      <Link href="/" className="flex justify-center items-center z-20 mt-10">
-        <img
-          src="/Web_Assets-08.png"
-          alt="Home"
-          className="w-28 h-28 md:w-44 md:h-44 cursor-pointer"
-        />
-      </Link>
-
+     <Navbar textColor='#1D5C75'/>
       <div className="-mt-20">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-16">
+        <div className="bg-[#1D5C75] text-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Events</h1>
-            <p className="text-lg md:text-xl text-purple-100 max-w-2xl">
+            <h1 className={`font-neco text-4xl md:text-5xl font-bold mb-4`}>Events</h1>
+            <p className={`${merri.className} text-lg md:text-xl text-purple-100 max-w-2xl`}>
               {upcomingEvents.length > 0
                 ? 'Discover our upcoming events and relive the memories from past gatherings'
                 : 'Relive the memories from our past events'}
@@ -211,7 +206,7 @@ const EventsPage = () => {
             <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
               <button
                 onClick={() => setActiveTab('upcoming')}
-                className={`px-6 py-3 rounded-md font-semibold transition-all ${
+                className={`px-6 py-3 rounded-md ${merri.className} font-semibold transition-all ${
                   activeTab === 'upcoming'
                     ? 'bg-purple-600 text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-100'
@@ -226,7 +221,7 @@ const EventsPage = () => {
               </button>
               <button
                 onClick={() => setActiveTab('past')}
-                className={`px-6 py-3 rounded-md font-semibold transition-all ${
+                className={`px-6 py-3 ${merri.className} rounded-md font-semibold transition-all ${
                   activeTab === 'past'
                     ? 'bg-purple-600 text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-100'
@@ -259,7 +254,7 @@ const EventsPage = () => {
                 upcomingEvents.length > 0 && (
                   <div>
                     {!showTabs && (
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                      <h2 className={`${merri.className} text-2xl font-bold text-gray-900 mb-6`}>
                         Upcoming Events
                       </h2>
                     )}

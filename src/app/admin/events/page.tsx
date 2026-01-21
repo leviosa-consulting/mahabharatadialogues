@@ -14,7 +14,7 @@ import {
   Link as LinkIcon,
   MessageSquare,
   Youtube,
-  MapPin
+  MapPin,
 } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 import { generateFullSlug } from '@/utils/slugUtils'
@@ -34,6 +34,7 @@ interface Event {
   slug: string
   venue: string
   city: string
+  mapUrl?: string
 }
 
 const EventsAdminPage = () => {
@@ -56,6 +57,7 @@ const EventsAdminPage = () => {
     slug: '',
     venue: '',
     city: '',
+    mapUrl: '',
   })
 
   useEffect(() => {
@@ -86,12 +88,12 @@ const EventsAdminPage = () => {
     const { name, value } = e.target
     setFormData((prev) => {
       const updated = { ...prev, [name]: value }
-      
+
       // Auto-generate slug when title changes (for both new and existing events)
       if (name === 'title') {
         updated.slug = generateFullSlug(value)
       }
-      
+
       return updated
     })
   }
@@ -165,6 +167,7 @@ const EventsAdminPage = () => {
       slug: '',
       venue: '',
       city: '',
+      mapUrl: '',
     })
     setEditingId(null)
     setShowModal(false)
@@ -188,6 +191,7 @@ const EventsAdminPage = () => {
       slug: event.slug || '',
       venue: event.venue || '',
       city: event.city || '',
+      mapUrl: event.mapUrl || '',
     })
     setEditingId(event.id)
     setShowModal(true)
@@ -195,7 +199,13 @@ const EventsAdminPage = () => {
 
   const handleSubmit = async () => {
     // Validation
-    if (!formData.title || !formData.description || !formData.eventDate || !formData.venue || !formData.city) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.eventDate ||
+      !formData.venue ||
+      !formData.city
+    ) {
       alert('Title, description, event date, venue and city are required')
       return
     }
@@ -284,7 +294,8 @@ const EventsAdminPage = () => {
       formData.coverImage !== '' &&
       formData.slug.trim() !== '' &&
       formData.venue.trim() !== '' &&
-      formData.city.trim() !== ''
+      formData.city.trim() !== '' &&
+      formData.mapUrl.trim() !== ''
     )
   }
 
@@ -300,9 +311,8 @@ const EventsAdminPage = () => {
 
   return (
     <ProtectedRoute requireAdmin={true}>
-       <AdminNavbar currentTab={'events'}/>
+      <AdminNavbar currentTab={'events'} />
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-       
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -365,7 +375,7 @@ const EventsAdminPage = () => {
                     <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
                       {renderDescriptionWithLineBreaks(event.description)}
                     </p>
-                    
+
                     <div className="space-y-2 mb-3">
                       <div className="flex items-center gap-2 text-xs text-gray-500">
                         <Calendar size={14} />
@@ -383,13 +393,19 @@ const EventsAdminPage = () => {
                           <span className="line-clamp-1">{event.city}</span>
                         </div>
                       )}
+                      {event.mapUrl && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <MapPin size={14} />
+                          <span className="line-clamp-1">{event.mapUrl}</span>
+                        </div>
+                      )}
                       {event.slug && (
                         <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
                           <span className="truncate">/{event.slug}</span>
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="space-y-1 mb-4 flex-grow">
                       {event.gallery && event.gallery.length > 0 && (
                         <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -470,7 +486,10 @@ const EventsAdminPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slug * <span className="text-xs text-gray-500">(Auto-generated from title)</span>
+                      Slug *{' '}
+                      <span className="text-xs text-gray-500">
+                        (Auto-generated from title)
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -488,7 +507,8 @@ const EventsAdminPage = () => {
                     )}
                     {editingId && (
                       <p className="text-xs text-amber-600 mt-1">
-                        ⚠️ Updating the slug will change the event URL. Make sure to update any existing links.
+                        ⚠️ Updating the slug will change the event URL. Make
+                        sure to update any existing links.
                       </p>
                     )}
                   </div>
@@ -507,7 +527,7 @@ const EventsAdminPage = () => {
                       placeholder="e.g., Fireflies, Kanakpura Road"
                     />
                   </div>
-<div>
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       City *
                     </label>
@@ -521,9 +541,27 @@ const EventsAdminPage = () => {
                       placeholder="e.g., Bengaluru"
                     />
                   </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Description * <span className="text-xs text-gray-500">(Press Enter for new line)</span>
+                      Map URL *
+                    </label>
+                    <input
+                      type="text"
+                      name="mapUrl"
+                      value={formData.mapUrl}
+                      onChange={handleInputChange}
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="e.g., https://maps.app.goo.gl/4Egj4DinYnHSuWzU9"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description *{' '}
+                      <span className="text-xs text-gray-500">
+                        (Press Enter for new line)
+                      </span>
                     </label>
                     <textarea
                       name="description"
@@ -556,7 +594,12 @@ const EventsAdminPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Cover Image * {!formData.coverImage && <span className="text-red-600">(Required to create event)</span>}
+                      Cover Image *{' '}
+                      {!formData.coverImage && (
+                        <span className="text-red-600">
+                          (Required to create event)
+                        </span>
+                      )}
                     </label>
                     <div className="flex items-center gap-4">
                       <input
@@ -570,7 +613,9 @@ const EventsAdminPage = () => {
                       <label
                         htmlFor="cover-image-upload"
                         className={`flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${
-                          uploadingCover || submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                          uploadingCover || submitting
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'cursor-pointer'
                         }`}
                       >
                         <ImageIcon size={20} />
@@ -622,11 +667,15 @@ const EventsAdminPage = () => {
                       <label
                         htmlFor="gallery-upload"
                         className={`inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors ${
-                          uploadingGallery || submitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                          uploadingGallery || submitting
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'cursor-pointer'
                         }`}
                       >
                         <Upload size={20} />
-                        {uploadingGallery ? 'Uploading...' : 'Upload Gallery Images'}
+                        {uploadingGallery
+                          ? 'Uploading...'
+                          : 'Upload Gallery Images'}
                       </label>
                       {formData.gallery.length > 0 && (
                         <div className="grid grid-cols-4 gap-2">
@@ -711,7 +760,12 @@ const EventsAdminPage = () => {
                     </button>
                     <button
                       onClick={handleSubmit}
-                      disabled={!isFormValid() || uploadingCover || uploadingGallery || submitting}
+                      disabled={
+                        !isFormValid() ||
+                        uploadingCover ||
+                        uploadingGallery ||
+                        submitting
+                      }
                       className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {submitting ? (
@@ -727,11 +781,11 @@ const EventsAdminPage = () => {
                       )}
                     </button>
                   </div>
-                  
+
                   {!isFormValid() && (
                     <div className="text-sm text-red-600 text-center">
-                      {!formData.coverImage 
-                        ? '⚠️ Cover image is required to create event' 
+                      {!formData.coverImage
+                        ? '⚠️ Cover image is required to create event'
                         : '⚠️ Please fill all required fields (Title, Slug, Venue, Description, Date, Cover Image)'}
                     </div>
                   )}

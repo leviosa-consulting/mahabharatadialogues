@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { title, description, eventDate, venue, city, slug } = body;
+    const { title, description, eventDate, venue, city, mapUrl,slug } = body;
 
     if (!title || !description || !eventDate || !venue || !city) {
       return NextResponse.json(
@@ -84,6 +84,7 @@ export async function POST(req: NextRequest) {
       slug: uniqueSlug,
       venue,
       city,
+      mapUrl,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };

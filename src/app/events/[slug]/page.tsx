@@ -14,6 +14,7 @@ import {
   X,
   MapPin,
 } from 'lucide-react'
+import { merri } from '@/app/fonts/merri'
 
 interface Event {
   id: string
@@ -24,6 +25,7 @@ interface Event {
   testimonial?: string
   bookingUrl?: string
   youtubeUrl?: string
+  mapUrl?: string
   eventDate: string
   slug: string
   venue: string
@@ -102,20 +104,26 @@ const EventDetailPage = () => {
   const youtubeId = event.youtubeUrl ? extractYouTubeId(event.youtubeUrl) : null
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       {/* Hero Section */}
-      <div className="relative h-96 bg-gradient-to-r from-purple-600 to-purple-800">
+      <div className="relative h-96 bg-[#1D5C75]">
         {event.coverImage && (
           <>
+            {/* Background image */}
             <img
               src={event.coverImage}
               alt={event.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-30"
+              className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1D5C75]/90 via-[#1D5C75]/50 to-transparent" />
           </>
         )}
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12">
+
+        <div
+          className={`relative ${merri.className} h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12`}
+        >
           <button
             onClick={() => router.push('/events')}
             className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors mb-6 w-fit"
@@ -123,7 +131,7 @@ const EventDetailPage = () => {
             <ArrowLeft size={20} />
             <span>Back to Events</span>
           </button>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-neco font-bold text-white mb-4">
             {event.title}
           </h1>
           <div className="flex flex-wrap gap-6 text-white">
@@ -135,18 +143,27 @@ const EventDetailPage = () => {
               <Clock size={20} />
               <span>{formatTime(event.eventDate)}</span>
             </div>
-            {event.venue && (
-              <div className="flex items-center gap-2">
+            {event.venue && event.mapUrl && (
+              <a
+                href={event.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 cursor-pointer hover:underline"
+              >
                 <MapPin size={20} />
-                <span>{event.venue}, {event.city}</span>
-              </div>
+                <span>
+                  {event.venue}, {event.city}
+                </span>
+              </a>
             )}
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div
+        className={`max-w-7xl ${merri.className} mx-auto px-4 sm:px-6 lg:px-8 py-12`}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
@@ -211,7 +228,9 @@ const EventDetailPage = () => {
 
             {/* Testimonial */}
             {event.testimonial && (
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-md p-8">
+              <div
+                className={`bg-gradient-to-br ${merri.className} from-purple-50 to-purple-100 rounded-lg shadow-md p-8`}
+              >
                 <div className="flex items-start gap-4">
                   <Quote className="text-purple-600 flex-shrink-0" size={32} />
                   <div>
@@ -229,7 +248,9 @@ const EventDetailPage = () => {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
+            <div
+              className={`bg-white ${merri.className} rounded-lg shadow-md p-6 sticky top-6`}
+            >
               <h3 className="text-xl font-bold text-gray-900 mb-4">
                 Event Details
               </h3>
@@ -249,10 +270,17 @@ const EventDetailPage = () => {
                   </p>
                 </div>
 
-                {event.venue && (
+                {event.venue && event.mapUrl && (
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Venue</p>
-                    <p className="text-gray-900 font-semibold">{event.venue}, {event.city}</p>
+                    <a
+                      href={event.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-900 font-semibold hover:underline inline-block"
+                    >
+                      {event.venue}, {event.city}
+                    </a>
                   </div>
                 )}
 

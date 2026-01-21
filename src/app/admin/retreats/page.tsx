@@ -48,6 +48,7 @@ interface Retreat {
   description?: string
   venue?: string
   city?: string
+  mapUrl?: string
   coverImage: string
   bookingUrl?: string
   youtube_video?: string
@@ -80,6 +81,7 @@ const RetreatsAdminPage = () => {
     description: '',
     venue: '',
     city: '',
+    mapUrl: '',
     coverImage: '',
     bookingUrl: '',
     youtube_video: '',
@@ -160,6 +162,7 @@ const RetreatsAdminPage = () => {
       description: '',
       venue: '',
       city: '',
+      mapUrl: '',
       coverImage: '',
       bookingUrl: '',
       price: '',
@@ -195,6 +198,7 @@ const RetreatsAdminPage = () => {
       description: retreat.description || '',
       venue: retreat.venue || '',
       city: retreat.city || '',
+      mapUrl: retreat.mapUrl || '',
       coverImage: retreat.coverImage || '',
       bookingUrl: retreat.bookingUrl || '',
       youtube_video: retreat.youtube_video || '',
@@ -328,6 +332,7 @@ const RetreatsAdminPage = () => {
         description: formData.description || undefined,
         venue: formData.venue || undefined,
         city: formData.city || undefined,
+        mapUrl: formData.mapUrl || undefined,
         coverImage: formData.coverImage || undefined,
         bookingUrl: formData.bookingUrl || undefined,
         youtube_video: formData.youtube_video || undefined,
@@ -925,7 +930,7 @@ const RetreatsAdminPage = () => {
                               Venue: {retreat.venue}
                             </p>
                             <p className="text-gray-500 text-sm">
-                              Venue: {retreat.city}
+                              City: {retreat.city}
                             </p>
                           </div>
                         )}
@@ -1291,6 +1296,25 @@ const RetreatsAdminPage = () => {
                             }))
                           }
                           placeholder="Eg: Bengaluru"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                          disabled={submitting}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          MapUrl
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.mapUrl}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              mapUrl: e.target.value,
+                            }))
+                          }
+                          placeholder="Eg: https://maps.app.goo.gl/KhBmDw8V3kVb8VGv9"
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                           disabled={submitting}
                         />

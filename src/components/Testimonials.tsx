@@ -22,6 +22,7 @@ interface Event {
   date: string
   time: string
   venue: string
+  mapUrl: string
   description?: string
   bookingUrl?: string
   slug?: string
@@ -36,6 +37,7 @@ interface RetreatData {
   photos?: string[]
   venue?: string
   city?: string
+  mapUrl?: string
   day1: {
     date: string
     dayName: string
@@ -60,6 +62,7 @@ interface EventData {
   eventDate: string
   eventTime?: string
   venue: string
+  mapUrl?: string
   city?: string
   description?: string
   bookingUrl?: string
@@ -294,6 +297,7 @@ const Testimonials = () => {
               endDate: endDate,
               time: '',
               venue: retreat.venue || 'Venue TBA',
+              mapUrl: retreat.mapUrl,
               city: retreat.city,
               slug: retreat.slug,
               bookingUrl: retreat.bookingUrl,
@@ -315,6 +319,7 @@ const Testimonials = () => {
               date: event.eventDate,
               time: event.eventTime || '',
               venue: event.venue || 'Venue TBA',
+              mapUrl: event.mapUrl,
               description: event.description,
               bookingUrl: event.bookingUrl,
               slug: event.slug,
@@ -512,16 +517,25 @@ const Testimonials = () => {
               >
                 {getDisplayDate(featuredItem)}
               </h3>
-              <h4
-                className={`${merri.className} text-white font-normal text-center px-2 text-[16px] md:text-[18px]`}
-              >
-                {`${featuredItem.venue},`}
-              </h4>
-              <h4
-                className={`${merri.className} text-white font-normal text-center px-2 text-[16px] md:text-[18px] pb-4`}
-              >
-                {featuredItem.city}
-              </h4>
+              {featuredItem.venue && featuredItem.mapUrl && (
+                <a
+                  href={featuredItem.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center"
+                >
+                  <h4
+                    className={`${merri.className} text-white font-normal px-2 text-[16px] md:text-[18px]`}
+                  >
+                    {featuredItem.venue},
+                  </h4>
+                  <h4
+                    className={`${merri.className} text-white font-normal px-2 text-[16px] md:text-[18px] pb-4`}
+                  >
+                    {featuredItem.city}
+                  </h4>
+                </a>
+              )}
             </div>
             <div className="">
               <img
@@ -552,22 +566,21 @@ const Testimonials = () => {
             <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
               <div className="sm:w-[280px]">
                 <CustomButton
-  text={
-    featuredItem.type === 'retreat'
-      ? 'LEARN MORE'
-      : 'GET YOUR TICKETS'
-  }
-  bgColor="#D12127"
-  textColor="#FFFFFF"
-  url={
-    featuredItem.type === 'retreat'
-      ? '/retreats'
-      : featuredItem.bookingUrl
-  }
-  isOutSideLink={featuredItem.type !== 'retreat'}
-  isArrow
-/>
-
+                  text={
+                    featuredItem.type === 'retreat'
+                      ? 'LEARN MORE'
+                      : 'GET YOUR TICKETS'
+                  }
+                  bgColor="#D12127"
+                  textColor="#FFFFFF"
+                  url={
+                    featuredItem.type === 'retreat'
+                      ? '/retreats'
+                      : featuredItem.bookingUrl
+                  }
+                  isOutSideLink={featuredItem.type !== 'retreat'}
+                  isArrow
+                />
               </div>
               <div
                 className="bg-[#78B0C7] p-[9px]  cursor-pointer"
@@ -629,16 +642,25 @@ const Testimonials = () => {
                     >
                       {getDisplayDate(item)}
                     </p>
-                    <p
-                      className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
-                    >
-                      {`${item.venue},`}
-                    </p>
-                    <p
-                      className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
-                    >
-                      {item.city}
-                    </p>
+                    {item.venue && item.mapUrl && (
+                      <a
+                        href={item.mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <p
+                          className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                        >
+                          {item.venue},
+                        </p>
+                        <p
+                          className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                        >
+                          {item.city}
+                        </p>
+                      </a>
+                    )}
 
                     <h2
                       className={`${merri.className} text-white font-normal px-[2px] my-4 text-[16px] md:text-[18px] italic leading-tight`}

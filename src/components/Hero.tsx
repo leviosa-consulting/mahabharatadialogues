@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
+import Navbar from './Navbar'
 
 export default function HeroSection() {
   return (
@@ -24,11 +25,8 @@ export default function HeroSection() {
           />
         </div>
 
-        {/* mid content */}
-        <div className="flex-[1.5] flex flex-col items-center justify-center my-20 px-12  xl:-mt-52 2xl:-mt-56">
-          <div className="w-[50%] h-[50%]  rounded-full">
-            <img src="Web_Assets-08.png" alt="webAssets9" className="" />
-          </div>
+        <div className="relative xl:-mt-60 2xl:-mt-40">
+          <Navbar textColor='#fff'/>
         </div>
 
         {/* right image */}

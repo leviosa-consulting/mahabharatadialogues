@@ -7,6 +7,7 @@ import { getLatestVideos } from '@/lib/youtube'
 import Footer from './Footer'
 import { adminDB } from '@/firebase/firebaseAdmin'
 import Link from 'next/link'
+import Navbar from './Navbar'
 
 interface DaySchedule {
   date: string
@@ -159,18 +160,15 @@ export default async function RetreatHero() {
           `,
         }}
       >
-        <div className="w-full">
-          {/* Web Asset */}
-          <Link
-            href="/"
-            className="flex justify-center items-center mt-8 relative z-20"
-          >
-            <img
-              src="/Web_Assets-08.png"
-              alt="Home"
-              className="w-30 h-30 md:w-50 md:h-50 -mb-16 md:-mb-24 cursor-pointer"
-            />
-          </Link>
+        <div
+          className="w-full"
+          style={{
+            backgroundImage: "url('/MD-Texture_BG_White-04.png')",
+            backgroundRepeat: 'repeat',
+            backgroundSize: '256px 256px',
+          }}
+        >
+          <Navbar textColor="#1D5C75"/>
 
           {/* Video */}
           {youtubeEmbedUrl && (
@@ -260,7 +258,6 @@ export default async function RetreatHero() {
                         text="SCHEDULE"
                         bgColor="#1D5C75"
                         textColor="#FFFFFF"
-                        
                         url={getScheduleUrl(upcomingRetreat)}
                       />
                     </div>
