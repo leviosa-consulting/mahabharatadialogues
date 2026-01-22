@@ -43,8 +43,7 @@ export default async function LatestBlogs({
         <div
           key={blog.id}
           className="
-            flex gap-4 items-start
-            md:items-center
+            flex gap-4 items-center
           "
         >
           {/* Blog Image */}
@@ -60,7 +59,6 @@ export default async function LatestBlogs({
                   w-15 h-15
                   md:w-15 md:h-15
                   object-cover
-                 
                 "
               />
             </Link>
