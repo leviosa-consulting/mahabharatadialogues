@@ -38,39 +38,58 @@ export default async function LatestBlogs({
   }
 
   return (
-    <div className="flex flex-col w-full mt-12 gap-10">
+    <div className="flex flex-col w-full mt-12 gap-6">
       {latestBlogs.map((blog) => (
         <div
           key={blog.id}
           className="
-            text-white
-            w-full
-            flex flex-col 
-            text-center
-            md:text-left
-            md:max-w-[300px]
-            mx-auto md:mx-0
+            flex gap-4 items-start
+            md:items-center
           "
         >
-          <h2 className={`${merri.className} font-bold text-[14px] md:text-[16px]`}>
-            {formatDate(blog.updated_at)}
-          </h2>
+          {/* Blog Image */}
+          {blog.image_url && (
+            <Link
+              href={`/blogs/${blog.slug}`}
+              className="shrink-0"
+            >
+              <img
+                src={blog.image_url}
+                alt={blog.title}
+                className="
+                  w-24 h-24
+                  md:w-28 md:h-28
+                  object-cover
+                 
+                "
+              />
+            </Link>
+          )}
 
-          <Link
-            href={`/blogs/${blog.slug}`}
-            className="
-              font-neco font-bold
-              text-[18px] md:text-[20px]
-              underline
-              hover:opacity-80
-              transition
-              inline-block
-            "
-          >
-            {blog.title.length > 48
-              ? blog.title.slice(0, 48) + "..."
-              : blog.title}
-          </Link>
+          {/* Date + Title */}
+          <div className="flex flex-col text-left">
+            <h2
+              className={`${merri.className} font-bold text-[14px] md:text-[16px] text-white/80`}
+            >
+              {formatDate(blog.updated_at)}
+            </h2>
+
+            <Link
+              href={`/blogs/${blog.slug}`}
+              className="
+                font-neco font-bold
+                text-[18px] md:text-[20px]
+                underline
+                hover:opacity-80
+                transition
+                text-white
+              "
+            >
+              {blog.title.length > 60
+                ? blog.title.slice(0, 60) + "..."
+                : blog.title}
+            </Link>
+          </div>
         </div>
       ))}
     </div>
