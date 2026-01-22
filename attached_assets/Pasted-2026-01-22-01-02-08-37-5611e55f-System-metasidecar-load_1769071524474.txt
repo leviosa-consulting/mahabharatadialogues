@@ -1,0 +1,120 @@
+2026-01-22 01:02:08.37
+5611e55f
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+2026-01-22 01:02:09.34
+5611e55f
+User
+> md@0.1.0 start
+2026-01-22 01:02:09.34
+5611e55f
+User
+> next start
+2026-01-22 01:02:10.03
+5611e55f
+User
+▲ Next.js 16.0.10
+2026-01-22 01:02:10.03
+5611e55f
+User
+- Network: http://169.254.8.1:5000
+2026-01-22 01:02:10.03
+5611e55f
+User
+- Local: http://localhost:5000
+2026-01-22 01:02:10.03
+5611e55f
+User
+✓ Starting...
+2026-01-22 01:02:11.50
+5611e55f
+User
+⚠ `images.domains` is deprecated in favor of `images.remotePatterns`. Please update next.config.ts to protect your application from malicious users.
+2026-01-22 01:02:11.76
+5611e55f
+User
+✓ Ready in 2.2s
+2026-01-22 02:20:24.32
+5611e55f
+System
+system: received signal terminated
+2026-01-22 02:21:07.05
+5611e55f
+System
+starting up user application
+2026-01-22 02:21:07.06
+5611e55f
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+2026-01-22 02:21:07.06
+5611e55f
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2026-01-22 02:21:07.56
+5611e55f
+System
+starting up user application
+2026-01-22 02:21:07.56
+5611e55f
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+2026-01-22 02:21:07.56
+5611e55f
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2026-01-22 02:21:07.93
+5611e55f
+User
+> next start
+2026-01-22 02:21:07.93
+5611e55f
+User
+> md@0.1.0 start
+2026-01-22 02:21:08.41
+5611e55f
+User
+▲ Next.js 16.0.10
+2026-01-22 02:21:08.41
+5611e55f
+User
+- Network: http://169.254.8.1:5000
+2026-01-22 02:21:08.41
+5611e55f
+User
+✓ Starting...
+2026-01-22 02:21:08.41
+5611e55f
+User
+- Local: http://localhost:5000
+2026-01-22 02:21:09.05
+5611e55f
+User
+> next start
+2026-01-22 02:21:09.05
+5611e55f
+User
+> md@0.1.0 start
+2026-01-22 02:21:09.37
+5611e55f
+User
+⚠ `images.domains` is deprecated in favor of `images.remotePatterns`. Please update next.config.ts to protect your application from malicious users.
+2026-01-22 02:21:09.53
+5611e55f
+User
+✓ Ready in 1394ms
+2026-01-22 02:21:09.86
+5611e55f
+User
+▲ Next.js 16.0.10
+2026-01-22 02:21:09.86
+5611e55f
+User
+- Network: http://169.254.8.1:5000
+2026-01-22 02:21:09.86
+5611e55f
+User
+✓ Starting...
+2026-01-22 02:21:09.86
+5611e55f
+User
+- Local: http://localhost:5000
