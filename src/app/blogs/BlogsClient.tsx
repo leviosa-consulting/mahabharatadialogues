@@ -253,7 +253,7 @@ export default function BlogsClient({
       {/* Main Content */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Search + Filters */}
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-6 md:mb-8">
+        <div className="bg-white shadow-lg p-4 sm:p-6 mb-6 md:mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
@@ -266,7 +266,7 @@ export default function BlogsClient({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by title, subtitle or author..."
-                className={`${merri.className} w-full pl-12 pr-4 py-3 border-2 border-[#1D5C75] rounded-lg focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
+                className={`${merri.className} w-full pl-12 pr-4 py-3 border-2 border-[#1D5C75]  focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
                 aria-label="Search blogs"
               />
             </div>
@@ -274,7 +274,7 @@ export default function BlogsClient({
             {/* Filters Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1D5C75] text-white rounded-lg hover:bg-[#47ABD8] transition-colors"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1D5C75] text-white  hover:bg-[#47ABD8] transition-colors"
               aria-label="Toggle filters"
             >
               <Filter size={20} />
@@ -306,7 +306,7 @@ export default function BlogsClient({
                     id="author-filter"
                     value={selectedAuthor}
                     onChange={(e) => setSelectedAuthor(e.target.value)}
-                    className={`${merri.className} w-full px-4 py-2 border-2 border-[#1D5C75] rounded-lg focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
+                    className={`${merri.className} w-full px-4 py-2 border-2 border-[#1D5C75]  focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
                   >
                     <option value="">All Authors</option>
                     {allAuthors.map((author) => (
@@ -355,7 +355,7 @@ export default function BlogsClient({
         {/* Active Filter Badge */}
         {selectedCategory && (
           <div className="mb-6 flex items-center gap-3 flex-wrap">
-            <div className="inline-flex items-center gap-2 bg-[#1D5C75] text-white px-4 py-2 rounded-lg">
+            <div className="inline-flex items-center gap-2 bg-[#1D5C75] text-white px-4 py-2 ">
               <span className={`${merri.className} text-sm font-medium`}>
                 Category: {selectedCategory}
               </span>
@@ -387,7 +387,7 @@ export default function BlogsClient({
             {filteredBlogs.map((blog) => (
               <article
                 key={blog.id}
-                className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
+                className="group bg-white  shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
               >
                 <Link href={`/blogs/${blog.slug}`}>
                   <div className="relative h-48 sm:h-56 overflow-hidden">
@@ -456,7 +456,7 @@ export default function BlogsClient({
             ))}
           </div>
         ) : blogs.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-lg shadow-lg">
+          <div className="text-center py-16 bg-white shadow-lg">
             {isLoading ? (
               <>
                 <Loader2 className="animate-spin h-12 w-12 text-[#1D5C75] mx-auto mb-4" />
@@ -481,7 +481,7 @@ export default function BlogsClient({
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="bg-white rounded-lg shadow-lg p-8 sm:p-12 max-w-md mx-auto">
+            <div className="bg-white r shadow-lg p-8 sm:p-12 max-w-md mx-auto">
               <Search size={48} className="text-[#1D5C75] mx-auto mb-4" />
               <h2 className="font-neco text-2xl font-bold text-[#1D5C75] mb-2">
                 No blogs found
@@ -493,7 +493,7 @@ export default function BlogsClient({
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className={`${merri.className} inline-flex items-center gap-2 px-6 py-3 bg-[#1D5C75] text-white rounded-lg hover:bg-[#47ABD8] transition-colors font-medium`}
+                  className={`${merri.className} inline-flex items-center gap-2 px-6 py-3 bg-[#1D5C75] text-white  hover:bg-[#47ABD8] transition-colors font-medium`}
                 >
                   <X size={16} />
                   Clear Filters

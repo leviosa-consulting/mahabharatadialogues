@@ -626,7 +626,7 @@ const Testimonials = () => {
                 backgroundImage: `
         linear-gradient(
           rgba(29, 92, 117, 0.5),
-          rgba(29, 92, 117, 0.5)
+          rgba(29, 92, 117, 0.5)   
         ),
         url('/MD-Texture_BG_Blue-01-04.png')
       `,
@@ -653,7 +653,7 @@ const Testimonials = () => {
 
                   <div className="flex flex-col justify-center items-center text-center ">
                     <h2
-                      className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[20px] md:text-[26px] italic leading-tight`}
+                      className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[32px]  italic leading-tight`}
                     >
                       {item.title}
                     </h2>
