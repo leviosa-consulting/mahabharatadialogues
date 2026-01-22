@@ -9,7 +9,7 @@ const Footer = () => {
         flex flex-col justify-center items-center
         text-white font-bold font-neco
         py-16
-        text-[18px] sm:text-[22px] md:text-[32px]
+        text-[20px] sm:text-[22px] md:text-[32px]
         px-4
         text-center
       "
