@@ -57,8 +57,8 @@ export default async function LatestBlogs({
                 src={blog.image_url}
                 alt={blog.title}
                 className="
-                  w-24 h-24
-                  md:w-28 md:h-28
+                  w-20 h-20
+                  md:w-15 md:h-15
                   object-cover
                  
                 "
