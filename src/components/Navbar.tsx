@@ -8,7 +8,7 @@ interface NavProps{
 
 const Navbar = ({textColor}: NavProps) => {
   return (
-    <div className="max-w-4xl mx-auto flex items-center justify-between px-4 gap-6">
+    <div className="hidden max-w-4xl mx-auto sm:flex items-center justify-between px-4 gap-6">
       
       {/* Left items */}
       <div className="flex gap-6">

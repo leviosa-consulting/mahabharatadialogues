@@ -14,6 +14,7 @@ import {
   Loader2,
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
+import Navbar from '@/components/Navbar'
 
 interface Blog {
   id: string
@@ -233,13 +234,7 @@ export default function BlogsClient({
     <div className="min-h-screen bg-[#1D5C75CC]">
       {/* Hero Section */}
       <header className="bg-white ">
-        <Link href="/" className="flex justify-center items-center mt-10">
-          <img
-            src="/Web_Assets-08.png"
-            alt="Home"
-            className="w-28 h-28 md:w-44 md:h-44 cursor-pointer"
-          />
-        </Link>
+       <Navbar textColor='#1D5C75'/>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="text-center">

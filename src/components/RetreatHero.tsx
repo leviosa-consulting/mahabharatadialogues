@@ -172,7 +172,7 @@ export default async function RetreatHero() {
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-2 xl:mx-0 2xl:mx-30">
+            <div className="mx-4 2xl:mx-30">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video relative z-10">
@@ -193,7 +193,7 @@ export default async function RetreatHero() {
         {upcomingRetreat && (
           <div className="w-full bg-[#1D5C75] -mt-[5vh] md:-mt-[20vh] pt-[10vh] md:pt-[20vh] pb-[5vh]">
             <div className="mx-4 2xl:mx-30">
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-12 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
                   <div>
                     <p
@@ -229,7 +229,7 @@ export default async function RetreatHero() {
                     </p>
                   </div>
                 </div>
-                <div className="w-full order-2 sm:order-0 lg:col-start-9 col-span-5 lg:col-span-3">
+                <div className="w-full order-2 sm:order-0 md:col-start-8 xl:col-start-9 col-span-5 lg:col-span-4 xl:col-span-3">
                   <div className="flex flex-col justify-between gap-6 md:mt-24">
                     <div className="">
                       <CustomButton
@@ -244,7 +244,7 @@ export default async function RetreatHero() {
                     <div>
                       <p className="font-neco font-bold text-[18px] text-white flex items-center gap-1">
                         <span>₹</span>
-                        <span>
+                        <span> 
                           {upcomingRetreat.price.toLocaleString('en-IN')}
                         </span>
                       </p>
@@ -293,7 +293,7 @@ export default async function RetreatHero() {
                         )}
                         <h3
                           className={`font-neco text-[28px] text-[#1D5C75] font-bold ${
-                            index % 2 === 1 ? 'mt-8 lg:mt-[42px]' : ''
+                            index % 2 === 1 ? 'mt-8 md:mt-[42px]' : ''
                           }`}
                         >
                           Mahabharata Dialogues
