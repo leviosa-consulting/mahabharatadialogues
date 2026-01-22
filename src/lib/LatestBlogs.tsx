@@ -38,58 +38,59 @@ export default async function LatestBlogs({
   }
 
   return (
-    <div className="flex flex-col w-full mt-12 gap-6">
-      {latestBlogs.map((blog) => (
-        <div
-          key={blog.id}
+   <div className="flex flex-col w-full mt-12 gap-6">
+  {latestBlogs.map((blog) => (
+    <div
+      key={blog.id}
+      className="flex gap-4 items-start"
+    >
+      {/* Blog Image */}
+      {blog.image_url && (
+        <Link
+          href={`/blogs/${blog.slug}`}
+          className="shrink-0"
+        >
+          <img
+            src={blog.image_url}
+            alt={blog.title}
+            className="
+              w-[65px] h-[65px]
+              md:w-[72px] md:h-[72px]
+              object-cover
+             
+            "
+          />
+        </Link>
+      )}
+
+      {/* Date + Title */}
+      <div className="flex flex-col text-left">
+        <h2
+          className={`${merri.className} font-bold text-[14px] md:text-[16px] text-white/80 leading-tight`}
+        >
+          {formatDate(blog.updated_at)}
+        </h2>
+
+        <Link
+          href={`/blogs/${blog.slug}`}
           className="
-            flex gap-4 items-center
+            font-neco font-bold
+            text-[18px] md:text-[20px]
+            underline
+            hover:opacity-80
+            transition
+            text-white
+            leading-snug
           "
         >
-          {/* Blog Image */}
-          {blog.image_url && (
-            <Link
-              href={`/blogs/${blog.slug}`}
-              className="shrink-0"
-            >
-              <img
-                src={blog.image_url}
-                alt={blog.title}
-                className="
-                  w-15 h-15
-                  md:w-15 md:h-15
-                  object-cover
-                "
-              />
-            </Link>
-          )}
-
-          {/* Date + Title */}
-          <div className="flex flex-col text-left">
-            <h2
-              className={`${merri.className} font-bold text-[14px] md:text-[16px] text-white/80`}
-            >
-              {formatDate(blog.updated_at)}
-            </h2>
-
-            <Link
-              href={`/blogs/${blog.slug}`}
-              className="
-                font-neco font-bold
-                text-[18px] md:text-[20px]
-                underline
-                hover:opacity-80
-                transition
-                text-white
-              "
-            >
-              {blog.title.length > 60
-                ? blog.title.slice(0, 60) + "..."
-                : blog.title}
-            </Link>
-          </div>
-        </div>
-      ))}
+          {blog.title.length > 60
+            ? blog.title.slice(0, 60) + "..."
+            : blog.title}
+        </Link>
+      </div>
     </div>
+  ))}
+</div>
+
   );
 }
