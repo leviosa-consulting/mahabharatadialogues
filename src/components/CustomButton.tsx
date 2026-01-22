@@ -41,7 +41,7 @@ const CustomButton = ({
       <img
         src="/Arrow_up-right.png"
         alt="Arrow_up"
-        className="w-8 h-8 shrink-0"
+        className="w-6 h-6 shrink-0"
       />
     )}
   </span>

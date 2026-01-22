@@ -604,10 +604,10 @@ const Testimonials = () => {
                 />
               </div>
               <div
-                className="bg-[#78B0C7] p-[9px]  cursor-pointer"
+                className="bg-[#78B0C7] p-[16px]  cursor-pointer"
                 onClick={() => handleShare(featuredItem.bookingUrl)}
               >
-                <img src="/share.png" alt="share" />
+                <img src="/share.png" alt="share" className='w-6 h-6'/>
               </div>
             </div>
           </div>
@@ -723,7 +723,7 @@ const Testimonials = () => {
                       className="bg-[#78B0C7] p-[9px] flex justify-center items-center cursor-pointer"
                       onClick={() => handleShare(item.bookingUrl)}
                     >
-                      <img src="/share.png" alt="share" />
+                      <img src="/share.png" alt="share" className='w-6 h-6'/>
                     </div>
                   </div>
 
@@ -746,10 +746,10 @@ const Testimonials = () => {
                       />
                     </div>
                     <div
-                      className="bg-[#78B0C7] p-[9px]  cursor-pointer"
+                      className="bg-[#78B0C7] p-[16px]  cursor-pointer"
                       onClick={() => handleShare(item.bookingUrl)}
                     >
-                      <img src="/share.png" alt="share" />
+                      <img src="/share.png" alt="share" className='w-6 h-6'/>
                     </div>
                   </div>
                 </div>

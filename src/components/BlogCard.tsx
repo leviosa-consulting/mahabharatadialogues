@@ -51,7 +51,7 @@ export default function BlogCard({ blog }: { blog: Blog }) {
 
         <Link
           href={`/blogs/${blog.slug}`}
-          className="font-neco font-bold text-[16px] md:text-[20px] underline hover:text-gray-300 transition block mt-2"
+          className="font-neco font-bold text-[18px] md:text-[20px] underline hover:text-gray-300 transition block mt-2"
         >
           {blog.title}
         </Link>

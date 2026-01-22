@@ -60,7 +60,7 @@ export default async function LatestBlogs({
             href={`/blogs/${blog.slug}`}
             className="
               font-neco font-bold
-              text-[16px] md:text-[20px]
+              text-[18px] md:text-[20px]
               underline
               hover:opacity-80
               transition
