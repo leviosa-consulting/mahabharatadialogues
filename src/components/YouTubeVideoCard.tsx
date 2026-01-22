@@ -60,7 +60,7 @@ export default function YouTubeVideoCard({
           rel="noopener noreferrer"
           className="
             font-neco font-bold
-            text-[16px] md:text-[20px]
+            text-[18px] md:text-[20px]
             underline
             hover:text-gray-300
             transition
