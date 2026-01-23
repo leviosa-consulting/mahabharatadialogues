@@ -212,17 +212,17 @@ export default async function RetreatHero() {
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
                   <div className="text-center md:text-left">
                     <p
-                      className={`${merri.className} text-[20px] text-[#78B0C7] font-bold my-4`}
+                      className={`${merri.className} text-[20px] text-[#78B0C7] font-bold my-6`}
                     >
                       UPCOMING RETREAT
                     </p>
                     <h2
-                      className={`font-neco text-[28px] text-white font-bold`}
+                      className={`font-neco text-[28px] leading-none text-white font-bold`}
                     >
                       Mahabharata Dialogues
                     </h2>
                     <h1
-                      className={`${merri.className} text-[44px] text-white font-extrabold italic`}
+                      className={`${merri.className} text-[44px] leading-none text-white font-extrabold italic mb-6`}
                     >
                       {upcomingRetreat.title}
                     </h1>
@@ -300,26 +300,28 @@ export default async function RetreatHero() {
                           : 'md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5'
                       } ${index > 0 ? 'mt-12 md:mt-0' : ''}`}
                     >
-                      <div className="flex flex-col justify-between gap-3 text-center md:text-left">
+                      <div className="flex flex-col justify-between text-center md:text-left">
                         {index === 0 && (
                           <p
-                            className={`${merri.className} text-[20px] text-[#4298BA] font-bold`}
+                            className={`${merri.className} text-[20px] text-[#4298BA] font-bold mb-6`}
                           >
                             PAST RETREATS
                           </p>
                         )}
                         <h3
-                          className={`font-neco text-[28px] text-[#1D5C75] font-bold ${
-                            index % 2 === 1 ? 'mt-0 md:mt-[42px]' : ''
+                          className={`font-neco text-[28px] leading-none text-[#1D5C75] font-bold ${
+                            index % 2 === 1 ? 'mt-0 md:mt-[46px]' : ''
                           }`}
                         >
                           Mahabharata Dialogues
                         </h3>
+
                         <h2
-                          className={`${merri.className} text-[44px] text-[#1D5C75] font-extrabold italic`}
+                          className={`${merri.className} text-[44px] leading-none text-[#1D5C75] font-extrabold italic mb-6`}
                         >
                           {retreat.title}
                         </h2>
+
                         <h3
                           className={`${merri.className} text-[20px] text-[#1D5C75] italic font-bold`}
                         >

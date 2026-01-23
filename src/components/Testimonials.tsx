@@ -6,6 +6,7 @@ import { merri } from '@/app/fonts/merri'
 import TestimonialsShimmer from './TestimonialsShimmer'
 import Link from 'next/link'
 import { Calendar, MapPin } from 'lucide-react'
+import { it } from 'node:test'
 
 interface Testimonial {
   id: string
@@ -526,33 +527,34 @@ const Testimonials = () => {
       max-w-xl
     "
                   >
-                    {/* Clickable map icon */}
-                    <a
-                      href={featuredItem.mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="
-          text-white hover:text-blue-300 transition-colors shrink-0
-          mt-[3px]
-          md:mt-[4px]
-        "
-                      title="Open in Google Maps"
-                    >
-                      <MapPin size={18} />
-                    </a>
-
                     {/* Text block */}
                     <div className="text-center md:text-center max-w-[85vw] md:max-w-none">
                       <h4
                         className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
                       >
-                        {featuredItem.venue}
+                        {featuredItem.venue},
                       </h4>
                       <h4
-                        className={`${merri.className} text-white font-normal text-[15px] md:text-[18px] leading-snug`}
+                        className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
                       >
                         {featuredItem.city}
                       </h4>
+                      <a
+                        href={featuredItem.mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open in Google Maps"
+                        className="
+    inline-flex items-center gap-1
+    text-white hover:text-blue-300
+    transition-colors
+    shrink-0
+    mt-[3px] text-[16px] md:text-[18px] 
+  "
+                      >
+                        <MapPin size={18} />
+                        <span>View in Map</span>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -607,7 +609,7 @@ const Testimonials = () => {
                 className="bg-[#78B0C7] p-[16px]  cursor-pointer"
                 onClick={() => handleShare(featuredItem.bookingUrl)}
               >
-                <img src="/share.png" alt="share" className='w-6 h-6'/>
+                <img src="/share.png" alt="share" className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -653,38 +655,27 @@ const Testimonials = () => {
 
                   <div className="flex flex-col justify-center items-center text-center ">
                     <h2
-                      className={`${merri.className} text-white font-bold px-[2px]  h-12 md:h-16 text-[32px]  italic leading-tight`}
+                      className={`${merri.className} text-white font-bold px-[2px]  text-[32px]  italic leading-tight mb-3`}
                     >
                       {item.title}
                     </h2>
 
                     <p
-                      className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-2`}
+                      className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] leading-normal`}
                     >
                       {getDisplayDate(item)}
                     </p>
-                    {item.venue && item.mapUrl && (
-                      <div className="flex items-start gap-2">
-                        {/* Clickable map icon */}
-                        <a
-                          href={item.mapUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-1 text-white hover:text-blue-300 transition-colors cursor-pointer"
-                          title="Open in Google Maps"
-                        >
-                          <MapPin size={18} />
-                        </a>
-
+                    {item.venue && (
+                      <div className="flex items-start leading-normal gap-2">
                         {/* Text (not clickable) */}
                         <div>
                           <p
-                            className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                            className={`${merri.className} text-white font-normal text-[16px] md:text-[18px]`}
                           >
                             {item.venue},
                           </p>
                           <p
-                            className={`${merri.className} text-white font-normal text-[15px] md:text-[17px]`}
+                            className={`${merri.className} text-white font-normal text-[16px] md:text-[18px]`}
                           >
                             {item.city}
                           </p>
@@ -692,10 +683,29 @@ const Testimonials = () => {
                       </div>
                     )}
 
+                    {item.mapUrl && (
+                      <a
+                        href={item.mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open in Google Maps"
+                        className="
+    inline-flex items-center gap-1
+    text-white hover:text-blue-300
+    transition-colors
+    shrink-0
+    mt-[3px] text-[16px] md:text-[18px] leading-normal 
+  "
+                      >
+                        <MapPin size={18} />
+                        <span>View in Map</span>
+                      </a>
+                    )}
+
                     <h2
                       className={`${merri.className} text-white font-normal px-[2px] my-4 text-[16px] md:text-[18px] italic leading-tight`}
                     >
-                      {item.description}
+                      {renderTextWithLineBreaks(item.description)}
                     </h2>
                   </div>
 
@@ -723,7 +733,7 @@ const Testimonials = () => {
                       className="bg-[#78B0C7] p-[9px] flex justify-center items-center cursor-pointer"
                       onClick={() => handleShare(item.bookingUrl)}
                     >
-                      <img src="/share.png" alt="share" className='w-6 h-6'/>
+                      <img src="/share.png" alt="share" className="w-6 h-6" />
                     </div>
                   </div>
 
@@ -749,7 +759,7 @@ const Testimonials = () => {
                       className="bg-[#78B0C7] p-[16px]  cursor-pointer"
                       onClick={() => handleShare(item.bookingUrl)}
                     >
-                      <img src="/share.png" alt="share" className='w-6 h-6'/>
+                      <img src="/share.png" alt="share" className="w-6 h-6" />
                     </div>
                   </div>
                 </div>

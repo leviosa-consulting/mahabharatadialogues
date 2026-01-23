@@ -27,6 +27,7 @@ interface Event {
   slug: string
   venue: string
   city?: string
+  mapUrl?: string
 }
 
 const EventsPage = () => {
@@ -123,7 +124,7 @@ const EventsPage = () => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full  from-purple-100 to-purple-200 flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center">
             <Calendar size={64} className="text-[#1D5C75CC]" />
           </div>
         )}
@@ -139,7 +140,7 @@ const EventsPage = () => {
 
       <div className="p-6">
         <h3
-          className={`font-neco text-xl font-bold transition-colors h-16 overflow-hidden`}
+          className={`${merri.className} text-[32px] font-bold transition-colors text-[#1d5c7f] overflow-hidden mb-2`}
         >
           {event?.title?.length > 60
             ? event.title.substring(0, 60) + '...'
@@ -147,30 +148,38 @@ const EventsPage = () => {
         </h3>
 
         <div
-          className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-3`}
+          className={`flex ${merri.className} text-[18px] items-center gap-2 text-sm text-[#1d5c7f] leading-[1.5]`}
         >
-          <Calendar size={16} />
+          <Calendar size={18} />
           <span>{formatDate(event.eventDate)}</span>
         </div>
 
         <div
-          className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-2`}
+          className={`flex ${merri.className} text-[18px] items-center gap-2 text-sm leading-none text-[#1d5c7f] mb-4`}
         >
-          <Clock size={16} />
+          <Clock size={18} />
           <span>{formatTime(event.eventDate)}</span>
         </div>
 
         <div
-          className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-4`}
+          className={`flex ${merri.className} text-[18px] items-start gap-2 text-[#1d5c7f] mb-4`}
         >
-          <MapPin size={16} />
-          <span className="line-clamp-1">
+          <a
+            href={event.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1 text-[#1d5c7f] hover:text-blue-300 transition-colors cursor-pointer"
+            title="Open in Google Maps"
+          >
+            <MapPin size={18} />
+          </a>
+          <span className="">
             {event.venue}, {event.city}
           </span>
         </div>
 
         <p
-          className={`text-gray-600 ${merri.className} text-sm mb-4 line-clamp-3`}
+          className={`text-[#1d5c7f] ${merri.className} text-[18px] mb-4 line-clamp-3`}
         >
           {event?.description?.length > 80
             ? event.description.substring(0, 80) + '...'
@@ -179,13 +188,13 @@ const EventsPage = () => {
 
         <div className="flex items-center justify-between">
           {event.gallery && event.gallery.length > 0 && (
-            <div className="flex items-center gap-1 text-sm text-gray-500">
+            <div className="flex items-center gap-1  text-[#1d5c7f]">
               <ImageIcon size={16} />
               <span>{event.gallery.length} photos</span>
             </div>
           )}
           <div
-            className={`flex ${merri.className} items-center gap-2 text-purple-600 font-semibold group-hover:gap-3 transition-all`}
+            className={`flex ${merri.className} items-center gap-2 text-[#1d5c7f] font-semibold group-hover:gap-3 transition-all`}
           >
             <span>View Details</span>
             <ArrowRight size={18} />
@@ -224,7 +233,7 @@ const EventsPage = () => {
               Events
             </h1>
             <p
-              className={`${merri.className} text-lg md:text-xl text-purple-100 max-w-2xl`}
+              className={`${merri.className} text-lg md:text-xl text-white max-w-2xl`}
             >
               {upcomingEvents.length > 0
                 ? 'Discover our upcoming events and relive the memories from past gatherings'
@@ -233,31 +242,29 @@ const EventsPage = () => {
           </div>
         </div>
 
-        {/* Tabs - Only show if both upcoming and past events exist */}
+        {/* Tabs  */}
         {showTabs && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
             <div className="bg-white  shadow-md p-2 inline-flex gap-2">
               <button
                 onClick={() => setActiveTab('upcoming')}
-                className={`px-6 py-3  ${merri.className} font-semibold transition-all ${
+                className={`px-6 py-3  ${merri.className} font-semibold  transition-all ${
                   activeTab === 'upcoming'
                     ? 'bg-[#1D5C75CC] text-white shadow-md'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    : 'text-[#1d5c7f] hover:bg-gray-100'
                 }`}
               >
                 Upcoming Events
-               
               </button>
               <button
                 onClick={() => setActiveTab('past')}
                 className={`px-6 py-3 ${merri.className} font-semibold transition-all ${
                   activeTab === 'past'
                     ? 'bg-[#1D5C75CC] text-white shadow-md'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    : 'text-[#1d5c7f] hover:bg-gray-100'
                 }`}
               >
                 Past Events
-               
               </button>
             </div>
           </div>
@@ -271,7 +278,7 @@ const EventsPage = () => {
         >
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="inline-block animate-spin  h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+              <div className="inline-block animate-spin  h-12 w-12 border-4 border-t-transparent"></div>
             </div>
           ) : (
             <>
@@ -280,7 +287,7 @@ const EventsPage = () => {
                   <div>
                     {!showTabs && (
                       <h2
-                        className={`${merri.className} text-2xl font-bold text-gray-900 mb-6`}
+                        className={`${merri.className} text-2xl font-bold mb-6`}
                       >
                         Upcoming Events
                       </h2>
@@ -298,11 +305,8 @@ const EventsPage = () => {
                 <>
                   {pastEvents.length === 0 ? (
                     <div className="text-center py-20">
-                      <Calendar
-                        size={64}
-                        className="mx-auto mb-4 text-gray-400"
-                      />
-                      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                      <Calendar size={64} className="mx-auto mb-4 text-white" />
+                      <h3 className="text-xl font-semibold text-white mb-2">
                         No Past Events
                       </h3>
                       <p className="text-gray-500">
@@ -328,8 +332,8 @@ const EventsPage = () => {
 
               {upcomingEvents.length === 0 && pastEvents.length === 0 && (
                 <div className="text-center py-20">
-                  <Calendar size={64} className="mx-auto mb-4 text-gray-400" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  <Calendar size={64} className="mx-auto mb-4 text-white" />
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     No Events Yet
                   </h3>
                   <p className="text-gray-500">
