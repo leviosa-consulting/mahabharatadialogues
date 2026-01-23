@@ -709,7 +709,7 @@ const Testimonials = () => {
                     )}
 
                     <h2
-                      className={`${merri.className} text-white font-light px-[2px] my-4 text-[16px] md:text-[18px] italic leading-tight`}
+                      className={`${merri.className} text-white font-light px-[2px] my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
                     >
                       {renderTextWithLineBreaks(
                         expandedId === item.id
