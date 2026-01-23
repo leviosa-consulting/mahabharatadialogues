@@ -13,21 +13,21 @@ const Navbar = ({ textColor }: NavProps) => {
         <div className="grid grid-cols-2 gap-4 text-center">
           <Link
             href="/events"
-            className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}
+            className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}
           >
             Events
           </Link>
 
           <Link
             href="/retreats"
-             className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}
+             className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}
           >
             Retreats
           </Link>
 
           <Link
             href="/blogs"
-             className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}
+             className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}
           >
             Blogs
           </Link>
@@ -45,11 +45,14 @@ const Navbar = ({ textColor }: NavProps) => {
       <div className="hidden sm:flex max-w-4xl mx-auto items-center justify-between px-4 gap-6">
         {/* Left */}
         <div className="flex gap-6">
-          <Link href="/events"  className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}>
+          <Link href="/events"  className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}>
             Events
           </Link>
-          <Link href="/retreats"  className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}>
+          <Link href="/retreats"  className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}>
             Retreats
+          </Link>
+          <Link href="/contact"  className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}>
+            Products
           </Link>
         </div>
 
@@ -58,20 +61,20 @@ const Navbar = ({ textColor }: NavProps) => {
           <img
             src="Web_Assets-08.png"
             alt="Logo"
-            className="w-42 xl:w-60 2xl:w-82 h-auto object-contain"
+            className="w-42 xl:w-60 2xl:w-62 h-auto object-contain"
           />
         </Link>
 
         {/* Right */}
         <div className="flex gap-6">
-          <Link href="/blogs"  className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}>
+          <Link href="/blogs"  className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}>
             Blogs
           </Link>
-          <Link href="/contact"  className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}>
+          <Link href="/contact"  className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}>
             About Us
           </Link>
-          <Link href="/contact"  className={`${merri.className} font-bold uppercase text-[18px] text-[${textColor}]`}>
-            Products
+          <Link href="/contact"  className={`${merri.className} font-bold uppercase text-[16px] text-[${textColor}]`}>
+            Contact
           </Link>
         </div>
       </div>
