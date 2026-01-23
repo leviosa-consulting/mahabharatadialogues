@@ -724,7 +724,7 @@ const Testimonials = () => {
                               expandedId === item.id ? null : item.id,
                             )
                           }
-                          className="ml-2 text-blue-300 hover:text-blue-400 font-medium not-italic"
+                          className="ml-2 text-[#1D5C75] hover:text-[#214351] uppercase font-normal text-[14px] not-italic"
                         >
                           {expandedId === item.id ? 'Read less' : 'Read more'}
                         </button>
