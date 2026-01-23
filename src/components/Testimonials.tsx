@@ -360,7 +360,7 @@ const Testimonials = () => {
           setCurrentIndex((prev) => (prev + 1) % testimonials.length)
         } else if (e.deltaX < 0) {
           setCurrentIndex(
-            (prev) => (prev - 1 + testimonials.length) % testimonials.length
+            (prev) => (prev - 1 + testimonials.length) % testimonials.length,
           )
         }
       }
@@ -384,7 +384,7 @@ const Testimonials = () => {
         setCurrentIndex((prev) => (prev + 1) % testimonials.length)
       } else {
         setCurrentIndex(
-          (prev) => (prev - 1 + testimonials.length) % testimonials.length
+          (prev) => (prev - 1 + testimonials.length) % testimonials.length,
         )
       }
     }
@@ -544,16 +544,17 @@ const Testimonials = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Open in Google Maps"
-                        className="
+                        className={` ${merri.className}
     inline-flex items-center gap-1
     text-white hover:text-blue-300
     transition-colors
     shrink-0
-    mt-[3px] text-[16px] md:text-[18px] 
-  "
+    text-[16px] 
+    mt-[6px] 
+  `}
                       >
                         <MapPin size={18} />
-                        <span>View in Map</span>
+                        <span className="">View in Map</span>
                       </a>
                     </div>
                   </div>
@@ -689,16 +690,17 @@ const Testimonials = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Open in Google Maps"
-                        className="
+                        className={` ${merri.className}
     inline-flex items-center gap-1
     text-white hover:text-blue-300
     transition-colors
     shrink-0
-    mt-[3px] text-[16px] md:text-[18px] leading-normal 
-  "
+    text-[16px] 
+    mt-[6px] 
+  `}
                       >
                         <MapPin size={18} />
-                        <span>View in Map</span>
+                        <span className="">View in Map</span>
                       </a>
                     )}
 
