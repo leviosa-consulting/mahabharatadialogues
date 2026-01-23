@@ -11,7 +11,7 @@ import {
   Calendar,
   Image as ImageIcon,
   Upload,
-  Link as LinkIcon,
+  Link,
   MessageSquare,
   Youtube,
   MapPin,
@@ -25,7 +25,7 @@ interface Event {
   id: string
   title: string
   description: string
-  coverImage: string
+  coverImage?: string
   gallery?: string[]
   testimonial?: string
   bookingUrl?: string
@@ -37,6 +37,8 @@ interface Event {
   mapUrl?: string
 }
 
+const FALLBACK_IMAGE = '/assets/first.png'
+
 const EventsAdminPage = () => {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
@@ -45,6 +47,7 @@ const EventsAdminPage = () => {
   const [uploadingCover, setUploadingCover] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming')
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -68,7 +71,7 @@ const EventsAdminPage = () => {
     try {
       const response = await fetch('/api/events')
       const data = await response.json()
-      // Sort events by date in descending order (most recent first)
+      // Sort events by date in ascending order
       const sortedEvents = (data.data || []).sort((a: Event, b: Event) => {
         const dateA = new Date(a.eventDate).getTime()
         const dateB = new Date(b.eventDate).getTime()
@@ -81,6 +84,13 @@ const EventsAdminPage = () => {
       setLoading(false)
     }
   }
+
+  // Split events into upcoming and past
+  const now = new Date()
+  const upcomingEvents = events.filter(
+    (event) => new Date(event.eventDate) >= now
+  )
+  const pastEvents = events.filter((event) => new Date(event.eventDate) < now)
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -210,17 +220,12 @@ const EventsAdminPage = () => {
       return
     }
 
-    if (!formData.coverImage) {
-      alert('Please upload a cover image before creating the event')
-      return
-    }
-
     if (!formData.slug) {
       alert('Slug is required')
       return
     }
 
-    // Prevent multiple submissions
+
     if (submitting) {
       return
     }
@@ -228,13 +233,19 @@ const EventsAdminPage = () => {
     setSubmitting(true)
 
     try {
+    
+      const dataToSubmit = {
+        ...formData,
+        coverImage: formData.coverImage || FALLBACK_IMAGE,
+      }
+
       const url = editingId ? `/api/events/${editingId}` : '/api/events'
       const method = editingId ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSubmit),
       })
 
       const data = await response.json()
@@ -291,7 +302,6 @@ const EventsAdminPage = () => {
       formData.title.trim() !== '' &&
       formData.description.trim() !== '' &&
       formData.eventDate !== '' &&
-      formData.coverImage !== '' &&
       formData.slug.trim() !== '' &&
       formData.venue.trim() !== '' &&
       formData.city.trim() !== '' &&
@@ -306,6 +316,118 @@ const EventsAdminPage = () => {
         {line}
         {index < array.length - 1 && <br />}
       </React.Fragment>
+    ))
+  }
+
+  // Render event cards
+  const renderEventCards = (eventsList: Event[]) => {
+    if (eventsList.length === 0) {
+      return (
+        <div className="bg-white rounded-lg shadow-md p-12 text-center col-span-full">
+          <Calendar size={48} className="mx-auto mb-4 text-gray-400" />
+          <p className="text-gray-600 text-lg">
+            No {activeTab} events found.
+          </p>
+        </div>
+      )
+    }
+
+    return eventsList.map((event) => (
+      <div
+        key={event.id}
+        className="bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow rounded-lg flex flex-col"
+      >
+        <div className="h-48 bg-gray-200 overflow-hidden flex-shrink-0">
+          {event.coverImage ? (
+            <img
+              src={event.coverImage}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
+              <Calendar size={48} />
+            </div>
+          )}
+        </div>
+
+        <div className="p-6 flex flex-col flex-grow">
+          <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
+            {event.title}
+          </h3>
+          <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
+            {renderDescriptionWithLineBreaks(event.description)}
+          </p>
+
+          <div className="space-y-2 mb-3">
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <Calendar size={14} />
+              <span>{formatDate(event.eventDate)}</span>
+            </div>
+            {event.venue && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <MapPin size={14} />
+                <span className="line-clamp-1">{event.venue}</span>
+              </div>
+            )}
+            {event.city && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <MapPin size={14} />
+                <span className="line-clamp-1">{event.city}</span>
+              </div>
+            )}
+            {event.mapUrl && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <MapPin size={14} />
+                <span className="line-clamp-1">{event.mapUrl}</span>
+              </div>
+            )}
+            {event.slug && (
+              <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                <span className="truncate">/{event.slug}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-1 mb-4 flex-grow">
+            {event.gallery && event.gallery.length > 0 && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <ImageIcon size={14} />
+                <span>{event.gallery.length} gallery image(s)</span>
+              </div>
+            )}
+            {event.youtubeUrl && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <Youtube size={14} />
+                <span>YouTube video attached</span>
+              </div>
+            )}
+            {event.bookingUrl && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <Link as LinkIcon size={14} />
+                <span>Booking link available</span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2 mt-auto">
+            <button
+              onClick={() => handleEdit(event)}
+              className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
+            >
+              <Pencil size={16} />
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(event.id)}
+              className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+            >
+              <Trash2 size={16} />
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
     ))
   }
 
@@ -335,117 +457,42 @@ const EventsAdminPage = () => {
             </div>
           </div>
 
+          {/* Tabs */}
+          <div className="bg-white rounded-lg shadow-md mb-6">
+            <div className="flex border-b">
+              <button
+                onClick={() => setActiveTab('upcoming')}
+                className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                  activeTab === 'upcoming'
+                    ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                Upcoming Events ({upcomingEvents.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('past')}
+                className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                  activeTab === 'past'
+                    ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                Past Events ({pastEvents.length})
+              </button>
+            </div>
+          </div>
+
           {loading ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
               <p className="mt-4 text-gray-600">Loading events...</p>
             </div>
-          ) : events.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <Calendar size={48} className="mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600 text-lg">
-                No events found. Create your first event!
-              </p>
-            </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow rounded-lg flex flex-col"
-                >
-                  <div className="h-48 bg-gray-200 overflow-hidden flex-shrink-0">
-                    {event.coverImage ? (
-                      <img
-                        src={event.coverImage}
-                        alt={event.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <Calendar size={48} />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-6 flex flex-col flex-grow">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
-                      {event.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-3 min-h-[3.75rem]">
-                      {renderDescriptionWithLineBreaks(event.description)}
-                    </p>
-
-                    <div className="space-y-2 mb-3">
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Calendar size={14} />
-                        <span>{formatDate(event.eventDate)}</span>
-                      </div>
-                      {event.venue && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <MapPin size={14} />
-                          <span className="line-clamp-1">{event.venue}</span>
-                        </div>
-                      )}
-                      {event.city && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <MapPin size={14} />
-                          <span className="line-clamp-1">{event.city}</span>
-                        </div>
-                      )}
-                      {event.mapUrl && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <MapPin size={14} />
-                          <span className="line-clamp-1">{event.mapUrl}</span>
-                        </div>
-                      )}
-                      {event.slug && (
-                        <div className="flex items-center gap-2 text-xs text-gray-400 font-mono">
-                          <span className="truncate">/{event.slug}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-1 mb-4 flex-grow">
-                      {event.gallery && event.gallery.length > 0 && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <ImageIcon size={14} />
-                          <span>{event.gallery.length} gallery image(s)</span>
-                        </div>
-                      )}
-                      {event.youtubeUrl && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <Youtube size={14} />
-                          <span>YouTube video attached</span>
-                        </div>
-                      )}
-                      {event.bookingUrl && (
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <LinkIcon size={14} />
-                          <span>Booking link available</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex gap-2 mt-auto">
-                      <button
-                        onClick={() => handleEdit(event)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
-                      >
-                        <Pencil size={16} />
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(event.id)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              {activeTab === 'upcoming'
+                ? renderEventCards(upcomingEvents)
+                : renderEventCards(pastEvents)}
             </div>
           )}
 
@@ -588,18 +635,16 @@ const EventsAdminPage = () => {
                       value={formData.eventDate}
                       onChange={handleInputChange}
                       disabled={submitting}
-                      className=" px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Cover Image *{' '}
-                      {!formData.coverImage && (
-                        <span className="text-red-600">
-                          (Required to create event)
-                        </span>
-                      )}
+                      Cover Image{' '}
+                      <span className="text-xs text-gray-500">
+                        (Optional - fallback image will be used if not uploaded)
+                      </span>
                     </label>
                     <div className="flex items-center gap-4">
                       <input
@@ -644,8 +689,8 @@ const EventsAdminPage = () => {
                       )}
                     </div>
                     {!formData.coverImage && (
-                      <p className="text-sm text-gray-500 mt-2">
-                        ⚠️ Please upload a cover image to enable event creation
+                      <p className="text-sm text-blue-600 mt-2">
+                        ℹ️ Fallback image ({FALLBACK_IMAGE}) will be used
                       </p>
                     )}
                   </div>
@@ -784,9 +829,9 @@ const EventsAdminPage = () => {
 
                   {!isFormValid() && (
                     <div className="text-sm text-red-600 text-center">
-                      {!formData.coverImage
-                        ? '⚠️ Cover image is required to create event'
-                        : '⚠️ Please fill all required fields (Title, Slug, Venue, Description, Date, Cover Image)'}
+                      {!formData.title && !formData.description && !formData.venue && !formData.eventDate
+                        ? '⚠️ Title, Description, Venue and Date are required to create event'
+                        : '⚠️ Please fill all required fields (Title, Slug, Venue, Description, Date, City, Map URL)'}
                     </div>
                   )}
                 </div>

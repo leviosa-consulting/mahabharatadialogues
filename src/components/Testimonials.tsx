@@ -454,7 +454,7 @@ const Testimonials = () => {
     return <TestimonialsShimmer />
   }
 
-  console.log('featuredItems : ', featuredItem)
+  // console.log('featuredItems : ', featuredItem)
   return (
     <div className="w-full pb-30">
       {/* BACKGROUND SECTION */}

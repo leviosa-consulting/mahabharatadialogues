@@ -78,9 +78,9 @@ export async function PUT(
     const existing = docSnap.data();
 
     // Validate required fields
-    if (!body.venue && !body.city && !body.title) {
+    if (!body.venue && !body.city && !body.title && !body.description) {
       return NextResponse.json(
-        { success: false, error: "Title , Venue and city are required" },
+        { success: false, error: "Title , Description, Venue and city are required" },
         { status: 400 }
       );
     }
