@@ -549,7 +549,7 @@ const Testimonials = () => {
     text-white hover:text-blue-300
     transition-colors
     shrink-0
-    text-[16px] 
+    text-[14px] uppercase
     mt-[6px] 
   `}
                       >
@@ -695,7 +695,7 @@ const Testimonials = () => {
     text-white hover:text-blue-300
     transition-colors
     shrink-0
-    text-[16px] 
+    text-[14px]  uppercase
     mt-[6px] 
   `}
                       >
