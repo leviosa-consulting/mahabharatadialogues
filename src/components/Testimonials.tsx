@@ -78,12 +78,14 @@ const Testimonials = () => {
   const [loading, setLoading] = useState(true)
   const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false)
+ const [expandedId, setExpandedId] = useState<string | undefined>(undefined)
+
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
   const featuredCardRef = useRef<HTMLDivElement>(null)
   const autoScrollInterval = useRef<NodeJS.Timeout | null>(null)
-
+  const MAX_CHARS = 80
   useEffect(() => {
     fetchTestimonials()
     fetchUpcomingItems()
@@ -453,6 +455,8 @@ const Testimonials = () => {
   if (loading) {
     return <TestimonialsShimmer />
   }
+  const truncateText = (text: string, max = 70) =>
+    text.length > max ? text.slice(0, max) + '...' : text
 
   // console.log('featuredItems : ', featuredItem)
   return (
@@ -707,7 +711,24 @@ const Testimonials = () => {
                     <h2
                       className={`${merri.className} text-white font-normal px-[2px] my-4 text-[16px] md:text-[18px] italic leading-tight`}
                     >
-                      {renderTextWithLineBreaks(item.description)}
+                      {renderTextWithLineBreaks(
+                        expandedId === item.id
+                          ? item.description
+                          : truncateText(item.description, MAX_CHARS),
+                      )}
+
+                      {item.description.length > MAX_CHARS && (
+                        <button
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === item.id ? null : item.id,
+                            )
+                          }
+                          className="ml-2 text-blue-300 hover:text-blue-400 font-medium not-italic"
+                        >
+                          {expandedId === item.id ? 'Read less' : 'Read more'}
+                        </button>
+                      )}
                     </h2>
                   </div>
 

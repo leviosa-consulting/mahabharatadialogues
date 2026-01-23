@@ -42,7 +42,7 @@ const Navbar = ({ textColor }: NavProps) => {
       </div>
 
       {/* --------------- TABLET / DESKTOP NAVBAR --------------- */}
-      <div className="hidden sm:flex max-w-4xl mx-auto items-center justify-between px-4 gap-12">
+      <div className="hidden sm:flex max-w-4xl mx-auto items-center justify-between px-4 gap-10">
         {/* Left */}
         <div className="flex gap-6">
           <Link href="/events"  className={`${merri.className} font-bold uppercase text-[14px] text-[${textColor}]`}>
