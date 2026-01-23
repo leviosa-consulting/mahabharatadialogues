@@ -141,7 +141,7 @@ export default async function RetreatHero() {
     }
   }
 
-  const youtubeEmbedUrl = upcomingRetreat.youtube_video
+  const youtubeEmbedUrl = upcomingRetreat?.youtube_video
     ? getYoutubeEmbedUrl(upcomingRetreat.youtube_video)
     : null
 
@@ -168,14 +168,29 @@ export default async function RetreatHero() {
             backgroundSize: '256px 256px',
           }}
         >
-          <Navbar textColor="#1D5C75"/>
+          <div className="sm:hidden py-10">
+            {/* Web Asset */}
+            <Link
+              href="/"
+              className="flex justify-center items-center relative z-20"
+            >
+              <img
+                src="/Web_Assets-08.png"
+                alt="Home"
+                className="w-35 h-35 -mb-20 cursor-pointer"
+              />
+            </Link>
+          </div>
+          <div className="hidden sm:block relative sm:pt-10 z-10">
+            <Navbar textColor="#1D5C75" />
+          </div>
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-4 2xl:mx-30">
+            <div className="mx-4 2xl:mx-30 md:-mt-15 2xl:-mt-20">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
-                  <div className="w-full aspect-video relative z-10">
+                  <div className="w-full aspect-video relative ">
                     <iframe
                       src={youtubeEmbedUrl}
                       title="Join us for a 2-day Mahabharata Retreat"
@@ -195,7 +210,7 @@ export default async function RetreatHero() {
             <div className="mx-4 2xl:mx-30">
               <div className="grid grid-cols-1 md:grid-cols-12 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
-                  <div>
+                  <div className="text-center md:text-left">
                     <p
                       className={`${merri.className} text-[20px] text-[#78B0C7] font-bold my-4`}
                     >
@@ -215,7 +230,7 @@ export default async function RetreatHero() {
                       className={`${merri.className} text-[20px] text-white italic font-bold`}
                     >
                       {getDateRange(upcomingRetreat)}
-                    </p> 
+                    </p>
                     <h4
                       className={`${merri.className} text-[20px] text-white font-normal italic`}
                     >
@@ -241,11 +256,11 @@ export default async function RetreatHero() {
                       />
                     </div>
 
-                    <div>
-                      <p className="font-neco font-bold text-[18px] text-white flex items-center gap-1">
+                    <div className="text-center md:text-left">
+                      <p className="font-neco font-bold text-[28px] text-white flex items-center gap-1 justify-center md:justify-start">
                         <span>₹</span>
-                        <span> 
-                          {upcomingRetreat.price.toLocaleString('en-IN')}
+                        <span>
+                          {upcomingRetreat.price?.toLocaleString('en-IN')}
                         </span>
                       </p>
 
@@ -253,11 +268,13 @@ export default async function RetreatHero() {
                         {upcomingRetreat.inclusions}
                       </p>
                     </div>
-                    <div className="border border-white">
+                    <div className="">
                       <CustomButton
                         text="SCHEDULE"
                         bgColor="#1D5C75"
                         textColor="#FFFFFF"
+                        isBorder
+                        borderColor="#FFFFFF"
                         url={getScheduleUrl(upcomingRetreat)}
                       />
                     </div>
@@ -273,7 +290,7 @@ export default async function RetreatHero() {
           {pastRetreats.length > 0 && (
             <div className="w-full pt-8 pb-30">
               <div className="mx-4 2xl:mx-30">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-14 sm:gap-4 overflow-hidden">
                   {pastRetreats.map((retreat, index) => (
                     <div
                       key={retreat.id}
@@ -281,9 +298,9 @@ export default async function RetreatHero() {
                         index % 2 === 0
                           ? 'md:col-start-1 lg:col-start-2 col-span-6 lg:col-span-5'
                           : 'md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5'
-                      }`}
+                      } ${index > 0 ? 'mt-12 md:mt-0' : ''}`}
                     >
-                      <div className="flex flex-col justify-between gap-3">
+                      <div className="flex flex-col justify-between gap-3 text-center md:text-left">
                         {index === 0 && (
                           <p
                             className={`${merri.className} text-[20px] text-[#4298BA] font-bold`}
@@ -293,7 +310,7 @@ export default async function RetreatHero() {
                         )}
                         <h3
                           className={`font-neco text-[28px] text-[#1D5C75] font-bold ${
-                            index % 2 === 1 ? 'mt-8 md:mt-[42px]' : ''
+                            index % 2 === 1 ? 'mt-0 md:mt-[42px]' : ''
                           }`}
                         >
                           Mahabharata Dialogues
@@ -326,7 +343,7 @@ export default async function RetreatHero() {
                           <img src="/assets/eight.png" alt="" />
                         )}
                       </div>
-                      <div>
+                      <div className="text-center md:text-left">
                         <p
                           className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-12`}
                         >

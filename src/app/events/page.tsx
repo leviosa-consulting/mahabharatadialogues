@@ -113,7 +113,7 @@ const EventsPage = () => {
   const EventCard = ({ event }: { event: Event }) => (
     <div
       onClick={() => handleEventClick(event.slug)}
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
+      className="bg-white shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
     >
       <div className="relative h-56 overflow-hidden">
         {event.coverImage ? (
@@ -123,12 +123,12 @@ const EventsPage = () => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
-            <Calendar size={64} className="text-purple-400" />
+          <div className="w-full h-full  from-purple-100 to-purple-200 flex items-center justify-center">
+            <Calendar size={64} className="text-[#1D5C75CC]" />
           </div>
         )}
-        <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-md">
-          <span className="text-sm font-semibold text-purple-600">
+        <div className="absolute top-4 right-4 bg-white px-3 py-1 shadow-md">
+          <span className="text-sm font-semibold text-[#1D5C75CC]">
             {new Date(event.eventDate).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
@@ -138,28 +138,40 @@ const EventsPage = () => {
       </div>
 
       <div className="p-6">
-        <h3 className={`font-neco text-xl font-bold transition-colors h-16 overflow-hidden`}>
+        <h3
+          className={`font-neco text-xl font-bold transition-colors h-16 overflow-hidden`}
+        >
           {event?.title?.length > 60
             ? event.title.substring(0, 60) + '...'
             : event?.title}
         </h3>
 
-        <div className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-3`}>
+        <div
+          className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-3`}
+        >
           <Calendar size={16} />
           <span>{formatDate(event.eventDate)}</span>
         </div>
 
-        <div className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-2`}>
+        <div
+          className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-2`}
+        >
           <Clock size={16} />
           <span>{formatTime(event.eventDate)}</span>
         </div>
 
-        <div className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-4`}>
+        <div
+          className={`flex ${merri.className} items-center gap-2 text-sm text-gray-600 mb-4`}
+        >
           <MapPin size={16} />
-          <span className="line-clamp-1">{event.venue}, {event.city}</span>
+          <span className="line-clamp-1">
+            {event.venue}, {event.city}
+          </span>
         </div>
 
-        <p className={`text-gray-600 ${merri.className} text-sm mb-4 line-clamp-3`}>
+        <p
+          className={`text-gray-600 ${merri.className} text-sm mb-4 line-clamp-3`}
+        >
           {event?.description?.length > 80
             ? event.description.substring(0, 80) + '...'
             : event?.description}
@@ -172,7 +184,9 @@ const EventsPage = () => {
               <span>{event.gallery.length} photos</span>
             </div>
           )}
-          <div className={`flex ${merri.className} items-center gap-2 text-purple-600 font-semibold group-hover:gap-3 transition-all`}>
+          <div
+            className={`flex ${merri.className} items-center gap-2 text-purple-600 font-semibold group-hover:gap-3 transition-all`}
+          >
             <span>View Details</span>
             <ArrowRight size={18} />
           </div>
@@ -184,15 +198,34 @@ const EventsPage = () => {
   const showTabs = upcomingEvents.length > 0 && pastEvents.length > 0
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className="min-h-screen">
       {/* Web Asset – TOP CENTER */}
-     <Navbar textColor='#1D5C75'/>
-      <div className="-mt-20">
+      <div className="hidden sm:block py-10">
+        <Navbar textColor="#1D5C75" />
+      </div>
+      <div className="sm:hidden py-10">
+        {/* Web Asset */}
+        <Link
+          href="/"
+          className="flex justify-center items-center relative z-20"
+        >
+          <img
+            src="/Web_Assets-08.png"
+            alt="Home"
+            className="w-35 h-35 -mb-20 cursor-pointer"
+          />
+        </Link>
+      </div>
+      <div className="">
         {/* Hero Section */}
         <div className="bg-[#1D5C75] text-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className={`font-neco text-4xl md:text-5xl font-bold mb-4`}>Events</h1>
-            <p className={`${merri.className} text-lg md:text-xl text-purple-100 max-w-2xl`}>
+            <h1 className={`font-neco text-4xl md:text-5xl font-bold mb-4`}>
+              Events
+            </h1>
+            <p
+              className={`${merri.className} text-lg md:text-xl text-purple-100 max-w-2xl`}
+            >
               {upcomingEvents.length > 0
                 ? 'Discover our upcoming events and relive the memories from past gatherings'
                 : 'Relive the memories from our past events'}
@@ -203,36 +236,28 @@ const EventsPage = () => {
         {/* Tabs - Only show if both upcoming and past events exist */}
         {showTabs && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-            <div className="bg-white rounded-lg shadow-md p-2 inline-flex gap-2">
+            <div className="bg-white  shadow-md p-2 inline-flex gap-2">
               <button
                 onClick={() => setActiveTab('upcoming')}
-                className={`px-6 py-3 rounded-md ${merri.className} font-semibold transition-all ${
+                className={`px-6 py-3  ${merri.className} font-semibold transition-all ${
                   activeTab === 'upcoming'
-                    ? 'bg-purple-600 text-white shadow-md'
+                    ? 'bg-[#1D5C75CC] text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 Upcoming Events
-                {upcomingEvents.length > 0 && (
-                  <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                    {upcomingEvents.length}
-                  </span>
-                )}
+               
               </button>
               <button
                 onClick={() => setActiveTab('past')}
-                className={`px-6 py-3 ${merri.className} rounded-md font-semibold transition-all ${
+                className={`px-6 py-3 ${merri.className} font-semibold transition-all ${
                   activeTab === 'past'
-                    ? 'bg-purple-600 text-white shadow-md'
+                    ? 'bg-[#1D5C75CC] text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 Past Events
-                {pastEvents.length > 0 && (
-                  <span className="ml-2 px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
-                    {pastEvents.length}
-                  </span>
-                )}
+               
               </button>
             </div>
           </div>
@@ -246,7 +271,7 @@ const EventsPage = () => {
         >
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+              <div className="inline-block animate-spin  h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
             </div>
           ) : (
             <>
@@ -254,7 +279,9 @@ const EventsPage = () => {
                 upcomingEvents.length > 0 && (
                   <div>
                     {!showTabs && (
-                      <h2 className={`${merri.className} text-2xl font-bold text-gray-900 mb-6`}>
+                      <h2
+                        className={`${merri.className} text-2xl font-bold text-gray-900 mb-6`}
+                      >
                         Upcoming Events
                       </h2>
                     )}

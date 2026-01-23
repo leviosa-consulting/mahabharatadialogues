@@ -6,6 +6,8 @@ interface ButtonProps {
   bgColor: string
   textColor: string
   isArrow?: boolean
+  isBorder?: boolean
+  borderColor?: string
   url: string
   isOutSideLink?: boolean
 }
@@ -16,6 +18,8 @@ const CustomButton = ({
   textColor,
   url,
   isArrow,
+  isBorder,
+  borderColor,
   isOutSideLink
 }: ButtonProps) => {
   return (
@@ -23,7 +27,11 @@ const CustomButton = ({
   href={url}
   target={isOutSideLink ? "_blank" : undefined}
   rel={isOutSideLink ? "noopener noreferrer" : undefined}
-  style={{ backgroundColor: bgColor, color: textColor }}
+  style={{
+    backgroundColor: bgColor,
+    color: textColor,
+    ...(isBorder && { borderColor: borderColor || textColor }),
+  }}
   className={`
     ${merri.className}
     inline-flex items-center justify-center
@@ -33,8 +41,10 @@ const CustomButton = ({
     px-6 sm:px-0 lg:px-12
     text-[14px] lg:text-[16px]
     leading-none
+    ${isBorder ? 'border' : ''}
   `}
 >
+
   <span className="flex items-center gap-2">
     {text}
     {isArrow && (

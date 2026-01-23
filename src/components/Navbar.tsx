@@ -1,45 +1,78 @@
 import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
-import React from 'react'
 
-interface NavProps{
-    textColor : string
+interface NavProps {
+  textColor: string
 }
 
-const Navbar = ({textColor}: NavProps) => {
+const Navbar = ({ textColor }: NavProps) => {
   return (
-    <div className="hidden max-w-4xl mx-auto sm:flex items-center justify-between px-4 gap-6">
-      
-      {/* Left items */}
-      <div className="flex gap-6">
-        <Link href={"/events"} className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
-          Events
-        </Link>
-        <Link href={"/retreats"} className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
-          Retreats
-        </Link>
+    <>
+      {/* ---------------- MOBILE NAVBAR ---------------- */}
+      <div className="sm:hidden w-full px-4 pt-4">
+        <div className="grid grid-cols-2 gap-4 text-center">
+          <Link
+            href="/events"
+            className={`${merri.className} font-bold text-lg text-[${textColor}]`}
+          >
+            Events
+          </Link>
+
+          <Link
+            href="/retreats"
+            className={`${merri.className} font-bold text-lg text-[${textColor}]`}
+          >
+            Retreats
+          </Link>
+
+          <Link
+            href="/blogs"
+            className={`${merri.className} font-bold text-lg text-[${textColor}]`}
+          >
+            Blogs
+          </Link>
+
+          <Link
+            href="/contact"
+            className={`${merri.className} font-bold text-lg text-[${textColor}]`}
+          >
+            Contact Us
+          </Link>
+        </div>
       </div>
 
-      {/* Center logo */}
-      <Link href={"/"} className="flex justify-center">
-        <img
-          src="Web_Assets-08.png"
-          alt="Logo"
-          className="w-42 xl:w-60 2xl:w-82 h-auto object-contain"
-        />
-      </Link>
+      {/* --------------- TABLET / DESKTOP NAVBAR --------------- */}
+      <div className="hidden sm:flex max-w-4xl mx-auto items-center justify-between px-4 gap-6">
+        {/* Left */}
+        <div className="flex gap-6">
+          <Link href="/events" className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
+            Events
+          </Link>
+          <Link href="/retreats" className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
+            Retreats
+          </Link>
+        </div>
 
-      {/* Right items */}
-      <div className="flex gap-6">
-        <Link href={"/blogs"} className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
-          Blogs
+        {/* Center Logo */}
+        <Link href="/" className="flex justify-center">
+          <img
+            src="Web_Assets-08.png"
+            alt="Logo"
+            className="w-42 xl:w-60 2xl:w-82 h-auto object-contain"
+          />
         </Link>
-        <h2 className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
-          Contact Us
-        </h2>
-      </div>
 
-    </div>
+        {/* Right */}
+        <div className="flex gap-6">
+          <Link href="/blogs" className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
+            Blogs
+          </Link>
+          <Link href="/contact" className={`${merri.className} font-bold text-2xl text-[${textColor}]`}>
+            Contact Us
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
 

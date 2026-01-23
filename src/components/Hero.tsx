@@ -15,7 +15,7 @@ export default function HeroSection() {
       // }}
     >
       {/* ipad/desktop */}
-      <div className="hidden sm:flex w-full overflow-hidden items-center">
+      <div className="hidden sm:flex w-full overflow-hidden items-start">
         {/* left image */}
         <div className="flex-1 -mt-20 -ml-20">
           <img
@@ -25,8 +25,14 @@ export default function HeroSection() {
           />
         </div>
 
-        <div className="relative xl:-mt-60 2xl:-mt-40">
-          <Navbar textColor='#fff'/>
+        {/* navbar */}
+        <div className="hidden lg:flex mt-10">
+          <Navbar textColor="#fff" />
+        </div>
+
+        {/* circle */}
+        <div className="lg:hidden w-[50%] h-[50%] rounded-full flex items-center justify-center text-center">
+          <img src="Web_Assets-08.png" alt="webAssets9" className="" />
         </div>
 
         {/* right image */}
@@ -43,7 +49,7 @@ export default function HeroSection() {
         {/* top circle */}
         <div className="flex flex-col items-center justify-center my-4 px-12">
           {/* circle */}
-          <div className="w-[70%] h-[70%] rounded-full bg-red-500 flex items-center justify-center text-center">
+          <div className="w-[70%] h-[70%] rounded-full flex items-center justify-center text-center">
             <img src="Web_Assets-08.png" alt="webAssets9" className="" />
           </div>
         </div>

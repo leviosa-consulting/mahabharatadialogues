@@ -306,7 +306,7 @@ const BlogDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="inline-block animate-spin rounded-full h-16 w-16 border-4 border-purple-600 border-t-transparent"></div>
+        <div className="inline-block animate-spin h-16 w-16 border-4 border-purple-600 border-t-transparent"></div>
       </div>
     )
   }
@@ -323,7 +323,7 @@ const BlogDetailPage = () => {
           </p>
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white hover:bg-purple-700 transition-colors"
           >
             <ArrowLeft size={20} />
             Back to Blogs
@@ -364,7 +364,7 @@ const BlogDetailPage = () => {
 
                           <button
                             onClick={handleClose}
-                            className="flex-shrink-0 text-[#1D5C75] hover:bg-gray-100 rounded-full p-1 transition-colors"
+                            className="flex-shrink-0 text-[#1D5C75] hover:bg-gray-100 p-1 transition-colors"
                             aria-label="Close"
                           >
                             <X className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-[45px] lg:h-[45px]" />
@@ -402,7 +402,7 @@ const BlogDetailPage = () => {
                               <span>Share</span>
                             </button>
                             {shareTooltip && (
-                              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 rounded whitespace-nowrap">
+                              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 whitespace-nowrap">
                                 Link copied!
                               </div>
                             )}

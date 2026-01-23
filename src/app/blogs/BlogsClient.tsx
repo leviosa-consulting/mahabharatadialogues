@@ -234,7 +234,22 @@ export default function BlogsClient({
     <div className="min-h-screen bg-[#1D5C75CC]">
       {/* Hero Section */}
       <header className="bg-white ">
-       <Navbar textColor='#1D5C75'/>
+        <div className="sm:hidden my-10">
+          {/* Web Asset */}
+          <Link
+            href="/"
+            className="flex justify-center items-center relative z-20"
+          >
+            <img
+              src="/Web_Assets-08.png"
+              alt="Home"
+              className="w-35 h-35 -mb-20 cursor-pointer"
+            />
+          </Link>
+        </div>
+        <div className="hidden sm:block relative sm:pt-10 z-10">
+          <Navbar textColor="#1D5C75" />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="text-center">
@@ -280,7 +295,7 @@ export default function BlogsClient({
               <Filter size={20} />
               <span className={`${merri.className} font-medium`}>Filters</span>
               {hasActiveFilters && (
-                <span className="ml-1 px-2 py-0.5 bg-white text-[#1D5C75] rounded-full text-xs font-semibold">
+                <span className="ml-1 px-2 py-0.5 bg-white text-[#1D5C75]  text-xs font-semibold">
                   {
                     [searchQuery, selectedAuthor, selectedCategory].filter(
                       Boolean
@@ -328,7 +343,7 @@ export default function BlogsClient({
                     id="category-filter"
                     value={selectedCategory}
                     onChange={(e) => handleCategoryChange(e.target.value)}
-                    className={`${merri.className} w-full px-4 py-2 border-2 border-[#1D5C75] rounded-lg focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
+                    className={`${merri.className} w-full px-4 py-2 border-2 border-[#1D5C75]  focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
                   >
                     <option value="">All Categories</option>
                     {allCategories.map((cat) => (
@@ -361,7 +376,7 @@ export default function BlogsClient({
               </span>
               <button
                 onClick={() => handleCategoryChange('')}
-                className="hover:bg-white/20 rounded-full p-1 transition-colors"
+                className="hover:bg-white/20  p-1 transition-colors"
                 aria-label="Clear category filter"
               >
                 <X size={16} />
@@ -406,7 +421,7 @@ export default function BlogsClient({
 
                     {blog.categories?.length > 0 && (
                       <span
-                        className={`${merri.className} absolute top-4 left-4 bg-white px-3 py-1 text-[#1D5C75] rounded-full text-xs font-semibold shadow-md`}
+                        className={`${merri.className} absolute top-4 left-4 bg-white px-3 py-1 text-[#1D5C75] text-xs font-semibold shadow-md`}
                       >
                         {blog.categories[0]}
                       </span>
