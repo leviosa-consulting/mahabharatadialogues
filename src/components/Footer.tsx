@@ -15,7 +15,7 @@ const Footer = () => {
       "
       >
         {/* Email */}
-        <div className="flex items-center gap-3 break-all sm:break-normal">
+        <div className="flex items-center gap-3">
           <Mail className="w-5 h-5 md:w-7 md:h-7" />
           <p className="font">mahabharatadialogues@gmail.com</p>
         </div>
