@@ -16,7 +16,7 @@ export default function Home() {
       style={{
         backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
         backgroundRepeat: 'repeat',
-        backgroundSize: '256px 256px',
+        backgroundSize: '240px 240px',
       }} 
     >
       <HeroSection />

@@ -6,7 +6,7 @@ import { merri } from '@/app/fonts/merri'
 import TestimonialsShimmer from './TestimonialsShimmer'
 import Link from 'next/link'
 import { Calendar, MapPin } from 'lucide-react'
-import { it } from 'node:test'
+import { useRouter } from 'next/navigation'
 
 interface Testimonial {
   id: string
@@ -24,7 +24,7 @@ interface Event {
   time: string
   venue: string
   mapUrl: string
-  description?: string
+  description: string
   bookingUrl?: string
   slug?: string
   endDate?: string
@@ -78,14 +78,16 @@ const Testimonials = () => {
   const [loading, setLoading] = useState(true)
   const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false)
- const [expandedId, setExpandedId] = useState<string | undefined>(undefined)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
   const featuredCardRef = useRef<HTMLDivElement>(null)
   const autoScrollInterval = useRef<NodeJS.Timeout | null>(null)
+  const router = useRouter()
   const MAX_CHARS = 80
+
   useEffect(() => {
     fetchTestimonials()
     fetchUpcomingItems()
@@ -294,13 +296,13 @@ const Testimonials = () => {
               id: retreat.id,
               type: 'retreat',
               title: retreat.title,
-              description: retreat.description,
+              description: retreat.description || '',
               coverImage: retreat.coverImage || '/assets/videoImg.png',
               date: retreat.day1.date,
               endDate: endDate,
               time: '',
               venue: retreat.venue || 'Venue TBA',
-              mapUrl: retreat.mapUrl,
+              mapUrl: retreat.mapUrl || '',
               city: retreat.city,
               slug: retreat.slug,
               bookingUrl: retreat.bookingUrl,
@@ -322,8 +324,8 @@ const Testimonials = () => {
               date: event.eventDate,
               time: event.eventTime || '',
               venue: event.venue || 'Venue TBA',
-              mapUrl: event.mapUrl,
-              description: event.description,
+              mapUrl: event.mapUrl || '',
+              description: event.description || '',
               bookingUrl: event.bookingUrl,
               slug: event.slug,
               city: event.city,
@@ -396,15 +398,6 @@ const Testimonials = () => {
     setIsAutoScrollPaused((prev) => !prev)
   }
 
-  const getItemUrl = (item: Event) => {
-    if (item.type === 'event' && item.slug) {
-      return `/events/${item.slug}`
-    } else if (item.type === 'retreat' && item.slug) {
-      return `/retreats/${item.slug}`
-    }
-    return '#'
-  }
-
   const getDisplayDate = (item: Event): string => {
     if (item.type === 'retreat' && item.endDate && item.endDate !== item.date) {
       return formatDateRange(item.date, item.endDate)
@@ -455,10 +448,10 @@ const Testimonials = () => {
   if (loading) {
     return <TestimonialsShimmer />
   }
+
   const truncateText = (text: string, max = 70) =>
     text.length > max ? text.slice(0, max) + '...' : text
 
-  // console.log('featuredItems : ', featuredItem)
   return (
     <div className="w-full pb-30">
       {/* BACKGROUND SECTION */}
@@ -474,7 +467,7 @@ const Testimonials = () => {
         
       `,
           backgroundRepeat: 'repeat',
-          backgroundSize: '256px 256px',
+          backgroundSize: '240px 240px',
         }}
       >
         {featuredItem && featuredCardHeight > 0 && (
@@ -627,8 +620,11 @@ const Testimonials = () => {
             </h2>
 
             <div
-              className={`flex gap-12 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory sm:px-4 py-8  ${upcomingItems.length < 2 ? 'justify-center' : ''}
-    ${upcomingItems.length < 4 ? 'md:justify-center' : ''}`}
+              className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-8 px-4
+    ${upcomingItems.length === 1 ? 'justify-center' : ''}
+    ${upcomingItems.length === 2 ? 'md:justify-center' : ''}
+    ${upcomingItems.length === 3 ? 'md:justify-start md:pl-[8%] lg:pl-[8%]' : ''}
+    ${upcomingItems.length >= 4 ? 'md:pl-[8%] lg:pl-[8%]' : ''}`}
               style={{
                 backgroundImage: `
         linear-gradient(
@@ -639,7 +635,7 @@ const Testimonials = () => {
       `,
 
                 backgroundRepeat: 'repeat',
-                backgroundSize: '256px 256px',
+                backgroundSize: '240px 240px',
               }}
             >
               {upcomingItems.map((item) => (
@@ -647,18 +643,18 @@ const Testimonials = () => {
                   key={item.id}
                   className="snap-start shrink-0 flex flex-col gap-3
     w-[85%]        
-    md:w-[40%] xl:w-[30%]"
+    md:w-[50%] lg:w-[42%] xl:w-[30%] bg-[#78B0C799] self-start"
                 >
                   {/* Image */}
-                  <div className="relative">
+                  <div className="relative w-full">
                     <img
                       src={item.coverImage || '/abhilash.png'}
                       alt={item.title}
-                      className="aspect-465/285 object-cover"
+                      className="aspect-465/285 object-cover w-full"
                     />
                   </div>
 
-                  <div className="flex flex-col justify-center items-center text-center ">
+                  <div className="flex flex-col justify-center items-center text-center w-full">
                     <h2
                       className={`${merri.className} text-white font-bold px-[2px]  text-[32px]  italic leading-tight mb-3`}
                     >
@@ -709,7 +705,7 @@ const Testimonials = () => {
                     )}
 
                     <h2
-                      className={`${merri.className} text-white font-light px-[2px] my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
+                      className={`${merri.className} text-white font-light px-1 my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
                     >
                       {renderTextWithLineBreaks(
                         expandedId === item.id
@@ -732,57 +728,37 @@ const Testimonials = () => {
                     </h2>
                   </div>
 
-                  {/* Buttons */}
-                  <div className="hidden gap-2 md:justify-start mt-2">
-                    <div className="w-full md:w-full">
-                      <CustomButton
-                        text={
-                          item.type === 'retreat'
-                            ? 'LEARN MORE'
-                            : 'GET YOUR TICKETS'
-                        }
-                        bgColor="#D12127"
-                        textColor="#FFFFFF"
-                        url={
-                          item.type === 'retreat'
-                            ? '/retreats'
-                            : item.bookingUrl
-                        }
-                        isArrow
-                      />
-                    </div>
-
-                    <div
-                      className="bg-[#78B0C7] p-[9px] flex justify-center items-center cursor-pointer"
-                      onClick={() => handleShare(item.bookingUrl)}
-                    >
-                      <img src="/share.png" alt="share" className="w-6 h-6" />
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
+                  <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2 w-full mt-auto">
                     <div className="sm:w-[280px]">
                       <CustomButton
-                        text={
-                          item.type === 'retreat'
-                            ? 'LEARN MORE'
-                            : 'GET YOUR TICKETS'
-                        }
-                        bgColor="#D12127"
+                        text={'LEARN MORE'}
+                        bgColor="#1D5C75"
                         textColor="#FFFFFF"
                         url={
                           item.type === 'retreat'
                             ? '/retreats'
-                            : item.bookingUrl
+                            : `/events/${item.slug ?? ''}`
                         }
                         isArrow
                       />
                     </div>
                     <div
-                      className="bg-[#78B0C7] p-[16px]  cursor-pointer"
-                      onClick={() => handleShare(item.bookingUrl)}
+                      className="bg-[#D12127] p-[16px]  cursor-pointer"
+                      onClick={() => {
+                        if (item.type === 'retreat') {
+                          router.push('/retreats')
+                        } else if (item.slug) {
+                          router.push(`/events/${item.slug}`)
+                        } else {
+                          router.push('/events')
+                        }
+                      }}
                     >
-                      <img src="/share.png" alt="share" className="w-6 h-6" />
+                      <img
+                        src="/Arrow_up-right.png"
+                        alt="share"
+                        className="w-6 h-6"
+                      />
                     </div>
                   </div>
                 </div>

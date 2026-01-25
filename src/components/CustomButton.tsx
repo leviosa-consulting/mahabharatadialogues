@@ -40,7 +40,7 @@ const CustomButton = ({
     h-14
     px-6 sm:px-0 lg:px-12
     text-[14px] lg:text-[16px]
-    leading-none
+    leading-none 
     ${isBorder ? 'border' : ''}
   `}
 >
