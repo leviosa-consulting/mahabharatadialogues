@@ -299,7 +299,7 @@ const EventDetailPage = () => {
                   href={event.bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
+                  className="w-full flex items-center justify-center gap-2 bg-[#1D5C75] text-white px-6 py-3  transition-colors font-semibold"
                 >
                   <span>Book Now</span>
                   <ExternalLink size={18} />

@@ -168,6 +168,7 @@ export default async function RetreatHero() {
             backgroundSize: '256px 256px',
           }}
         >
+          <div className=' bg-white/50 '></div>
           <div className="sm:hidden py-10">
             {/* Web Asset */}
             <Link
