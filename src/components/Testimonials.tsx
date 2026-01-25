@@ -739,7 +739,7 @@ const Testimonials = () => {
                             ? '/retreats'
                             : `/events/${item.slug ?? ''}`
                         }
-                        isArrow
+                        
                       />
                     </div>
                     <div
