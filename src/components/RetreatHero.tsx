@@ -160,15 +160,21 @@ export default async function RetreatHero() {
           `,
         }}
       >
-        <div
-          className="w-full"
-          style={{
-            backgroundImage: "url('/MD-Texture_BG_White-04.png')",
-            backgroundRepeat: 'repeat',
-            backgroundSize: '256px 256px',
-          }}
-        >
-          <div className=' bg-white/50 '></div>
+       <div
+  className="w-full"
+  style={{
+    backgroundImage: `
+      linear-gradient(
+        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.6)
+      ),
+      url('/MD-Texture_BG_White-04.png')
+    `,
+    backgroundRepeat: 'repeat',
+    backgroundSize: '240px 240px',
+  }}
+>
+
           <div className="sm:hidden py-10">
             {/* Web Asset */}
             <Link
@@ -183,12 +189,12 @@ export default async function RetreatHero() {
             </Link>
           </div>
           <div className="hidden sm:block relative sm:pt-10 z-10">
-            <Navbar textColor="#1D5C75" />
+            <Navbar textColor="#1D5C75" isNotHome />
           </div>
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-4 2xl:mx-30 md:-mt-15 2xl:-mt-20">
+            <div className="mx-4 2xl:mx-30 md:-mt-10 xl:-mt-10">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video relative ">
@@ -311,7 +317,7 @@ export default async function RetreatHero() {
                         )}
                         <h3
                           className={`font-neco text-[28px] leading-none text-[#1D5C75] font-bold ${
-                            index % 2 === 1 ? 'mt-0 md:mt-[46px]' : ''
+                            index % 2 === 1 ? 'mt-0 md:mt-[55px]' : ''
                           }`}
                         >
                           Mahabharata Dialogues
