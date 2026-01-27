@@ -215,8 +215,19 @@ const EventsPage = () => {
   const showTabs = upcomingEvents.length > 0 && pastEvents.length > 0
 
   return (
-    <div className="min-h-screen">
-      {/* Web Asset – TOP CENTER */}
+    <div className="min-h-screen" >
+     <div className='w-full ' style={{
+    backgroundImage: `
+      linear-gradient(
+        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.6)
+      ),
+      url('/MD-Texture_BG_White-04.png')
+    `,
+    backgroundRepeat: 'repeat',
+    backgroundSize: '240px 240px',
+  }}>
+       {/* Web Asset – TOP CENTER */}
       <div className="hidden sm:block py-10">
         <Navbar textColor="#1D5C75" isNotHome/>
       </div>
@@ -233,6 +244,7 @@ const EventsPage = () => {
           />
         </Link>
       </div>
+     </div>
       <div className="">
         {/* Hero Section */}
         <div className="bg-[#1D5C75] text-white py-16">

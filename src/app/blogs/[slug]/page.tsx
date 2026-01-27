@@ -306,7 +306,7 @@ const BlogDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="inline-block animate-spin h-16 w-16 border-4 border-purple-600 border-t-transparent"></div>
+        <div className="inline-block animate-spin h-16 w-16 border-4 border-black border-t-transparent"></div>
       </div>
     )
   }
@@ -323,7 +323,7 @@ const BlogDetailPage = () => {
           </p>
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white hover:bg-black transition-colors"
           >
             <ArrowLeft size={20} />
             Back to Blogs
@@ -425,13 +425,13 @@ const BlogDetailPage = () => {
                                 >
                                   <button
                                     onClick={() => handleCategoryClick(cat)}
-                                    className="hover:underline hover:text-[#47ABD8] transition-colors cursor-pointer"
+                                    className="hover:underline text-[#78B0C7] hover:text-[#47ABD8] transition-colors cursor-pointer"
                                   >
                                     {cat}
                                   </button>
 
                                   {index !== blog.categories.length - 1 && (
-                                    <span className=" flex items-center mx-2">
+                                    <span className=" flex text-[#78B0C7] items-center mx-2">
                                       |
                                     </span>
                                   )}

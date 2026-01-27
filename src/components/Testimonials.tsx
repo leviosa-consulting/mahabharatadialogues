@@ -297,7 +297,7 @@ const Testimonials = () => {
               type: 'retreat',
               title: retreat.title,
               description: retreat.description || '',
-              coverImage: retreat.coverImage || '/assets/videoImg.png',
+              coverImage: retreat.coverImage || '/assets/fallbackImg.jpeg',
               date: retreat.day1.date,
               endDate: endDate,
               time: '',
@@ -320,7 +320,7 @@ const Testimonials = () => {
               id: event.id,
               type: 'event',
               title: event.title,
-              coverImage: event.coverImage || '/assets/videoImg.png',
+              coverImage: event.coverImage || '/assets/fallbackImg.jpeg',
               date: event.eventDate,
               time: event.eventTime || '',
               venue: event.venue || 'Venue TBA',
@@ -642,7 +642,7 @@ const Testimonials = () => {
                 <div
                   key={item.id}
                   className="snap-start shrink-0 flex flex-col gap-3
-    w-[85%]        
+    w-[95%]        
     md:w-[50%] lg:w-[42%] xl:w-[30%] bg-[#78B0C799] self-start"
                 >
                   {/* Image */}

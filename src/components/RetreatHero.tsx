@@ -160,21 +160,20 @@ export default async function RetreatHero() {
           `,
         }}
       >
-       <div
-  className="w-full"
-  style={{
-    backgroundImage: `
+        <div
+          className="w-full"
+          style={{
+            backgroundImage: `
       linear-gradient(
         rgba(255, 255, 255, 0.6),
         rgba(255, 255, 255, 0.6)
       ),
       url('/MD-Texture_BG_White-04.png')
     `,
-    backgroundRepeat: 'repeat',
-    backgroundSize: '240px 240px',
-  }}
->
-
+            backgroundRepeat: 'repeat',
+            backgroundSize: '240px 240px',
+          }}
+        >
           <div className="sm:hidden py-10">
             {/* Web Asset */}
             <Link

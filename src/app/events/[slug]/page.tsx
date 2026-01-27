@@ -92,7 +92,7 @@ const EventDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="inline-block animate-spin  h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
+        <div className="inline-block animate-spin  h-12 w-12 border-4 border-black border-t-transparent"></div>
       </div>
     )
   }
