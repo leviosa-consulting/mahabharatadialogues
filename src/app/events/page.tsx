@@ -107,110 +107,180 @@ const EventsPage = () => {
     })
   }
 
+  const formatEventDateTime = (dateString: string) => {
+  const date = new Date(dateString)
+
+  const datePart = date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+
+  const timePart = date
+    .toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    })
+    .toLowerCase()
+
+  return `${datePart} | ${timePart}`
+}
+
+
   const handleEventClick = (slug: string) => {
     router.push(`/events/${slug}`)
   }
 
-  const EventCard = ({ event }: { event: Event }) => (
+const EventCard = ({ event }: { event: Event }) => (
+  <div
+    onClick={() => handleEventClick(event.slug)}
+    className="
+      flex flex-col
+      items-center
+      cursor-pointer
+      group
+      bg-white
+      shadow-2xl
+    "
+  >
+    {/* Image */}
+    <div className="w-full h-[260px] overflow-hidden">
+      {event.coverImage ? (
+        <img
+          src={event.coverImage}
+          alt={event.title}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <Calendar size={64} className="text-black/40" />
+        </div>
+      )}
+    </div>
+
+    {/* Content */}
     <div
-      onClick={() => handleEventClick(event.slug)}
-      className="bg-white shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
+      className="
+        flex flex-col
+        justify-center
+        items-center
+        text-center
+        px-2 md:px-10
+      "
     >
-      <div className="relative h-56 overflow-hidden">
-        {event.coverImage ? (
-          <img
-            src={event.coverImage}
-            alt={event.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Calendar size={64} className="text-[#1D5C75CC]" />
-          </div>
-        )}
-        <div className="absolute top-4 right-4 bg-white px-3 py-1 shadow-md">
-          <span className="text-sm font-semibold text-[#1D5C75CC]">
-            {new Date(event.eventDate).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-            })}
-          </span>
-        </div>
-      </div>
+      {/* Title */}
+      <h2
+        className={`${merri.className}
+          text-black
+          font-extrabold
+          italic
+          text-[26px] md:text-[32px]
+          leading-tight
+          mt-6
+        `}
+      >
+        {event.title}
+      </h2>
 
-      <div className="p-6">
-        <h3
-          className={`${merri.className} text-[32px] font-bold transition-colors text-[#1d5c7f] overflow-hidden mb-2`}
+      {/* Date */}
+      <h3
+        className={`${merri.className}
+          text-black
+          font-bold
+          text-[16px] md:text-[18px]
+          mt-2
+        `}
+      >
+       {formatEventDateTime(event.eventDate)}
+      </h3>
+
+      {/* Venue */}
+      <div className="flex flex-col items-center mt-3">
+        <h4
+          className={`${merri.className}
+            text-black
+            font-normal
+            text-[16px] md:text-[18px]
+            leading-snug
+          `}
         >
-          {event?.title?.length > 60
-            ? event.title.substring(0, 60) + '...'
-            : event?.title}
-        </h3>
-
-        <div
-          className={`flex ${merri.className} text-[16px] md:text-[18px] items-center gap-2 text-sm text-[#1d5c7f] leading-[1.5]`}
+          {event.venue},
+        </h4>
+        <h4
+          className={`${merri.className}
+            text-black
+            font-normal
+            text-[16px] md:text-[18px]
+            leading-snug
+          `}
         >
-          <Calendar size={18} />
-          <span>{formatDate(event.eventDate)}</span>
-        </div>
+          {event.city}
+        </h4>
 
-        <div
-          className={`flex ${merri.className} text-[16px] md:text-[18px] items-center gap-2 text-sm leading-none text-[#1d5c7f] mb-4`}
-        >
-          <Clock size={18} />
-          <span>{formatTime(event.eventDate)}</span>
-        </div>
-
-        <div
-          className={`flex flex-col ${merri.className} text-[16px] md:text-[18px] items-start gap-2 text-[#1d5c7f] mb-4`}
-        >
-          <span className="leading-none">
-            {event.venue}, {event.city}
-          </span>
-
+        {event.mapUrl && (
           <a
             href={event.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title="Open in Google Maps"
-            className={` ${merri.className}
+            onClick={(e) => e.stopPropagation()}
+            className={`${merri.className}
               inline-flex items-center gap-1
-              text-[#1d5c7f] hover:text-blue-300
+              text-black hover:text-blue-600
               transition-colors
-              shrink-0
-              leading-none text-[16px] mt-1
+              text-[14px] uppercase
+              mt-[6px]
             `}
           >
             <MapPin size={18} />
             <span>View in Map</span>
           </a>
-        </div>
+        )}
+      </div>
 
+      {/* Description */}
+      {event.description && (
         <p
-          className={`text-[#1d5c7f] ${merri.className} text-[16px] md:text-[18px] mb-4 line-clamp-3`}
+          className={`${merri.className}
+            text-black
+            font-light
+            italic
+            text-[16px] md:text-[18px]
+            py-6
+          `}
         >
-          {event?.description?.length > 80
-            ? event.description.substring(0, 80) + '...'
-            : event?.description}
+          {event.description.length > 60
+            ? event.description.slice(0, 60) + '...'
+            : event.description}
         </p>
+      )}
 
-        <div className="flex items-center justify-between">
-          {event.gallery && event.gallery.length > 0 && (
-            <div className="flex items-center gap-1  text-[#1d5c7f]">
-              <ImageIcon size={16} />
-              <span>{event.gallery.length} photos</span>
-            </div>
-          )}
-          <div
-            className={`flex ${merri.className} items-center gap-2 text-[16px] md:text-[18px] text-[#1d5c7f] font-semibold group-hover:gap-3 transition-all`}
-          >
-            <span>View Details</span>
-            <ArrowRight size={18} />
+      {/* Footer */}
+      <div className="flex items-center justify-between w-full pb-8">
+        {event.gallery && event.gallery.length > 0 && (
+          <div className="flex items-center gap-1 text-black text-[14px]">
+            <ImageIcon size={16} />
+            <span>{event.gallery.length} photos</span>
           </div>
+        )}
+
+        <div
+          className={`${merri.className}
+            flex  items-center gap-2
+            text-black
+            text-[16px] md:text-[18px]
+            font-semibold
+           
+          `}
+        >
+          <span>View Details</span>
+          <ArrowRight size={18} />
         </div>
       </div>
     </div>
-  )
+  </div>
+)
+
 
   const showTabs = upcomingEvents.length > 0 && pastEvents.length > 0
 

@@ -134,29 +134,7 @@ const EventDetailPage = () => {
           <h1 className="text-4xl md:text-5xl font-neco font-bold text-white mb-4">
             {event.title}
           </h1>
-          <div className="flex flex-wrap gap-6 text-white">
-            <div className="flex items-center gap-2">
-              <Calendar size={20} />
-              <span>{formatDate(event.eventDate)}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock size={20} />
-              <span>{formatTime(event.eventDate)}</span>
-            </div>
-            {event.venue && event.mapUrl && (
-              <a
-                href={event.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 cursor-pointer hover:underline"
-              >
-                <MapPin size={20} />
-                <span>
-                  {event.venue}, {event.city}
-                </span>
-              </a>
-            )}
-          </div>
+         
         </div>
       </div>
 
@@ -299,7 +277,7 @@ const EventDetailPage = () => {
                   href={event.bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-[#1D5C75] text-white px-6 py-3  transition-colors font-semibold"
+                  className="w-full flex items-center justify-center gap-2 bg-[#D12127] text-white px-6 py-3  transition-colors font-semibold"
                 >
                   <span>Book Now</span>
                   <ExternalLink size={18} />

@@ -386,7 +386,7 @@ const UpcomingEvents = () => {
             ref={featuredCardRef}
             className="
     absolute top-0 left-1/2 -translate-x-1/2
-    flex flex-col max-w-84 w-[calc(100%-2rem)] sm:max-w-100 sm:mx-0 lg:max-w-[520px]
+    flex flex-col max-w-94 w-[calc(100%-2rem)] sm:max-w-100 sm:mx-0 lg:max-w-[520px]
     justify-center items-center
     -mt-[20%] sm:-mt-[10%] xl:-mt-[20%]
     bg-[#1D5C75CC]
@@ -409,7 +409,7 @@ const UpcomingEvents = () => {
               >
                 {getDisplayDate(featuredItem)}
               </h3>
-              {featuredItem.venue && featuredItem.mapUrl && (
+              {featuredItem.venue && (
                 <div className="flex justify-center pb-4">
                   <div
                     className="
@@ -419,9 +419,9 @@ const UpcomingEvents = () => {
     "
                   >
                     {/* Text block */}
-                    <div className="text-center md:text-center max-w-[85vw] md:max-w-none">
+                    <div className="text-center md:text-center  md:max-w-none">
                       <h4
-                        className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
+                        className={`${merri.className} text-white font-normal text-[16px] px-10 md:text-[18px] leading-snug`}
                       >
                         {featuredItem.venue},
                       </h4>
@@ -430,7 +430,9 @@ const UpcomingEvents = () => {
                       >
                         {featuredItem.city}
                       </h4>
-                      <a
+                     {
+                        featuredItem.mapUrl && (
+                             <a
                         href={featuredItem.mapUrl}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -447,6 +449,8 @@ const UpcomingEvents = () => {
                         <MapPin size={18} />
                         <span className="">View in Map</span>
                       </a>
+                        )
+                     }
                     </div>
                   </div>
                 </div>
@@ -550,13 +554,13 @@ const UpcomingEvents = () => {
 
                   <div className="flex flex-col justify-center items-center text-center w-full">
                     <h2
-                      className={`${merri.className} text-white font-bold px-[2px]  text-[32px]  italic leading-tight mb-3`}
+                      className={`${merri.className} text-white font-bold px-[2px]  text-[32px]  italic leading-tight mb-2`}
                     >
                       {item.title}
                     </h2>
 
                     <p
-                      className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] leading-normal`}
+                      className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] leading-normal pb-3`}
                     >
                       {getDisplayDate(item)}
                     </p>
