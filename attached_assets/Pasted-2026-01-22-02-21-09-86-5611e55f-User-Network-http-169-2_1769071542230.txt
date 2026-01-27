@@ -1,0 +1,112 @@
+2026-01-22 02:21:09.86
+5611e55f
+User
+- Network: http://169.254.8.1:5000
+2026-01-22 02:21:09.86
+5611e55f
+User
+✓ Starting...
+2026-01-22 02:21:09.86
+5611e55f
+User
+- Local: http://localhost:5000
+2026-01-22 02:21:11.34
+5611e55f
+User
+⚠ `images.domains` is deprecated in favor of `images.remotePatterns`. Please update next.config.ts to protect your application from malicious users.
+2026-01-22 02:21:11.56
+5611e55f
+User
+✓ Ready in 2.2s
+2026-01-22 02:26:05.00
+5611e55f
+System
+system: received signal terminated
+2026-01-22 04:32:43.47
+5611e55f
+System
+system: received signal terminated
+2026-01-22 04:43:55.57
+5611e55f
+System
+starting up user application
+2026-01-22 04:43:55.57
+5611e55f
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2026-01-22 04:43:55.57
+5611e55f
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+2026-01-22 04:43:56.67
+5611e55f
+User
+> next start
+2026-01-22 04:43:56.67
+5611e55f
+User
+> md@0.1.0 start
+2026-01-22 04:43:57.39
+5611e55f
+User
+▲ Next.js 16.0.10
+2026-01-22 04:43:57.40
+5611e55f
+User
+- Network: http://169.254.8.1:5000
+2026-01-22 04:43:57.40
+5611e55f
+User
+- Local: http://localhost:5000
+2026-01-22 04:43:57.40
+5611e55f
+User
+✓ Starting...
+2026-01-22 04:43:59.15
+5611e55f
+User
+⚠ `images.domains` is deprecated in favor of `images.remotePatterns`. Please update next.config.ts to protect your application from malicious users.
+2026-01-22 04:43:59.36
+5611e55f
+User
+✓ Ready in 2.4s
+2026-01-22 06:22:04.41
+5611e55f
+System
+system: received signal terminated
+2026-01-22 06:23:10.63
+5611e55f
+System
+starting up user application
+2026-01-22 06:23:10.63
+5611e55f
+System
+metasidecar: loaded enterprise status from environment is_enterprise=false
+2026-01-22 06:23:10.63
+5611e55f
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2026-01-22 06:23:11.52
+5611e55f
+User
+> next start
+2026-01-22 06:23:11.52
+5611e55f
+User
+> md@0.1.0 start
+2026-01-22 06:23:12.16
+5611e55f
+User
+▲ Next.js 16.0.10
+2026-01-22 06:23:12.16
+5611e55f
+User
+- Network: http://169.254.8.1:5000
+2026-01-22 06:23:12.16
+5611e55f
+User
+✓ Starting...
+2026-01-22 06:23:12.16
+5611e55f
+User
+- Local: http://localhost:5000
