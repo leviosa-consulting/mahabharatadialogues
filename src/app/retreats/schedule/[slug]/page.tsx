@@ -361,7 +361,7 @@ const RetreatSchedulePage: React.FC = () => {
         {days.map((dayInfo) => (
           <div key={dayInfo.day} className="flex items-center justify-center">
             <div
-              className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center`}
+              className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center`}
             >
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">
@@ -381,7 +381,7 @@ const RetreatSchedulePage: React.FC = () => {
       <div
         className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
       >
-        <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+        <div className="w-40 h-40 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center">
           <div className="text-center leading-tight">
             <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
             <div className="text-xl font-semibold">{days[0].date}</div>
@@ -416,7 +416,7 @@ const RetreatSchedulePage: React.FC = () => {
           <div
             className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
           >
-            <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+            <div className="w-40 h-40 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center">
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
                 <div className="text-xl font-semibold">{days[1].date}</div>
@@ -443,7 +443,7 @@ const RetreatSchedulePage: React.FC = () => {
             <div
               className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
             >
-              <div className="w-40 h-40 rounded-full bg-red-600 shadow-xl text-white flex items-center justify-center">
+              <div className="w-40 h-40 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center">
                 <div className="text-center leading-tight">
                   <div className="text-xs tracking-wide mb-1">-DAY 3-</div>
                   <div className="text-xl font-semibold">{days[2].date}</div>

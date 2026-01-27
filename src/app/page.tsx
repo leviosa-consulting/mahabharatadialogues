@@ -4,6 +4,7 @@ import Testimonials from '@/components/Testimonials'
 import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
 import Navbar from '@/components/Navbar'
+import UpcomingEvents from '@/components/Upcomingevents'
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -20,7 +21,7 @@ export default function Home() {
       }} 
     >
       <HeroSection />
-      <Testimonials />
+      <UpcomingEvents />
       <ImageCarousel />
       <Retreats />
       {/* <Navbar /> */}

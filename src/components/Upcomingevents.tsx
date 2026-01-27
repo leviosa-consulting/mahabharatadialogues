@@ -1,0 +1,704 @@
+'use client'
+
+import React, { useEffect, useRef, useState } from 'react'
+import CustomButton from './CustomButton'
+import { merri } from '@/app/fonts/merri'
+import TestimonialsShimmer from './TestimonialsShimmer'
+import { MapPin } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import TestimonialsCarousel from './TestimonialsCarousel'
+
+interface Event {
+  id: string
+  type: 'event' | 'retreat'
+  title: string
+  coverImage: string
+  date: string
+  time: string
+  venue: string
+  mapUrl: string
+  description: string
+  bookingUrl?: string
+  slug?: string
+  endDate?: string
+  city?: string
+}
+
+interface RetreatData {
+  id: string
+  title: string
+  description: string
+  photos?: string[]
+  venue?: string
+  city?: string
+  mapUrl?: string
+  day1: {
+    date: string
+    dayName: string
+  }
+  day2?: {
+    date: string
+    dayName: string
+  }
+  day3?: {
+    date: string
+    dayName: string
+  }
+  slug?: string
+  bookingUrl: string
+  coverImage: string
+}
+
+interface EventData {
+  id: string
+  title: string
+  coverImage: string
+  eventDate: string
+  eventTime?: string
+  venue: string
+  mapUrl?: string
+  city?: string
+  description?: string
+  bookingUrl?: string
+  slug?: string
+}
+
+const UpcomingEvents = () => {
+  const [upcomingItems, setUpcomingItems] = useState<Event[]>([])
+  const [featuredItem, setFeaturedItem] = useState<Event | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  const featuredCardRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
+  const MAX_CHARS = 80
+
+  useEffect(() => {
+    fetchUpcomingItems()
+  }, [])
+
+  useEffect(() => {
+    if (featuredCardRef.current && featuredItem) {
+      const updateHeight = () => {
+        const height = featuredCardRef.current?.offsetHeight || 0
+        setFeaturedCardHeight((prevHeight) => {
+          if (prevHeight !== height) {
+            return height
+          }
+          return prevHeight
+        })
+      }
+
+      updateHeight()
+
+      window.addEventListener('resize', updateHeight)
+
+      const timeoutId = setTimeout(updateHeight, 100)
+
+      return () => {
+        window.removeEventListener('resize', updateHeight)
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [featuredItem])
+
+  const parseDate = (dateStr: string): Date => {
+    if (dateStr.includes('-')) {
+      return new Date(dateStr)
+    }
+
+    const [day, month, year] = dateStr.split(' ')
+    const monthMap: { [key: string]: number } = {
+      Jan: 0,
+      Feb: 1,
+      Mar: 2,
+      Apr: 3,
+      May: 4,
+      Jun: 5,
+      Jul: 6,
+      Aug: 7,
+      Sep: 8,
+      Oct: 9,
+      Nov: 10,
+      Dec: 11,
+    }
+    return new Date(parseInt(year), monthMap[month], parseInt(day))
+  }
+
+  const formatDate = (dateStr: string): string => {
+    const date = parseDate(dateStr)
+    const day = date.getDate()
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    return `${day} ${month}, ${year}`
+  }
+
+  const formatDateRange = (startDate: string, endDate: string): string => {
+    const start = parseDate(startDate)
+    const end = parseDate(endDate)
+
+    const startDay = start.getDate()
+    const endDay = end.getDate()
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+    const month = months[start.getMonth()]
+    const year = start.getFullYear()
+
+    return `${startDay} ${month} - ${endDay} ${month}, ${year}`
+  }
+
+  const formatEventDateTime = (dateTimeStr: string): string => {
+    const date = new Date(dateTimeStr)
+    const day = date.getDate()
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+
+    let hours = date.getHours()
+    const minutes = date.getMinutes()
+    const ampm = hours >= 12 ? 'pm' : 'am'
+    hours = hours % 12
+    hours = hours ? hours : 12
+    const timeStr = `${hours}${
+      minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
+    }${ampm}`
+
+    return `${day} ${month}, ${year} | ${timeStr}`
+  }
+
+  const fetchUpcomingItems = async () => {
+    try {
+      setLoading(true)
+      const now = new Date()
+      const thirtyDaysLater = new Date(now)
+      thirtyDaysLater.setDate(now.getDate() + 300)
+
+      const retreatsResponse = await fetch('/api/retreats')
+      const retreatsData = await retreatsResponse.json()
+
+      const eventsResponse = await fetch('/api/events')
+      const eventsData = await eventsResponse.json()
+
+      const allItems: Event[] = []
+
+      if (retreatsData.success && retreatsData.data) {
+        retreatsData.data.forEach((retreat: RetreatData) => {
+          const retreatDate = parseDate(retreat.day1.date)
+
+          retreatDate.setHours(23, 59, 59, 999)
+
+          if (retreatDate >= now && retreatDate <= thirtyDaysLater) {
+            const endDate =
+              retreat.day3?.date || retreat.day2?.date || retreat.day1.date
+
+            allItems.push({
+              id: retreat.id,
+              type: 'retreat',
+              title: retreat.title,
+              description: retreat.description || '',
+              coverImage: retreat.coverImage || '/assets/fallbackImg.jpeg',
+              date: retreat.day1.date,
+              endDate: endDate,
+              time: '',
+              venue: retreat.venue || 'Venue TBA',
+              mapUrl: retreat.mapUrl || '',
+              city: retreat.city,
+              slug: retreat.slug,
+              bookingUrl: retreat.bookingUrl,
+            })
+          }
+        })
+      }
+
+      if (eventsData.success && eventsData.data) {
+        eventsData.data.forEach((event: EventData) => {
+          const eventDateTime = new Date(event.eventDate)
+
+          if (eventDateTime >= now && eventDateTime <= thirtyDaysLater) {
+            allItems.push({
+              id: event.id,
+              type: 'event',
+              title: event.title,
+              coverImage: event.coverImage || '/assets/fallbackImg.jpeg',
+              date: event.eventDate,
+              time: event.eventTime || '',
+              venue: event.venue || 'Venue TBA',
+              mapUrl: event.mapUrl || '',
+              description: event.description || '',
+              bookingUrl: event.bookingUrl,
+              slug: event.slug,
+              city: event.city,
+            })
+          }
+        })
+      }
+
+      // Sort by date (earliest first)
+      allItems.sort((a, b) => {
+        const dateA = a.type === 'event' ? new Date(a.date) : parseDate(a.date)
+        const dateB = b.type === 'event' ? new Date(b.date) : parseDate(b.date)
+        return dateA.getTime() - dateB.getTime()
+      })
+
+      if (allItems.length > 0) {
+        setFeaturedItem(allItems[0])
+        setUpcomingItems(allItems.slice(1))
+      }
+
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching upcoming items:', error)
+      setLoading(false)
+    }
+  }
+
+  const getDisplayDate = (item: Event): string => {
+    if (item.type === 'retreat' && item.endDate && item.endDate !== item.date) {
+      return formatDateRange(item.date, item.endDate)
+    } else if (item.type === 'event') {
+      return formatEventDateTime(item.date)
+    }
+    return formatDate(item.date)
+  }
+
+  const handleShare = async (bookingUrl?: string) => {
+    if (!bookingUrl) {
+      alert('No booking URL available')
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(bookingUrl)
+      alert('Booking URL copied to clipboard!')
+    } catch (err) {
+      console.error('Failed to copy:', err)
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = bookingUrl
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        alert('Booking URL copied to clipboard!')
+      } catch (err) {
+        alert('Failed to copy URL')
+      }
+      document.body.removeChild(textArea)
+    }
+  }
+
+  const renderTextWithLineBreaks = (text: string) => {
+    return text.split('\n').map((line, index, array) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < array.length - 1 && <br />}
+      </React.Fragment>
+    ))
+  }
+
+  if (loading) {
+    return <TestimonialsShimmer />
+  }
+
+  const truncateText = (text: string, max = 70) =>
+    text.length > max ? text.slice(0, max) + '...' : text
+
+  return (
+    <div className="w-full pb-30">
+      {/* BACKGROUND SECTION */}
+      <div
+        className="w-full relative"
+        style={{
+          backgroundImage: `
+        linear-gradient(
+          rgba(29, 92, 117, 0.5),
+          rgba(29, 92, 117, 0.5)
+        ),
+        url('/MD-Texture_BG_Blue-01-04.png')
+        
+      `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
+      >
+        {featuredItem && featuredCardHeight > 0 && (
+          <div
+            style={
+              {
+                '--card-height-mobile': `${featuredCardHeight}px`,
+                '--card-height-md': `${featuredCardHeight}px`,
+                '--card-height-xl': `${featuredCardHeight * 0.8}px`,
+              } as React.CSSProperties
+            }
+            className="
+      h-[var(--card-height-mobile)]
+      md:h-[var(--card-height-md)]
+      xl:h-[var(--card-height-xl)]
+    "
+          ></div>
+        )}
+
+        {featuredItem && (
+          <div
+            ref={featuredCardRef}
+            className="
+    absolute top-0 left-1/2 -translate-x-1/2
+    flex flex-col max-w-84 w-[calc(100%-2rem)] sm:max-w-100 sm:mx-0 lg:max-w-[520px]
+    justify-center items-center
+    -mt-[20%] sm:-mt-[10%] xl:-mt-[20%]
+    bg-[#1D5C75CC]
+    z-10
+  "
+          >
+            <p
+              className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] pt-6`}
+            >
+              COMING UP NEXT
+            </p>
+            <h2
+              className={`${merri.className} text-white font-extrabold text-[32px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
+            >
+              {featuredItem.title}
+            </h2>
+            <div className="flex flex-col justify-center items-center my-2">
+              <h3
+                className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] text-center pb-3`}
+              >
+                {getDisplayDate(featuredItem)}
+              </h3>
+              {featuredItem.venue && featuredItem.mapUrl && (
+                <div className="flex justify-center pb-4">
+                  <div
+                    className="
+      flex items-start gap-2
+      md:gap-2
+      max-w-xl
+    "
+                  >
+                    {/* Text block */}
+                    <div className="text-center md:text-center max-w-[85vw] md:max-w-none">
+                      <h4
+                        className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
+                      >
+                        {featuredItem.venue},
+                      </h4>
+                      <h4
+                        className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
+                      >
+                        {featuredItem.city}
+                      </h4>
+                      <a
+                        href={featuredItem.mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open in Google Maps"
+                        className={` ${merri.className}
+    inline-flex items-center gap-1
+    text-white hover:text-blue-300
+    transition-colors
+    shrink-0
+    text-[14px] uppercase
+    mt-[6px] 
+  `}
+                      >
+                        <MapPin size={18} />
+                        <span className="">View in Map</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="">
+              <img
+                src={featuredItem.coverImage || '/assets/videoImg.png'}
+                alt={featuredItem.title}
+                className="w-full h-full object-cover"
+                onLoad={() => {
+                  if (featuredCardRef.current) {
+                    const newHeight = featuredCardRef.current.offsetHeight
+                    setFeaturedCardHeight((prevHeight) => {
+                      if (prevHeight !== newHeight) {
+                        return newHeight
+                      }
+                      return prevHeight
+                    })
+                  }
+                }}
+              />
+            </div>
+
+            {featuredItem.description && (
+              <p
+                className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
+              >
+                {renderTextWithLineBreaks(featuredItem.description)}
+              </p>
+            )}
+            <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
+              <div className="sm:w-[280px]">
+                <CustomButton
+                  text={
+                    featuredItem.type === 'retreat'
+                      ? 'LEARN MORE'
+                      : 'GET YOUR TICKETS'
+                  }
+                  bgColor="#D12127"
+                  textColor="#FFFFFF"
+                  url={
+                    featuredItem.type === 'retreat'
+                      ? '/retreats'
+                      : featuredItem.bookingUrl
+                  }
+                  isOutSideLink={featuredItem.type !== 'retreat'}
+                  isArrow
+                />
+              </div>
+              <div
+                className="bg-[#78B0C7] p-[16px]  cursor-pointer"
+                onClick={() => handleShare(featuredItem.bookingUrl)}
+              >
+                <img src="/share.png" alt="share" className="w-6 h-6" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {upcomingItems.length > 0 && (
+          <div className="text-center">
+            <h2 className="font-neco text-[32px] text-[#78B0C7] font-bold mb-12">
+              COMING UP
+            </h2>
+
+            <div
+              className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-8 px-4
+    ${upcomingItems.length === 1 ? 'justify-center' : ''}
+    ${upcomingItems.length === 2 ? 'md:justify-center' : ''}
+    ${upcomingItems.length === 3 ? 'md:justify-start md:pl-[8%] lg:pl-[8%]' : ''}
+    ${upcomingItems.length >= 4 ? 'md:pl-[8%] lg:pl-[8%]' : ''}`}
+              style={{
+                backgroundImage: `
+        linear-gradient(
+          rgba(29, 92, 117, 0.5),
+          rgba(29, 92, 117, 0.5)   
+        ),
+        url('/MD-Texture_BG_Blue-01-04.png')
+      `,
+
+                backgroundRepeat: 'repeat',
+                backgroundSize: '240px 240px',
+              }}
+            >
+              {upcomingItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="snap-start shrink-0 flex flex-col gap-3
+    w-[95%]        
+    sm:w-[60%] md:w-[50%] lg:w-[42%] xl:w-[30%] bg-[#78B0C799] self-start"
+                >
+                  {/* Image */}
+                  <div className="relative w-full">
+                    <img
+                      src={item.coverImage || '/abhilash.png'}
+                      alt={item.title}
+                      className="aspect-465/285 object-cover w-full"
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-center items-center text-center w-full">
+                    <h2
+                      className={`${merri.className} text-white font-bold px-[2px]  text-[32px]  italic leading-tight mb-3`}
+                    >
+                      {item.title}
+                    </h2>
+
+                    <p
+                      className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] leading-normal`}
+                    >
+                      {getDisplayDate(item)}
+                    </p>
+                    {item.venue && (
+                      <div className="flex items-start leading-normal gap-2">
+                        {/* Text (not clickable) */}
+                        <div>
+                          <p
+                            className={`${merri.className} text-white font-normal text-[16px] md:text-[18px]`}
+                          >
+                            {item.venue},
+                          </p>
+                          <p
+                            className={`${merri.className} text-white font-normal text-[16px] md:text-[18px]`}
+                          >
+                            {item.city}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {item.mapUrl && (
+                      <a
+                        href={item.mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open in Google Maps"
+                        className={` ${merri.className}
+    inline-flex items-center gap-1
+    text-white hover:text-blue-300
+    transition-colors
+    shrink-0
+    text-[14px]  uppercase
+    mt-[6px] 
+  `}
+                      >
+                        <MapPin size={18} />
+                        <span className="">View in Map</span>
+                      </a>
+                    )}
+
+                    <h2
+                      className={`${merri.className} text-white font-light px-1 my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
+                    >
+                      {renderTextWithLineBreaks(
+                        expandedId === item.id
+                          ? item.description
+                          : truncateText(item.description, MAX_CHARS),
+                      )}
+
+                      {item.description.length > MAX_CHARS && (
+                        <button
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === item.id ? null : item.id,
+                            )
+                          }
+                          className="ml-2 text-[#1D5C75] hover:text-[#214351] uppercase font-normal text-[14px] not-italic"
+                        >
+                          {expandedId === item.id ? 'Read less' : 'Read more'}
+                        </button>
+                      )}
+                    </h2>
+                  </div>
+
+                  <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2 w-full mt-auto">
+                    <div className="sm:w-[280px]">
+                      <CustomButton
+                        text={'LEARN MORE'}
+                        bgColor="#1D5C75"
+                        textColor="#FFFFFF"
+                        url={
+                          item.type === 'retreat'
+                            ? '/retreats'
+                            : `/events/${item.slug ?? ''}`
+                        }
+                        
+                      />
+                    </div>
+                    <div
+                      className="bg-[#D12127] p-[16px]  cursor-pointer"
+                      onClick={() => {
+                        if (item.type === 'retreat') {
+                          router.push('/retreats')
+                        } else if (item.slug) {
+                          router.push(`/events/${item.slug}`)
+                        } else {
+                          router.push('/events')
+                        }
+                      }}
+                    >
+                      <img
+                        src="/Arrow_up-right.png"
+                        alt="share"
+                        className="w-6 h-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div
+          className={`relative ${
+            featuredItem ? 'mt-[20%] md:mt-[10%]' : 'mt-0'
+          }`}
+        >
+          {/* No Upcoming Events */}
+          {!featuredItem && upcomingItems.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20">
+              <p
+                className={`${merri.className} text-white text-2xl text-center`}
+              >
+                No upcoming events in the next 30 days
+              </p>
+            </div>
+          )}
+
+          {/* button */}
+          <div className="flex flex-col md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-12 px-4 sm:px-10 xl:px-40">
+            <p
+              className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
+            >
+              Dialogues, Retreats, and Evenings with Mahabharata, celebrating
+              art, music, dance, and stories.
+            </p>
+            <CustomButton
+              text="EXPLORE MORE EVENTS"
+              bgColor="#1D5C75"
+              textColor="#FFFFFF"
+              url={'/events'}
+            />
+          </div>
+
+          {/* Testimonials Section */}
+          <TestimonialsCarousel />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default UpcomingEvents
