@@ -7,6 +7,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
 import CustomButton from '@/components/CustomButton'
+import Navbar from '@/components/Navbar'
 
 interface Testimonial {
   id: string
@@ -284,24 +285,29 @@ const PastRetreatPage: React.FC = () => {
     <div className="bg-[#1D5C75CC] w-full h-full">
       <div className="w-full">
         <div className="w-full">
-          {/* Web Asset */}
-          <Link
-            href="/"
-            className="flex justify-center items-center relative z-20"
-          >
-            <img
-              src="/Web_Assets-08.png"
-              alt="Home"
-              className="w-30 h-30 md:w-50 md:h-50 -mb-13 md:-mb-21 mt-3 cursor-pointer"
-            />
-          </Link>
+         <div className="sm:hidden py-10">
+            {/* Web Asset */}
+            <Link
+              href="/"
+              className="flex justify-center items-center relative z-20"
+            >
+              <img
+                src="/Web_Assets-08.png"
+                alt="Home"
+                className="w-35 h-35 -mb-20 cursor-pointer"
+              />
+            </Link>
+          </div>
+          <div className="hidden sm:block relative sm:pt-10 z-10">
+            <Navbar textColor="#fff" isNotHome />
+          </div>
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-4 2xl:mx-30">
+            <div className="mx-4 2xl:mx-30 md:-mt-10 xl:-mt-8">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
-                  <div className="w-full aspect-video relative z-10">
+                  <div className="w-full aspect-video ">
                     <iframe
                       src={youtubeEmbedUrl}
                       title={retreat.title}

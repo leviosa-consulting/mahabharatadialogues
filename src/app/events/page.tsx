@@ -218,7 +218,7 @@ const EventsPage = () => {
     <div className="min-h-screen">
       {/* Web Asset – TOP CENTER */}
       <div className="hidden sm:block py-10">
-        <Navbar textColor="#1D5C75" />
+        <Navbar textColor="#1D5C75" isNotHome/>
       </div>
       <div className="sm:hidden py-10">
         {/* Web Asset */}

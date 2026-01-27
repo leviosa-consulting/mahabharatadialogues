@@ -248,7 +248,7 @@ export default function BlogsClient({
           </Link>
         </div>
         <div className="hidden sm:block relative sm:pt-10 z-10">
-          <Navbar textColor="#1D5C75" />
+          <Navbar textColor="#1D5C75" isNotHome/>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

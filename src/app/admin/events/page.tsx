@@ -37,7 +37,7 @@ interface Event {
   mapUrl?: string
 }
 
-const FALLBACK_IMAGE = '/assets/first.png'
+const FALLBACK_IMAGE = '/assets/fallbackImg.jpeg'
 
 const EventsAdminPage = () => {
   const [events, setEvents] = useState<Event[]>([])
@@ -404,7 +404,7 @@ const EventsAdminPage = () => {
             )}
             {event.bookingUrl && (
               <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Link as LinkIcon size={14} />
+                <Link size={14} />
                 <span>Booking link available</span>
               </div>
             )}
