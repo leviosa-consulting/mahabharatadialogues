@@ -247,7 +247,7 @@ export default function BlogsClient({
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="sm:hidden my-10">
+        <div className="sm:hidden py-10">
           {/* Web Asset */}
           <Link
             href="/"

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
+import Navbar from '@/components/Navbar'
 
 interface ScheduleItem {
   title: string
@@ -54,7 +55,7 @@ const RetreatSchedulePage: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
+    null,
   )
 
   useEffect(() => {
@@ -118,7 +119,7 @@ const RetreatSchedulePage: React.FC = () => {
     section: ScheduleSection,
     index: number,
     isLastActivity: boolean,
-    isThreeDayRetreat: boolean
+    isThreeDayRetreat: boolean,
   ) => {
     if (section.type === 'meal') {
       return (
@@ -212,13 +213,13 @@ const RetreatSchedulePage: React.FC = () => {
       setSelectedImageIndex(
         selectedImageIndex === 0
           ? retreat.photos.length - 1
-          : selectedImageIndex - 1
+          : selectedImageIndex - 1,
       )
     } else {
       setSelectedImageIndex(
         selectedImageIndex === retreat.photos.length - 1
           ? 0
-          : selectedImageIndex + 1
+          : selectedImageIndex + 1,
       )
     }
   }
@@ -276,21 +277,43 @@ const RetreatSchedulePage: React.FC = () => {
     : null
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Back Button */}
-     <div>
-       {/* Web Asset */}
-          <Link
-            href="/"
-            className="flex justify-center items-center relative z-20"
-          >
-            <img
-              src="/Web_Assets-08.png"
-              alt="Home"
-              className="w-30 h-30 md:w-50 md:h-50 -mb-13 md:-mb-21 mt-3 cursor-pointer"
-            />
-          </Link>
-     </div>
+    <div className="min-h-screen">
+      <div className="sm:hidden py-10"  style={{
+            backgroundImage: `
+      linear-gradient(
+        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.6)
+      ),
+      url('/MD-Texture_BG_White-04.png')
+    `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '240px 240px',
+          }}>
+        {/* Web Asset */}
+        <Link
+          href="/"
+          className="flex justify-center items-center relative z-20"
+        >
+          <img
+            src="/Web_Assets-08.png"
+            alt="Home"
+            className="w-35 h-35 -mb-20 cursor-pointer"
+          />
+        </Link>
+      </div>
+      <div className="hidden sm:block relative sm:py-10  z-10"  style={{
+            backgroundImage: `
+      linear-gradient(
+        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0.6)
+      ),
+      url('/MD-Texture_BG_White-04.png')
+    `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '240px 240px',
+          }}>
+        <Navbar textColor="#1D5C75" isNotHome />
+      </div>
 
       {/* Header */}
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
@@ -301,7 +324,6 @@ const RetreatSchedulePage: React.FC = () => {
             <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
 
             <div className="flex items-center justify-center md:justify-start gap-3 mt-4 text-white/90">
-             
               <span className="text-sm md:text-base tracking-wide">
                 {retreat.day1.date} <span className="mx-1">–</span>{' '}
                 {isThreeDay ? retreat.day3!.date : retreat.day2.date}
@@ -322,7 +344,7 @@ const RetreatSchedulePage: React.FC = () => {
                 <span
                   className={`text-sm  md:text-base text-white/90 ${merri.className}`}
                 >
-                 {retreat.venue}, {retreat.city}
+                  {retreat.venue}, {retreat.city}
                 </span>
               </div>
             )}
@@ -382,8 +404,8 @@ const RetreatSchedulePage: React.FC = () => {
                 section,
                 index,
                 index === retreat.day1.schedule.length - 1,
-                isThreeDay
-              )
+                isThreeDay,
+              ),
             )}
           </div>
         </div>
@@ -409,7 +431,7 @@ const RetreatSchedulePage: React.FC = () => {
             }`}
           >
             {retreat.day2.schedule.map((section, index) =>
-              renderScheduleSection(section, index, false, isThreeDay)
+              renderScheduleSection(section, index, false, isThreeDay),
             )}
           </div>
         </div>
@@ -432,7 +454,7 @@ const RetreatSchedulePage: React.FC = () => {
 
             <div className="px-2 py-6 md:px-8 md:py-0">
               {retreat.day3.schedule.map((section, index) =>
-                renderScheduleSection(section, index, false, isThreeDay)
+                renderScheduleSection(section, index, false, isThreeDay),
               )}
             </div>
           </div>

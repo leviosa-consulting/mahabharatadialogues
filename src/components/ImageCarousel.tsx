@@ -7,7 +7,7 @@ const ImageCarousel = () => {
 
   return (
     <section
-      className=" w-full overflow-hidden flex flex-col justify-center gap-8 pb-20 "
+      className=" w-full overflow-hidden flex flex-col justify-center gap-8 pb-20 -mt-50"
       // style={{
       //   backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
       //   backgroundSize: 'cover',
@@ -78,7 +78,7 @@ const ImageCarousel = () => {
             >
               <img
                 src={`/assets/${img}`}
-                alt=""
+                alt={img}
                 className="w-full h-full object-cover shadow-lg"
               />
             </div>

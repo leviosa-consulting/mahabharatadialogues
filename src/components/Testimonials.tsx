@@ -643,7 +643,7 @@ const Testimonials = () => {
                   key={item.id}
                   className="snap-start shrink-0 flex flex-col gap-3
     w-[95%]        
-    md:w-[50%] lg:w-[42%] xl:w-[30%] bg-[#78B0C799] self-start"
+    sm:w-[60%] md:w-[50%] lg:w-[42%] xl:w-[30%] bg-[#78B0C799] self-start"
                 >
                   {/* Image */}
                   <div className="relative w-full">
@@ -800,7 +800,7 @@ const Testimonials = () => {
           </div>
 
           {/* Testimonials Section */}
-          <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto py-16">
+          <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-16 pb-24">
             <div
               className="bg-opacity-60 rounded-lg p-6 text-center cursor-pointer"
               onWheel={handleWheel}
