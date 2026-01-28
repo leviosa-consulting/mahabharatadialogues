@@ -25,7 +25,7 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
     <div className="sm:hidden relative z-50">
       {/* TOP AREA (hide when menu open) */}
       {!open && (
-        <div className="relative flex items-center justify-center my-4 px-12">
+        <div className="relative flex items-center justify-center py-4 px-12">
           {/* Clickable circle logo */}
           <Link
             href="/"
@@ -65,7 +65,7 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-end px-6 py-6">
+        <div className="flex items-center justify-end px-6 py-6 mt-10">
           <button onClick={() => setOpen(false)}>
             <X size={32} className="text-white" />
           </button>

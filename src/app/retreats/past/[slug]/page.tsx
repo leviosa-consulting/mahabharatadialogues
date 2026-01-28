@@ -8,6 +8,7 @@ import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
 import CustomButton from '@/components/CustomButton'
 import Navbar from '@/components/Navbar'
+import MobileNavbar from '@/components/MobileNavbar'
 
 interface Testimonial {
   id: string
@@ -48,7 +49,7 @@ const PastRetreatPage: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [error, setError] = useState(false)
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null
+    null,
   )
 
   const touchStartX = useRef(0)
@@ -159,7 +160,7 @@ const PastRetreatPage: React.FC = () => {
           setCurrentIndex((prev) => (prev + 1) % testimonials.length)
         } else if (e.deltaX < 0) {
           setCurrentIndex(
-            (prev) => (prev - 1 + testimonials.length) % testimonials.length
+            (prev) => (prev - 1 + testimonials.length) % testimonials.length,
           )
         }
       }
@@ -183,7 +184,7 @@ const PastRetreatPage: React.FC = () => {
         setCurrentIndex((prev) => (prev + 1) % testimonials.length)
       } else {
         setCurrentIndex(
-          (prev) => (prev - 1 + testimonials.length) % testimonials.length
+          (prev) => (prev - 1 + testimonials.length) % testimonials.length,
         )
       }
     }
@@ -221,13 +222,13 @@ const PastRetreatPage: React.FC = () => {
       setSelectedImageIndex(
         selectedImageIndex === 0
           ? retreat.photos.length - 1
-          : selectedImageIndex - 1
+          : selectedImageIndex - 1,
       )
     } else {
       setSelectedImageIndex(
         selectedImageIndex === retreat.photos.length - 1
           ? 0
-          : selectedImageIndex + 1
+          : selectedImageIndex + 1,
       )
     }
   }
@@ -285,18 +286,11 @@ const PastRetreatPage: React.FC = () => {
     <div className="bg-[#1D5C75CC] w-full h-full">
       <div className="w-full">
         <div className="w-full">
-         <div className="sm:hidden py-10">
+          <div className="sm:hidden">
             {/* Web Asset */}
-            <Link
-              href="/"
-              className="flex justify-center items-center relative z-20"
-            >
-              <img
-                src="/Web_Assets-08.png"
-                alt="Home"
-                className="w-35 h-35 -mb-20 cursor-pointer"
-              />
-            </Link>
+            <div>
+              <MobileNavbar textColor="#fff" isNotHome />
+            </div>
           </div>
           <div className="hidden sm:block relative sm:pt-10 z-10">
             <Navbar textColor="#fff" isNotHome />
@@ -400,7 +394,7 @@ const PastRetreatPage: React.FC = () => {
                   </div>
 
                   {/* button */}
-                  <div className='flex justify-center items-center'>
+                  <div className="flex justify-center items-center">
                     <CustomButton
                       text="VIEW SCHEDULE"
                       bgColor="#1D5C75"

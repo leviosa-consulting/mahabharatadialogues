@@ -184,7 +184,7 @@ export default async function RetreatHero() {
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-4 2xl:mx-30 md:-mt-10 xl:-mt-8">
+            <div className="mx-4 2xl:mx-30 -mt-7 md:-mt-10 xl:-mt-8">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video relative ">

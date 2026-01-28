@@ -13,6 +13,7 @@ import {
 import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
+import MobileNavbar from '@/components/MobileNavbar'
 
 interface ScheduleItem {
   title: string
@@ -278,7 +279,7 @@ const RetreatSchedulePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="sm:hidden py-10"  style={{
+      <div className="sm:hidden"  style={{
             backgroundImage: `
       linear-gradient(
         rgba(255, 255, 255, 0.6),
@@ -289,17 +290,9 @@ const RetreatSchedulePage: React.FC = () => {
             backgroundRepeat: 'repeat',
             backgroundSize: '240px 240px',
           }}>
-        {/* Web Asset */}
-        <Link
-          href="/"
-          className="flex justify-center items-center relative z-20"
-        >
-          <img
-            src="/Web_Assets-08.png"
-            alt="Home"
-            className="w-35 h-35 -mb-20 cursor-pointer"
-          />
-        </Link>
+         <div >
+           <MobileNavbar textColor="#1D5C75" isNotHome/>
+          </div>
       </div>
       <div className="hidden sm:block relative sm:py-10  z-10"  style={{
             backgroundImage: `

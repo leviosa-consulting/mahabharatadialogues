@@ -14,12 +14,16 @@ interface TestimonialsCarouselProps {
   testimonials?: Testimonial[]
 }
 
-const TestimonialsCarousel = ({ testimonials: initialTestimonials }: TestimonialsCarouselProps) => {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials || [])
+const TestimonialsCarousel = ({
+  testimonials: initialTestimonials,
+}: TestimonialsCarouselProps) => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(
+    initialTestimonials || [],
+  )
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
-  
+
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -41,7 +45,7 @@ const TestimonialsCarousel = ({ testimonials: initialTestimonials }: Testimonial
           setIsTransitioning(false)
         }, 300) // Half of transition time for smooth effect
       }, 3000)
-      
+
       return () => {
         if (autoScrollInterval.current) {
           clearInterval(autoScrollInterval.current)
@@ -159,7 +163,7 @@ const TestimonialsCarousel = ({ testimonials: initialTestimonials }: Testimonial
         onTouchEnd={handleTouchEnd}
         onClick={handleTestimonialClick}
       >
-        <div className="h-[280px] flex flex-col justify-center items-center relative overflow-hidden">
+        <div className="h-[300px] flex flex-col justify-center items-center relative overflow-hidden">
           <div
             className={`transition-all duration-600 ease-in-out ${
               isTransitioning
@@ -170,14 +174,15 @@ const TestimonialsCarousel = ({ testimonials: initialTestimonials }: Testimonial
             <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7">
               {testimonials[currentIndex]?.quote}
             </p>
-            <p
-              className={`text-white ${merri.className} mt-4 font-bold text-[14px] md:text-[16px]`}
-            >
-              <span className="uppercase">
-                {testimonials[currentIndex]?.name},{' '}
-              </span>
-              {testimonials[currentIndex]?.designation}
-            </p>
+            <div className={`text-white ${merri.className} mt-4 text-center`}>
+              <p className="uppercase font-bold text-[14px] md:text-[16px]">
+                {testimonials[currentIndex]?.name},
+              </p>
+
+              <p className="font-bold italic text-[13px] md:text-[15px] opacity-90">
+                {testimonials[currentIndex]?.designation}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -201,7 +206,9 @@ const TestimonialsCarousel = ({ testimonials: initialTestimonials }: Testimonial
                 handleDotClick(index)
               }}
               className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all duration-300 ${
-                index === currentIndex ? 'bg-white scale-125' : 'bg-gray-400 hover:bg-gray-300'
+                index === currentIndex
+                  ? 'bg-white scale-125'
+                  : 'bg-gray-400 hover:bg-gray-300'
               }`}
             ></div>
           ))}

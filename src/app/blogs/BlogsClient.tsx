@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import Navbar from '@/components/Navbar'
+import MobileNavbar from '@/components/MobileNavbar'
 
 interface Blog {
   id: string
@@ -247,19 +248,9 @@ export default function BlogsClient({
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="sm:hidden py-10">
-          {/* Web Asset */}
-          <Link
-            href="/"
-            className="flex justify-center items-center relative z-20"
-          >
-            <img
-              src="/Web_Assets-08.png"
-              alt="Home"
-              className="w-35 h-35 -mb-20 cursor-pointer"
-            />
-          </Link>
-        </div>
+        <div >
+           <MobileNavbar textColor="#1D5C75" isNotHome/>
+          </div>
         <div className="hidden sm:block relative sm:pt-10 z-10">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
