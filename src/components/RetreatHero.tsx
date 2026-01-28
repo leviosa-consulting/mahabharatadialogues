@@ -8,6 +8,7 @@ import Footer from './Footer'
 import { adminDB } from '@/firebase/firebaseAdmin'
 import Link from 'next/link'
 import Navbar from './Navbar'
+import MobileNavbar from './MobileNavbar'
 
 interface DaySchedule {
   date: string
@@ -174,18 +175,8 @@ export default async function RetreatHero() {
             backgroundSize: '240px 240px',
           }}
         >
-          <div className="sm:hidden py-10">
-            {/* Web Asset */}
-            <Link
-              href="/"
-              className="flex justify-center items-center relative z-20"
-            >
-              <img
-                src="/Web_Assets-08.png"
-                alt="Home"
-                className="w-35 h-35 -mb-20 cursor-pointer"
-              />
-            </Link>
+          <div >
+           <MobileNavbar textColor="#1D5C75" isNotHome/>
           </div>
           <div className="hidden sm:block relative sm:pt-10 z-10">
             <Navbar textColor="#1D5C75" isNotHome />

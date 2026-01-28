@@ -2,6 +2,7 @@ import Image from 'next/image'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
 import Navbar from './Navbar'
+import MobileNavbar from './MobileNavbar'
 
 export default function HeroSection() {
   return (
@@ -46,13 +47,7 @@ export default function HeroSection() {
       </div>
       {/* Mobile */}
       <div className="sm:hidden">
-        {/* top circle */}
-        <div className="flex flex-col items-center justify-center my-4 px-12">
-          {/* circle */}
-          <div className="w-[70%] h-[70%] rounded-full flex items-center justify-center text-center">
-            <img src="Web_Assets-08.png" alt="webAssets9" className="" />
-          </div>
-        </div>
+        <MobileNavbar textColor="#fff" />
 
         <div className="flex justify-between items-center gap-14 pb-10 -mt-20">
           <div className="flex-1 -ml-10">

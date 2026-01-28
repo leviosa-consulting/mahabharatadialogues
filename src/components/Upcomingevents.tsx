@@ -399,11 +399,11 @@ const UpcomingEvents = () => {
               COMING UP NEXT
             </p>
             <h2
-              className={`${merri.className} text-white font-extrabold text-[32px] italic px-0.5 md:px-10 text-center leading-relaxed mt-2`}
+              className={`${merri.className} text-white font-extrabold text-[32px] italic px-4 md:px-10 text-center leading-relaxed mt-2`}
             >
               {featuredItem.title}
             </h2>
-            <div className="flex flex-col justify-center items-center my-2">
+            <div className="flex flex-col px-4 justify-center items-center my-2">
               <h3
                 className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] text-center pb-3`}
               >
@@ -477,7 +477,7 @@ const UpcomingEvents = () => {
 
             {featuredItem.description && (
               <p
-                className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-2 md:px-10 italic py-6 text-center whitespace-pre-line`}
+                className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-4 md:px-10 italic py-6 text-center whitespace-pre-line`}
               >
                 {renderTextWithLineBreaks(featuredItem.description)}
               </p>
@@ -539,7 +539,7 @@ const UpcomingEvents = () => {
                 <div
                   key={item.id}
                   className="snap-start shrink-0 flex flex-col gap-3
-    w-[95%]        
+    w-[90%]        
     sm:w-[60%] md:w-[50%] lg:w-[42%] xl:w-[30%] bg-[#78B0C799] self-start"
                 >
                   {/* Image */}
@@ -551,7 +551,7 @@ const UpcomingEvents = () => {
                     />
                   </div>
 
-                  <div className="flex flex-col justify-center items-center text-center w-full">
+                  <div className="flex flex-col px-4 justify-center items-center text-center w-full">
                     <h2
                       className={`${merri.className} text-white font-bold px-[2px]  text-[32px]  italic leading-tight mb-2`}
                     >
@@ -602,10 +602,10 @@ const UpcomingEvents = () => {
                     )}
 
                     <h2
-                      className={`${merri.className} text-white font-light px-1 my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
+                      className={`${merri.className} text-white font-light my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
                     >
-                      {item.description.length > 80
-            ? item.description.slice(0, 80) + '...'
+                      {item.description.length > 60
+            ? item.description.slice(0, 60) + '...'
             : item.description}
 
                       {/* {item.description.length > MAX_CHARS && (

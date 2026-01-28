@@ -182,14 +182,14 @@ const TestimonialsCarousel = ({ testimonials: initialTestimonials }: Testimonial
         </div>
 
         {/* Pause/Play indicator */}
-        <div className="absolute top-4 right-4">
+        {/* <div className="absolute top-4 right-4">
           <div
             className={`w-3 h-3 rounded-full transition-colors ${
               isAutoScrollPaused ? 'bg-yellow-400' : 'bg-green-400'
             }`}
             title={isAutoScrollPaused ? 'Paused - Click to resume' : 'Playing - Click to pause'}
           />
-        </div>
+        </div> */}
 
         {/* Navigation Dots */}
         <div className="flex justify-center gap-3.5 mt-8">
