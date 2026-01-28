@@ -15,6 +15,7 @@ import {
   MapPin,
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
+import CustomButton from '@/components/CustomButton'
 
 interface Event {
   id: string
@@ -134,7 +135,6 @@ const EventDetailPage = () => {
           <h1 className="text-4xl md:text-5xl font-neco font-bold text-white mb-4">
             {event.title}
           </h1>
-         
         </div>
       </div>
 
@@ -190,7 +190,7 @@ const EventDetailPage = () => {
                     <div
                       key={idx}
                       onClick={() => setSelectedImage(img)}
-                      className="relative aspect-square rounded-lg overflow-hidden cursor-pointer group"
+                      className="relative aspect-square overflow-hidden cursor-pointer group"
                     >
                       <img
                         src={img}
@@ -273,15 +273,24 @@ const EventDetailPage = () => {
               </div>
 
               {event.bookingUrl && new Date(event.eventDate) > new Date() && (
-                <a
-                  href={event.bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-[#D12127] text-white px-6 py-3  transition-colors font-semibold"
-                >
-                  <span>Book Now</span>
-                  <ExternalLink size={18} />
-                </a>
+                // <a
+                //   href={event.bookingUrl}
+                //   target="_blank"
+                //   rel="noopener noreferrer"
+                //   className="w-full flex items-center justify-center gap-2 bg-[#D12127] text-white px-6 py-3  transition-colors font-semibold"
+                // >
+                //   <span>Book Now</span>
+                //   <ExternalLink size={18} />
+                // </a>
+
+                <CustomButton
+                  text="Book Now"
+                  bgColor="#D12127"
+                  textColor="#FFFFFF"
+                  url={event.bookingUrl}
+                  isArrow
+                  isOutSideLink
+                />
               )}
             </div>
           </div>
@@ -303,7 +312,7 @@ const EventDetailPage = () => {
           <img
             src={selectedImage}
             alt="Gallery"
-            className="max-w-full max-h-full object-contain rounded-lg"
+            className="max-w-full max-h-full object-contain"
             onClick={(e) => e.stopPropagation()}
           />
         </div>

@@ -486,26 +486,25 @@ const UpcomingEvents = () => {
               <div className="sm:w-[280px]">
                 <CustomButton
                   text={
-                    featuredItem.type === 'retreat'
-                      ? 'LEARN MORE'
-                      : 'GET YOUR TICKETS'
+                     'LEARN MORE'
+                      
                   }
-                  bgColor="#D12127"
+                  bgColor="#78B0C7"
                   textColor="#FFFFFF"
                   url={
                     featuredItem.type === 'retreat'
                       ? '/retreats'
-                      : featuredItem.bookingUrl
+                      : `/events/${featuredItem.slug}`
                   }
-                  isOutSideLink={featuredItem.type !== 'retreat'}
-                  isArrow
+                //   isOutSideLink={featuredItem.type !== 'retreat'}
+                 
                 />
               </div>
               <div
-                className="bg-[#78B0C7] p-[16px]  cursor-pointer"
-                onClick={() => handleShare(featuredItem.bookingUrl)}
+                className="bg-[#D12127] p-[16px]  cursor-pointer"
+                onClick={() => window.open(featuredItem.bookingUrl, '_blank')}
               >
-                <img src="/share.png" alt="share" className="w-6 h-6" />
+                <img src="/Arrow_up-right.png" alt="share" className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -605,13 +604,11 @@ const UpcomingEvents = () => {
                     <h2
                       className={`${merri.className} text-white font-light px-1 my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
                     >
-                      {renderTextWithLineBreaks(
-                        expandedId === item.id
-                          ? item.description
-                          : truncateText(item.description, MAX_CHARS),
-                      )}
+                      {item.description.length > 80
+            ? item.description.slice(0, 80) + '...'
+            : item.description}
 
-                      {item.description.length > MAX_CHARS && (
+                      {/* {item.description.length > MAX_CHARS && (
                         <button
                           onClick={() =>
                             setExpandedId(
@@ -622,7 +619,7 @@ const UpcomingEvents = () => {
                         >
                           {expandedId === item.id ? 'Read less' : 'Read more'}
                         </button>
-                      )}
+                      )} */}
                     </h2>
                   </div>
 
@@ -640,24 +637,17 @@ const UpcomingEvents = () => {
                         
                       />
                     </div>
-                    <div
-                      className="bg-[#D12127] p-[16px]  cursor-pointer"
-                      onClick={() => {
-                        if (item.type === 'retreat') {
-                          router.push('/retreats')
-                        } else if (item.slug) {
-                          router.push(`/events/${item.slug}`)
-                        } else {
-                          router.push('/events')
-                        }
-                      }}
-                    >
-                      <img
-                        src="/Arrow_up-right.png"
-                        alt="share"
-                        className="w-6 h-6"
-                      />
-                    </div>
+                   <div
+  className="bg-[#D12127] p-[16px] cursor-pointer"
+  onClick={() => window.open(item.bookingUrl, '_blank')}
+>
+  <img
+    src="/Arrow_up-right.png"
+    alt="share"
+    className="w-6 h-6"
+  />
+</div>
+
                   </div>
                 </div>
               ))}
