@@ -250,8 +250,8 @@ const EventCard = ({ event }: { event: Event }) => (
             py-6
           `}
         >
-          {event.description.length > 60
-            ? event.description.slice(0, 60) + '...'
+          {event.description.length > 400
+            ? event.description.slice(0, 400) + '...'
             : event.description}
         </p>
       )}
