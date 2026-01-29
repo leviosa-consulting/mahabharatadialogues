@@ -304,7 +304,7 @@ const EventsPage = () => {
   return (
     <div className="min-h-screen">
       <div
-        className="w-full "
+        className="w-full"
         style={{
           backgroundImage: `
       linear-gradient(

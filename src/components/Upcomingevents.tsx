@@ -514,8 +514,8 @@ const UpcomingEvents = () => {
 
         {upcomingItems.length > 0 && (
           <div className="text-center">
-            <h2 className="font-neco text-[32px] text-[#78B0C7] font-bold mb-12">
-              COMING UP
+            <h2 className="font-neco text-[32px] text-[#78B0C7] uppercase font-bold mb-12">
+             More from Mahabharata Dialogues
             </h2>
 
             <div

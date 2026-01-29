@@ -54,7 +54,7 @@ const ImageCarousel = () => {
               >
                 <img
                   src={`/assets/${img}`}
-                  alt=""
+                  alt={`/assets/${img}`}
                   className="w-full h-full object-cover shadow-lg"
                 />
               </div>
@@ -92,6 +92,7 @@ const ImageCarousel = () => {
           text="MORE CLIPS OF OUR DIALOGUES"
           bgColor="#1D5C75"
           textColor="#FFFFFF"
+          isOutSideLink
           url="https://www.instagram.com/mahabharatadialogues"
         />
       </div>
