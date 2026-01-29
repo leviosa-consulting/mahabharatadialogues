@@ -248,30 +248,39 @@ export default function BlogsClient({
           backgroundSize: '240px 240px',
         }}
       >
-        <div >
-           <MobileNavbar textColor="#1D5C75" isNotHome/>
-          </div>
-        <div className="hidden sm:block relative sm:pt-10 z-10">
+        <div>
+          <MobileNavbar textColor="#1D5C75" isNotHome />
+        </div>
+        <div className="hidden sm:block relative py-10 z-10">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 ">
+      </header>
+      {/* mid part */}
+      <div className="bg-[#1D5C75] text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="font-neco font-bold text-[#1D5C75] text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
-              Mahabharata Dialogues
+            <h1 className="font-neco font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
+              Blogs
             </h1>
             <p
-              className={`${merri.className} text-[#1D5C75] text-lg md:text-xl lg:text-2xl font-normal`}
+              className={`${merri.className} text-lg md:text-xl lg:text-2xl font-normal`}
             >
               Explore deep insights, knowledge, and timeless wisdom
             </p>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Main Content */}
-      <div className="w-full bg-[#1D5C75CC]">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 ">
+      <div
+        className="relative w-full bg-texture"
+        style={{
+          backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
+      >
+        <section className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-8 md:py-12 ">
           {/* Search + Filters */}
           <div className="bg-white shadow-lg p-4 sm:p-6 mb-6 md:mb-8">
             <div className="flex flex-col lg:flex-row gap-4">
@@ -377,7 +386,7 @@ export default function BlogsClient({
           {/* Active Filter Badge */}
           {selectedCategory && (
             <div className="mb-6 flex items-center gap-3 flex-wrap">
-              <div className="inline-flex items-center gap-2 bg-[#1D5C75] text-white px-4 py-2 ">
+              <div className="inline-flex items-center gap-2 bg-[#1D5C75] text-white py-2 px-2">
                 <span className={`${merri.className} text-sm font-medium`}>
                   Category: {selectedCategory}
                 </span>
@@ -440,9 +449,10 @@ export default function BlogsClient({
 
                     <div className="p-4 sm:p-6">
                       <div
-                        className={`${merri.className} flex flex-wrap gap-3 text-xs text-[#1D5C75] mb-3`}
+                        className={`${merri.className} font-normal
+            text-[16px] md:text-[18px] text-[#1D5C75] mb-3`}
                       >
-                        <span className="flex items-center gap-1">
+                        <span className="flex  items-center gap-1 ">
                           <Calendar size={14} aria-hidden="true" />
                           <time dateTime={blog.created_at}>
                             {formatDate(blog.created_at)}
@@ -454,26 +464,36 @@ export default function BlogsClient({
                         </span>
                       </div>
 
-                      <h2 className="font-neco font-bold text-[#1D5C75] text-lg sm:text-xl line-clamp-2 group-hover:text-[#47ABD8] transition-colors mb-2">
+                      <h2
+                        // className="font-neco font-bold text-[#1D5C75] text-lg sm:text-xl line-clamp-2 group-hover:text-[#47ABD8] transition-colors mb-2"
+                        className={`${merri.className}
+                                text-[#1D5C75]
+                                font-extrabold
+                                italic
+                                text-[26px] md:text-[32px]
+                                leading-tight
+                                mb-2
+                              `}
+                      >
                         {blog.title}
                       </h2>
 
                       {blog.subtitle && (
                         <p
-                          className={`${merri.className} text-[#1D5C75] text-sm line-clamp-3 mb-4`}
+                          className={`${merri.className} text-[#1D5C75]  font-light
+            italic
+            text-[16px] md:text-[18px]  line-clamp-3 mb-4`}
                         >
                           {blog.subtitle}
                         </p>
                       )}
 
                       <div
-                        className={`${merri.className} flex items-center text-[#1D5C75] font-semibold group-hover:text-[#47ABD8] transition-all`}
+                        className={`${merri.className} flex items-center text-[#1D5C75]  text-[16px] md:text-[18px]
+      font-bold uppercase`}
                       >
                         Read More
-                        <ChevronRight
-                          size={20}
-                          className="ml-1 group-hover:translate-x-1 transition-transform"
-                        />
+                         
                       </div>
                     </div>
                   </Link>

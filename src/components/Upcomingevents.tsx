@@ -421,7 +421,7 @@ const UpcomingEvents = () => {
                     {/* Text block */}
                     <div className="text-center md:text-center  md:max-w-none">
                       <h4
-                        className={`${merri.className} text-white font-normal text-[16px] px-10 md:text-[18px] leading-snug`}
+                        className={`${merri.className} text-white font-normal text-[16px] px-4 md:text-[18px] leading-snug`}
                       >
                         {featuredItem.venue},
                       </h4>
@@ -430,14 +430,13 @@ const UpcomingEvents = () => {
                       >
                         {featuredItem.city}
                       </h4>
-                     {
-                        featuredItem.mapUrl && (
-                             <a
-                        href={featuredItem.mapUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Open in Google Maps"
-                        className={` ${merri.className}
+                      {featuredItem.mapUrl && (
+                        <a
+                          href={featuredItem.mapUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Open in Google Maps"
+                          className={` ${merri.className}
     inline-flex items-center gap-1
     text-white hover:text-blue-300
     transition-colors
@@ -445,12 +444,11 @@ const UpcomingEvents = () => {
     text-[14px] uppercase
     mt-[6px] 
   `}
-                      >
-                        <MapPin size={18} />
-                        <span className="">View in Map</span>
-                      </a>
-                        )
-                     }
+                        >
+                          <MapPin size={18} />
+                          <span className="">View in Map</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -482,13 +480,10 @@ const UpcomingEvents = () => {
                 {renderTextWithLineBreaks(featuredItem.description)}
               </p>
             )}
-            <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2">
-              <div className="sm:w-[280px]">
+            <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
+              <div className="flex-1">
                 <CustomButton
-                  text={
-                     'LEARN MORE'
-                      
-                  }
+                  text={'LEARN MORE'}
                   bgColor="#78B0C7"
                   textColor="#FFFFFF"
                   url={
@@ -496,15 +491,18 @@ const UpcomingEvents = () => {
                       ? '/retreats'
                       : `/events/${featuredItem.slug}`
                   }
-                //   isOutSideLink={featuredItem.type !== 'retreat'}
-                 
+                  //   isOutSideLink={featuredItem.type !== 'retreat'}
                 />
               </div>
               <div
                 className="bg-[#D12127] p-[16px]  cursor-pointer"
                 onClick={() => window.open(featuredItem.bookingUrl, '_blank')}
               >
-                <img src="/Arrow_up-right.png" alt="share" className="w-6 h-6" />
+                <img
+                  src="/Arrow_up-right.png"
+                  alt="share"
+                  className="w-6 h-6"
+                />
               </div>
             </div>
           </div>
@@ -517,7 +515,7 @@ const UpcomingEvents = () => {
             </h2>
 
             <div
-              className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-8 px-4
+              className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-8 px-4 scroll-pl-4 md:scroll-pl-0 
     ${upcomingItems.length === 1 ? 'justify-center' : ''}
     ${upcomingItems.length === 2 ? 'md:justify-center' : ''}
     ${upcomingItems.length === 3 ? 'md:justify-start md:pl-[8%] lg:pl-[8%]' : ''}
@@ -568,7 +566,7 @@ const UpcomingEvents = () => {
                         {/* Text (not clickable) */}
                         <div>
                           <p
-                            className={`${merri.className} text-white font-normal text-[16px] md:text-[18px]`}
+                            className={`${merri.className} text-white font-normal text-[16px] px-2 md:text-[18px]`}
                           >
                             {item.venue},
                           </p>
@@ -605,8 +603,8 @@ const UpcomingEvents = () => {
                       className={`${merri.className} text-white font-light my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
                     >
                       {item.description.length > 60
-            ? item.description.slice(0, 60) + '...'
-            : item.description}
+                        ? item.description.slice(0, 60) + '...'
+                        : item.description}
 
                       {/* {item.description.length > MAX_CHARS && (
                         <button
@@ -623,32 +621,34 @@ const UpcomingEvents = () => {
                     </h2>
                   </div>
 
-                  <div className="flex justify-center items-center gap-2 pb-8 sm:mx-2 w-full mt-auto">
-                    <div className="sm:w-[280px]">
-                      <CustomButton
-                        text={'LEARN MORE'}
-                        bgColor="#1D5C75"
-                        textColor="#FFFFFF"
-                        url={
-                          item.type === 'retreat'
-                            ? '/retreats'
-                            : `/events/${item.slug ?? ''}`
-                        }
-                        
-                      />
-                    </div>
-                   <div
-  className="bg-[#D12127] p-[16px] cursor-pointer"
-  onClick={() => window.open(item.bookingUrl, '_blank')}
->
-  <img
-    src="/Arrow_up-right.png"
-    alt="share"
-    className="w-6 h-6"
-  />
+                 <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
+  {/* Button */}
+  <div className="flex-1">
+    <CustomButton
+      text={'LEARN MORE'}
+      bgColor="#1D5C75"
+      textColor="#FFFFFF"
+      url={
+        item.type === 'retreat'
+          ? '/retreats'
+          : `/events/${item.slug ?? ''}`
+      }
+    />
+  </div>
+
+  {/* Arrow icon */}
+  <div
+    className="bg-[#D12127] p-[16px] cursor-pointer shrink-0"
+    onClick={() => window.open(item.bookingUrl, '_blank')}
+  >
+    <img
+      src="/Arrow_up-right.png"
+      alt="share"
+      className="w-6 h-6"
+    />
+  </div>
 </div>
 
-                  </div>
                 </div>
               ))}
             </div>
