@@ -353,7 +353,7 @@ const EventCard = ({ event }: { event: Event }) => (
 
         {/* Events Grid */}
         <div
-          className={`max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 ${
+          className={`max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 ${
             showTabs ? 'py-12' : 'py-8'
           }`}
         >
