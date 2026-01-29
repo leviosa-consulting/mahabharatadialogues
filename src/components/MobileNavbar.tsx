@@ -33,7 +33,7 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
               rounded-full
               flex items-center justify-center
               transition-all duration-300
-              ${isNotHome ? 'w-[50%]' : 'w-[70%]'}
+              ${isNotHome ? 'w-[35%]' : 'w-[70%]'}
             `}
           >
             <img

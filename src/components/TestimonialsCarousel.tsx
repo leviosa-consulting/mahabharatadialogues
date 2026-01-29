@@ -182,7 +182,7 @@ const TestimonialsCarousel = ({
               <p className="font-bold italic text-[13px] md:text-[15px] opacity-90">
                 {testimonials[currentIndex]?.designation}
               </p>
-            </div>
+            </div> 
           </div>
         </div>
 
