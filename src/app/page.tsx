@@ -3,14 +3,13 @@ import HeroSection from '@/components/Hero'
 import Testimonials from '@/components/Testimonials'
 import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
-import Navbar from '@/components/Navbar'
 import UpcomingEvents from '@/components/Upcomingevents'
+import MobileNavbarScroll from '@/components/MobileNavbarScroll' // Add this import
 
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export default function Home() {
-  
   return (
     <div
       className="relative w-full bg-texture"
@@ -18,13 +17,14 @@ export default function Home() {
         backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
         backgroundRepeat: 'repeat',
         backgroundSize: '240px 240px',
-      }} 
+      }}
     >
+      <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
+
       <HeroSection />
       <UpcomingEvents />
       <ImageCarousel />
       <Retreats />
-      {/* <Navbar /> */}
     </div>
   )
 }

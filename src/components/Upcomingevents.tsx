@@ -7,6 +7,7 @@ import TestimonialsShimmer from './TestimonialsShimmer'
 import { MapPin } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import TestimonialsCarousel from './TestimonialsCarousel'
+import MobileNavbarScroll from './MobileNavbarScroll'
 
 interface Event {
   id: string
@@ -364,6 +365,9 @@ const UpcomingEvents = () => {
           backgroundSize: '240px 240px',
         }}
       >
+        {/* <div className="sm:hidden">
+          <MobileNavbarScroll textColor="#fff" />
+        </div> */}
         {featuredItem && featuredCardHeight > 0 && (
           <div
             style={
@@ -621,34 +625,33 @@ const UpcomingEvents = () => {
                     </h2>
                   </div>
 
-                 <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
-  {/* Button */}
-  <div className="flex-1">
-    <CustomButton
-      text={'LEARN MORE'}
-      bgColor="#1D5C75"
-      textColor="#FFFFFF"
-      url={
-        item.type === 'retreat'
-          ? '/retreats'
-          : `/events/${item.slug ?? ''}`
-      }
-    />
-  </div>
+                  <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
+                    {/* Button */}
+                    <div className="flex-1">
+                      <CustomButton
+                        text={'LEARN MORE'}
+                        bgColor="#1D5C75"
+                        textColor="#FFFFFF"
+                        url={
+                          item.type === 'retreat'
+                            ? '/retreats'
+                            : `/events/${item.slug ?? ''}`
+                        }
+                      />
+                    </div>
 
-  {/* Arrow icon */}
-  <div
-    className="bg-[#D12127] p-[16px] cursor-pointer shrink-0"
-    onClick={() => window.open(item.bookingUrl, '_blank')}
-  >
-    <img
-      src="/Arrow_up-right.png"
-      alt="share"
-      className="w-6 h-6"
-    />
-  </div>
-</div>
-
+                    {/* Arrow icon */}
+                    <div
+                      className="bg-[#D12127] p-[16px] cursor-pointer shrink-0"
+                      onClick={() => window.open(item.bookingUrl, '_blank')}
+                    >
+                      <img
+                        src="/Arrow_up-right.png"
+                        alt="share"
+                        className="w-6 h-6"
+                      />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
