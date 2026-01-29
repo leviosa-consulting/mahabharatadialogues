@@ -250,8 +250,8 @@ const EventCard = ({ event }: { event: Event }) => (
             py-6
           `}
         >
-          {event.description.length > 400
-            ? event.description.slice(0, 400) + '...'
+          {event.description.length > 500
+            ? event.description.slice(0, 500) + '...'
             : event.description}
         </p>
       )}
@@ -353,7 +353,7 @@ const EventCard = ({ event }: { event: Event }) => (
 
         {/* Events Grid */}
         <div
-          className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${
+          className={`max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 ${
             showTabs ? 'py-12' : 'py-8'
           }`}
         >
