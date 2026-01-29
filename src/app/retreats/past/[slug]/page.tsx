@@ -9,6 +9,7 @@ import Link from 'next/link'
 import CustomButton from '@/components/CustomButton'
 import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
+import Footer from '@/components/Footer'
 
 interface Testimonial {
   id: string
@@ -492,6 +493,8 @@ const PastRetreatPage: React.FC = () => {
           </button>
         </div>
       )}
+
+      <Footer />
     </div>
   )
 }

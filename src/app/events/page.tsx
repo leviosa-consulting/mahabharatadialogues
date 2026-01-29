@@ -14,6 +14,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { merri } from '../fonts/merri'
 import MobileNavbar from '@/components/MobileNavbar'
+import Footer from '@/components/Footer'
 
 interface Event {
   id: string
@@ -467,6 +468,7 @@ const EventsPage = () => {
               </>
             )}
           </div>
+          <Footer />
         </div>
       </div>
     </div>

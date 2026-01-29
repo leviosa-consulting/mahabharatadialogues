@@ -14,6 +14,7 @@ import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
+import Footer from '@/components/Footer'
 
 interface ScheduleItem {
   title: string
@@ -279,32 +280,38 @@ const RetreatSchedulePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="sm:hidden"  style={{
-            backgroundImage: `
+      <div
+        className="sm:hidden"
+        style={{
+          backgroundImage: `
       linear-gradient(
         rgba(255, 255, 255, 0.6),
         rgba(255, 255, 255, 0.6)
       ),
       url('/MD-Texture_BG_White-04.png')
     `,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '240px 240px',
-          }}>
-         <div >
-           <MobileNavbar textColor="#1D5C75" isNotHome/>
-          </div>
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
+      >
+        <div>
+          <MobileNavbar textColor="#1D5C75" isNotHome />
+        </div>
       </div>
-      <div className="hidden sm:block relative sm:py-10  z-10"  style={{
-            backgroundImage: `
+      <div
+        className="hidden sm:block relative sm:py-10  z-10"
+        style={{
+          backgroundImage: `
       linear-gradient(
         rgba(255, 255, 255, 0.6),
         rgba(255, 255, 255, 0.6)
       ),
       url('/MD-Texture_BG_White-04.png')
     `,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '240px 240px',
-          }}>
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
+      >
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
 
@@ -550,6 +557,9 @@ const RetreatSchedulePage: React.FC = () => {
           </button>
         </div>
       )}
+      <div className="bg-[#1D5C75CC]">
+        <Footer />
+      </div>
     </div>
   )
 }

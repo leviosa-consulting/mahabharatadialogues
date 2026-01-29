@@ -16,6 +16,7 @@ import {
 import { merri } from '@/app/fonts/merri'
 import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
+import Footer from '@/components/Footer'
 
 interface Blog {
   id: string
@@ -548,7 +549,10 @@ export default function BlogsClient({
             </div>
           )}
         </section>
+        <Footer />
       </div>
+
+      
     </div>
   )
 }
