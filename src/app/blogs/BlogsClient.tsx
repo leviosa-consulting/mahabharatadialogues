@@ -252,7 +252,7 @@ export default function BlogsClient({
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
         </div>
-        <div className="hidden sm:block relative py-10 z-10">
+        <div className="hidden sm:block pt-5 -mb-7">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
       </header>

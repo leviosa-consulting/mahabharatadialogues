@@ -149,31 +149,54 @@ const UpcomingEvents = () => {
     return `${day} ${month} ${year}`
   }
 
-  const formatDateRange = (startDate: string, endDate: string): string => {
-    const start = parseDate(startDate)
-    const end = parseDate(endDate)
+ const formatDateRange = (startDate: string, endDate: string): string => {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
 
-    const startDay = start.getDate()
-    const endDay = end.getDate()
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ]
-    const month = months[start.getMonth()]
-    const year = start.getFullYear()
+  const weekdays = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ]
 
-    return `${startDay} ${month} - ${endDay} ${month} ${year}`
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+
+  const startDayName = weekdays[start.getDay()]
+  const endDayName = weekdays[end.getDay()]
+
+  const startDay = start.getDate()
+  const endDay = end.getDate()
+
+  const startMonth = months[start.getMonth()]
+  const endMonth = months[end.getMonth()]
+  const year = start.getFullYear()
+
+  // Same month (your current case)
+  if (startMonth === endMonth) {
+    return `${startDayName} ${startDay} ${startMonth} - ${endDayName} ${endDay} ${endMonth} ${year}`
   }
+
+  // Different months (future-proof)
+  return `${startDayName} ${startDay} ${startMonth} - ${endDayName} ${endDay} ${endMonth} ${year}`
+}
+
 
  const formatEventDateTime = (dateTimeStr: string): string => {
   const date = new Date(dateTimeStr)

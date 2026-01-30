@@ -27,7 +27,7 @@ const EventsPageShimmer = () => {
         }}
       >
         {/* Web Asset – TOP CENTER */}
-        <div className="hidden sm:block py-10">
+        <div className="hidden sm:block pt-5 -mb-7">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
         <div>
