@@ -220,10 +220,10 @@ export default function BlogsClient({
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
-      return date.toLocaleDateString('en-US', {
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
       })
     } catch {
       return 'Unknown date'
@@ -461,35 +461,32 @@ export default function BlogsClient({
                         className={`${merri.className} font-normal
             text-[16px] md:text-[18px] text-[#1D5C75] mb-3`}
                       >
-                        <span className="flex  items-center gap-1 ">
-                          <Calendar size={14} aria-hidden="true" />
-                          <time dateTime={blog.created_at}>
-                            {formatDate(blog.created_at)}
-                          </time>
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <User size={14} aria-hidden="true" />
-                          {blog.author}
-                        </span>
-                      </div>
-
-                      <h2
-                        // className="font-neco font-bold text-[#1D5C75] text-lg sm:text-xl line-clamp-2 group-hover:text-[#47ABD8] transition-colors mb-2"
-                        className={`${merri.className}
+                        <h2
+                          // className="font-neco font-bold text-[#1D5C75] text-lg sm:text-xl line-clamp-2 group-hover:text-[#47ABD8] transition-colors mb-2"
+                          className={`${merri.className}
                                 text-[#1D5C75]
-                                font-extrabold
+                                font-bold
                                 italic
                                 text-[26px] md:text-[32px]
                                 leading-tight
                                 mb-2
                               `}
-                      >
-                        {blog.title}
-                      </h2>
+                        >
+                          {blog.title}
+                        </h2>
+                        <div className="flex justify-between">
+                          <span className="flex items-center gap-1">
+                            {blog.author}
+                          </span>
+                          <span className="flex  items-center gap-1 ">
+                            {formatDate(blog.created_at)}
+                          </span>
+                        </div>
+                      </div>
 
                       {blog.subtitle && (
                         <p
-                          className={`${merri.className} text-[#1D5C75]  font-light
+                          className={`${merri.className} text-black  font-light
             italic
             text-[16px] md:text-[18px]  line-clamp-3 mb-4`}
                         >
@@ -498,7 +495,7 @@ export default function BlogsClient({
                       )}
 
                       <div
-                        className={`${merri.className} flex items-center text-[#1D5C75]  text-[16px] md:text-[18px]
+                        className={`${merri.className} flex items-center text-[#1D5C75]  text-[14px] lg:text-[16px]
       font-bold uppercase`}
                       >
                         Read More

@@ -246,10 +246,10 @@ const BlogDetailPage = () => {
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
-      return date.toLocaleDateString('en-US', {
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
       })
     } catch {
       return 'Unknown date'
@@ -330,7 +330,22 @@ const BlogDetailPage = () => {
 
   return (
     <div onClick={handleBackgroundClick}>
-      <div className="w-full min-h-screen bg-[#1D5C75CC]">
+      <div
+        className="w-full min-h-screen"
+        style={{
+          backgroundImage: `
+    linear-gradient(
+      to bottom,
+      #47ABD880 50%,
+      #1D5C75 100%
+    ),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'cover, 240px 240px',
+          backgroundPosition: 'center, top left',
+        }}
+      >
         <div className="md:mx-1 lg:mx-4 xl:mx-30 2xl:mx-40">
           <div className="grid grid-cols-12">
             <div
@@ -349,7 +364,7 @@ const BlogDetailPage = () => {
 
               <div className="bg-white">
                 <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4  lg:p-8">
+                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4 lg:p-8">
                     <div className="w-full">
                       <div className="flex flex-col items-start text-start  w-full">
                         <div className="flex justify-between items-start w-full gap-4">
@@ -370,7 +385,7 @@ const BlogDetailPage = () => {
                           <div>
                             <div>
                               <h3
-                                className={`${merri.className} italic text-[#1D5C75] text-lg sm:text-[22px] font-bold`}
+                                className={`${merri.className} italic text-[#1D5C75] text-lg  font-bold`}
                               >
                                 {blog.author}
                               </h3>
@@ -378,10 +393,6 @@ const BlogDetailPage = () => {
                             <div
                               className={`${merri.className} flex items-center font-normal gap-2 text-[#1D5C75] text-sm sm:text-base md:text-lg`}
                             >
-                              <Calendar
-                                size={16}
-                                className="sm:w-[18px] sm:h-[18px]"
-                              />
                               <time dateTime={blog.created_at}>
                                 {formatDate(blog.created_at)}
                               </time>
@@ -437,7 +448,9 @@ const BlogDetailPage = () => {
                         </div>
                       </div>
                       <div className="mb-4 sm:mb-6">
-                        <p className="font-neco font-bold italic text-lg sm:text-xl md:text-[22px] text-[#1D5C75]">
+                        <p
+                          className={`${merri.className} font-bold italic text-lg sm:text-xl md:text-[22px] text-[#1D5C75]`}
+                        >
                           {blog.subtitle}
                         </p>
                       </div>
@@ -652,27 +665,42 @@ const BlogDetailPage = () => {
                       />
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  {relatedBlogs.length > 0 && (
-                    <div className="bg-[#47ABD8B2] col-span-12 md:col-start-1 lg:col-start-2 lg:col-span-10 m-4 sm:my-4 lg:m-8">
-                      <h2
-                        className={`${merri.className} text-center text-white text-[20px] font-bold  my-6 uppercase`}
-                      >
-                        Next Story
-                      </h2>
+              {/*  */}
+              <div className="bg-[#47ABD8B2] mt-8">
+                <div className="grid grid-cols-12">
+                  {/* Centered content */}
+                  <div className="col-span-12 lg:col-span-10 lg:col-start-2 px-4 sm:px-6 lg:px-8 py-8">
+                    {relatedBlogs.length > 0 && (
+                      <>
+                        <h2
+                          className={`${merri.className}
+              text-center
+              text-white
+              text-[20px]
+              font-bold
+              my-9
+              uppercase
+            `}
+                        >
+                          Next Story
+                        </h2>
 
-                      <div className="flex flex-col items-center gap-6 px-4 sm:px-8 md:px-16 lg:px-24 pb-10">
-                        {relatedBlogs.map((relatedBlog) => (
-                          <div
-                            key={relatedBlog.id}
-                            className="w-full max-w-2xl"
-                          >
-                            <BlogCard blog={relatedBlog} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                        <div className="flex flex-col items-center gap-6 pb-10">
+                          {relatedBlogs.map((relatedBlog) => (
+                            <div
+                              key={relatedBlog.id}
+                              className="w-full max-w-2xl"
+                            >
+                              <BlogCard blog={relatedBlog} />
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

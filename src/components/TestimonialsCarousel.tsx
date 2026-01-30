@@ -197,23 +197,33 @@ const TestimonialsCarousel = ({
           />
         </div> */}
 
-        {/* Navigation Dots */}
-        <div className="flex justify-center gap-3.5 mt-8">
-          {testimonials.map((_, index) => (
-            <div
-              key={index}
-              onClick={(e) => {
-                e.stopPropagation()
-                handleDotClick(index)
-              }}
-              className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all duration-300 ${
-                index === currentIndex
-                  ? `bg-[${textColor}] scale-125`
-                  : 'bg-gray-400 hover:bg-gray-300'
-              }`}
-            ></div>
-          ))}
-        </div>
+       {/* Navigation Dots */}
+<div className="flex justify-center gap-3.5 mt-8">
+  {testimonials.map((_, index) => {
+    const isActive = index === currentIndex
+
+    return (
+      <div
+        key={index}
+        onClick={(e) => {
+          e.stopPropagation()
+          handleDotClick(index)
+        }}
+        className={`
+          w-2.5 h-2.5
+          rounded-full
+          cursor-pointer
+          transition-all duration-300
+          ${isActive ? 'scale-125' : ''}
+        `}
+        style={{
+          backgroundColor: isActive ? textColor : '#9CA3AF', // gray-400
+        }}
+      />
+    )
+  })}
+</div>
+
       </div>
     </div>
   )

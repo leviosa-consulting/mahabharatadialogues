@@ -146,7 +146,7 @@ const UpcomingEvents = () => {
     ]
     const month = months[date.getMonth()]
     const year = date.getFullYear()
-    return `${day} ${month}, ${year}`
+    return `${day} ${month} ${year}`
   }
 
   const formatDateRange = (startDate: string, endDate: string): string => {
@@ -172,40 +172,54 @@ const UpcomingEvents = () => {
     const month = months[start.getMonth()]
     const year = start.getFullYear()
 
-    return `${startDay} ${month} - ${endDay} ${month}, ${year}`
+    return `${startDay} ${month} - ${endDay} ${month} ${year}`
   }
 
-  const formatEventDateTime = (dateTimeStr: string): string => {
-    const date = new Date(dateTimeStr)
-    const day = date.getDate()
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ]
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
+ const formatEventDateTime = (dateTimeStr: string): string => {
+  const date = new Date(dateTimeStr)
 
-    let hours = date.getHours()
-    const minutes = date.getMinutes()
-    const ampm = hours >= 12 ? 'pm' : 'am'
-    hours = hours % 12
-    hours = hours ? hours : 12
-    const timeStr = `${hours}${
-      minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
-    }${ampm}`
+  const weekdays = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ]
+  const dayName = weekdays[date.getDay()]
 
-    return `${day} ${month}, ${year} | ${timeStr}`
-  }
+  const day = date.getDate()
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+
+  let hours = date.getHours()
+  const minutes = date.getMinutes()
+  const ampm = hours >= 12 ? 'pm' : 'am'
+  hours = hours % 12
+  hours = hours ? hours : 12
+
+  const timeStr = `${hours}${
+    minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
+  }${ampm}`
+
+  return `${dayName} ${day} ${month} ${year} | ${timeStr}`
+}
+
 
   const fetchUpcomingItems = async () => {
     try {
@@ -512,12 +526,25 @@ const UpcomingEvents = () => {
           </div>
         )}
 
+         {/* button */}
+          <div className="flex flex-col md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-18 px-4 sm:px-10 xl:px-40 mb-12 md:mb-18">
+            <p
+              className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
+            >
+              Dialogues, Retreats, and Evenings with Mahabharata, celebrating
+              art, music, dance, and stories.
+            </p>
+            <CustomButton
+              text="EXPLORE MORE EVENTS"
+              bgColor="#1D5C75"
+              textColor="#FFFFFF"
+              url={'/events'}
+            />
+          </div>
+
         {upcomingItems.length > 0 && (
           <div className="text-center">
-            <h2 className="font-neco text-[32px] text-[#78B0C7] uppercase font-bold mb-12">
-             More from Mahabharata Dialogues
-            </h2>
-
+            
             <div
               className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-8 px-4 scroll-pl-4 md:scroll-pl-0 
     ${upcomingItems.length === 1 ? 'justify-center' : ''}
@@ -673,22 +700,6 @@ const UpcomingEvents = () => {
               </p>
             </div>
           )}
-
-          {/* button */}
-          <div className="flex flex-col md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-12 px-4 sm:px-10 xl:px-40">
-            <p
-              className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
-            >
-              Dialogues, Retreats, and Evenings with Mahabharata, celebrating
-              art, music, dance, and stories.
-            </p>
-            <CustomButton
-              text="EXPLORE MORE EVENTS"
-              bgColor="#1D5C75"
-              textColor="#FFFFFF"
-              url={'/events'}
-            />
-          </div>
 
           {/* Testimonials Section */}
           <TestimonialsCarousel textColor={'#fff'}/>

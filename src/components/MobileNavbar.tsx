@@ -37,7 +37,9 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
             `}
           >
             <img
-              src="/Web_Assets-08.png"
+              src={
+              isNotHome ? '/Logo_for_video_Corner-04.png' : '/Web_Assets-08.png'
+            }
               alt="Logo"
               className="w-full h-auto"
             />

@@ -46,11 +46,15 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
         {/* CENTER LOGO */}
         <Link href="/" className="flex justify-center">
           <img
-            src="/Web_Assets-08.png"
+            src={
+              isNotHome ? '/Logo_for_video_Corner-04.png' : '/Web_Assets-08.png'
+            }
             alt="Logo"
-            className={`h-auto object-contain cursor-pointer transition-all duration-300
-              ${isNotHome ? 'w-31' : 'w-42 xl:w-60 2xl:w-62'}
-            `}
+            className={`
+      h-auto object-contain cursor-pointer
+      transition-all duration-300
+      ${isNotHome ? 'w-31' : 'w-42 xl:w-60 2xl:w-62'}
+    `}
           />
         </Link>
 

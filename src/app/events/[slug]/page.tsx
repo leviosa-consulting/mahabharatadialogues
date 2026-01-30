@@ -17,6 +17,7 @@ import {
 import { merri } from '@/app/fonts/merri'
 import CustomButton from '@/components/CustomButton'
 import EventDetailShimmer from '@/components/shimmer/EventDetailShimmer'
+import Footer from '@/components/Footer'
 
 interface Event {
   id: string
@@ -68,13 +69,21 @@ const EventDetailPage = () => {
     }
   }
 
-  const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+
+    const weekday = date.toLocaleDateString('en-US', {
       weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
     })
+
+    const rest = date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    })
+
+    return `${weekday} ${rest}`
+  }
 
   const formatTime = (dateString: string) =>
     new Date(dateString).toLocaleTimeString('en-US', {
@@ -92,30 +101,24 @@ const EventDetailPage = () => {
 
   const handlePrevImage = () => {
     if (!event?.gallery) return
-    setSelectedImageIndex(
-      (prev) =>
-        prev !== null
-          ? (prev - 1 + event.gallery.length) % event.gallery.length
-          : prev,
+    setSelectedImageIndex((prev) =>
+      prev !== null
+        ? (prev - 1 + event.gallery.length) % event.gallery.length
+        : prev,
     )
   }
 
   const handleNextImage = () => {
     if (!event?.gallery) return
-    setSelectedImageIndex(
-      (prev) =>
-        prev !== null
-          ? (prev + 1) % event.gallery.length
-          : prev,
+    setSelectedImageIndex((prev) =>
+      prev !== null ? (prev + 1) % event.gallery.length : prev,
     )
   }
 
   if (loading) return <EventDetailShimmer />
   if (!event) return null
 
-  const youtubeId = event.youtubeUrl
-    ? extractYouTubeId(event.youtubeUrl)
-    : null
+  const youtubeId = event.youtubeUrl ? extractYouTubeId(event.youtubeUrl) : null
 
   return (
     <div className="min-h-screen">
@@ -136,7 +139,7 @@ const EventDetailPage = () => {
             className="flex items-center gap-2 text-white mb-6 w-fit"
           >
             <ArrowLeft size={20} />
-            <span>Back to Events</span>
+            <span>Go to Events</span>
           </button>
 
           <h1 className="text-4xl md:text-5xl font-bold text-white">
@@ -147,105 +150,142 @@ const EventDetailPage = () => {
 
       {/* CONTENT */}
       <div
-        className={`max-w-7xl ${merri.className} mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8`}
+        style={{
+          backgroundImage: `
+    linear-gradient(
+      to bottom,
+      #47ABD880 50%,
+      #1D5C75 100%
+    ),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'cover, 240px 240px',
+          backgroundPosition: 'center, top left',
+        }}
       >
-        {/* MAIN */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* ABOUT */}
-          <div className="bg-white shadow-md p-8">
-            <h2 className="text-2xl font-bold mb-4">About This Event</h2>
-            <p className="text-gray-700 whitespace-pre-wrap">
-              {event.description}
-            </p>
-          </div>
-
-          {/* VIDEO */}
-          {youtubeId && (
-            <div className="bg-white shadow-md p-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Youtube className="text-red-600" />
-                <h2 className="text-2xl font-bold">Event Video</h2>
-              </div>
-              <div className="relative aspect-video">
-                <iframe
-                  src={`https://www.youtube.com/embed/${youtubeId}`}
-                  className="absolute inset-0 w-full h-full"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-          )}
-
-          {/* GALLERY */}
-          {event.gallery && event.gallery.length >= 1 && (
-            <div className="bg-white shadow-md p-8">
-              <div className="flex items-center gap-2 mb-4">
-                <ImageIcon />
-                <h2 className="text-2xl font-bold">Event Gallery</h2>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {event.gallery.map((img, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => setSelectedImageIndex(idx)}
-                    className="aspect-square overflow-hidden cursor-pointer"
-                  >
-                    <img
-                      src={img}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* TESTIMONIAL */}
-          {event.testimonial && (
-            <div className="bg-purple-50 shadow-md p-8">
-              <Quote className="text-purple-600 mb-4" size={32} />
-              <p className="italic text-lg">"{event.testimonial}"</p>
-            </div>
-          )}
+      <div
+  className={`max-w-7xl ${merri.className} mx-auto px-6 py-12`}
+>
+  {/* SINGLE COMBINED BOX */}
+  <div className="bg-white shadow-md">
+    <div className="grid grid-cols-1 lg:grid-cols-3">
+      
+      {/* LEFT (MAIN CONTENT) */}
+      <div className="lg:col-span-2 p-8 space-y-8">
+        {/* ABOUT */}
+        <div>
+          <h3 className={`event-content ${merri.className}`}>
+            About This Event
+          </h3>
+          <p className={`${merri.className} text-[16px] font-light leading-7`}>
+            {event.description}
+          </p>
         </div>
 
-        {/* SIDEBAR */}
-        <div>
-          <div className="bg-white shadow-md p-6 sticky top-6">
-            <h3 className="text-xl font-bold mb-4">Event Details</h3>
-
-            <p className="font-semibold">{formatDate(event.eventDate)}</p>
-            <p className="font-semibold">{formatTime(event.eventDate)}</p>
-
-            {event.mapUrl && (
-              <a
-                href={event.mapUrl}
-                target="_blank"
-                className="inline-flex items-center gap-1 font-semibold mt-2"
-              >
-                <MapPin size={16} />
-                {event.venue}, {event.city}
-              </a>
-            )}
-
-            {event.bookingUrl && (
-              <div className="mt-6">
-                <CustomButton
-                  text="Book Now"
-                  bgColor="#D12127"
-                  textColor="#FFFFFF"
-                  url={event.bookingUrl}
-                  isArrow
-                  isOutSideLink
-                />
-              </div>
-            )}
+        {/* VIDEO */}
+        {youtubeId && (
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Youtube className="text-red-600" />
+              <h2 className="text-2xl font-bold">Event Video</h2>
+            </div>
+            <div className="relative aspect-video">
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeId}`}
+                className="absolute inset-0 w-full h-full"
+                allowFullScreen
+              />
+            </div>
           </div>
+        )}
+
+        {/* GALLERY */}
+        {event.gallery && event.gallery.length >= 1 && (
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <ImageIcon />
+              <h2 className="text-2xl font-bold">Event Gallery</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {event.gallery.map((img, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => setSelectedImageIndex(idx)}
+                  className="aspect-square overflow-hidden cursor-pointer"
+                >
+                  <img
+                    src={img}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TESTIMONIAL */}
+        {event.testimonial && (
+          <div className="bg-purple-50 p-6">
+            <Quote className="text-purple-600 mb-4" size={32} />
+            <p className="italic text-lg">"{event.testimonial}"</p>
+          </div>
+        )}
+      </div>
+
+      {/* RIGHT (SIDEBAR) */}
+      <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-8">
+        <div className="sticky top-6">
+          <h3 className={`${merri.className} text-[22px] font-bold mb-4`}>
+            Event Details
+          </h3>
+
+          <p className={`${merri.className} text-[20px] italic font-bold`}>
+            {formatDate(event.eventDate)}
+          </p>
+          <p
+            className={`${merri.className} text-[20px] italic font-bold mb-2`}
+          >
+            {formatTime(event.eventDate)}
+          </p>
+
+          {event.venue && (
+            <a
+              href={event.mapUrl}
+              target="_blank"
+              className={`${merri.className} text-[20px] italic hover:underline`}
+            >
+              {event.venue}, {event.city}
+            </a>
+          )}
+
+          {event.bookingUrl && (
+            <div className="mt-6">
+              <CustomButton
+                text="BOOK NOW"
+                bgColor="#D12127"
+                textColor="#FFFFFF"
+                url={event.bookingUrl}
+                isArrow
+                isOutSideLink
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ✅ RETREAT-STYLE LIGHTBOX */}
+    </div>
+  </div>
+</div>
+
+
+
+        <div>
+          <Footer />
+        </div>
+      </div>
+
       {selectedImageIndex !== null && event.gallery && (
         <div
           className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center"

@@ -175,8 +175,8 @@ export default async function RetreatHero() {
             backgroundSize: '240px 240px',
           }}
         >
-          <div >
-           <MobileNavbar textColor="#1D5C75" isNotHome/>
+          <div>
+            <MobileNavbar textColor="#1D5C75" isNotHome />
           </div>
           <div className="hidden sm:block relative sm:pt-10 z-10">
             <Navbar textColor="#1D5C75" isNotHome />
@@ -254,9 +254,9 @@ export default async function RetreatHero() {
                     </div>
 
                     <div className="text-center md:text-left">
-                      <p className="font-neco font-bold text-[28px] text-white flex items-center gap-1 justify-center md:justify-start">
-                        <span>₹</span>
-                        <span>
+                      <p className="font-neco font-bold text-white flex items-center gap-1 justify-center md:justify-start">
+                        <span className="text-[16px] leading-none">₹</span>
+                        <span className="text-[28px] leading-none">
                           {upcomingRetreat.price?.toLocaleString('en-IN')}
                         </span>
                       </p>

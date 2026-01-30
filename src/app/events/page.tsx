@@ -113,25 +113,53 @@ const EventsPage = () => {
   return <EventsPageShimmer />
 }
 
-  const formatEventDateTime = (dateString: string) => {
-    const date = new Date(dateString)
+ 
 
-    const datePart = date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    })
+  const formatEventDateTime = (dateTimeStr: string): string => {
+  const date = new Date(dateTimeStr)
 
-    const timePart = date
-      .toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      })
-      .toLowerCase()
+  const weekdays = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ]
+  const dayName = weekdays[date.getDay()]
 
-    return `${datePart} | ${timePart}`
-  }
+  const day = date.getDate()
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+
+  let hours = date.getHours()
+  const minutes = date.getMinutes()
+  const ampm = hours >= 12 ? 'pm' : 'am'
+  hours = hours % 12
+  hours = hours ? hours : 12
+
+  const timeStr = `${hours}${
+    minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
+  }${ampm}`
+
+  return `${dayName} ${day} ${month} ${year} | ${timeStr}`
+}
+
 
   const handleEventClick = (slug: string) => {
     router.push(`/events/${slug}`)
@@ -267,7 +295,7 @@ const EventsPage = () => {
             className={`${merri.className}
       flex items-center gap-2
       text-[#1D5C75]
-      text-[16px] md:text-[18px]
+      text-[14px] lg:text-[16px]
       font-bold uppercase
     `}
           >
