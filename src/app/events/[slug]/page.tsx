@@ -13,6 +13,8 @@ import {
   Image as ImageIcon,
   X,
   MapPin,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import CustomButton from '@/components/CustomButton'
@@ -40,6 +42,7 @@ const EventDetailPage = () => {
   const [event, setEvent] = useState<Event | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
     if (params.slug) {
@@ -89,6 +92,43 @@ const EventDetailPage = () => {
       /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
     const match = url.match(regExp)
     return match && match[7].length === 11 ? match[7] : null
+  }
+
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (event?.gallery) {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? event.gallery!.length - 1 : prev - 1
+      )
+      setSelectedImage(
+        event.gallery[
+          currentImageIndex === 0
+            ? event.gallery.length - 1
+            : currentImageIndex - 1
+        ]
+      )
+    }
+  }
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (event?.gallery) {
+      setCurrentImageIndex((prev) =>
+        prev === event.gallery!.length - 1 ? 0 : prev + 1
+      )
+      setSelectedImage(
+        event.gallery[
+          currentImageIndex === event.gallery.length - 1
+            ? 0
+            : currentImageIndex + 1
+        ]
+      )
+    }
+  }
+
+  const openImageModal = (img: string, index: number) => {
+    setSelectedImage(img)
+    setCurrentImageIndex(index)
   }
 
   if (loading) {
@@ -186,7 +226,7 @@ const EventDetailPage = () => {
                   {event.gallery.map((img, idx) => (
                     <div
                       key={idx}
-                      onClick={() => setSelectedImage(img)}
+                      onClick={() => openImageModal(img, idx)}
                       className="relative aspect-square overflow-hidden cursor-pointer group"
                     >
                       <img
@@ -306,6 +346,27 @@ const EventDetailPage = () => {
           >
             <X size={32} />
           </button>
+
+          {/* Previous Button */}
+          {event.gallery && event.gallery.length > 1 && (
+            <button
+              onClick={handlePrevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-2"
+            >
+              <ChevronLeft size={40} />
+            </button>
+          )}
+
+          {/* Next Button */}
+          {event.gallery && event.gallery.length > 1 && (
+            <button
+              onClick={handleNextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-2"
+            >
+              <ChevronRight size={40} />
+            </button>
+          )}
+
           <img
             src={selectedImage}
             alt="Gallery"
