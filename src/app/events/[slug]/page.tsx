@@ -164,122 +164,122 @@ const EventDetailPage = () => {
           backgroundPosition: 'center, top left',
         }}
       >
-      <div
-  className={`max-w-7xl ${merri.className} mx-auto px-6 py-12`}
->
-  {/* SINGLE COMBINED BOX */}
-  <div className="bg-white shadow-md">
-    <div className="grid grid-cols-1 lg:grid-cols-3">
-      
-      {/* LEFT (MAIN CONTENT) */}
-      <div className="lg:col-span-2 p-8 space-y-8">
-        {/* ABOUT */}
-        <div>
-          <h3 className={`event-content ${merri.className}`}>
-            About This Event
-          </h3>
-          <p className={`${merri.className} text-[16px] font-light leading-7`}>
-            {event.description}
-          </p>
-        </div>
-
-        {/* VIDEO */}
-        {youtubeId && (
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Youtube className="text-red-600" />
-              <h2 className="text-2xl font-bold">Event Video</h2>
-            </div>
-            <div className="relative aspect-video">
-              <iframe
-                src={`https://www.youtube.com/embed/${youtubeId}`}
-                className="absolute inset-0 w-full h-full"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        )}
-
-        {/* GALLERY */}
-        {event.gallery && event.gallery.length >= 1 && (
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <ImageIcon />
-              <h2 className="text-2xl font-bold">Event Gallery</h2>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {event.gallery.map((img, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedImageIndex(idx)}
-                  className="aspect-square overflow-hidden cursor-pointer"
-                >
-                  <img
-                    src={img}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform"
-                  />
+        <div className={`max-w-7xl ${merri.className} mx-auto px-6 py-12`}>
+          {/* SINGLE COMBINED BOX */}
+          <div className="bg-white shadow-md">
+            <div className="grid grid-cols-1 lg:grid-cols-3">
+              {/* LEFT (MAIN CONTENT) */}
+              <div className="lg:col-span-2 p-8 space-y-8">
+                {/* ABOUT */}
+                <div>
+                  <h3 className={`event-content ${merri.className}`}>
+                    About This Event
+                  </h3>
+                  <p
+                    className={`${merri.className} text-[16px] font-light leading-7`}
+                  >
+                    {event.description}
+                  </p>
                 </div>
-              ))}
+
+                {/* VIDEO */}
+                {youtubeId && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Youtube className="text-red-600" />
+                      <h2 className="text-2xl font-bold">Event Video</h2>
+                    </div>
+                    <div className="relative aspect-video">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${youtubeId}`}
+                        className="absolute inset-0 w-full h-full"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* GALLERY */}
+                {event.gallery && event.gallery.length >= 1 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <ImageIcon />
+                      <h2 className="text-2xl font-bold">Event Gallery</h2>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {event.gallery.map((img, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => setSelectedImageIndex(idx)}
+                          className="aspect-square overflow-hidden cursor-pointer"
+                        >
+                          <img
+                            src={img}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* TESTIMONIAL */}
+                {event.testimonial && (
+                  <div className="bg-purple-50 p-6">
+                    <Quote className="text-purple-600 mb-4" size={32} />
+                    <p className="italic text-lg">"{event.testimonial}"</p>
+                  </div>
+                )}
+              </div>
+
+              {/* RIGHT (SIDEBAR) */}
+              <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-8">
+                <div className="sticky top-6">
+                  <h3
+                    className={`${merri.className} text-[22px] font-bold mb-4`}
+                  >
+                    Event Details
+                  </h3>
+
+                  <p
+                    className={`${merri.className}  text-[16px] md:text-[18px] italic font-bold`}
+                  >
+                    {formatDate(event.eventDate)}
+                  </p>
+                  <p
+                    className={`${merri.className}  text-[16px] md:text-[18px] italic font-bold mb-2`}
+                  >
+                    {formatTime(event.eventDate)}
+                  </p>
+
+                  {event.venue && (
+                    <a
+                      href={event.mapUrl}
+                      target="_blank"
+                      className={`${merri.className}  text-[16px] md:text-[18px] italic hover:underline`}
+                    >
+                      {event.venue}, {event.city}
+                    </a>
+                  )}
+
+                  {event.bookingUrl && (
+                    <div className="mt-6">
+                      <CustomButton
+                        text="BOOK NOW"
+                        bgColor="#D12127"
+                        textColor="#FFFFFF"
+                        url={event.bookingUrl}
+                        isArrow
+                        isOutSideLink
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        )}
-
-        {/* TESTIMONIAL */}
-        {event.testimonial && (
-          <div className="bg-purple-50 p-6">
-            <Quote className="text-purple-600 mb-4" size={32} />
-            <p className="italic text-lg">"{event.testimonial}"</p>
-          </div>
-        )}
-      </div>
-
-      {/* RIGHT (SIDEBAR) */}
-      <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-8">
-        <div className="sticky top-6">
-          <h3 className={`${merri.className} text-[22px] font-bold mb-4`}>
-            Event Details
-          </h3>
-
-          <p className={`${merri.className} text-[20px] italic font-bold`}>
-            {formatDate(event.eventDate)}
-          </p>
-          <p
-            className={`${merri.className} text-[20px] italic font-bold mb-2`}
-          >
-            {formatTime(event.eventDate)}
-          </p>
-
-          {event.venue && (
-            <a
-              href={event.mapUrl}
-              target="_blank"
-              className={`${merri.className} text-[20px] italic hover:underline`}
-            >
-              {event.venue}, {event.city}
-            </a>
-          )}
-
-          {event.bookingUrl && (
-            <div className="mt-6">
-              <CustomButton
-                text="BOOK NOW"
-                bgColor="#D12127"
-                textColor="#FFFFFF"
-                url={event.bookingUrl}
-                isArrow
-                isOutSideLink
-              />
-            </div>
-          )}
         </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
 
         <div>
           <Footer />
