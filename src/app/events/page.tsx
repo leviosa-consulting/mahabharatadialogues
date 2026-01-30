@@ -387,9 +387,17 @@ const EventsPage = () => {
         <div
           className="relative w-full bg-texture"
           style={{
-            backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
+            backgroundImage: `
+    linear-gradient(
+      to bottom,
+      #47ABD880 50%,
+      #1D5C75 100%
+    ),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
             backgroundRepeat: 'repeat',
-            backgroundSize: '240px 240px',
+            backgroundSize: 'cover, 240px 240px',
+            backgroundPosition: 'center, top left',
           }}
         >
           <div
