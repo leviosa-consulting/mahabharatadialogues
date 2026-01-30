@@ -12,10 +12,11 @@ interface Testimonial {
 
 interface TestimonialsCarouselProps {
   testimonials?: Testimonial[]
+  textColor?: string
 }
 
 const TestimonialsCarousel = ({
-  testimonials: initialTestimonials,
+  testimonials: initialTestimonials,textColor
 }: TestimonialsCarouselProps) => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>(
     initialTestimonials || [],
@@ -171,10 +172,10 @@ const TestimonialsCarousel = ({
                 : 'opacity-100 transform translate-y-0'
             }`}
           >
-            <p className="text-white font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7">
+            <p className={`text-[${textColor}] font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7`}>
               {testimonials[currentIndex]?.quote}
             </p>
-            <div className={`text-white ${merri.className} mt-4 text-center`}>
+            <div className={`text-[${textColor}] ${merri.className} mt-4 text-center`}>
               <p className="uppercase font-bold text-[14px] md:text-[16px]">
                 {testimonials[currentIndex]?.name},
               </p>
@@ -207,7 +208,7 @@ const TestimonialsCarousel = ({
               }}
               className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all duration-300 ${
                 index === currentIndex
-                  ? 'bg-white scale-125'
+                  ? `bg-[${textColor}] scale-125`
                   : 'bg-gray-400 hover:bg-gray-300'
               }`}
             ></div>

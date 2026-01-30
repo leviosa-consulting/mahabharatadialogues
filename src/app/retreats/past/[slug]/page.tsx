@@ -10,6 +10,7 @@ import CustomButton from '@/components/CustomButton'
 import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
+import TestimonialsCarousel from '@/components/TestimonialsCarousel'
 
 interface Testimonial {
   id: string
@@ -356,43 +357,8 @@ const PastRetreatPage: React.FC = () => {
                     </p>
                   )}
 
-                  {/* Testimonials Section */}
-                  <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-6">
-                    <div
-                      className="bg-opacity-60 rounded-lg p-6 text-center"
-                      onWheel={handleWheel}
-                      onTouchStart={handleTouchStart}
-                      onTouchMove={handleTouchMove}
-                      onTouchEnd={handleTouchEnd}
-                    >
-                      <p className="text-[#1D5C75] font-neco italic text-[20px] sm:text-[24px] leading-relaxed">
-                        {testimonials[currentIndex]?.quote}
-                      </p>
-                      <p
-                        className={`text-[#1D5C75] ${merri.className} mt-4 font-bold text-[16px] md:text-[18px]`}
-                      >
-                        <span className="uppercase">
-                          {testimonials[currentIndex]?.name},{' '}
-                        </span>
-                        {testimonials[currentIndex]?.designation}
-                      </p>
-
-                      {/* Navigation Dots */}
-                      <div className="flex justify-center gap-3.5 my-8">
-                        {testimonials.map((_, index) => (
-                          <div
-                            key={index}
-                            onClick={() => setCurrentIndex(index)}
-                            className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${
-                              index === currentIndex
-                                ? 'bg-[#1D5C75]'
-                                : 'bg-[#78B0C7]'
-                            }`}
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                 
+                  <TestimonialsCarousel textColor={'#1D5C75'}/>
 
                   {/* button */}
                   <div className="flex justify-center items-center">

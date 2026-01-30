@@ -691,7 +691,7 @@ const UpcomingEvents = () => {
           </div>
 
           {/* Testimonials Section */}
-          <TestimonialsCarousel />
+          <TestimonialsCarousel textColor={'#fff'}/>
         </div>
       </div>
     </div>

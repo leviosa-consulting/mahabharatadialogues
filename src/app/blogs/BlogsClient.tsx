@@ -275,8 +275,8 @@ export default function BlogsClient({
       {/* Main Content */}
       <div
         className="relative w-full bg-texture"
-       style={{
-  backgroundImage: `
+        style={{
+          backgroundImage: `
     linear-gradient(
       to bottom,
       #47ABD880 50%,
@@ -284,11 +284,10 @@ export default function BlogsClient({
     ),
     url('/MD-Texture_BG_Blue-01-04.png')
   `,
-  backgroundRepeat: 'repeat',
-  backgroundSize: 'cover, 240px 240px',
-  backgroundPosition: 'center, top left',
-}}
-
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'cover, 240px 240px',
+          backgroundPosition: 'center, top left',
+        }}
       >
         <section className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-8 md:py-12 ">
           {/* Search + Filters */}
@@ -503,7 +502,6 @@ export default function BlogsClient({
       font-bold uppercase`}
                       >
                         Read More
-                         
                       </div>
                     </div>
                   </Link>
@@ -560,8 +558,6 @@ export default function BlogsClient({
         </section>
         <Footer />
       </div>
-
-      
     </div>
   )
 }
