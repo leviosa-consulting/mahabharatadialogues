@@ -654,11 +654,9 @@ const UpcomingEvents = () => {
                     )}
 
                     <h2
-                      className={`${merri.className} text-white font-light my-4 text-[16px] md:text-[18px] italic whitespace-pre-line`}
+                      className={`${merri.className} text-white font-light my-4 text-[16px] md:text-[18px] italic line-clamp-3`}
                     >
-                      {item.description.length > 60
-                        ? item.description.slice(0, 60) + '...'
-                        : item.description}
+                      {item.description}
 
                       {/* {item.description.length > MAX_CHARS && (
                         <button
