@@ -708,7 +708,7 @@ const UpcomingEvents = () => {
 
         <div
           className={`relative ${
-            featuredItem ? 'mt-[20%] md:mt-[10%]' : 'mt-0'
+            featuredItem ? 'mt-[1%] md:mt-[1%]' : 'mt-0'
           }`}
         >
           {/* No Upcoming Events */}
