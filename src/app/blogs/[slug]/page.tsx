@@ -16,6 +16,7 @@ import {
 import Head from 'next/head'
 import { merri } from '@/app/fonts/merri'
 import BlogCard from '@/components/BlogCard'
+import BlogDetailShimmer from '@/components/shimmer/BlogDetailShimmer'
 
 interface Blog {
   id: string
@@ -75,14 +76,12 @@ const BlogDetailPage = () => {
       const allBlogsData = await allBlogsResponse.json()
 
       if (allBlogsData.success) {
-       
         const relatedByCategory = allBlogsData.data.filter(
-          (b: Blog) => 
-            b.slug !== slug && 
-            b.categories?.some(cat => data.data.categories?.includes(cat))
+          (b: Blog) =>
+            b.slug !== slug &&
+            b.categories?.some((cat) => data.data.categories?.includes(cat)),
         )
 
-       
         setRelatedBlogs(relatedByCategory.slice(0, 3))
       }
 
@@ -102,7 +101,7 @@ const BlogDetailPage = () => {
     const setMetaTag = (
       property: string,
       content: string,
-      isProperty = false
+      isProperty = false,
     ) => {
       const attribute = isProperty ? 'property' : 'name'
       let element = document.querySelector(`meta[${attribute}="${property}"]`)
@@ -129,7 +128,7 @@ const BlogDetailPage = () => {
     setMetaTag(
       'og:url',
       `https://mahabharatadialogues.com/blogs/${blog.slug}`,
-      true
+      true,
     )
     setMetaTag('og:type', 'article', true)
     setMetaTag('og:site_name', 'Mahabharata Dialogues', true)
@@ -153,7 +152,7 @@ const BlogDetailPage = () => {
 
     setMetaTag(
       'robots',
-      'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+      'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
     )
     setMetaTag('googlebot', 'index, follow')
 
@@ -165,7 +164,7 @@ const BlogDetailPage = () => {
     }
     canonicalLink.setAttribute(
       'href',
-      `https://mahabharatadialogues.com/blogs/${blog.slug}`
+      `https://mahabharatadialogues.com/blogs/${blog.slug}`,
     )
   }
 
@@ -173,7 +172,7 @@ const BlogDetailPage = () => {
     if (!blog) return
 
     const existingScript = document.querySelector(
-      'script[type="application/ld+json"]'
+      'script[type="application/ld+json"]',
     )
     if (existingScript) {
       existingScript.remove()
@@ -304,11 +303,7 @@ const BlogDetailPage = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="inline-block animate-spin h-16 w-16 border-4 border-black border-t-transparent"></div>
-      </div>
-    )
+    return <BlogDetailShimmer />
   }
 
   if (error || !blog) {
@@ -650,7 +645,7 @@ const BlogDetailPage = () => {
                         padding: 0;
                       }
                     `}</style>
-                    <div  className={`${merri.className} text-black`}>
+                    <div className={`${merri.className} text-black`}>
                       <div
                         className="blog-content font-light"
                         dangerouslySetInnerHTML={{ __html: blog.content }}
@@ -668,7 +663,10 @@ const BlogDetailPage = () => {
 
                       <div className="flex flex-col items-center gap-6 px-4 sm:px-8 md:px-16 lg:px-24 pb-10">
                         {relatedBlogs.map((relatedBlog) => (
-                          <div key={relatedBlog.id} className="w-full max-w-2xl">
+                          <div
+                            key={relatedBlog.id}
+                            className="w-full max-w-2xl"
+                          >
                             <BlogCard blog={relatedBlog} />
                           </div>
                         ))}

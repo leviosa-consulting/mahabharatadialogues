@@ -15,6 +15,7 @@ import Navbar from '@/components/Navbar'
 import { merri } from '../fonts/merri'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
+import EventsPageShimmer from '@/components/shimmer/EventsPageShimmer'
 
 interface Event {
   id: string
@@ -108,6 +109,9 @@ const EventsPage = () => {
       hour12: true,
     })
   }
+  if (loading) {
+  return <EventsPageShimmer />
+}
 
   const formatEventDateTime = (dateString: string) => {
     const date = new Date(dateString)

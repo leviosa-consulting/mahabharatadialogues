@@ -11,6 +11,7 @@ import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import TestimonialsCarousel from '@/components/TestimonialsCarousel'
+import PastRetreatShimmer from '@/components/shimmer/PastRetreatShimmer'
 
 interface Testimonial {
   id: string
@@ -248,14 +249,7 @@ const PastRetreatPage: React.FC = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-transparent"></div>
-          <p className="mt-4 text-gray-600">Loading retreat...</p>
-        </div>
-      </div>
-    )
+    return <PastRetreatShimmer />
   }
 
   if (error || !retreat) {

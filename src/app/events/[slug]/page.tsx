@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import CustomButton from '@/components/CustomButton'
+import EventDetailShimmer from '@/components/shimmer/EventDetailShimmer'
 
 interface Event {
   id: string
@@ -91,11 +92,7 @@ const EventDetailPage = () => {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="inline-block animate-spin  h-12 w-12 border-4 border-black border-t-transparent"></div>
-      </div>
-    )
+    return <EventDetailShimmer />
   }
 
   if (!event) {

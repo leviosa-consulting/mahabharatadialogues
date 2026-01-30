@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
-import TestimonialsShimmer from './TestimonialsShimmer'
+import TestimonialsShimmer from './shimmer/TestimonialsShimmer'
 import Link from 'next/link'
 import { Calendar, MapPin } from 'lucide-react'
 import { useRouter } from 'next/navigation'
