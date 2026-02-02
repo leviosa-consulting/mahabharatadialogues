@@ -288,13 +288,13 @@ const PastRetreatPage: React.FC = () => {
               <MobileNavbar textColor="#fff" isNotHome />
             </div>
           </div>
-          <div className="hidden sm:block relative sm:pt-10 z-10">
+          <div className="hidden sm:block relative pt-5 z-10">
             <Navbar textColor="#fff" isNotHome />
           </div>
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-4 xl:mx-30 md:-mt-10 xl:-mt-8">
+            <div className="mx-4 xl:mx-30 -mt-7 md:-mt-10 xl:-mt-8">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video ">

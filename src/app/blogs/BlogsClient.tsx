@@ -17,6 +17,7 @@ import { merri } from '@/app/fonts/merri'
 import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
+import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 
 interface Blog {
   id: string
@@ -251,13 +252,14 @@ export default function BlogsClient({
       >
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
+           <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true}/>
         </div>
         <div className="hidden sm:block pt-5 -mb-7">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
       </header>
       {/* mid part */}
-      <div className="bg-[#1D5C75] text-white py-16">
+      <div className="bg-[#1D5C75] text-white -mt-7 md:-mt-10 xl:-mt-8 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-neco font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
@@ -458,8 +460,7 @@ export default function BlogsClient({
 
                     <div className="p-4 sm:p-6">
                       <div
-                        className={`${merri.className} font-normal
-            text-[16px] md:text-[18px] text-[#1D5C75] mb-3`}
+                        className={`${merri.className} font-normal text-[#1D5C75] mb-3`}
                       >
                         <h2
                           // className="font-neco font-bold text-[#1D5C75] text-lg sm:text-xl line-clamp-2 group-hover:text-[#47ABD8] transition-colors mb-2"
@@ -475,10 +476,10 @@ export default function BlogsClient({
                           {blog.title}
                         </h2>
                         <div className="flex justify-between">
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center  text-[16px] md:text-[18px] gap-1">
                             {blog.author}
                           </span>
-                          <span className="flex  items-center gap-1 ">
+                          <span className="flex text-[14px] md:text-[16px] items-center gap-1 ">
                             {formatDate(blog.created_at)}
                           </span>
                         </div>

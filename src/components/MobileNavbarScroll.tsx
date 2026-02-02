@@ -68,7 +68,7 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
         <div
           className={`
             fixed top-0 left-0 right-0
-            flex items-center justify-center py-4 px-12
+            flex items-center justify-center py-1 px-12
             bg-white/95 backdrop-blur-sm
             transition-all duration-300
             ${shouldShow ? 'translate-y-0 shadow-md' : '-translate-y-full'}

@@ -16,6 +16,7 @@ import { merri } from '../fonts/merri'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import EventsPageShimmer from '@/components/shimmer/EventsPageShimmer'
+import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 
 interface Event {
   id: string
@@ -350,16 +351,17 @@ const EventsPage = () => {
         }}
       >
         {/* Web Asset – TOP CENTER */}
-        <div className="hidden sm:block pt-5 -mb-7">
+        <div className="hidden sm:block pt-5">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
+           <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true}/>
         </div>
       </div>
       <div className="">
         {/* Hero Section */}
-        <div className="bg-[#1D5C75] text-white py-16">
+        <div className="bg-[#1D5C75] text-white -mt-7 md:-mt-10 xl:-mt-8 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className={`font-neco text-4xl md:text-5xl font-bold mb-4`}>
               Events

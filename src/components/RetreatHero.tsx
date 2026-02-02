@@ -9,6 +9,7 @@ import { adminDB } from '@/firebase/firebaseAdmin'
 import Link from 'next/link'
 import Navbar from './Navbar'
 import MobileNavbar from './MobileNavbar'
+import MobileNavbarScroll from './MobileNavbarScroll'
 
 interface DaySchedule {
   date: string
@@ -163,23 +164,23 @@ export default async function RetreatHero() {
       >
         <div
           className="w-full"
-         style={{
-  backgroundImage: `
+          style={{
+            backgroundImage: `
     linear-gradient(
       rgba(255, 255, 255, 0.85),
       rgba(255, 255, 255, 0.85)
     ),
     url('/MD-Texture_BG_White-04.png')
   `,
-  backgroundRepeat: 'repeat',
-  backgroundSize: '240px 240px',
-}}
-
+            backgroundRepeat: 'repeat',
+            backgroundSize: '240px 240px',
+          }}
         >
           <div>
             <MobileNavbar textColor="#1D5C75" isNotHome />
+            <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true}/>
           </div>
-          <div className="hidden sm:block relative sm:pt-10 z-10">
+          <div className="hidden sm:block relative pt-5 z-10">
             <Navbar textColor="#1D5C75" isNotHome />
           </div>
 
@@ -243,8 +244,9 @@ export default async function RetreatHero() {
                   </div>
                 </div>
                 <div className="w-full order-2 sm:order-0 md:col-start-8 xl:col-start-9 col-span-5 lg:col-span-4 xl:col-span-3">
-                  <div className="flex flex-col justify-between gap-6 md:mt-24">
-                    <div className="">
+                  <div className="flex flex-col items-center md:items-start gap-6 md:mt-24">
+                    {/* TOP BUTTON */}
+                    <div className="w-full flex justify-center md:justify-start">
                       <CustomButton
                         text="EXPERIENCE THE RETREAT"
                         bgColor="#D12127"
@@ -254,6 +256,7 @@ export default async function RetreatHero() {
                       />
                     </div>
 
+                    {/* PRICE + CONTENT */}
                     <div className="text-center md:text-left">
                       <p className="font-neco font-bold text-white flex items-center gap-1 justify-center md:justify-start">
                         <span className="text-[16px] leading-none">₹</span>
@@ -266,7 +269,9 @@ export default async function RetreatHero() {
                         {upcomingRetreat.inclusions}
                       </p>
                     </div>
-                    <div className="">
+
+                    {/* BOTTOM BUTTON */}
+                    <div className="w-full flex justify-center md:justify-start">
                       <CustomButton
                         text="SCHEDULE"
                         bgColor="#1D5C75"

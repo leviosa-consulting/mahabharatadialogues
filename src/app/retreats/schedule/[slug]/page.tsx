@@ -293,7 +293,7 @@ const RetreatSchedulePage: React.FC = () => {
         </div>
       </div>
       <div
-        className="hidden sm:block relative sm:py-10  z-10"
+        className="hidden sm:block relative pt-5  z-10"
         style={{
           backgroundImage: `
       linear-gradient(
@@ -310,7 +310,7 @@ const RetreatSchedulePage: React.FC = () => {
       </div>
 
       {/* Header */}
-      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
+      <div className="bg-[#282828] text-white py-12 md:py-24  px-6 relative overflow-hidden">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Left */}
           <div className={`text-center md:text-left ${merri.className}`}>

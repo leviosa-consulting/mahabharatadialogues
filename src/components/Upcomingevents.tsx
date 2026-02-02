@@ -190,11 +190,11 @@ const UpcomingEvents = () => {
 
   // Same month (your current case)
   if (startMonth === endMonth) {
-    return `${startDayName} ${startDay} ${startMonth} - ${endDayName} ${endDay} ${endMonth} ${year}`
+    return `${startDayName}, ${startDay} ${startMonth} - ${endDayName}, ${endDay} ${endMonth} ${year}`
   }
 
   // Different months (future-proof)
-  return `${startDayName} ${startDay} ${startMonth} - ${endDayName} ${endDay} ${endMonth} ${year}`
+  return `${startDayName}, ${startDay} ${startMonth} - ${endDayName}, ${endDay} ${endMonth} ${year}`
 }
 
 
@@ -240,7 +240,7 @@ const UpcomingEvents = () => {
     minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
   }${ampm}`
 
-  return `${dayName} ${day} ${month} ${year} | ${timeStr}`
+  return `${dayName}, ${day} ${month} ${year} | ${timeStr}`
 }
 
 
@@ -550,7 +550,7 @@ const UpcomingEvents = () => {
         )}
 
          {/* button */}
-          <div className="flex flex-col md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-18 px-4 sm:px-10 xl:px-40 mb-12 md:mb-18">
+          <div className="flex flex-col relative md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-24 px-4 sm:px-10 xl:px-40">
             <p
               className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
             >
@@ -569,7 +569,7 @@ const UpcomingEvents = () => {
           <div className="text-center">
             
             <div
-              className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory py-8 px-4 scroll-pl-4 md:scroll-pl-0 
+              className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mt-12 pb-8 px-4 scroll-pl-4 md:scroll-pl-0 
     ${upcomingItems.length === 1 ? 'justify-center' : ''}
     ${upcomingItems.length === 2 ? 'md:justify-center' : ''}
     ${upcomingItems.length === 3 ? 'md:justify-start md:pl-[8%] lg:pl-[8%]' : ''}
