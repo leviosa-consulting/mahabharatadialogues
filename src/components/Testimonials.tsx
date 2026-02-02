@@ -791,12 +791,14 @@ const Testimonials = () => {
               Dialogues, Retreats, and Evenings with Mahabharata, celebrating
               art, music, dance, and stories.
             </p>
-            <CustomButton
+           <div className='relative w-40'>
+             <CustomButton
               text="EXPLORE MORE EVENTS"
               bgColor="#1D5C75"
               textColor="#FFFFFF"
               url={'/events'}
             />
+           </div>
           </div>
 
           {/* Testimonials Section */}

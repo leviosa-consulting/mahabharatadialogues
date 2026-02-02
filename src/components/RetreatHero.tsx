@@ -10,6 +10,7 @@ import Link from 'next/link'
 import Navbar from './Navbar'
 import MobileNavbar from './MobileNavbar'
 import MobileNavbarScroll from './MobileNavbarScroll'
+import CustomButtonRetreat from './CustomButtonRetreat'
 
 interface DaySchedule {
   date: string
@@ -121,9 +122,26 @@ export default async function RetreatHero() {
       : `/retreats/past/${retreat.id}`
   }
 
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+
+    const day = date.getDate()
+    const month = date.toLocaleString('en-US', { month: 'long' })
+    const year = date.getFullYear()
+
+    return { day, month, year }
+  }
+
   const getDateRange = (retreat: Retreat) => {
-    const endDate = retreat.day3 ? retreat.day3.date : retreat.day2.date
-    return `${retreat.day1.date} - ${endDate}`
+    const start = formatDate(retreat.day1.date)
+    const endDateStr = retreat.day3 ? retreat.day3.date : retreat.day2.date
+    const end = formatDate(endDateStr)
+
+    if (start.month === end.month && start.year === end.year) {
+      return `${start.day} - ${end.day} ${start.month}. ${start.year}`
+    }
+
+    return `${start.day} ${start.month}. ${start.year} - ${end.day} ${end.month}. ${end.year}`
   }
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
@@ -149,36 +167,11 @@ export default async function RetreatHero() {
 
   return (
     <div>
-      <div
-        className="w-full"
-        style={{
-          background: `
-            linear-gradient(
-              to bottom,
-              #FFFFFF 0%,
-              #47ABD880 50%,
-              #1D5C75 100%
-            )
-          `,
-        }}
-      >
-        <div
-          className="w-full"
-          style={{
-            backgroundImage: `
-    linear-gradient(
-      rgba(255, 255, 255, 0.85),
-      rgba(255, 255, 255, 0.85)
-    ),
-    url('/MD-Texture_BG_White-04.png')
-  `,
-            backgroundRepeat: 'repeat',
-            backgroundSize: '240px 240px',
-          }}
-        >
+      <div className="w-full">
+        <div className="w-full">
           <div>
             <MobileNavbar textColor="#1D5C75" isNotHome />
-            <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true}/>
+            <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
           </div>
           <div className="hidden sm:block relative pt-5 z-10">
             <Navbar textColor="#1D5C75" isNotHome />
@@ -186,7 +179,7 @@ export default async function RetreatHero() {
 
           {/* Video */}
           {youtubeEmbedUrl && (
-            <div className="mx-4 2xl:mx-30 -mt-7 md:-mt-10 xl:-mt-8">
+            <div className="mx-4 xl:mx-30 -mt-7 md:-mt-10 xl:-mt-8">
               <div className="grid grid-cols-12 gap-3">
                 <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
                   <div className="w-full aspect-video relative ">
@@ -205,8 +198,18 @@ export default async function RetreatHero() {
         </div>
 
         {upcomingRetreat && (
-          <div className="w-full bg-[#1D5C75] -mt-[5vh] md:-mt-[20vh] pt-[10vh] md:pt-[20vh] pb-[5vh]">
-            <div className="mx-4 2xl:mx-30">
+          <div
+            className="w-full -mt-[5vh] md:-mt-[40vh] pt-[10vh] md:pt-[40vh] pb-[5vh]"
+            style={{
+              backgroundImage: `
+    linear-gradient(#1D5C75CC, #1D5C75CC),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
+              backgroundRepeat: 'repeat',
+              backgroundSize: '240px 240px',
+            }}
+          >
+            <div className="mx-4 xl:mx-30">
               <div className="grid grid-cols-1 md:grid-cols-12 overflow-hidden">
                 <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-6 md:my-6">
                   <div className="text-center md:text-left">
@@ -226,12 +229,12 @@ export default async function RetreatHero() {
                       {upcomingRetreat.title}
                     </h1>
                     <p
-                      className={`${merri.className} text-[20px] text-white italic font-bold`}
+                      className={`${merri.className} text-white text-[16px] md:text-[18px] font-bold`}
                     >
                       {getDateRange(upcomingRetreat)}
                     </p>
                     <h4
-                      className={`${merri.className} text-[20px] text-white font-normal italic`}
+                      className={`${merri.className} text-white text-[16px] md:text-[18px] font-normal italic leading-6 pb-2`}
                     >
                       {upcomingRetreat.venue}, {upcomingRetreat.city}
                     </h4>
@@ -243,11 +246,11 @@ export default async function RetreatHero() {
                     </p>
                   </div>
                 </div>
-                <div className="w-full order-2 sm:order-0 md:col-start-8 xl:col-start-9 col-span-5 lg:col-span-4 xl:col-span-3">
+                <div className="w-full order-2 sm:order-0 md:col-start-8  col-span-5 lg:col-span-4">
                   <div className="flex flex-col items-center md:items-start gap-6 md:mt-24">
                     {/* TOP BUTTON */}
                     <div className="w-full flex justify-center md:justify-start">
-                      <CustomButton
+                      <CustomButtonRetreat
                         text="EXPERIENCE THE RETREAT"
                         bgColor="#D12127"
                         textColor="#FFFFFF"
@@ -257,27 +260,25 @@ export default async function RetreatHero() {
                     </div>
 
                     {/* PRICE + CONTENT */}
-                    <div className="text-center md:text-left">
-                      <p className="font-neco font-bold text-white flex items-center gap-1 justify-center md:justify-start">
+                    <div className="text-center flex justify-between md:text-left">
+                      <p className="font-neco px-4 py-2 border-r font-bold text-white flex items-center gap-1 justify-center md:justify-start">
                         <span className="text-[16px] leading-none">₹</span>
                         <span className="text-[28px] leading-none">
                           {upcomingRetreat.price?.toLocaleString('en-IN')}
                         </span>
                       </p>
 
-                      <p className="font-neco font-normal text-[18px] text-white">
+                      <p className="font-neco px-8 py-2 font-normal text-[18px] text-white">
                         {upcomingRetreat.inclusions}
                       </p>
                     </div>
 
                     {/* BOTTOM BUTTON */}
                     <div className="w-full flex justify-center md:justify-start">
-                      <CustomButton
-                        text="SCHEDULE"
+                      <CustomButtonRetreat
+                        text="SEE THE SCHEDULE"
                         bgColor="#1D5C75"
                         textColor="#FFFFFF"
-                        isBorder
-                        borderColor="#FFFFFF"
                         url={getScheduleUrl(upcomingRetreat)}
                       />
                     </div>
@@ -288,79 +289,135 @@ export default async function RetreatHero() {
           </div>
         )}
 
-        <div className="w-full">
+        <div
+          className="w-full"
+          style={{
+            backgroundImage: `
+    linear-gradient(
+      to bottom,
+      #47ABD880 50%,
+      #1D5C75 100%
+    ),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: 'cover, 240px 240px',
+            backgroundPosition: 'center, top left',
+          }}
+        >
           {/* PAST RETREATS */}
           {pastRetreats.length > 0 && (
             <div className="w-full pt-8 pb-30">
-              <div className="mx-4 2xl:mx-30">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-14 sm:gap-4 overflow-hidden">
+              <div className="py-10">
+                <p
+                  className={`${merri.className} font-bold text-[24px] text-[#1D5C75] text-center`}
+                >
+                  PAST RETREATS
+                </p>
+              </div>
+              <div className="mx-4 xl:mx-30">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-16 overflow-hidden">
                   {pastRetreats.map((retreat, index) => (
                     <div
                       key={retreat.id}
-                      className={`w-full ${
-                        index % 2 === 0
-                          ? 'md:col-start-1 lg:col-start-2 col-span-6 lg:col-span-5'
-                          : 'md:col-start-7 lg:col-start-8 col-span-6 lg:col-span-5'
-                      } ${index > 0 ? 'mt-12 md:mt-0' : ''}`}
+                      className="w-full md:col-span-12 lg:col-span-10 lg:col-start-2"
+                      style={{
+                        backgroundColor:
+                          index % 2 === 0 ? '#1D5C75' : '#D9D9D9E5',
+                      }}
                     >
-                      <div className="flex flex-col justify-between text-center md:text-left">
-                        {index === 0 && (
-                          <p
-                            className={`${merri.className} text-[20px] text-[#4298BA] font-bold mb-6`}
+                      <div
+                        className={`grid grid-cols-1 md:grid-cols-2  items-center`}
+                      >
+                        {/* Text Content */}
+                        <div className="flex flex-col justify-center text-center md:text-left px-6 py-10">
+
+                          <div className='md:hidden'>
+                             {retreat.photos && retreat.photos.length > 0 ? (
+                            <img
+                              src={retreat.photos[0]}
+                              alt={retreat.title}
+                              className="w-full h-auto object-cover"
+                            />
+                          ) : (
+                            <img
+                              src="/assets/eight.png"
+                              alt=""
+                              className="w-full h-auto object-cover"
+                            />
+                          )}
+                          </div>
+                          <h3
+                            className="font-neco text-[28px] mt-8 md:mt-0 leading-none font-bold"
+                            style={{
+                              color: index % 2 === 0 ? '#FFFFFF' : '#1D5C75',
+                            }}
                           >
-                            PAST RETREATS
+                            Mahabharata Dialogues
+                          </h3>
+
+                          <h2
+                            className={`${merri.className} text-[44px] leading-none font-extrabold italic mb-6`}
+                            style={{
+                              color: index % 2 === 0 ? '#FFFFFF' : '#1D5C75',
+                            }}
+                          >
+                            {retreat.title}
+                          </h2>
+
+                          <h3
+                            className={`${merri.className} text-[16px] md:text-[18px] font-bold`}
+                            style={{
+                              color: index % 2 === 0 ? '#FFFFFF' : '#1D5C75',
+                            }}
+                          >
+                            {getDateRange(retreat)}
+                          </h3>
+                          <p
+                            className={`${merri.className} text-[16px] md:text-[18px] font-normal leading-6 pb-2`}
+                            style={{
+                              color: index % 2 === 0 ? '#FFFFFF' : '#1D5C75',
+                            }}
+                          >
+                            {retreat.venue}, {retreat.city}
                           </p>
-                        )}
-                        <h3
-                          className={`font-neco text-[28px] leading-none text-[#1D5C75] font-bold ${
-                            index % 2 === 1 ? 'mt-0 md:mt-[55px]' : ''
-                          }`}
-                        >
-                          Mahabharata Dialogues
-                        </h3>
 
-                        <h2
-                          className={`${merri.className} text-[44px] leading-none text-[#1D5C75] font-extrabold italic mb-6`}
-                        >
-                          {retreat.title}
-                        </h2>
+                          <p
+                            className={`${merri.className} font-light text-[16px] md:text-[18px] italic py-6 lg:pr-4`}
+                            style={{
+                              color: index % 2 === 0 ? '#FFFFFF' : '#1D5C75',
+                            }}
+                          >
+                            {retreat.description ||
+                              'A memorable retreat experience.'}
+                          </p>
 
-                        <h3
-                          className={`${merri.className} text-[20px] text-[#1D5C75] italic font-bold`}
-                        >
-                          {getDateRange(retreat)}
-                        </h3>
-                        <p
-                          className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic pb-2`}
-                        >
-                          {retreat.venue}, {retreat.city}
-                        </p>
-                      </div>
+                          <div className="text-center md:text-left">
+                            <CustomButton
+                              text="SEE THE MAGIC WE CREATED"
+                              bgColor={index % 2 === 0 ? '#78B0C7' : '#1D5C75'}
+                              textColor="#FFFFFF"
+                              url={getPastRetreatUrl(retreat)}
+                            />
+                          </div>
+                        </div>
 
-                      <div>
-                        {retreat.photos && retreat.photos.length > 0 ? (
-                          <img
-                            src={retreat.photos[0]}
-                            alt={retreat.title}
-                            className="w-full h-auto object-cover"
-                          />
-                        ) : (
-                          <img src="/assets/eight.png" alt="" />
-                        )}
-                      </div>
-                      <div className="text-center md:text-left">
-                        <p
-                          className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 lg:pr-12`}
-                        >
-                          {retreat.description ||
-                            'A memorable retreat experience.'}
-                        </p>
-                        <CustomButton
-                          text="SEE THE MAGIC WE CREATED"
-                          bgColor="#1D5C75"
-                          textColor="#FFFFFF"
-                          url={getPastRetreatUrl(retreat)}
-                        />
+                        {/* Image  */}
+                        <div className='hidden md:block'>
+                          {retreat.photos && retreat.photos.length > 0 ? (
+                            <img
+                              src={retreat.photos[0]}
+                              alt={retreat.title}
+                              className="w-full h-auto object-cover md:pr-6"
+                            />
+                          ) : (
+                            <img
+                              src="/assets/eight.png"
+                              alt=""
+                              className="w-full h-auto object-cover"
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -371,7 +428,7 @@ export default async function RetreatHero() {
 
           {/* youtube/blogs */}
           <div>
-            <div className="mx-4 sm:mx-4 xl:mx-30 overflow-hidden bg-[#1D5C7580]">
+            <div className="mx-4 xl:mx-40 overflow-hidden bg-[#1D5C7580]">
               <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
                 {/* YOUTUBE*/}
                 <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
