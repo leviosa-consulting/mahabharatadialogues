@@ -219,7 +219,7 @@ export default async function RetreatHero() {
                       UPCOMING RETREAT
                     </p>
                     <h2
-                      className={`font-neco text-[28px] leading-none text-white font-bold`}
+                      className={`font-neco text-[24px] leading-none text-white font-bold`}
                     >
                       Mahabharata Dialogues
                     </h2>
@@ -348,7 +348,7 @@ export default async function RetreatHero() {
                           )}
                           </div>
                           <h3
-                            className="font-neco text-[28px] mt-8 md:mt-0 leading-none font-bold"
+                            className="font-neco text-[24px] mt-8 md:mt-0 leading-none font-bold"
                             style={{
                               color: index % 2 === 0 ? '#FFFFFF' : '#1D5C75',
                             }}
