@@ -397,33 +397,37 @@ const EventPage = () => {
               </p>
             </div>
           ) : pastEvents.length > 0 ? (
-            <div className="mx-4 xl:mx-30">
-              <div className="grid grid-cols-12 gap-8">
-                {pastEvents.map((event, index) => (
+            <div className="px-4 relative xl:mx-30 max-w-full overflow-x-hidden">
+              <div className="grid grid-cols-12 gap-0 md:gap-8">
+                {pastEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFFCC] md:mb-8"
+                    className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFFCC] mb-6 min-w-0"
                   >
-                    <div className="flex flex-col md:flex-row justify-between gap-4  md:px-8 py-4 md:py-6">
-                      {/* Left: Text Content */}
-                      <div className="flex-1 flex flex-col justify-between md:max-w-[400px] text-center md:text-left order-1 md:order-1">
+                    <div className="grid grid-cols-12 gap-4 md:flex md:flex-row md:justify-between px-4 md:px-8 py-6">
+                      {/* LEFT TEXT — DESKTOP STRUCTURE PRESERVED */}
+                      <div className="col-span-12 md:flex-1 flex flex-col justify-between max-w-full md:max-w-[400px] text-center md:text-left">
                         <div>
                           <h1
-                            className={`${merri.className} text-[#1D5C75] font-bold text-[24px] md:text-[28px] italic leading-tight mb-2`}
+                            className={`${merri.className} text-[#1D5C75] font-bold text-[22px] md:text-[28px] italic leading-tight mb-2`}
                           >
                             {event.title}
                           </h1>
+
                           <p
-                            className={`${merri.className} text-[#1D5C75] font-bold text-[14px] md:text-[16px] mb-1`}
+                            className={`${merri.className} text-[#1D5C75] font-bold text-[14px] md:text-[16px]`}
                           >
                             {formatPastEventDate(event.date)}
                           </p>
+
                           <p
-                            className={`${merri.className} text-[#1D5C75] px-4 md:px-0 font-normal text-[14px] md:text-[16px]`}
+                            className={`${merri.className} text-[#1D5C75] text-[14px] md:text-[16px]`}
                           >
                             {event.venue}, {event.city}
                           </p>
                         </div>
+
+                        {/* DESKTOP BUTTON */}
                         <div className="hidden md:block mt-4 w-[80%]">
                           <CustomButton
                             text="LEARN MORE"
@@ -434,43 +438,27 @@ const EventPage = () => {
                         </div>
                       </div>
 
-                      {/* Right: Images */}
-                      <div className="flex flex-col md:flex-row gap-2 items-start justify-center md:justify-start order-2 md:order-2">
-                        {/* Main cover image */}
+                      {/* IMAGES */}
+                      <div className="col-span-12 md:flex md:flex-row gap-2 mt-4 md:mt-0 justify-center md:justify-start min-w-0">
                         <div
-                          className="cursor-pointer w-full sm:w-[240px] md:w-[280px] lg:w-[320px] xl:w-[360px] flex-shrink-0"
+                          className="cursor-pointer w-full md:w-[280px] lg:w-[320px] xl:w-[360px]"
                           onClick={() => openImageModal(event.coverImage)}
                         >
                           <img
                             src={event.coverImage}
                             alt={event.title}
-                            className="aspect-465/285 object-cover w-full"
+                            className="w-full aspect-465/285 object-cover"
                           />
                         </div>
 
-                        {/* Gallery thumbnails */}
-                        {event.gallery && event.gallery.length > 0 && (
-                          <div
-                            className="
-      flex md:flex-col
-      gap-2
-      w-full md:w-auto
-      justify-center md:justify-start
-    "
-                          >
+                        {event.gallery?.length > 0 && (
+                          <div className="flex flex-row md:flex-col gap-2 justify-center mt-2 md:mt-0">
                             {event.gallery
                               .slice(0, 3)
                               .map((image, imgIndex) => (
                                 <div
                                   key={imgIndex}
-                                  className="
-            cursor-pointer
-            w-[64px] h-[64px]
-            sm:w-[70px] sm:h-[70px]
-            md:w-[60px] md:h-[60px]
-            lg:w-[65px] lg:h-[65px]
-            flex-shrink-0
-          "
+                                  className="cursor-pointer w-[64px] h-[64px]"
                                   onClick={() => openImageModal(image)}
                                 >
                                   <img
@@ -482,15 +470,16 @@ const EventPage = () => {
                               ))}
                           </div>
                         )}
+                      </div>
 
-                        <div className="sm:hidden flex justify-center items-center my-4 text-center w-[80%] mx-auto">
-                          <CustomButton
-                            text="LEARN MORE"
-                            bgColor="#1D5C75"
-                            textColor="#FFFFFF"
-                            url={`/events/${event.slug ?? ''}`}
-                          />
-                        </div>
+                      {/* MOBILE BUTTON */}
+                      <div className="col-span-12 mt-4 md:hidden">
+                        <CustomButton
+                          text="LEARN MORE"
+                          bgColor="#1D5C75"
+                          textColor="#FFFFFF"
+                          url={`/events/${event.slug ?? ''}`}
+                        />
                       </div>
                     </div>
                   </div>

@@ -1,23 +1,14 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useSearchParams, useRouter } from 'next/navigation'
-import {
-  Search,
-  Filter,
-  X,
-  Calendar,
-  User,
-  Tag,
-  ChevronRight,
-  Loader2,
-} from 'lucide-react'
-import { merri } from '@/app/fonts/merri'
-import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
-import Footer from '@/components/Footer'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
+import Navbar from '@/components/Navbar'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import { merri } from '../fonts/merri'
+import Link from 'next/link'
+import Footer from '@/components/Footer'
+import BlogsShimmer from '@/components/shimmer/BlogsShimmer'
+import { useSearchParams } from 'next/navigation'
 
 interface Blog {
   id: string
@@ -31,193 +22,231 @@ interface Blog {
   created_at: string
 }
 
-export default function BlogsClient({
-  initialBlogs,
-}: {
-  initialBlogs: Blog[]
-}) {
+const BlogsClient = () => {
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const urlCategory = searchParams?.get('category')
 
-  const [blogs, setBlogs] = useState<Blog[]>(initialBlogs || [])
-  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(initialBlogs || [])
+  // State management
+  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedAuthor, setSelectedAuthor] = useState<string>('')
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    urlCategory || '',
-  )
-  const [showFilters, setShowFilters] = useState(false)
-  const [isLoading, setIsLoading] = useState(initialBlogs.length === 0)
-
-  const [allAuthors, setAllAuthors] = useState<string[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<string>('All')
+  const [selectedAuthor, setSelectedAuthor] = useState<string>('All')
+  const [selectedReadingTime, setSelectedReadingTime] = useState<string>('All')
   const [allCategories, setAllCategories] = useState<string[]>([])
+  const [allAuthors, setAllAuthors] = useState<string[]>([])
+  const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Update selected category when URL changes
-  useEffect(() => {
-    if (urlCategory) {
-      setSelectedCategory(urlCategory)
-      setShowFilters(true)
-    } else {
-      setSelectedCategory('')
-    }
-  }, [urlCategory])
+  // Refs for layout calculation
+  const categoriesRef = useRef<HTMLDivElement>(null)
+  const readingTimeRef = useRef<HTMLDivElement>(null)
+  const hasAppliedUrlParams = useRef(false)
 
-  // Fetch blogs client-side if not provided by server
-  useEffect(() => {
-    if (initialBlogs.length === 0) {
-      fetchBlogsClientSide()
+  // Show/hide states
+  const [showAllCategories, setShowAllCategories] = useState(false)
+  const [showAllReadingTimes, setShowAllReadingTimes] = useState(false)
+  const [categoryCutIndex, setCategoryCutIndex] = useState<number | null>(null)
+  const [readingTimeCutIndex, setReadingTimeCutIndex] = useState<number | null>(null)
+
+  // Calculate layout for categories
+  useLayoutEffect(() => {
+    if (!categoriesRef.current) return
+
+    const calculate = () => {
+      const items = Array.from(categoriesRef.current!.children) as HTMLElement[]
+      if (!items.length) return
+
+      requestAnimationFrame(() => {
+        const firstRowTop = items[0].offsetTop
+        let secondRowTop: number | null = null
+        let thirdRowTop: number | null = null
+
+        // Find second row
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].offsetTop > firstRowTop) {
+            secondRowTop = items[i].offsetTop
+            break
+          }
+        }
+
+        if (!secondRowTop) {
+          // All items in one row
+          setCategoryCutIndex(null)
+          return
+        }
+
+        // Find third row
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].offsetTop > secondRowTop) {
+            thirdRowTop = items[i].offsetTop
+            break
+          }
+        }
+
+        if (!thirdRowTop) {
+          // All items fit in two rows
+          setCategoryCutIndex(null)
+          return
+        }
+
+        // Find last item in second row
+        let lastSecondRowIndex = -1
+        items.forEach((el, i) => {
+          if (el.offsetTop === secondRowTop) lastSecondRowIndex = i
+        })
+
+        setCategoryCutIndex(lastSecondRowIndex + 1)
+      })
     }
+
+    calculate()
+    window.addEventListener('resize', calculate)
+    return () => window.removeEventListener('resize', calculate)
+  }, [allCategories])
+
+  // Calculate layout for reading times
+  useLayoutEffect(() => {
+    if (!readingTimeRef.current) return
+
+    const calculate = () => {
+      const items = Array.from(readingTimeRef.current!.children) as HTMLElement[]
+      if (!items.length) return
+
+      requestAnimationFrame(() => {
+        const firstRowTop = items[0].offsetTop
+        let secondRowTop: number | null = null
+        let thirdRowTop: number | null = null
+
+        // Find second row
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].offsetTop > firstRowTop) {
+            secondRowTop = items[i].offsetTop
+            break
+          }
+        }
+
+        if (!secondRowTop) {
+          // All items in one row
+          setReadingTimeCutIndex(null)
+          return
+        }
+
+        // Find third row
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].offsetTop > secondRowTop) {
+            thirdRowTop = items[i].offsetTop
+            break
+          }
+        }
+
+        if (!thirdRowTop) {
+          // All items fit in two rows
+          setReadingTimeCutIndex(null)
+          return
+        }
+
+        // Find last item in second row
+        let lastSecondRowIndex = -1
+        items.forEach((el, i) => {
+          if (el.offsetTop === secondRowTop) lastSecondRowIndex = i
+        })
+
+        setReadingTimeCutIndex(lastSecondRowIndex + 1)
+      })
+    }
+
+    calculate()
+    window.addEventListener('resize', calculate)
+    return () => window.removeEventListener('resize', calculate)
+  }, [allReadingTimes])
+
+  // Fetch blogs on mount
+  useEffect(() => {
+    fetchBlogs()
   }, [])
 
-  const fetchBlogsClientSide = async () => {
-    try {
-      console.log('🔄 Fetching blogs client-side...')
-      setIsLoading(true)
+  // Apply filters from URL parameters - run once after blogs are loaded
+  useEffect(() => {
+    if (blogs.length > 0 && !loading && !hasAppliedUrlParams.current) {
+      const categoryParam = searchParams.get('category')
+      const authorParam = searchParams.get('author')
+      const readingTimeParam = searchParams.get('readingTime')
 
-      const res = await fetch('/api/blogs')
+      if (categoryParam || authorParam || readingTimeParam) {
+        // Set the selected filters
+        if (categoryParam) {
+          setSelectedCategory(categoryParam)
+        }
+        if (authorParam) {
+          setSelectedAuthor(authorParam)
+        }
+        if (readingTimeParam) {
+          setSelectedReadingTime(readingTimeParam)
+        }
 
-      if (!res.ok) {
-        console.error('❌ Client-side fetch failed:', res.status)
-        setIsLoading(false)
-        return
+        // Apply the filters
+        applyFilters(
+          '',
+          categoryParam || 'All',
+          authorParam || 'All',
+          readingTimeParam || 'All'
+        )
+
+        // Mark that we've applied URL params
+        hasAppliedUrlParams.current = true
+      } else {
+        // No URL params, show all blogs
+        setFilteredBlogs(blogs)
       }
+    }
+  }, [blogs.length, loading])
 
+  // Fetch blogs from API
+  const fetchBlogs = async () => {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/blogs')
       const data = await res.json()
       const fetchedBlogs = data.data || data.blogs || []
 
-      console.log('✅ Client-side blogs fetched:', fetchedBlogs.length)
-
       setBlogs(fetchedBlogs)
-      setFilteredBlogs(fetchedBlogs)
-      setIsLoading(false)
+      
+      // Don't set filtered blogs here - let the URL params effect handle it
+      // Only set if no URL params exist
+      const categoryParam = searchParams.get('category')
+      const authorParam = searchParams.get('author')
+      const readingTimeParam = searchParams.get('readingTime')
+      
+      if (!categoryParam && !authorParam && !readingTimeParam) {
+        setFilteredBlogs(fetchedBlogs)
+      }
+
+      // Extract unique categories
+      const categories = Array.from(
+        new Set(fetchedBlogs.flatMap((b: Blog) => b.categories || [])),
+      ) as string[]
+      setAllCategories(categories.sort())
+
+      // Extract unique authors
+      const authors = Array.from(
+        new Set(fetchedBlogs.map((b: Blog) => b.author).filter(Boolean)),
+      ) as string[]
+      setAllAuthors(authors.sort())
+
+      // Extract unique reading times
+      const readingTimes = Array.from(
+        new Set(fetchedBlogs.map((b: Blog) => estimateReadTime(b.content)))
+      ).sort((a, b) => a - b)
+      setAllReadingTimes(readingTimes.map(time => `${time} min read`))
+
+      setLoading(false)
     } catch (error) {
-      console.error('❌ Error fetching blogs client-side:', error)
-      setIsLoading(false)
+      console.error('Error fetching blogs:', error)
+      setLoading(false)
     }
   }
 
-  // Add structured data on mount
-  useEffect(() => {
-    if (blogs.length > 0) {
-      addStructuredData()
-    }
-  }, [blogs])
-
-  const addStructuredData = () => {
-    const existingScript = document.querySelector(
-      'script[type="application/ld+json"]',
-    )
-    if (existingScript) {
-      existingScript.remove()
-    }
-
-    const structuredData = {
-      '@context': 'https://schema.org',
-      '@type': 'Blog',
-      name: 'Mahabharata Dialogues Blogs',
-      description:
-        'Explore deep insights, knowledge, and timeless wisdom from the Mahabharata',
-      url: 'https://mahabharatadialogues.com/blogs',
-      blogPost: blogs.slice(0, 10).map((blog) => ({
-        '@type': 'BlogPosting',
-        headline: blog.title,
-        description: blog.subtitle,
-        image: blog.image_url,
-        author: {
-          '@type': 'Person',
-          name: blog.author,
-        },
-        datePublished: blog.created_at,
-        url: `https://mahabharatadialogues.com/blogs/${blog.slug}`,
-      })),
-    }
-
-    const breadcrumbData = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Home',
-          item: 'https://mahabharatadialogues.com',
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: 'Blogs',
-          item: 'https://mahabharatadialogues.com/blogs',
-        },
-      ],
-    }
-
-    const script = document.createElement('script')
-    script.type = 'application/ld+json'
-    script.text = JSON.stringify([structuredData, breadcrumbData])
-    document.head.appendChild(script)
-  }
-
-  // Build author and category lists
-  useEffect(() => {
-    const authors = Array.from(
-      new Set(blogs.map((b) => b.author).filter(Boolean)),
-    ) as string[]
-
-    const categories = Array.from(
-      new Set(blogs.flatMap((b) => b.categories || [])),
-    ) as string[]
-
-    setAllAuthors(authors.sort())
-    setAllCategories(categories.sort())
-  }, [blogs])
-
-  // Filtering logic
-  useEffect(() => {
-    filterBlogs()
-  }, [searchQuery, selectedAuthor, selectedCategory, blogs])
-
-  const filterBlogs = () => {
-    let filtered = blogs
-
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (blog) =>
-          blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          blog.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          blog.author?.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    }
-
-    if (selectedAuthor) {
-      filtered = filtered.filter((blog) => blog.author === selectedAuthor)
-    }
-
-    if (selectedCategory) {
-      filtered = filtered.filter((blog) =>
-        blog.categories?.includes(selectedCategory),
-      )
-    }
-
-    setFilteredBlogs(filtered)
-  }
-
-  const clearFilters = () => {
-    setSearchQuery('')
-    setSelectedAuthor('')
-    setSelectedCategory('')
-    router.push('/blogs')
-  }
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category)
-    if (category) {
-      router.push(`/blogs?category=${encodeURIComponent(category)}`)
-    } else {
-      router.push('/blogs')
-    }
-  }
-
+  // Format date helper
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -231,331 +260,430 @@ export default function BlogsClient({
     }
   }
 
-  const hasActiveFilters = searchQuery || selectedAuthor || selectedCategory
+  // Estimate reading time helper
+  const estimateReadTime = (content: string) => {
+    const wordsPerMinute = 200
+    const text = content.replace(/<[^>]*>/g, '')
+    const wordCount = text.split(/\s+/).length
+    const minutes = Math.ceil(wordCount / wordsPerMinute)
+    return minutes
+  }
+
+  // Apply all filters
+  const applyFilters = (search: string, category: string, author: string, readingTime: string) => {
+    let filtered = blogs
+
+    // Filter by search query
+    if (search) {
+      filtered = filtered.filter(
+        (blog) =>
+          blog.title.toLowerCase().includes(search.toLowerCase()) ||
+          blog.subtitle?.toLowerCase().includes(search.toLowerCase()) ||
+          blog.author?.toLowerCase().includes(search.toLowerCase()),
+      )
+    }
+
+    // Filter by category
+    if (category !== 'All') {
+      filtered = filtered.filter((blog) => blog.categories?.includes(category))
+    }
+
+    // Filter by author
+    if (author !== 'All') {
+      filtered = filtered.filter((blog) => blog.author === author)
+    }
+
+    // Filter by reading time
+    if (readingTime !== 'All') {
+      const timeInMinutes = parseInt(readingTime.split(' ')[0])
+      filtered = filtered.filter((blog) => estimateReadTime(blog.content) === timeInMinutes)
+    }
+
+    setFilteredBlogs(filtered)
+  }
+
+  // Event handlers
+  const handleFilter = () => {
+    applyFilters(searchQuery, selectedCategory, selectedAuthor, selectedReadingTime)
+  }
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category)
+    applyFilters(searchQuery, category, selectedAuthor, selectedReadingTime)
+    
+    // Update URL
+    const params = new URLSearchParams(window.location.search)
+    if (category === 'All') {
+      params.delete('category')
+    } else {
+      params.set('category', category)
+    }
+    
+    const newUrl = params.toString() ? `/blogs?${params.toString()}` : '/blogs'
+    window.history.pushState({}, '', newUrl)
+  }
+
+  const handleAuthorClick = (author: string) => {
+    setSelectedAuthor(author)
+    applyFilters(searchQuery, selectedCategory, author, selectedReadingTime)
+    
+    // Update URL
+    const params = new URLSearchParams(window.location.search)
+    if (author === 'All') {
+      params.delete('author')
+    } else {
+      params.set('author', author)
+    }
+    
+    const newUrl = params.toString() ? `/blogs?${params.toString()}` : '/blogs'
+    window.history.pushState({}, '', newUrl)
+  }
+
+  const handleReadingTimeClick = (readingTime: string) => {
+    setSelectedReadingTime(readingTime)
+    applyFilters(searchQuery, selectedCategory, selectedAuthor, readingTime)
+    
+    // Update URL
+    const params = new URLSearchParams(window.location.search)
+    if (readingTime === 'All') {
+      params.delete('readingTime')
+    } else {
+      params.set('readingTime', readingTime)
+    }
+    
+    const newUrl = params.toString() ? `/blogs?${params.toString()}` : '/blogs'
+    window.history.pushState({}, '', newUrl)
+  }
+
+  const clearAllFilters = () => {
+    setSearchQuery('')
+    setSelectedCategory('All')
+    setSelectedAuthor('All')
+    setSelectedReadingTime('All')
+    setFilteredBlogs(blogs)
+    
+    // Clear URL params
+    window.history.pushState({}, '', '/blogs')
+  }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <header
-        className=""
+    <div className="overflow-x-hidden">
+      {/* nav */}
+      <div>
+        <MobileNavbar textColor="#1D5C75" isNotHome />
+        <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
+      </div>
+      <div className="hidden sm:block relative pt-5 z-10">
+        <Navbar textColor="#1D5C75" isNotHome />
+      </div>
+
+      {/* first section */}
+      <div
+        className="w-full relative pb-10 -mt-7 md:-mt-10 xl:-mt-8"
         style={{
           backgroundImage: `
-      linear-gradient(
-        rgba(255, 255, 255, 0.6),
-        rgba(255, 255, 255, 0.6)
-      ),
-      url('/MD-Texture_BG_White-04.png')
+      linear-gradient(#1D5C75CC, #1D5C75CC),
+      url('/MD-Texture_BG_Blue-01-04.png')
     `,
           backgroundRepeat: 'repeat',
           backgroundSize: '240px 240px',
         }}
       >
-        <div>
-          <MobileNavbar textColor="#1D5C75" isNotHome />
-           <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true}/>
+        <div className="max-w-xl mx-auto py-28 flex flex-col justify-center items-center text-center">
+          <h2
+            className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
+          >
+            BLOG
+          </h2>
+          <p
+            className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-normal px-1`}
+          >
+            Discover our upcoming events and relive the memories from past
+            gatherings
+          </p>
         </div>
-        <div className="hidden sm:block pt-5 -mb-7">
-          <Navbar textColor="#1D5C75" isNotHome />
-        </div>
-      </header>
-      {/* mid part */}
-      <div className="bg-[#1D5C75] text-white -mt-7 md:-mt-10 xl:-mt-8 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="font-neco font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4">
-              Blogs
-            </h1>
-            <p
-              className={`${merri.className} text-lg md:text-xl lg:text-2xl font-normal`}
-            >
-              Explore deep insights, knowledge, and timeless wisdom
-            </p>
+
+        {/* filters */}
+        <div className="px-4 xl:mx-30 max-w-full">
+          <div className="grid grid-cols-12 gap-0 md:gap-8">
+            <div className="col-span-12 md:col-start-3 md:col-span-8 min-w-0">
+              <div className="flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6 w-full">
+                {/* Input wrapper */}
+                <div className="flex-1 w-full border-b border-[#D9D9D9]">
+                  <input
+                    type="text"
+                    placeholder="Search a keyword, title or author"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={`${merri.className} 
+        w-full 
+        h-12 
+        px-3 md:px-5
+        text-[#78B0C7] 
+        italic 
+        font-normal 
+        text-[16px] 
+        md:text-[18px] 
+        bg-transparent 
+        outline-none
+        placeholder:text-[#78B0C7]`}
+                  />
+                </div>
+
+                {/* Button */}
+                <button
+                  onClick={handleFilter}
+                  className={`${merri.className} 
+      w-full md:w-auto 
+      h-12 
+      bg-[#1D5C75] 
+      text-[#78B0C7] 
+      px-12 
+      cursor-pointer 
+      hover:bg-[#78B0C7] 
+      hover:text-[#1D5C75] 
+      transition-colors 
+      font-bold`}
+                >
+                  Filter
+                </button>
+              </div>
+
+              {/* filter categories */}
+              <div className="mt-10 mb-5">
+                <p
+                  className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
+                >
+                  CATEGORIES
+                </p>
+                <div
+                  ref={categoriesRef}
+                  className="flex flex-wrap gap-2 max-w-full overflow-hidden"
+                >
+                  {['All', ...allCategories]
+                    .slice(
+                      0,
+                      showAllCategories || categoryCutIndex === null
+                        ? undefined
+                        : categoryCutIndex - 1,
+                    )
+                    .map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => handleCategoryClick(category)}
+                        className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 ${
+                          selectedCategory === category
+                            ? 'bg-[#D9D9D9] text-[#1D5C75]'
+                            : 'bg-[#78B0C7] text-white'
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+
+                  {!showAllCategories && categoryCutIndex !== null && (
+                    <button
+                      onClick={() => setShowAllCategories(true)}
+                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                    >
+                      more tags...
+                    </button>
+                  )}
+
+                  {showAllCategories && (
+                    <button
+                      onClick={() => setShowAllCategories(false)}
+                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                    >
+                      less tags...
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* filter authors */}
+              <div className="mb-5">
+                <p
+                  className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
+                >
+                  AUTHOR
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => handleAuthorClick('All')}
+                    className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-4 md:px-8 lg:px-12 py-1 transition-colors ${
+                      selectedAuthor === 'All'
+                        ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                        : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                    }`}
+                  >
+                    All
+                  </button>
+
+                  {allAuthors.map((author) => (
+                    <button
+                      key={author}
+                      onClick={() => handleAuthorClick(author)}
+                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
+                        selectedAuthor === author
+                          ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                          : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                      }`}
+                    >
+                      {author}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* READING TIME */}
+              <div className="mb-5">
+                <p
+                  className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
+                >
+                  READING TIME
+                </p>
+                <div
+                  ref={readingTimeRef}
+                  className="flex flex-wrap gap-2 max-w-full overflow-hidden"
+                >
+                  {['All', ...allReadingTimes]
+                    .slice(
+                      0,
+                      showAllReadingTimes || readingTimeCutIndex === null
+                        ? undefined
+                        : readingTimeCutIndex - 1,
+                    )
+                    .map((readingTime) => (
+                      <button
+                        key={readingTime}
+                        onClick={() => handleReadingTimeClick(readingTime)}
+                        className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
+                          selectedReadingTime === readingTime
+                            ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                            : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                        }`}
+                      >
+                        {readingTime}
+                      </button>
+                    ))}
+
+                  {!showAllReadingTimes && readingTimeCutIndex !== null && (
+                    <button
+                      onClick={() => setShowAllReadingTimes(true)}
+                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                    >
+                      more tags...
+                    </button>
+                  )}
+
+                  {showAllReadingTimes && (
+                    <button
+                      onClick={() => setShowAllReadingTimes(false)}
+                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                    >
+                      less tags...
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Results count */}
+              <div className="mb-5">
+                <p
+                  className={`${merri.className} text-white font-bold pb-20 text-[32px] md:text-[48px]`}
+                >
+                  {filteredBlogs.length}{' '}
+                  <span className="text-[24px] md:text-[36px]">
+                    {filteredBlogs.length === 1 ? 'Blog' : 'Blogs'}
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* blogs */}
       <div
-        className="relative w-full bg-texture"
+        className="w-full"
         style={{
           backgroundImage: `
-    linear-gradient(
-      to bottom,
-      #47ABD880 50%,
-      #1D5C75 100%
-    ),
+    linear-gradient(#47ABD8CC, #47ABD8CC),
     url('/MD-Texture_BG_Blue-01-04.png')
   `,
           backgroundRepeat: 'repeat',
-          backgroundSize: 'cover, 240px 240px',
-          backgroundPosition: 'center, top left',
+          backgroundSize: '240px 240px',
         }}
       >
-        <section className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-8 md:py-12 ">
-          {/* Search + Filters */}
-          <div className="bg-white shadow-lg p-4 sm:p-6 mb-6 md:mb-8">
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1 relative">
-                <Search
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1D5C75]"
-                  size={20}
-                />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by title, subtitle or author..."
-                  className={`${merri.className} w-full pl-12 pr-4 py-3 border-2 border-[#1D5C75]  focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
-                  aria-label="Search blogs"
-                />
-              </div>
-
-              {/* Filters Button */}
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1D5C75] text-white  hover:bg-[#47ABD8] transition-colors"
-                aria-label="Toggle filters"
-              >
-                <Filter size={20} />
-                <span className={`${merri.className} font-medium`}>
-                  Filters
-                </span>
-                {hasActiveFilters && (
-                  <span className="ml-1 px-2 py-0.5 bg-white text-[#1D5C75]  text-xs font-semibold">
-                    {
-                      [searchQuery, selectedAuthor, selectedCategory].filter(
-                        Boolean,
-                      ).length
-                    }
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* Filter Options */}
-            {showFilters && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="author-filter"
-                      className={`${merri.className} text-sm font-semibold text-[#1D5C75] mb-2 block`}
-                    >
-                      Filter by Author
-                    </label>
-                    <select
-                      id="author-filter"
-                      value={selectedAuthor}
-                      onChange={(e) => setSelectedAuthor(e.target.value)}
-                      className={`${merri.className} w-full px-4 py-2 border-2 border-[#1D5C75]  focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
-                    >
-                      <option value="">All Authors</option>
-                      {allAuthors.map((author) => (
-                        <option key={author} value={author}>
-                          {author}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="category-filter"
-                      className={`${merri.className} text-sm font-semibold text-[#1D5C75] mb-2 block`}
-                    >
-                      Filter by Category
-                    </label>
-                    <select
-                      id="category-filter"
-                      value={selectedCategory}
-                      onChange={(e) => handleCategoryChange(e.target.value)}
-                      className={`${merri.className} w-full px-4 py-2 border-2 border-[#1D5C75]  focus:ring-2 focus:ring-[#47ABD8] focus:border-[#47ABD8] text-[#1D5C75]`}
-                    >
-                      <option value="">All Categories</option>
-                      {allCategories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                {hasActiveFilters && (
-                  <button
-                    onClick={clearFilters}
-                    className={`${merri.className} mt-4 flex items-center gap-2 text-[#1D5C75] hover:text-[#47ABD8] font-semibold transition-colors`}
-                  >
-                    <X size={16} /> Clear All Filters
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Active Filter Badge */}
-          {selectedCategory && (
-            <div className="mb-6 flex items-center gap-3 flex-wrap">
-              <div className="inline-flex items-center gap-2 bg-[#1D5C75] text-white py-2 px-2">
-                <span className={`${merri.className} text-sm font-medium`}>
-                  Category: {selectedCategory}
-                </span>
-                <button
-                  onClick={() => handleCategoryChange('')}
-                  className="hover:bg-white/20  p-1 transition-colors"
-                  aria-label="Clear category filter"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Results Count */}
-          {blogs.length > 0 && (
-            <div className="mb-6">
-              <p
-                className={`${merri.className} text-white text-sm md:text-base`}
-              >
-                Showing{' '}
-                <span className="font-bold">{filteredBlogs.length}</span> of{' '}
-                <span className="font-bold">{blogs.length}</span> blogs
-                {hasActiveFilters && ' (filtered)'}
-              </p>
-            </div>
-          )}
-
-          {/* Blog Cards Grid */}
-          {filteredBlogs.length > 0 ? (
-            <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filteredBlogs.map((blog) => (
-                <article
+        <div className="px-4 relative xl:mx-30 -mt-20 max-w-full overflow-x-hidden">
+          <div className="grid grid-cols-12 gap-0 md:gap-8">
+            {loading ? (
+              <BlogsShimmer />
+            ) : filteredBlogs.length > 0 ? (
+              filteredBlogs.map((blog) => (
+                <div
                   key={blog.id}
-                  className="group bg-white  shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
+                  className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFF] mb-4 min-w-0"
                 >
                   <Link href={`/blogs/${blog.slug}`}>
-                    <div className="relative h-48 sm:h-56 overflow-hidden">
-                      {blog.image_url ? (
+                    <div className="flex flex-col md:flex-row gap-4 cursor-pointer">
+                      {/* Left: Image */}
+                      <div className="w-full md:w-[340px] flex-shrink-0">
                         <img
-                          src={blog.image_url}
+                          src={blog.image_url || '/assets/fallbackImg.jpeg'}
                           alt={blog.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                          loading="lazy"
+                          className="w-full h-auto md:w-[340px] md:h-[226px] object-cover"
                         />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-[#1D5C75] to-[#47ABD8]">
-                          <Tag size={48} className="text-white" />
-                        </div>
-                      )}
-
-                      {blog.categories?.length > 0 && (
-                        <span
-                          className={`${merri.className} absolute top-4 left-4 bg-white px-3 py-1 text-[#1D5C75] text-xs font-semibold shadow-md`}
-                        >
-                          {blog.categories[0]}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="p-4 sm:p-6">
-                      <div
-                        className={`${merri.className} font-normal text-[#1D5C75] mb-3`}
-                      >
-                        <h2
-                          // className="font-neco font-bold text-[#1D5C75] text-lg sm:text-xl line-clamp-2 group-hover:text-[#47ABD8] transition-colors mb-2"
-                          className={`${merri.className}
-                                text-[#1D5C75]
-                                font-bold
-                                italic
-                                text-[26px] md:text-[32px]
-                                leading-tight
-                                mb-2
-                              `}
-                        >
-                          {blog.title}
-                        </h2>
-                        <div className="flex justify-between">
-                          <span className="flex items-center  text-[16px] md:text-[18px] gap-1">
-                            {blog.author}
-                          </span>
-                          <span className="flex text-[14px] md:text-[16px] items-center gap-1 ">
-                            {formatDate(blog.created_at)}
-                          </span>
-                        </div>
                       </div>
 
-                      {blog.subtitle && (
-                        <p
-                          className={`${merri.className} text-black  font-light
-            italic
-            text-[16px] md:text-[18px]  line-clamp-3 mb-4`}
-                        >
-                          {blog.subtitle}
-                        </p>
-                      )}
-
-                      <div
-                        className={`${merri.className} flex items-center text-[#1D5C75]  text-[14px] lg:text-[16px]
-      font-bold uppercase`}
-                      >
-                        Read More
+                      {/* Right: Content */}
+                      <div className="flex-1 flex px-4 md:px-8 py-4 flex-col justify-between">
+                        <div>
+                          <h2
+                            className={`${merri.className} text-[#1D5C75] font-bold text-[32px] italic leading-tight mb-2`}
+                          >
+                            {blog.title}
+                          </h2>
+                          <p
+                            className={`${merri.className} text-[#1D5C75] font-normal text-[14px] md:text-[16px] mb-1`}
+                          >
+                            {formatDate(blog.created_at)} | {blog.author}
+                          </p>
+                          <p
+                            className={`${merri.className} text-black font-light italic text-[16px] md:text-[18px] line-clamp-3 md:line-clamp-2 mt-4`}
+                          >
+                            {blog.subtitle}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </Link>
-                </article>
-              ))}
-            </div>
-          ) : blogs.length === 0 ? (
-            <div className="text-center py-16 bg-white shadow-lg">
-              {isLoading ? (
-                <>
-                  <Loader2 className="animate-spin h-12 w-12 text-[#1D5C75] mx-auto mb-4" />
-                  <h2 className="font-neco text-2xl font-bold text-[#1D5C75] mb-2">
-                    Loading blogs...
-                  </h2>
-                  <p className={`${merri.className} text-[#1D5C75]`}>
-                    Please wait while we fetch the latest blogs.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <Tag size={48} className="text-[#1D5C75] mx-auto mb-4" />
-                  <h2 className="font-neco text-2xl font-bold text-[#1D5C75] mb-2">
-                    No blogs available
-                  </h2>
-                  <p className={`${merri.className} text-[#1D5C75]`}>
-                    Check back soon for new blogs.
-                  </p>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="bg-white r shadow-lg p-8 sm:p-12 max-w-md mx-auto">
-                <Search size={48} className="text-[#1D5C75] mx-auto mb-4" />
-                <h2 className="font-neco text-2xl font-bold text-[#1D5C75] mb-2">
-                  No blogs found
-                </h2>
-                <p className={`${merri.className} text-[#1D5C75] mb-6`}>
-                  Try adjusting your search or filters to find what you're
-                  looking for.
-                </p>
-                {hasActiveFilters && (
-                  <button
-                    onClick={clearFilters}
-                    className={`${merri.className} inline-flex items-center gap-2 px-6 py-3 bg-[#1D5C75] text-white  hover:bg-[#47ABD8] transition-colors font-medium`}
+                </div>
+              ))
+            ) : (
+              <div className="col-span-12 flex justify-center items-center py-20">
+                <div className="text-center bg-white p-8 rounded shadow-lg">
+                  <p
+                    className={`${merri.className} text-[#1D5C75] text-xl mb-4`}
                   >
-                    <X size={16} />
+                    No blogs found
+                  </p>
+                  <button
+                    onClick={clearAllFilters}
+                    className={`${merri.className} bg-[#1D5C75] text-white px-6 py-2 hover:bg-[#78B0C7] transition-colors`}
+                  >
                     Clear Filters
                   </button>
-                )}
+                </div>
               </div>
-            </div>
-          )}
-        </section>
+            )}
+          </div>
+        </div>
         <Footer />
       </div>
     </div>
   )
 }
+
+export default BlogsClient
