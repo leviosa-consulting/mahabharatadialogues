@@ -34,13 +34,13 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
             Retreats
           </Link>
 
-          {/* <Link
-            href="/"
+          <Link
+            href="/products"
             className={`${merri.className} font-bold uppercase text-[14px]`}
             style={{ color: textColor }}
           >
             Products
-          </Link> */}
+          </Link>
         </div>
 
         {/* CENTER LOGO */}

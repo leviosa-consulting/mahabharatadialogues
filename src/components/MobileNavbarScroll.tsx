@@ -139,6 +139,14 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
           >
             Blogs
           </Link>
+           <Link
+            href="/products"
+            onClick={() => setOpen(false)}
+            className={`${merri.className} text-white font-bold uppercase text-[18px]`}
+          >
+            Products
+          </Link>
+
 
           <button
             onClick={() => {

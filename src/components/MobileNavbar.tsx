@@ -98,6 +98,13 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
           >
             Blogs
           </Link>
+          <Link
+            href="/products"
+            onClick={() => setOpen(false)}
+            className={`${merri.className} text-white font-bold uppercase text-[18px]`}
+          >
+            Products
+          </Link>
 
           <button
             onClick={() => {
