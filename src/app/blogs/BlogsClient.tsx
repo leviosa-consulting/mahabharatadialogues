@@ -3,7 +3,7 @@
 import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { merri } from '../fonts/merri'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
@@ -25,7 +25,6 @@ interface Blog {
 const BlogsClient = () => {
   const searchParams = useSearchParams()
 
-  // State management
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -37,162 +36,26 @@ const BlogsClient = () => {
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
-  
-  const categoriesContainerRef = useRef<HTMLDivElement>(null)
-  const readingTimeContainerRef = useRef<HTMLDivElement>(null)
   const hasAppliedUrlParams = useRef(false)
 
  
   const [showAllCategories, setShowAllCategories] = useState(false)
   const [showAllReadingTimes, setShowAllReadingTimes] = useState(false)
-  
-  
-  const [maxCategoryItems, setMaxCategoryItems] = useState<number | null>(null)
-  const [maxReadingTimeItems, setMaxReadingTimeItems] = useState<number | null>(null)
 
+
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (!categoriesContainerRef.current || allCategories.length === 0) return
-
-    const measureLayout = () => {
-      const container = categoriesContainerRef.current
-      if (!container) return
-
-      const allItems = ['All', ...allCategories]
-      const children = Array.from(container.children) as HTMLElement[]
-      
-      if (children.length === 0) return
-
-      // Get position of first item
-      const firstItemTop = children[0].offsetTop
-      let secondRowTop: number | null = null
-      let thirdRowTop: number | null = null
-
-      // Find where second row starts
-      for (let i = 1; i < children.length; i++) {
-        if (children[i].offsetTop > firstItemTop) {
-          secondRowTop = children[i].offsetTop
-          break
-        }
-      }
-
-      // If no second row, all items fit in one row
-      if (!secondRowTop) {
-        setMaxCategoryItems(null) // null means no limit needed
-        return
-      }
-
-      // Find where third row starts
-      for (let i = 0; i < children.length; i++) {
-        if (children[i].offsetTop > secondRowTop) {
-          thirdRowTop = children[i].offsetTop
-          break
-        }
-      }
-
-     
-      if (!thirdRowTop) {
-        setMaxCategoryItems(null) 
-        return
-      }
-
-      // Count items in first two rows
-      let itemsInFirstTwoRows = 0
-      for (let i = 0; i < children.length; i++) {
-        if (children[i].offsetTop < thirdRowTop) {
-          itemsInFirstTwoRows++
-        } else {
-          break
-        }
-      }
-
-      setMaxCategoryItems(itemsInFirstTwoRows)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768) 
     }
-
     
-    const timeoutId = setTimeout(measureLayout, 100)
-    
-    window.addEventListener('resize', measureLayout)
-    return () => {
-      clearTimeout(timeoutId)
-      window.removeEventListener('resize', measureLayout)
-    }
-  }, [allCategories])
-
- 
-  useEffect(() => {
-    if (!readingTimeContainerRef.current || allReadingTimes.length === 0) return
-
-    const measureLayout = () => {
-      const container = readingTimeContainerRef.current
-      if (!container) return
-
-      const allItems = ['All', ...allReadingTimes]
-      const children = Array.from(container.children) as HTMLElement[]
-      
-      if (children.length === 0) return
-
-      const firstItemTop = children[0].offsetTop
-      let secondRowTop: number | null = null
-      let thirdRowTop: number | null = null
-
-      for (let i = 1; i < children.length; i++) {
-        if (children[i].offsetTop > firstItemTop) {
-          secondRowTop = children[i].offsetTop
-          break
-        }
-      }
-
-      if (!secondRowTop) {
-        setMaxReadingTimeItems(null)
-        return
-      }
-
-      for (let i = 0; i < children.length; i++) {
-        if (children[i].offsetTop > secondRowTop) {
-          thirdRowTop = children[i].offsetTop
-          break
-        }
-      }
-
-      if (!thirdRowTop) {
-        setMaxReadingTimeItems(null)
-        return
-      }
-
-      let itemsInFirstTwoRows = 0
-      for (let i = 0; i < children.length; i++) {
-        if (children[i].offsetTop < thirdRowTop) {
-          itemsInFirstTwoRows++
-        } else {
-          break
-        }
-      }
-
-      setMaxReadingTimeItems(itemsInFirstTwoRows)
-    }
-
-    const timeoutId = setTimeout(measureLayout, 100)
-    
-    window.addEventListener('resize', measureLayout)
-    return () => {
-      clearTimeout(timeoutId)
-      window.removeEventListener('resize', measureLayout)
-    }
-  }, [allReadingTimes])
-
- 
-  useEffect(() => {
-    const handleResize = () => {
-      setShowAllCategories(false)
-      setShowAllReadingTimes(false)
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  
+ 
   useEffect(() => {
     fetchBlogs()
   }, [])
@@ -205,7 +68,7 @@ const BlogsClient = () => {
       const readingTimeParam = searchParams.get('readingTime')
 
       if (categoryParam || authorParam || readingTimeParam) {
-        // Set the selected filters
+        
         if (categoryParam) {
           setSelectedCategory(categoryParam)
         }
@@ -216,7 +79,7 @@ const BlogsClient = () => {
           setSelectedReadingTime(readingTimeParam)
         }
 
-        // Apply the filters
+       
         applyFilters(
           '',
           categoryParam || 'All',
@@ -224,10 +87,10 @@ const BlogsClient = () => {
           readingTimeParam || 'All'
         )
 
-        // Mark that we've applied URL params
+       
         hasAppliedUrlParams.current = true
       } else {
-        // No URL params, show all blogs
+      
         setFilteredBlogs(blogs)
       }
     }
@@ -252,19 +115,19 @@ const BlogsClient = () => {
         setFilteredBlogs(fetchedBlogs)
       }
 
-      // Extract unique categories
+     
       const categories = Array.from(
         new Set(fetchedBlogs.flatMap((b: Blog) => b.categories || [])),
       ) as string[]
       setAllCategories(categories.sort())
 
-      // Extract unique authors
+     
       const authors = Array.from(
         new Set(fetchedBlogs.map((b: Blog) => b.author).filter(Boolean)),
       ) as string[]
       setAllAuthors(authors.sort())
 
-      // Extract unique reading times
+    
       const readingTimes = Array.from(
         new Set(fetchedBlogs.map((b: Blog) => estimateReadTime(b.content)))
       ).sort((a, b) => a - b)
@@ -277,7 +140,7 @@ const BlogsClient = () => {
     }
   }
 
-  // Format date helper
+  
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -291,7 +154,7 @@ const BlogsClient = () => {
     }
   }
 
-  // Estimate reading time helper
+
   const estimateReadTime = (content: string) => {
     const wordsPerMinute = 200
     const text = content.replace(/<[^>]*>/g, '')
@@ -300,11 +163,10 @@ const BlogsClient = () => {
     return minutes
   }
 
-  // Apply all filters
   const applyFilters = (search: string, category: string, author: string, readingTime: string) => {
     let filtered = blogs
 
-    // Filter by search query
+
     if (search) {
       filtered = filtered.filter(
         (blog) =>
@@ -397,40 +259,42 @@ const BlogsClient = () => {
     window.history.pushState({}, '', '/blogs')
   }
 
-  // Determine which categories to show
-  const categoriesToShow = () => {
+  
+  const getCategoriesToDisplay = () => {
     const allItems = ['All', ...allCategories]
+    const limit = isMobile ? 4 : 7
     
-    
-    if (showAllCategories || maxCategoryItems === null) {
+    if (showAllCategories || allItems.length <= limit) {
       return allItems
     }
     
-    // Otherwise, show only items that fit in 2 rows
-    return allItems.slice(0, maxCategoryItems)
+    return allItems.slice(0, limit)
   }
 
-  // Determine which reading times to show
-  const readingTimesToShow = () => {
+ 
+  const getReadingTimesToDisplay = () => {
     const allItems = ['All', ...allReadingTimes]
+    const limit = isMobile ? 3 : 6
     
-    // If we're showing all OR there's no limit (items fit in <=2 rows), show everything
-    if (showAllReadingTimes || maxReadingTimeItems === null) {
+    if (showAllReadingTimes || allItems.length <= limit) {
       return allItems
     }
     
-    // Otherwise, show only items that fit in 2 rows
-    return allItems.slice(0, maxReadingTimeItems)
+    return allItems.slice(0, limit)
   }
 
-  // Should we show the "more" button for categories?
+
   const needsMoreButtonCategories = () => {
-    return maxCategoryItems !== null && !showAllCategories
+    const allItems = ['All', ...allCategories]
+    const limit = isMobile ? 3 : 6
+    return allItems.length > limit && !showAllCategories
   }
 
-  // Should we show the "more" button for reading times?
+ 
   const needsMoreButtonReadingTimes = () => {
-    return maxReadingTimeItems !== null && !showAllReadingTimes
+    const allItems = ['All', ...allReadingTimes]
+    const limit = isMobile ? 3 : 6
+    return allItems.length > limit && !showAllReadingTimes
   }
 
   return (
@@ -523,26 +387,8 @@ const BlogsClient = () => {
                 >
                   CATEGORIES
                 </p>
-                
-                {/* Hidden container for measurement */}
-                <div
-                  ref={categoriesContainerRef}
-                  className="flex flex-wrap gap-2 max-w-full"
-                  style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }}
-                >
-                  {['All', ...allCategories].map((category) => (
-                    <button
-                      key={category}
-                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#78B0C7] text-white`}
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Visible container with filtered items */}
-                <div className="flex flex-wrap gap-2 max-w-full overflow-hidden">
-                  {categoriesToShow().map((category) => (
+                <div className="flex flex-wrap gap-2 max-w-full">
+                  {getCategoriesToDisplay().map((category) => (
                     <button
                       key={category}
                       onClick={() => handleCategoryClick(category)}
@@ -565,7 +411,7 @@ const BlogsClient = () => {
                     </button>
                   )}
 
-                  {showAllCategories && maxCategoryItems !== null && (
+                  {showAllCategories && (
                     <button
                       onClick={() => setShowAllCategories(false)}
                       className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
@@ -618,26 +464,8 @@ const BlogsClient = () => {
                 >
                   READING TIME
                 </p>
-                
-                {/* Hidden container for measurement */}
-                <div
-                  ref={readingTimeContainerRef}
-                  className="flex flex-wrap gap-2 max-w-full"
-                  style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }}
-                >
-                  {['All', ...allReadingTimes].map((readingTime) => (
-                    <button
-                      key={readingTime}
-                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#78B0C7] text-white`}
-                    >
-                      {readingTime}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Visible container with filtered items */}
-                <div className="flex flex-wrap gap-2 max-w-full overflow-hidden">
-                  {readingTimesToShow().map((readingTime) => (
+                <div className="flex flex-wrap gap-2 max-w-full">
+                  {getReadingTimesToDisplay().map((readingTime) => (
                     <button
                       key={readingTime}
                       onClick={() => handleReadingTimeClick(readingTime)}
@@ -660,7 +488,7 @@ const BlogsClient = () => {
                     </button>
                   )}
 
-                  {showAllReadingTimes && maxReadingTimeItems !== null && (
+                  {showAllReadingTimes && (
                     <button
                       onClick={() => setShowAllReadingTimes(false)}
                       className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
