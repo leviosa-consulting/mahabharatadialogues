@@ -2,13 +2,13 @@ import React from 'react'
 
 const BlogsShimmer = () => {
   return (
-    <div className="px-4 relative xl:mx-30 -mt-20">
-      <div className="grid grid-cols-12 gap-8">
+    <div className="px-4">
+      <div className="flex flex-col">
         {/* Generate 3 shimmer cards */}
         {[1, 2, 3].map((index) => (
           <div
             key={index}
-            className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFF] mb-4 animate-pulse"
+            className=" bg-[#FFFFFF] mb-4 animate-pulse"
           >
             <div className="flex flex-col md:flex-row gap-4">
               {/* Left: Image Shimmer */}

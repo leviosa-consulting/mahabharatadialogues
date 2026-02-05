@@ -12,9 +12,10 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
   return (
     <div className="hidden sm:flex justify-center">
       <div
-        className={`flex items-center
-          ${isNotHome ? 'gap-12 max-w-5xl' : 'gap-10 max-w-4xl'}
-        `}
+       className={`flex items-center justify-center
+  ${isNotHome ? 'gap-12 w-full' : 'gap-10 max-w-4xl'}
+`}
+
       >
         {/* LEFT */}
         <div className={`flex ${isNotHome ? 'gap-12' : 'gap-6'}`}>
@@ -68,13 +69,13 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
             Blogs
           </Link>
 
-          {/* <Link
+          <Link
             href="/"
             className={`${merri.className} font-bold uppercase text-[14px]`}
             style={{ color: textColor }}
           >
             About Us
-          </Link> */}
+          </Link>
 
           <button
             onClick={() =>

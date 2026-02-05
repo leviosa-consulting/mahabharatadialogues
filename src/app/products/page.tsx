@@ -9,6 +9,7 @@ import CustomButton from '@/components/CustomButton'
 import { productsData } from '@/data/productsData'
 import { Product } from '@/data/productsData'
 import Link from 'next/link'
+import Footer from '@/components/Footer'
 
 const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -125,7 +126,7 @@ const ProductsPage = () => {
                 className="flex flex-col md:flex-row border-b border-[#1D5C75] pb-8 my-10"
               >
                 {/* left */}
-                <div className="bg-[#D9D9D9E5] max-w-[434px] relative">
+                <div className="bg-[#D9D9D9E5] max-w-[434px] h-52 md:h-auto relative">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -142,7 +143,7 @@ const ProductsPage = () => {
 
                 <div className="flex flex-col gap-2 px-2 py-2 md:pl-6 md:px-0 md:py-0">
                   {/* right */}
-                  <div className="flex flex-col md:flex-row justify-between">
+                  <div className="flex flex-row justify-between">
                     <div>
                       <h2
                         className={`${merri.className} text-[#1D5C75] font-bold text-[32px] italic leading-tight mb-2`}
@@ -204,6 +205,20 @@ const ProductsPage = () => {
             ))}
           </div>
         </div>
+      </div>
+
+       <div
+        className="w-full relative"
+        style={{
+          backgroundImage: `
+      linear-gradient(#1D5C75CC, #1D5C75CC),
+      url('/MD-Texture_BG_Blue-01-04.png')
+    `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
+      >
+        <Footer />
       </div>
     </div>
   )

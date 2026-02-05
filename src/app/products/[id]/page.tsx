@@ -72,10 +72,10 @@ export default function ProductDetails() {
 
       {/* Product Details Section */}
       <div className="px-4 relative xl:mx-30 max-w-full overflow-x-hidden">
-        <div className="grid grid-cols-12  mt-12 mb-4">
-          <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
+        <div className="grid grid-cols-12 mt-12 mb-4">
+          <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 border-b border-[#1D5C75] mb-10">
             {/* Back to Products Link and Cart */}
-            <div className="flex justify-between items-center mb-6 pb-4">
+            <div className="flex justify-between items-center pb-4">
               <Link
                 href="/products"
                 className={`${merri.className} text-[#78B0C7] font-normal text-[16px] hover:underline`}
@@ -94,16 +94,16 @@ export default function ProductDetails() {
                 <img
                   src={productImages[currentImageIndex]}
                   alt={product.name}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-60 md:h-112 object-cover"
                 />
 
                 {/* Carousel Dots */}
-                <div className="flex justify-center md:justify-start gap-4 mt-4">
+                <div className="flex justify-center md:justify-start gap-3.5 mt-4">
                   {productImages.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-colors ${
+                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
                         currentImageIndex === index
                           ? 'bg-[#1D5C75]'
                           : 'bg-[#D9D9D9]'
@@ -120,17 +120,17 @@ export default function ProductDetails() {
               {/* Left: Title and Description */}
               <div className="flex-1">
                 <h1
-                  className={`${merri.className} text-[#1D5C75] font-bold text-[32px] md:text-[36px] italic leading-tight mb-2`}
+                  className={`${merri.className} text-[#1D5C75] text-center md:text-start font-bold text-[32px] md:text-[36px] italic leading-tight mb-2`}
                 >
                   {product.name}
                 </h1>
                 <p
-                  className={`${merri.className} text-[#1D5C75] font-normal text-[14px] md:text-[16px] mb-4`}
+                  className={`${merri.className} text-[#1D5C75] text-center md:text-start font-normal text-[14px] md:text-[16px] mb-4`}
                 >
                   {product.author}
                 </p>
                 <p
-                  className={`${merri.className} text-black font-light italic md:max-w-[80%] text-[14px] md:text-[16px] leading-relaxed`}
+                  className={`${merri.className} text-black font-light text-center md:text-start italic md:max-w-[80%] text-[14px] md:text-[16px] leading-relaxed`}
                 >
                   {product.description}
                 </p>
@@ -156,6 +156,7 @@ export default function ProductDetails() {
             </div>
           </div>
 
+          <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 border-b border-[#1D5C75] mb-10"></div>
           {/* Related Products Section */}
           <div className="mb-10 col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
             {relatedProducts.length > 0 && (
@@ -166,7 +167,7 @@ export default function ProductDetails() {
                   MORE PRODUCTS FROM US
                 </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">
                   {relatedProducts.map((relatedProduct) => (
                     <Link
                       key={relatedProduct.id}
@@ -174,7 +175,7 @@ export default function ProductDetails() {
                     >
                       <div className="cursor-pointer transition-shadow h-full flex flex-col">
                         {/* Product Image */}
-                        <div className="w-full h-40 overflow-hidden flex items-center justify-center">
+                        <div className="w-full h-52 overflow-hidden flex items-center justify-center">
                           <img
                             src={relatedProduct.image}
                             alt={relatedProduct.name}
@@ -186,7 +187,7 @@ export default function ProductDetails() {
                         <div className="flex my-2 justify-between">
                           <div className="">
                             <h4
-                              className={`${merri.className} text-[#1D5C75] font-bold text-[18px] italic`}
+                              className={`${merri.className} leading-tight text-[#1D5C75] font-bold text-[18px] italic`}
                             >
                               {relatedProduct.name}
                             </h4>

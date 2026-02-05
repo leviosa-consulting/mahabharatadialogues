@@ -37,135 +37,167 @@ const BlogsClient = () => {
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Refs for layout calculation
-  const categoriesRef = useRef<HTMLDivElement>(null)
-  const readingTimeRef = useRef<HTMLDivElement>(null)
+  
+  const categoriesContainerRef = useRef<HTMLDivElement>(null)
+  const readingTimeContainerRef = useRef<HTMLDivElement>(null)
   const hasAppliedUrlParams = useRef(false)
 
-  // Show/hide states
+ 
   const [showAllCategories, setShowAllCategories] = useState(false)
   const [showAllReadingTimes, setShowAllReadingTimes] = useState(false)
-  const [categoryCutIndex, setCategoryCutIndex] = useState<number | null>(null)
-  const [readingTimeCutIndex, setReadingTimeCutIndex] = useState<number | null>(null)
+  
+  
+  const [maxCategoryItems, setMaxCategoryItems] = useState<number | null>(null)
+  const [maxReadingTimeItems, setMaxReadingTimeItems] = useState<number | null>(null)
 
-  // Calculate layout for categories
-  useLayoutEffect(() => {
-    if (!categoriesRef.current) return
 
-    const calculate = () => {
-      const items = Array.from(categoriesRef.current!.children) as HTMLElement[]
-      if (!items.length) return
+  useEffect(() => {
+    if (!categoriesContainerRef.current || allCategories.length === 0) return
 
-      requestAnimationFrame(() => {
-        const firstRowTop = items[0].offsetTop
-        let secondRowTop: number | null = null
-        let thirdRowTop: number | null = null
+    const measureLayout = () => {
+      const container = categoriesContainerRef.current
+      if (!container) return
 
-        // Find second row
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].offsetTop > firstRowTop) {
-            secondRowTop = items[i].offsetTop
-            break
-          }
+      const allItems = ['All', ...allCategories]
+      const children = Array.from(container.children) as HTMLElement[]
+      
+      if (children.length === 0) return
+
+      // Get position of first item
+      const firstItemTop = children[0].offsetTop
+      let secondRowTop: number | null = null
+      let thirdRowTop: number | null = null
+
+      // Find where second row starts
+      for (let i = 1; i < children.length; i++) {
+        if (children[i].offsetTop > firstItemTop) {
+          secondRowTop = children[i].offsetTop
+          break
         }
+      }
 
-        if (!secondRowTop) {
-          // All items in one row
-          setCategoryCutIndex(null)
-          return
+      // If no second row, all items fit in one row
+      if (!secondRowTop) {
+        setMaxCategoryItems(null) // null means no limit needed
+        return
+      }
+
+      // Find where third row starts
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].offsetTop > secondRowTop) {
+          thirdRowTop = children[i].offsetTop
+          break
         }
+      }
 
-        // Find third row
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].offsetTop > secondRowTop) {
-            thirdRowTop = items[i].offsetTop
-            break
-          }
+     
+      if (!thirdRowTop) {
+        setMaxCategoryItems(null) 
+        return
+      }
+
+      // Count items in first two rows
+      let itemsInFirstTwoRows = 0
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].offsetTop < thirdRowTop) {
+          itemsInFirstTwoRows++
+        } else {
+          break
         }
+      }
 
-        if (!thirdRowTop) {
-          // All items fit in two rows
-          setCategoryCutIndex(null)
-          return
-        }
-
-        // Find last item in second row
-        let lastSecondRowIndex = -1
-        items.forEach((el, i) => {
-          if (el.offsetTop === secondRowTop) lastSecondRowIndex = i
-        })
-
-        setCategoryCutIndex(lastSecondRowIndex + 1)
-      })
+      setMaxCategoryItems(itemsInFirstTwoRows)
     }
 
-    calculate()
-    window.addEventListener('resize', calculate)
-    return () => window.removeEventListener('resize', calculate)
+    
+    const timeoutId = setTimeout(measureLayout, 100)
+    
+    window.addEventListener('resize', measureLayout)
+    return () => {
+      clearTimeout(timeoutId)
+      window.removeEventListener('resize', measureLayout)
+    }
   }, [allCategories])
 
-  // Calculate layout for reading times
-  useLayoutEffect(() => {
-    if (!readingTimeRef.current) return
+ 
+  useEffect(() => {
+    if (!readingTimeContainerRef.current || allReadingTimes.length === 0) return
 
-    const calculate = () => {
-      const items = Array.from(readingTimeRef.current!.children) as HTMLElement[]
-      if (!items.length) return
+    const measureLayout = () => {
+      const container = readingTimeContainerRef.current
+      if (!container) return
 
-      requestAnimationFrame(() => {
-        const firstRowTop = items[0].offsetTop
-        let secondRowTop: number | null = null
-        let thirdRowTop: number | null = null
+      const allItems = ['All', ...allReadingTimes]
+      const children = Array.from(container.children) as HTMLElement[]
+      
+      if (children.length === 0) return
 
-        // Find second row
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].offsetTop > firstRowTop) {
-            secondRowTop = items[i].offsetTop
-            break
-          }
+      const firstItemTop = children[0].offsetTop
+      let secondRowTop: number | null = null
+      let thirdRowTop: number | null = null
+
+      for (let i = 1; i < children.length; i++) {
+        if (children[i].offsetTop > firstItemTop) {
+          secondRowTop = children[i].offsetTop
+          break
         }
+      }
 
-        if (!secondRowTop) {
-          // All items in one row
-          setReadingTimeCutIndex(null)
-          return
+      if (!secondRowTop) {
+        setMaxReadingTimeItems(null)
+        return
+      }
+
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].offsetTop > secondRowTop) {
+          thirdRowTop = children[i].offsetTop
+          break
         }
+      }
 
-        // Find third row
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].offsetTop > secondRowTop) {
-            thirdRowTop = items[i].offsetTop
-            break
-          }
+      if (!thirdRowTop) {
+        setMaxReadingTimeItems(null)
+        return
+      }
+
+      let itemsInFirstTwoRows = 0
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].offsetTop < thirdRowTop) {
+          itemsInFirstTwoRows++
+        } else {
+          break
         }
+      }
 
-        if (!thirdRowTop) {
-          // All items fit in two rows
-          setReadingTimeCutIndex(null)
-          return
-        }
-
-        // Find last item in second row
-        let lastSecondRowIndex = -1
-        items.forEach((el, i) => {
-          if (el.offsetTop === secondRowTop) lastSecondRowIndex = i
-        })
-
-        setReadingTimeCutIndex(lastSecondRowIndex + 1)
-      })
+      setMaxReadingTimeItems(itemsInFirstTwoRows)
     }
 
-    calculate()
-    window.addEventListener('resize', calculate)
-    return () => window.removeEventListener('resize', calculate)
+    const timeoutId = setTimeout(measureLayout, 100)
+    
+    window.addEventListener('resize', measureLayout)
+    return () => {
+      clearTimeout(timeoutId)
+      window.removeEventListener('resize', measureLayout)
+    }
   }, [allReadingTimes])
 
-  // Fetch blogs on mount
+ 
+  useEffect(() => {
+    const handleResize = () => {
+      setShowAllCategories(false)
+      setShowAllReadingTimes(false)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  
   useEffect(() => {
     fetchBlogs()
   }, [])
 
-  // Apply filters from URL parameters - run once after blogs are loaded
+  
   useEffect(() => {
     if (blogs.length > 0 && !loading && !hasAppliedUrlParams.current) {
       const categoryParam = searchParams.get('category')
@@ -211,8 +243,7 @@ const BlogsClient = () => {
 
       setBlogs(fetchedBlogs)
       
-      // Don't set filtered blogs here - let the URL params effect handle it
-      // Only set if no URL params exist
+      
       const categoryParam = searchParams.get('category')
       const authorParam = searchParams.get('author')
       const readingTimeParam = searchParams.get('readingTime')
@@ -362,8 +393,44 @@ const BlogsClient = () => {
     setSelectedReadingTime('All')
     setFilteredBlogs(blogs)
     
-    // Clear URL params
+    
     window.history.pushState({}, '', '/blogs')
+  }
+
+  // Determine which categories to show
+  const categoriesToShow = () => {
+    const allItems = ['All', ...allCategories]
+    
+    
+    if (showAllCategories || maxCategoryItems === null) {
+      return allItems
+    }
+    
+    // Otherwise, show only items that fit in 2 rows
+    return allItems.slice(0, maxCategoryItems)
+  }
+
+  // Determine which reading times to show
+  const readingTimesToShow = () => {
+    const allItems = ['All', ...allReadingTimes]
+    
+    // If we're showing all OR there's no limit (items fit in <=2 rows), show everything
+    if (showAllReadingTimes || maxReadingTimeItems === null) {
+      return allItems
+    }
+    
+    // Otherwise, show only items that fit in 2 rows
+    return allItems.slice(0, maxReadingTimeItems)
+  }
+
+  // Should we show the "more" button for categories?
+  const needsMoreButtonCategories = () => {
+    return maxCategoryItems !== null && !showAllCategories
+  }
+
+  // Should we show the "more" button for reading times?
+  const needsMoreButtonReadingTimes = () => {
+    return maxReadingTimeItems !== null && !showAllReadingTimes
   }
 
   return (
@@ -456,32 +523,40 @@ const BlogsClient = () => {
                 >
                   CATEGORIES
                 </p>
+                
+                {/* Hidden container for measurement */}
                 <div
-                  ref={categoriesRef}
-                  className="flex flex-wrap gap-2 max-w-full overflow-hidden"
+                  ref={categoriesContainerRef}
+                  className="flex flex-wrap gap-2 max-w-full"
+                  style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }}
                 >
-                  {['All', ...allCategories]
-                    .slice(
-                      0,
-                      showAllCategories || categoryCutIndex === null
-                        ? undefined
-                        : categoryCutIndex - 1,
-                    )
-                    .map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => handleCategoryClick(category)}
-                        className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 ${
-                          selectedCategory === category
-                            ? 'bg-[#D9D9D9] text-[#1D5C75]'
-                            : 'bg-[#78B0C7] text-white'
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
+                  {['All', ...allCategories].map((category) => (
+                    <button
+                      key={category}
+                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#78B0C7] text-white`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
 
-                  {!showAllCategories && categoryCutIndex !== null && (
+                {/* Visible container with filtered items */}
+                <div className="flex flex-wrap gap-2 max-w-full overflow-hidden">
+                  {categoriesToShow().map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => handleCategoryClick(category)}
+                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 ${
+                        selectedCategory === category
+                          ? 'bg-[#D9D9D9] text-[#1D5C75]'
+                          : 'bg-[#78B0C7] text-white'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+
+                  {needsMoreButtonCategories() && (
                     <button
                       onClick={() => setShowAllCategories(true)}
                       className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
@@ -490,7 +565,7 @@ const BlogsClient = () => {
                     </button>
                   )}
 
-                  {showAllCategories && (
+                  {showAllCategories && maxCategoryItems !== null && (
                     <button
                       onClick={() => setShowAllCategories(false)}
                       className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
@@ -543,32 +618,40 @@ const BlogsClient = () => {
                 >
                   READING TIME
                 </p>
+                
+                {/* Hidden container for measurement */}
                 <div
-                  ref={readingTimeRef}
-                  className="flex flex-wrap gap-2 max-w-full overflow-hidden"
+                  ref={readingTimeContainerRef}
+                  className="flex flex-wrap gap-2 max-w-full"
+                  style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }}
                 >
-                  {['All', ...allReadingTimes]
-                    .slice(
-                      0,
-                      showAllReadingTimes || readingTimeCutIndex === null
-                        ? undefined
-                        : readingTimeCutIndex - 1,
-                    )
-                    .map((readingTime) => (
-                      <button
-                        key={readingTime}
-                        onClick={() => handleReadingTimeClick(readingTime)}
-                        className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
-                          selectedReadingTime === readingTime
-                            ? 'text-[#1D5C75] bg-[#D9D9D9]'
-                            : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
-                        }`}
-                      >
-                        {readingTime}
-                      </button>
-                    ))}
+                  {['All', ...allReadingTimes].map((readingTime) => (
+                    <button
+                      key={readingTime}
+                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#78B0C7] text-white`}
+                    >
+                      {readingTime}
+                    </button>
+                  ))}
+                </div>
 
-                  {!showAllReadingTimes && readingTimeCutIndex !== null && (
+                {/* Visible container with filtered items */}
+                <div className="flex flex-wrap gap-2 max-w-full overflow-hidden">
+                  {readingTimesToShow().map((readingTime) => (
+                    <button
+                      key={readingTime}
+                      onClick={() => handleReadingTimeClick(readingTime)}
+                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
+                        selectedReadingTime === readingTime
+                          ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                          : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                      }`}
+                    >
+                      {readingTime}
+                    </button>
+                  ))}
+
+                  {needsMoreButtonReadingTimes() && (
                     <button
                       onClick={() => setShowAllReadingTimes(true)}
                       className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
@@ -577,7 +660,7 @@ const BlogsClient = () => {
                     </button>
                   )}
 
-                  {showAllReadingTimes && (
+                  {showAllReadingTimes && maxReadingTimeItems !== null && (
                     <button
                       onClick={() => setShowAllReadingTimes(false)}
                       className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
