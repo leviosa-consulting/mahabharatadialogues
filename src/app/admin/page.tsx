@@ -118,49 +118,21 @@ const AdminDashboard = () => {
             </div>
             <span className="text-gray-400 text-2xl">→</span>
           </Link>
-
-          {/* Retreat Date Range Settings */}
-          <div className="bg-white hidden shadow-sm border rounded-xl p-6  gap-4 md:col-span-2">
-            <h2 className="text-xl font-semibold">Update Retreat Dates</h2>
-
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex flex-col w-full">
-                <label className="text-sm text-gray-600 mb-1">
-                  Start Date
-                </label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col w-full">
-                <label className="text-sm text-gray-600 mb-1">
-                  End Date
-                </label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 outline-none"
-                />
-              </div>
+          {/* Products */}
+          <Link
+            href="/admin/products"
+            className="bg-white shadow-sm border rounded-xl p-6 hover:shadow-md transition flex items-center justify-between"
+          >
+            <div>
+              <h2 className="text-xl font-semibold">Manage Products</h2>
+              <p className="text-gray-500 text-sm mt-1">
+                Add, edit & manage Products.
+              </p>
             </div>
+            <span className="text-gray-400 text-2xl">→</span>
+          </Link>
 
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition disabled:opacity-50"
-            >
-              {loading ? "Saving..." : "Save Retreat Dates"}
-            </button>
-
-            {message && (
-              <p className="text-sm text-green-600">{message}</p>
-            )}
-          </div>
+        
         </div>
       </div>
     </ProtectedRoute>
