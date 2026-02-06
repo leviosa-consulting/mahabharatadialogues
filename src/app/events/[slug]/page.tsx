@@ -234,7 +234,7 @@ const EventDetailPage = () => {
       </div>
 
       {/* RIGHT (SIDEBAR) */}
-      <div className="border-t  lg:border-t-0 lg:border-l border-gray-200 p-8 self-start">
+      <div className="border-t lg:border-t-0 lg:border-l border-gray-200 p-8 self-start">
         <div className="sticky top-6">
           <h3 className={`${merri.className} text-[22px] font-bold mb-4`}>
             Event Details
@@ -258,7 +258,7 @@ const EventDetailPage = () => {
             </a>
           )}
 
-          {event.bookingUrl && (
+         {event.bookingUrl && new Date(event.eventDate) > new Date() && (
             <div className="mt-6">
               <CustomButton
                 text="BOOK NOW"
