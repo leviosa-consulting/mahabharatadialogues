@@ -11,6 +11,7 @@ import Navbar from './Navbar'
 import MobileNavbar from './MobileNavbar'
 import MobileNavbarScroll from './MobileNavbarScroll'
 import CustomButtonRetreat from './CustomButtonRetreat'
+import NavbarScroll from './NavbarScroll'
 
 interface DaySchedule {
   date: string
@@ -175,7 +176,9 @@ export default async function RetreatHero() {
           </div>
           <div className="hidden sm:block relative pt-5 z-10">
             <Navbar textColor="#1D5C75" isNotHome />
+            
           </div>
+          <NavbarScroll textColor="#1D5C75" />
 
           {/* Video */}
           {youtubeEmbedUrl && (

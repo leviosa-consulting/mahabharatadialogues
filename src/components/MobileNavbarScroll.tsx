@@ -80,7 +80,7 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
             className="rounded-full flex items-center justify-center transition-all duration-300 w-[23%]"
           >
             <img
-              src="/Web_Assets-08.png"
+              src="/Logo_for_video_Corner-04.png"
               alt="Logo"
               className="w-full h-auto"
             />

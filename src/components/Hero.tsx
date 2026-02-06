@@ -4,6 +4,7 @@ import { merri } from '@/app/fonts/merri'
 import Navbar from './Navbar'
 import MobileNavbar from './MobileNavbar'
 import MobileNavbarScroll from './MobileNavbarScroll'
+import NavbarScroll from './NavbarScroll'
 
 export default function HeroSection() {
   return (
@@ -30,6 +31,7 @@ export default function HeroSection() {
         {/* navbar */}
         <div className="hidden lg:flex mt-10">
           <Navbar textColor="#fff" />
+          <NavbarScroll textColor="#1D5C75" />
         </div>
 
         {/* circle */}
