@@ -8,6 +8,8 @@ import { merri } from '../fonts/merri'
 import CustomButton from '@/components/CustomButton'
 import { MapPin, X } from 'lucide-react'
 import Footer from '@/components/Footer'
+import UpcomingEvents from '@/components/Upcomingevents'
+import PastEventsShimmer from '@/components/shimmer/PastEventsShimmer'
 
 interface Event {
   id: string
@@ -41,7 +43,7 @@ interface EventData {
   gallery?: string[]
 }
 
-const EventPage = () => {
+const EventsPage = () => {
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([])
   const [pastEvents, setPastEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
@@ -127,7 +129,7 @@ const EventPage = () => {
       minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
     }${ampm}`
 
-    return `${day} ${month}, ${year} | ${timeStr}`
+    return `${day} ${month} ${year} | ${timeStr}`
   }
 
   const fetchEvents = async () => {
@@ -227,18 +229,20 @@ const EventPage = () => {
             Events
           </h2>
           <p
-            className={`${merri.className} text-[#D9D9D9] italic  text-[24px] font-normal `}
+            className={`${merri.className} text-[#D9D9D9] italic  text-[24px] font-light `}
           >
             Discover our upcoming events and relive the memories from past
             gatherings
           </p>
         </div>
         <div className="pb-34">
-          <h2
-            className={`${merri.className} text-[#D9D9D9] uppercase text-center text-[20px] font-bold`}
-          >
-            UPCOMING EVENTS
-          </h2>
+          {upcomingEvents.length > 0 && (
+            <h2
+              className={`${merri.className} text-[#D9D9D9] uppercase text-center text-[16px] md:text-[18px] font-bold`}
+            >
+              UPCOMING EVENTS
+            </h2>
+          )}
         </div>
       </div>
 
@@ -255,11 +259,7 @@ const EventPage = () => {
         }}
       >
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <p className={`${merri.className} text-white text-xl`}>
-              Loading events...
-            </p>
-          </div>
+          <UpcomingEvents />
         ) : upcomingEvents.length > 0 ? (
           <div
             className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mt-20 pb-8 px-4 scroll-pl-4 md:scroll-pl-0 
@@ -385,17 +385,13 @@ const EventPage = () => {
       >
         <div>
           <h2
-            className={`${merri.className} text-[#1D5C75] uppercase text-center text-[20px] font-bold mb-12`}
+            className={`${merri.className} text-[#1D5C75] uppercase text-center text-[16px] md:text-[18px] font-bold mb-12`}
           >
             PAST EVENTS
           </h2>
 
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <p className={`${merri.className} text-[#1D5C75] text-xl`}>
-                Loading past events...
-              </p>
-            </div>
+            <PastEventsShimmer />
           ) : pastEvents.length > 0 ? (
             <div className="px-4 relative xl:mx-30 max-w-full overflow-x-hidden">
               <div className="grid grid-cols-12 gap-0 md:gap-8">
@@ -439,41 +435,45 @@ const EventPage = () => {
                       </div>
 
                       {/* IMAGES */}
-                      <div className="col-span-12 md:flex md:flex-row gap-2 mt-4 md:mt-0 justify-center md:justify-start min-w-0">
+                      <div className="col-span-12 md:flex gap-2 mt-4 md:mt-0 items-stretch min-w-0">
+                        {/* COVER */}
                         <div
-                          className="cursor-pointer w-full md:w-[280px] lg:w-[320px] xl:w-[360px]"
+                          className="cursor-pointer w-full md:w-[320px] lg:w-[380px] h-[220px] md:h-[240px] lg:h-[260px] overflow-hidden"
                           onClick={() => openImageModal(event.coverImage)}
                         >
                           <img
                             src={event.coverImage}
                             alt={event.title}
-                            className="w-full aspect-465/285 object-cover"
+                            className="w-full h-full object-cover"
                           />
                         </div>
 
-                        {event.gallery?.length > 0 && (
-                          <div className="flex flex-row md:flex-col gap-2 justify-center mt-2 md:mt-0">
-                            {event.gallery
-                              .slice(0, 3)
-                              .map((image, imgIndex) => (
-                                <div
-                                  key={imgIndex}
-                                  className="cursor-pointer w-[64px] h-[64px]"
-                                  onClick={() => openImageModal(image)}
-                                >
+                        {/* GALLERY COLUMN */}
+                        <div className="flex md:flex-col flex-row gap-2 w-full md:w-[140px] h-20 mt-3 md:mt-0 md:h-[240px] lg:h-[260px]">
+                          {[0, 1, 2].map((slot) => {
+                            const image = event.gallery?.[slot]
+
+                            return (
+                              <div
+                                key={slot}
+                                className="flex-1 overflow-hidden cursor-pointer "
+                                onClick={() => image && openImageModal(image)}
+                              >
+                                {image && (
                                   <img
                                     src={image}
-                                    alt={`${event.title} gallery ${imgIndex + 1}`}
+                                    alt=""
                                     className="w-full h-full object-cover"
                                   />
-                                </div>
-                              ))}
-                          </div>
-                        )}
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
                       </div>
 
                       {/* MOBILE BUTTON */}
-                      <div className="col-span-12 mt-4 md:hidden">
+                      <div className="col-span-12 mt-4 md:hidden flex justify-center">
                         <CustomButton
                           text="LEARN MORE"
                           bgColor="#1D5C75"
@@ -522,4 +522,4 @@ const EventPage = () => {
   )
 }
 
-export default EventPage
+export default EventsPage

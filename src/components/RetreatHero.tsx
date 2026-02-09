@@ -139,7 +139,7 @@ export default async function RetreatHero() {
     const end = formatDate(endDateStr)
 
     if (start.month === end.month && start.year === end.year) {
-      return `${start.day} - ${end.day} ${start.month}. ${start.year}`
+      return `${start.day} ${start.month} - ${end.day} ${start.month}. ${start.year}`
     }
 
     return `${start.day} ${start.month}. ${start.year} - ${end.day} ${end.month}. ${end.year}`
@@ -176,7 +176,6 @@ export default async function RetreatHero() {
           </div>
           <div className="hidden sm:block relative pt-5 z-10">
             <Navbar textColor="#1D5C75" isNotHome />
-            
           </div>
           <NavbarScroll textColor="#1D5C75" />
 
@@ -263,17 +262,22 @@ export default async function RetreatHero() {
                     </div>
 
                     {/* PRICE + CONTENT */}
-                    <div className="text-center flex justify-between md:text-left">
-                      <p className="font-neco px-4 py-2 border-r font-bold text-white flex items-center gap-1 justify-center md:justify-start">
-                        <span className="text-[16px] leading-none">₹</span>
-                        <span className="text-[28px] leading-none">
-                          {upcomingRetreat.price?.toLocaleString('en-IN')}
-                        </span>
-                      </p>
+                    <div className="flex justify-between text-left">
+                      <div>
+                        <p className="font-neco pr-8 border-r font-bold text-white flex items-center gap-1 justify-center md:justify-start">
+                          <span className="text-[16px] leading-none">₹</span>
+                          <span className="text-[34px] leading-none">
+                            {upcomingRetreat.price?.toLocaleString('en-IN')}
+                          </span>
+                        </p>
+                        <span className='font-neco border-r text-[18px] font-medium italic text-white flex items-center gap-1 justify-center md:justify-start'>per participant</span>
+                      </div>
 
-                      <p className="font-neco px-8 py-2 font-normal text-[18px] text-white">
+                     <div>
+                       <p className="font-neco px-8 py-2 font-normal text-[18px] text-white">
                         {upcomingRetreat.inclusions}
                       </p>
+                     </div>
                     </div>
 
                     {/* BOTTOM BUTTON */}
@@ -334,21 +338,20 @@ export default async function RetreatHero() {
                       >
                         {/* Text Content */}
                         <div className="flex flex-col justify-center text-center md:text-left px-6 py-10">
-
-                          <div className='md:hidden'>
-                             {retreat.photos && retreat.photos.length > 0 ? (
-                            <img
-                              src={retreat.photos[0]}
-                              alt={retreat.title}
-                              className="w-full h-auto object-cover"
-                            />
-                          ) : (
-                            <img
-                              src="/assets/eight.png"
-                              alt=""
-                              className="w-full h-auto object-cover"
-                            />
-                          )}
+                          <div className="md:hidden">
+                            {retreat.photos && retreat.photos.length > 0 ? (
+                              <img
+                                src={retreat.photos[0]}
+                                alt={retreat.title}
+                                className="w-full h-auto object-cover"
+                              />
+                            ) : (
+                              <img
+                                src="/assets/eight.png"
+                                alt=""
+                                className="w-full h-auto object-cover"
+                              />
+                            )}
                           </div>
                           <h3
                             className="font-neco text-[24px] mt-8 md:mt-0 leading-none font-bold"
@@ -406,7 +409,7 @@ export default async function RetreatHero() {
                         </div>
 
                         {/* Image  */}
-                        <div className='hidden md:block'>
+                        <div className="hidden md:block">
                           {retreat.photos && retreat.photos.length > 0 ? (
                             <img
                               src={retreat.photos[0]}

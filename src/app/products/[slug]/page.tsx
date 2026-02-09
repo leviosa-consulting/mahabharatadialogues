@@ -1,24 +1,134 @@
+// app/products/[slug]/page.tsx
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { merri } from '@/app/fonts/merri'
 import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
-import { productsData } from '@/data/productsData'
+import { Product } from '@/data/productsData'
 import { notFound, useParams } from 'next/navigation'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import { ArrowLeft } from 'lucide-react'
 
 export default function ProductDetails() {
   const params = useParams()
-  const id = params.id as string
+  const slug = params.slug as string
 
-  const product = productsData.find((p) => p.id === id)
+  const [product, setProduct] = useState<Product | null>(null)
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    if (slug) {
+      fetchProduct()
+    }
+  }, [slug])
+
+  // Auto-scroll carousel effect
+  useEffect(() => {
+    if (!product || !product.images || product.images.length <= 1) return
+
+    const productImages = product.images && product.images.length > 0
+      ? product.images
+      : [product.image]
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % productImages.length
+      )
+    }, 3000) // Change image every 3 seconds
+
+    return () => clearInterval(interval)
+  }, [product])
+
+  const fetchProduct = async () => {
+    try {
+      // Fetch the product by slug
+      const response = await fetch(`/api/products/slug/${slug}`)
+      const data = await response.json()
+
+      if (!data.success || !data.data) {
+        notFound()
+        return
+      }
+
+      setProduct(data.data)
+
+      // Fetch all products to find related ones
+      const allProductsResponse = await fetch('/api/products')
+      const allProductsData = await allProductsResponse.json()
+
+      if (allProductsData.success) {
+        // Filter related products (same category, different id) - limit to 3
+        const related = (allProductsData.data || [])
+          .filter(
+            (p: Product) =>
+              p.category === data.data.category && p.id !== data.data.id
+          )
+          .slice(0, 3) // This ensures maximum 3 products
+        setRelatedProducts(related)
+      }
+
+      setLoading(false)
+    } catch (err) {
+      console.error('Failed to fetch product:', err)
+      setLoading(false)
+      notFound()
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="overflow-x-hidden">
+        {/* nav */}
+        <div>
+          <MobileNavbar textColor="#1D5C75" isNotHome />
+          <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
+        </div>
+        <div className="hidden sm:block relative pt-5 z-10">
+          <Navbar textColor="#1D5C75" isNotHome />
+        </div>
+
+        {/* first section */}
+        <div
+          className="w-full relative pb-10 -mt-7 md:-mt-10 xl:-mt-8"
+          style={{
+            backgroundImage: `
+      linear-gradient(#1D5C75CC, #1D5C75CC),
+      url('/MD-Texture_BG_Blue-01-04.png')
+    `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '240px 240px',
+          }}
+        >
+          <div className="max-w-xl mx-auto py-28 flex flex-col justify-center items-center text-center">
+            <h2
+              className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
+            >
+              PRODUCTS
+            </h2>
+            <p
+              className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-normal px-1`}
+            >
+              Discover our upcoming events and relive the memories from past
+              gatherings
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-center items-center py-20">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#1D5C75] border-t-transparent"></div>
+        </div>
+      </div>
+    )
+  }
 
   if (!product) {
     notFound()
+    return null
   }
 
   // Get product images (use images array if available, otherwise fallback to single image)
@@ -26,11 +136,6 @@ export default function ProductDetails() {
     product.images && product.images.length > 0
       ? product.images
       : [product.image]
-
-  // Get related products (same category, different id)
-  const relatedProducts = productsData
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 3)
 
   return (
     <div className="overflow-x-hidden">
@@ -78,9 +183,10 @@ export default function ProductDetails() {
             <div className="flex justify-between items-center pb-4">
               <Link
                 href="/products"
-                className={`${merri.className} text-[#78B0C7] font-normal text-[16px] hover:underline`}
+                className={`${merri.className} text-[#78B0C7] flex items-center gap-2 font-normal text-[16px] hover:underline`}
               >
-                Back to Products
+                <ArrowLeft size={20} />
+                <span>Back to Products</span>
               </Link>
               <img src="/cart.png" alt="cart" className="w-8 md:w-10" />
             </div>
@@ -90,11 +196,11 @@ export default function ProductDetails() {
           <div className="mb-10 col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
             {/* Image Carousel */}
             <div className="mb-6">
-              <div className="w-full  mx-auto">
+              <div className="w-full mx-auto">
                 <img
                   src={productImages[currentImageIndex]}
                   alt={product.name}
-                  className="w-full h-60 md:h-112 object-cover"
+                  className="w-full h-60 md:h-112 object-cover transition-opacity duration-500"
                 />
 
                 {/* Carousel Dots */}
@@ -140,7 +246,7 @@ export default function ProductDetails() {
               <div className="flex flex-col items-end mt-6 md:mt-0 w-[160px]">
                 {/* PRICE */}
                 <div
-                  className={`${merri.className} w-full italic font-extrabold text-[28px] bg-[#78B0C74D] text-[#1D5C75] px-4 py-3 flex items-baseline justify-center gap-1`}
+                  className={`${merri.className} w-full italic font-extrabold text-[32px] md:text-[36px] bg-[#78B0C74D] text-[#1D5C75] px-4 py-3 flex items-baseline justify-center gap-1`}
                 >
                   <span className="text-[20px]">₹</span>
                   {product.price}
@@ -148,9 +254,9 @@ export default function ProductDetails() {
 
                 {/* BUTTON */}
                 <button
-                  className={`${merri.className} w-full  font-bold text-[14px] md:text-[16px] py-2 bg-[#D12127] text-white`}
+                  className={`${merri.className} w-full font-bold text-[14px] md:text-[16px] py-2 bg-[#D12127] text-white`}
                 >
-                  ADD TO BAG
+                  GO TO CART
                 </button>
               </div>
             </div>
@@ -160,18 +266,18 @@ export default function ProductDetails() {
           {/* Related Products Section */}
           <div className="mb-10 col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
             {relatedProducts.length > 0 && (
-              <div className="mb-10  pt-10">
+              <div className="mb-10 pt-10">
                 <h3
-                  className={`${merri.className} text-[#78B0C7] font-bold text-[18px] md:text-[20px] mb-6 uppercase`}
+                  className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] mb-6 uppercase`}
                 >
                   MORE PRODUCTS FROM US
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">
-                  {relatedProducts.map((relatedProduct) => (
+                  {relatedProducts.slice(0, 3).map((relatedProduct) => (
                     <Link
                       key={relatedProduct.id}
-                      href={`/products/${relatedProduct.id}`}
+                      href={`/products/${relatedProduct.slug}`}
                     >
                       <div className="cursor-pointer transition-shadow h-full flex flex-col">
                         {/* Product Image */}
@@ -187,7 +293,7 @@ export default function ProductDetails() {
                         <div className="flex my-2 justify-between">
                           <div className="">
                             <h4
-                              className={`${merri.className} leading-tight text-[#1D5C75] font-bold text-[18px] italic`}
+                              className={`${merri.className} leading-tight text-[#1D5C75] font-bold text-[20px] md:text-[24px] italic`}
                             >
                               {relatedProduct.name}
                             </h4>
@@ -198,7 +304,7 @@ export default function ProductDetails() {
                             </p>
                           </div>
                           <div
-                            className={`${merri.className} italic font-extrabold text-[28px] bg-[#78B0C74D] text-[#1D5C75]  flex items-center px-2 gap-1`}
+                            className={`${merri.className} italic font-extrabold text-[20px] md:text-[24px] bg-[#78B0C74D] text-[#1D5C75] flex items-center px-2 gap-1`}
                           >
                             <span className="text-[20px]">₹</span>
                             {relatedProduct.price}

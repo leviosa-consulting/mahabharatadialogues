@@ -35,32 +35,29 @@ const BlogsClient = () => {
   const [allAuthors, setAllAuthors] = useState<string[]>([])
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
+  const [showFilters, setShowFilters] = useState(false) // NEW: Toggle filter visibility
 
   const hasAppliedUrlParams = useRef(false)
 
- 
   const [showAllCategories, setShowAllCategories] = useState(false)
   const [showAllReadingTimes, setShowAllReadingTimes] = useState(false)
-
 
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768) 
+      setIsMobile(window.innerWidth < 768)
     }
-    
+
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
- 
   useEffect(() => {
     fetchBlogs()
   }, [])
 
-  
   useEffect(() => {
     if (blogs.length > 0 && !loading && !hasAppliedUrlParams.current) {
       const categoryParam = searchParams.get('category')
@@ -68,7 +65,6 @@ const BlogsClient = () => {
       const readingTimeParam = searchParams.get('readingTime')
 
       if (categoryParam || authorParam || readingTimeParam) {
-        
         if (categoryParam) {
           setSelectedCategory(categoryParam)
         }
@@ -79,22 +75,29 @@ const BlogsClient = () => {
           setSelectedReadingTime(readingTimeParam)
         }
 
-       
         applyFilters(
           '',
           categoryParam || 'All',
           authorParam || 'All',
-          readingTimeParam || 'All'
+          readingTimeParam || 'All',
         )
 
-       
         hasAppliedUrlParams.current = true
       } else {
-      
         setFilteredBlogs(blogs)
       }
     }
   }, [blogs.length, loading])
+
+  // NEW: Real-time search as user types
+  useEffect(() => {
+    applyFilters(
+      searchQuery,
+      selectedCategory,
+      selectedAuthor,
+      selectedReadingTime,
+    )
+  }, [searchQuery])
 
   // Fetch blogs from API
   const fetchBlogs = async () => {
@@ -105,33 +108,29 @@ const BlogsClient = () => {
       const fetchedBlogs = data.data || data.blogs || []
 
       setBlogs(fetchedBlogs)
-      
-      
+
       const categoryParam = searchParams.get('category')
       const authorParam = searchParams.get('author')
       const readingTimeParam = searchParams.get('readingTime')
-      
+
       if (!categoryParam && !authorParam && !readingTimeParam) {
         setFilteredBlogs(fetchedBlogs)
       }
 
-     
       const categories = Array.from(
         new Set(fetchedBlogs.flatMap((b: Blog) => b.categories || [])),
       ) as string[]
       setAllCategories(categories.sort())
 
-     
       const authors = Array.from(
         new Set(fetchedBlogs.map((b: Blog) => b.author).filter(Boolean)),
       ) as string[]
       setAllAuthors(authors.sort())
 
-    
       const readingTimes = Array.from(
-        new Set(fetchedBlogs.map((b: Blog) => estimateReadTime(b.content)))
+        new Set(fetchedBlogs.map((b: Blog) => estimateReadTime(b.content))),
       ).sort((a, b) => a - b)
-      setAllReadingTimes(readingTimes.map(time => `${time} min read`))
+      setAllReadingTimes(readingTimes.map((time) => `${time} min read`))
 
       setLoading(false)
     } catch (error) {
@@ -140,7 +139,6 @@ const BlogsClient = () => {
     }
   }
 
-  
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString)
@@ -154,7 +152,6 @@ const BlogsClient = () => {
     }
   }
 
-
   const estimateReadTime = (content: string) => {
     const wordsPerMinute = 200
     const text = content.replace(/<[^>]*>/g, '')
@@ -163,9 +160,13 @@ const BlogsClient = () => {
     return minutes
   }
 
-  const applyFilters = (search: string, category: string, author: string, readingTime: string) => {
+  const applyFilters = (
+    search: string,
+    category: string,
+    author: string,
+    readingTime: string,
+  ) => {
     let filtered = blogs
-
 
     if (search) {
       filtered = filtered.filter(
@@ -189,21 +190,23 @@ const BlogsClient = () => {
     // Filter by reading time
     if (readingTime !== 'All') {
       const timeInMinutes = parseInt(readingTime.split(' ')[0])
-      filtered = filtered.filter((blog) => estimateReadTime(blog.content) === timeInMinutes)
+      filtered = filtered.filter(
+        (blog) => estimateReadTime(blog.content) === timeInMinutes,
+      )
     }
 
     setFilteredBlogs(filtered)
   }
 
-  // Event handlers
-  const handleFilter = () => {
-    applyFilters(searchQuery, selectedCategory, selectedAuthor, selectedReadingTime)
+  // NEW: Toggle filter visibility
+  const handleFilterToggle = () => {
+    setShowFilters(!showFilters)
   }
 
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category)
     applyFilters(searchQuery, category, selectedAuthor, selectedReadingTime)
-    
+
     // Update URL
     const params = new URLSearchParams(window.location.search)
     if (category === 'All') {
@@ -211,7 +214,7 @@ const BlogsClient = () => {
     } else {
       params.set('category', category)
     }
-    
+
     const newUrl = params.toString() ? `/blogs?${params.toString()}` : '/blogs'
     window.history.pushState({}, '', newUrl)
   }
@@ -219,7 +222,7 @@ const BlogsClient = () => {
   const handleAuthorClick = (author: string) => {
     setSelectedAuthor(author)
     applyFilters(searchQuery, selectedCategory, author, selectedReadingTime)
-    
+
     // Update URL
     const params = new URLSearchParams(window.location.search)
     if (author === 'All') {
@@ -227,7 +230,7 @@ const BlogsClient = () => {
     } else {
       params.set('author', author)
     }
-    
+
     const newUrl = params.toString() ? `/blogs?${params.toString()}` : '/blogs'
     window.history.pushState({}, '', newUrl)
   }
@@ -235,7 +238,7 @@ const BlogsClient = () => {
   const handleReadingTimeClick = (readingTime: string) => {
     setSelectedReadingTime(readingTime)
     applyFilters(searchQuery, selectedCategory, selectedAuthor, readingTime)
-    
+
     // Update URL
     const params = new URLSearchParams(window.location.search)
     if (readingTime === 'All') {
@@ -243,7 +246,7 @@ const BlogsClient = () => {
     } else {
       params.set('readingTime', readingTime)
     }
-    
+
     const newUrl = params.toString() ? `/blogs?${params.toString()}` : '/blogs'
     window.history.pushState({}, '', newUrl)
   }
@@ -254,35 +257,31 @@ const BlogsClient = () => {
     setSelectedAuthor('All')
     setSelectedReadingTime('All')
     setFilteredBlogs(blogs)
-    
-    
+
     window.history.pushState({}, '', '/blogs')
   }
 
-  
   const getCategoriesToDisplay = () => {
     const allItems = ['All', ...allCategories]
     const limit = isMobile ? 4 : 7
-    
+
     if (showAllCategories || allItems.length <= limit) {
       return allItems
     }
-    
+
     return allItems.slice(0, limit)
   }
 
- 
   const getReadingTimesToDisplay = () => {
     const allItems = ['All', ...allReadingTimes]
     const limit = isMobile ? 3 : 6
-    
+
     if (showAllReadingTimes || allItems.length <= limit) {
       return allItems
     }
-    
+
     return allItems.slice(0, limit)
   }
-
 
   const needsMoreButtonCategories = () => {
     const allItems = ['All', ...allCategories]
@@ -290,7 +289,6 @@ const BlogsClient = () => {
     return allItems.length > limit && !showAllCategories
   }
 
- 
   const needsMoreButtonReadingTimes = () => {
     const allItems = ['All', ...allReadingTimes]
     const limit = isMobile ? 3 : 6
@@ -327,7 +325,7 @@ const BlogsClient = () => {
             BLOG
           </h2>
           <p
-            className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-normal px-1`}
+            className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-light px-1`}
           >
             Discover our upcoming events and relive the memories from past
             gatherings
@@ -363,7 +361,7 @@ const BlogsClient = () => {
 
                 {/* Button */}
                 <button
-                  onClick={handleFilter}
+                  onClick={handleFilterToggle}
                   className={`${merri.className} 
       w-full md:w-auto 
       h-12 
@@ -376,135 +374,140 @@ const BlogsClient = () => {
       transition-colors 
       font-bold`}
                 >
-                  Filter
+                  {showFilters ? 'Hide Filters' : 'Filter'}
                 </button>
               </div>
 
-              {/* filter categories */}
-              <div className="mt-10 mb-5">
-                <p
-                  className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
-                >
-                  CATEGORIES
-                </p>
-                <div className="flex flex-wrap gap-2 max-w-full">
-                  {getCategoriesToDisplay().map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => handleCategoryClick(category)}
-                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 ${
-                        selectedCategory === category
-                          ? 'bg-[#D9D9D9] text-[#1D5C75]'
-                          : 'bg-[#78B0C7] text-white'
-                      }`}
+              {/* Conditional Filter Sections */}
+              {showFilters && (
+                <>
+                  {/* filter categories */}
+                  <div className="mt-10 mb-5">
+                    <p
+                      className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
                     >
-                      {category}
-                    </button>
-                  ))}
+                      CATEGORIES
+                    </p>
+                    <div className="flex flex-wrap gap-2 max-w-full">
+                      {getCategoriesToDisplay().map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => handleCategoryClick(category)}
+                          className={`${merri.className} font-normal text-[14px] lg:text-[16px] px-6 py-1 ${
+                            selectedCategory === category
+                              ? 'bg-[#D9D9D9] text-[#1D5C75]'
+                              : 'bg-[#78B0C7] text-white'
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
 
-                  {needsMoreButtonCategories() && (
-                    <button
-                      onClick={() => setShowAllCategories(true)}
-                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                      {needsMoreButtonCategories() && (
+                        <button
+                          onClick={() => setShowAllCategories(true)}
+                          className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-6 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                        >
+                          more tags...
+                        </button>
+                      )}
+
+                      {showAllCategories && (
+                        <button
+                          onClick={() => setShowAllCategories(false)}
+                          className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-6 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                        >
+                          less tags...
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* filter authors */}
+                  <div className="mb-5">
+                    <p
+                      className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
                     >
-                      more tags...
-                    </button>
-                  )}
+                      AUTHOR
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => handleAuthorClick('All')}
+                        className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-6 py-1 transition-colors ${
+                          selectedAuthor === 'All'
+                            ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                            : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                        }`}
+                      >
+                        All
+                      </button>
 
-                  {showAllCategories && (
-                    <button
-                      onClick={() => setShowAllCategories(false)}
-                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                      {allAuthors.map((author) => (
+                        <button
+                          key={author}
+                          onClick={() => handleAuthorClick(author)}
+                          className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
+                            selectedAuthor === author
+                              ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                              : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                          }`}
+                        >
+                          {author}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* READING TIME */}
+                  <div className="mb-5">
+                    <p
+                      className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
                     >
-                      less tags...
-                    </button>
-                  )}
-                </div>
-              </div>
+                      READING TIME
+                    </p>
+                    <div className="flex flex-wrap gap-2 max-w-full">
+                      {getReadingTimesToDisplay().map((readingTime) => (
+                        <button
+                          key={readingTime}
+                          onClick={() => handleReadingTimeClick(readingTime)}
+                          className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
+                            selectedReadingTime === readingTime
+                              ? 'text-[#1D5C75] bg-[#D9D9D9]'
+                              : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
+                          }`}
+                        >
+                          {readingTime}
+                        </button>
+                      ))}
 
-              {/* filter authors */}
-              <div className="mb-5">
-                <p
-                  className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
-                >
-                  AUTHOR
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => handleAuthorClick('All')}
-                    className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-4 md:px-8 lg:px-12 py-1 transition-colors ${
-                      selectedAuthor === 'All'
-                        ? 'text-[#1D5C75] bg-[#D9D9D9]'
-                        : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
-                    }`}
-                  >
-                    All
-                  </button>
+                      {needsMoreButtonReadingTimes() && (
+                        <button
+                          onClick={() => setShowAllReadingTimes(true)}
+                          className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                        >
+                          more tags...
+                        </button>
+                      )}
 
-                  {allAuthors.map((author) => (
-                    <button
-                      key={author}
-                      onClick={() => handleAuthorClick(author)}
-                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
-                        selectedAuthor === author
-                          ? 'text-[#1D5C75] bg-[#D9D9D9]'
-                          : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
-                      }`}
-                    >
-                      {author}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* READING TIME */}
-              <div className="mb-5">
-                <p
-                  className={`${merri.className} text-[#78B0C7] font-extrabold text-[14px] py-1`}
-                >
-                  READING TIME
-                </p>
-                <div className="flex flex-wrap gap-2 max-w-full">
-                  {getReadingTimesToDisplay().map((readingTime) => (
-                    <button
-                      key={readingTime}
-                      onClick={() => handleReadingTimeClick(readingTime)}
-                      className={`${merri.className} font-bold text-[14px] lg:text-[16px] px-8 md:px-12 py-1 transition-colors ${
-                        selectedReadingTime === readingTime
-                          ? 'text-[#1D5C75] bg-[#D9D9D9]'
-                          : 'text-[#FFFFFF] bg-[#78B0C7] hover:bg-[#D9D9D9] hover:text-[#1D5C75]'
-                      }`}
-                    >
-                      {readingTime}
-                    </button>
-                  ))}
-
-                  {needsMoreButtonReadingTimes() && (
-                    <button
-                      onClick={() => setShowAllReadingTimes(true)}
-                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
-                    >
-                      more tags...
-                    </button>
-                  )}
-
-                  {showAllReadingTimes && (
-                    <button
-                      onClick={() => setShowAllReadingTimes(false)}
-                      className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
-                    >
-                      less tags...
-                    </button>
-                  )}
-                </div>
-              </div>
+                      {showAllReadingTimes && (
+                        <button
+                          onClick={() => setShowAllReadingTimes(false)}
+                          className={`${merri.className} font-normal italic text-[14px] lg:text-[16px] px-8 md:px-12 py-1 bg-[#1D5C75] text-[#FFFFFF]`}
+                        >
+                          less tags...
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Results count */}
               <div className="mb-5">
                 <p
-                  className={`${merri.className} text-white font-bold pb-20 text-[32px] md:text-[48px]`}
+                  className={`${merri.className} text-white font-bold pt-5 pb-20 text-[32px] md:text-[48px]`}
                 >
-                  {filteredBlogs.length}{' '}
+                  Showing {filteredBlogs.length} of {blogs.length}
                   <span className="text-[24px] md:text-[36px]">
                     {filteredBlogs.length === 1 ? 'Blog' : 'Blogs'}
                   </span>
@@ -538,8 +541,8 @@ const BlogsClient = () => {
                   className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFF] mb-4 min-w-0"
                 >
                   <Link href={`/blogs/${blog.slug}`}>
-                    <div className="flex flex-col md:flex-row gap-4 cursor-pointer">
-                      {/* Left: Image */}
+                    <div className="flex flex-col md:flex-row cursor-pointer">
+                      {/* LEFT IMAGE */}
                       <div className="w-full md:w-[340px] flex-shrink-0">
                         <img
                           src={blog.image_url || '/assets/fallbackImg.jpeg'}
@@ -548,19 +551,21 @@ const BlogsClient = () => {
                         />
                       </div>
 
-                      {/* Right: Content */}
-                      <div className="flex-1 flex px-4 md:px-8 py-4 flex-col justify-between">
+                      {/* RIGHT CONTENT */}
+                      <div className="flex-1 flex p-4 md:p-6 flex-col justify-between">
                         <div>
                           <h2
                             className={`${merri.className} text-[#1D5C75] font-bold text-[32px] italic leading-tight mb-2`}
                           >
                             {blog.title}
                           </h2>
+
                           <p
                             className={`${merri.className} text-[#1D5C75] font-normal text-[14px] md:text-[16px] mb-1`}
                           >
                             {formatDate(blog.created_at)} | {blog.author}
                           </p>
+
                           <p
                             className={`${merri.className} text-black font-light italic text-[16px] md:text-[18px] line-clamp-3 md:line-clamp-2 mt-4`}
                           >

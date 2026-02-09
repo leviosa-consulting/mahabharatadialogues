@@ -114,7 +114,7 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
           </button>
         </div>
 
-        {/* NAV ITEMS */}
+         {/* NAV ITEMS — FORCE VISIBLE */}
         <nav className="flex flex-col items-start gap-8 px-6 pt-12">
           <Link
             href="/events"
@@ -133,13 +133,6 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
           </Link>
 
           <Link
-            href="/blogs"
-            onClick={() => setOpen(false)}
-            className={`${merri.className} text-white font-bold uppercase text-[18px]`}
-          >
-            Blogs
-          </Link>
-           <Link
             href="/products"
             onClick={() => setOpen(false)}
             className={`${merri.className} text-white font-bold uppercase text-[18px]`}
@@ -147,6 +140,20 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
             Products
           </Link>
 
+          <Link
+            href="/blogs"
+            onClick={() => setOpen(false)}
+            className={`${merri.className} text-white font-bold uppercase text-[18px]`}
+          >
+            Blogs
+          </Link>
+          <Link
+            href="/about"
+            onClick={() => setOpen(false)}
+            className={`${merri.className} text-white font-bold uppercase text-[18px]`}
+          >
+            About Us
+          </Link>
 
           <button
             onClick={() => {

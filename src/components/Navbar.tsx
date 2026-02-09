@@ -70,7 +70,7 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
           </Link>
 
           <Link
-            href="/"
+            href="/about"
             className={`${merri.className} font-bold uppercase text-[14px]`}
             style={{ color: textColor }}
           >

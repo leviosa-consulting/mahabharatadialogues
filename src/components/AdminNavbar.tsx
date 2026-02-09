@@ -9,7 +9,7 @@ interface NavbarProps {
 const AdminNavbar: React.FC<NavbarProps> = ({ currentTab }) => {
   return (
     <nav className="w-full border-b bg-white/70 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 items-center justify-center gap-10 py-4">
+      <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-5 items-center justify-center gap-10 py-4">
 
         {/* Events */}
         <Link href="/admin/events">
@@ -64,6 +64,19 @@ const AdminNavbar: React.FC<NavbarProps> = ({ currentTab }) => {
             )}
           >
             Testimonials
+          </span>
+        </Link>
+        {/* Products */}
+        <Link href="/admin/products">
+          <span
+            className={clsx(
+              "text-lg font-semibold cursor-pointer transition-all duration-200 px-3 py-1 rounded-md",
+              currentTab === "testimonials"
+                ? "text-purple-600 border-b-2 border-purple-600"
+                : "text-gray-700 hover:text-purple-600"
+            )}
+          >
+            Products
           </span>
         </Link>
 

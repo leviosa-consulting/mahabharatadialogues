@@ -203,8 +203,7 @@ const EventDetailPage = () => {
         {event.gallery && event.gallery.length >= 1 && (
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <ImageIcon />
-              <h2 className="text-2xl font-bold">Event Gallery</h2>
+              <h2 className={`${merri.className} text-[18px] uppercase text-[#1D5C75] font-bold`}>Event Gallery</h2>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -240,11 +239,11 @@ const EventDetailPage = () => {
             Event Details
           </h3>
 
-          <p className={`${merri.className} text-[16px] md:text-[18px] italic font-bold`}>
+          <p className={`${merri.className} text-[16px] md:text-[18px] font-bold`}>
             {formatDate(event.eventDate)}
           </p>
 
-          <p className={`${merri.className} text-[16px] md:text-[18px] italic font-bold mb-2`}>
+          <p className={`${merri.className} text-[16px] md:text-[18px] font-bold mb-2`}>
             {formatTime(event.eventDate)}
           </p>
 
@@ -252,7 +251,7 @@ const EventDetailPage = () => {
             <a
               href={event.mapUrl}
               target="_blank"
-              className={`${merri.className} text-[16px] md:text-[18px] italic hover:underline block`}
+              className={`${merri.className} text-[16px] md:text-[18px] hover:underline block`}
             >
               {event.venue}, {event.city}
             </a>

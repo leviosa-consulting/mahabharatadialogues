@@ -38,8 +38,10 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
           >
             <img
               src={
-              isNotHome ? '/Logo_for_video_Corner-04.png' : '/Web_Assets-08.png'
-            }
+                isNotHome
+                  ? '/Logo_for_video_Corner-04.png'
+                  : '/Web_Assets-08.png'
+              }
               alt="Logo"
               className="w-full h-auto"
             />
@@ -73,7 +75,7 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
           </button>
         </div>
 
-        {/* NAV ITEMS — FORCE VISIBLE */}
+        {/* NAV ITEMS */}
         <nav className="flex flex-col items-start gap-8 px-6 pt-12">
           <Link
             href="/events"
@@ -92,6 +94,14 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
           </Link>
 
           <Link
+            href="/products"
+            onClick={() => setOpen(false)}
+            className={`${merri.className} text-white font-bold uppercase text-[18px]`}
+          >
+            Products
+          </Link>
+
+          <Link
             href="/blogs"
             onClick={() => setOpen(false)}
             className={`${merri.className} text-white font-bold uppercase text-[18px]`}
@@ -99,11 +109,11 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
             Blogs
           </Link>
           <Link
-            href="/products"
+            href="/about"
             onClick={() => setOpen(false)}
             className={`${merri.className} text-white font-bold uppercase text-[18px]`}
           >
-            Products
+            About Us
           </Link>
 
           <button

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export default async function BlogsPage() {
   const blogs = await getBlogs();
   
-  return <BlogsClient initialBlogs={blogs} />;
+  return <BlogsClient  />;
 }
 
 export const dynamic = 'force-dynamic';
