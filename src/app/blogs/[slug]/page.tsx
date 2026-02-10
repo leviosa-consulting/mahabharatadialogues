@@ -19,10 +19,8 @@ interface Props {
   }>
 }
 
-// Fetch blog data on the server
 async function getBlogData(slug: string) {
   try {
-    // Replace with your actual API URL
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const url = `${baseUrl}/api/blogs/${slug}`
     
@@ -30,7 +28,6 @@ async function getBlogData(slug: string) {
     
     const response = await fetch(url, {
       cache: 'no-store', 
-      // next: { revalidate: 3600 } // Revalidate every hour
     })
 
     console.log('Response status:', response.status)
@@ -50,7 +47,6 @@ async function getBlogData(slug: string) {
   }
 }
 
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const blog = await getBlogData(slug)
@@ -62,15 +58,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
- 
   const contentText = blog.content.replace(/<[^>]*>/g, '').trim()
   const description = blog.subtitle || contentText.substring(0, 160) + '...'
   
-  // Calculate reading time
   const wordCount = contentText.split(/\s+/).length
   const readTime = Math.ceil(wordCount / 200)
 
   const blogUrl = `https://mahabharatadialogues.com/blogs/${blog.slug}`
+  
+
+  const imageUrl = blog.image_url.startsWith('http') 
+    ? blog.image_url 
+    : `https://mahabharatadialogues.com${blog.image_url}`
 
   return {
     title: `${blog.title} | Mahabharata Dialogues`,
@@ -78,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: blog.categories?.join(', ') || '',
     authors: [{ name: blog.author }],
     
-    // Open Graph metadata (Facebook, LinkedIn, etc.)
+
     openGraph: {
       title: blog.title,
       description: description,
@@ -86,7 +85,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'Mahabharata Dialogues',
       images: [
         {
-          url: blog.image_url,
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: blog.title,
@@ -101,17 +100,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       tags: blog.categories,
     },
 
-    // Twitter metadata
+   
     twitter: {
       card: 'summary_large_image',
       title: blog.title,
       description: description,
       creator: `@${blog.author.replace(/\s+/g, '')}`,
-      images: {
-        url: blog.image_url,
-        alt: blog.title,
-      },
-      site: '@MahabharataDialogues', 
+      images: [imageUrl], 
+      site: '@MahabharataDialogues',
     },
 
     // Robots metadata
@@ -132,28 +128,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: blogUrl,
     },
 
-    
-    verification: {
-   
-    },
-
     // Additional metadata
     other: {
       'article:published_time': blog.created_at,
       'article:author': blog.author,
       'article:section': blog.categories?.[0] || 'Blog',
       'article:tag': blog.categories?.join(', ') || '',
+      
+      'og:image': imageUrl,
+      'og:image:width': '1200',
+      'og:image:height': '630',
+      'og:image:alt': blog.title,
+      'og:image:type': 'image/jpeg',
     },
   }
 }
 
-// Optional: Generate static params for all blogs (for static site generation)
 export async function generateStaticParams() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const response = await fetch(`${baseUrl}/api/blogs`)
     const data = await response.json()
-
+ 
     if (!data.success) {
       return []
     }
@@ -167,12 +163,15 @@ export async function generateStaticParams() {
   }
 }
 
-// Server Component - This renders on the server
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params
   const blog = await getBlogData(slug)
 
-  // Generate structured data for rich snippets
+  // Ensure image URL is absolute for structured data
+  const imageUrl = blog?.image_url?.startsWith('http') 
+    ? blog.image_url 
+    : `https://mahabharatadialogues.com${blog?.image_url || ''}`
+
   const structuredData = blog ? {
     '@context': 'https://schema.org',
     '@graph': [
@@ -183,7 +182,7 @@ export default async function BlogDetailPage({ params }: Props) {
         description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
         image: {
           '@type': 'ImageObject',
-          url: blog.image_url,
+          url: imageUrl,
           width: 1200,
           height: 630,
           caption: blog.title,
@@ -270,7 +269,7 @@ export default async function BlogDetailPage({ params }: Props) {
         />
       )}
       
-      {/* Client Component handles all interactivity */}
+     
       <BlogDetailClient initialBlog={blog} slug={slug} />
     </>
   )
