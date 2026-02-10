@@ -440,7 +440,7 @@ export default async function RetreatHero() {
                 <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
                   <div className="flex flex-col gap-6 px-6 py-8">
                     <h2
-                      className={`${merri.className} text-[24px] text-center md:text-left text-white font-bold`}
+                      className={`${merri.className} text-[18px] text-center md:text-left text-white font-bold`}
                     >
                       LATEST ON YOUTUBE
                     </h2>
@@ -453,7 +453,7 @@ export default async function RetreatHero() {
                 <div className="order-2 md:order-0 md:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
                   <div className="flex flex-col px-6 py-8">
                     <h2
-                      className={`${merri.className} text-white font-bold text-[24px] text-center md:text-left`}
+                      className={`${merri.className} text-white font-bold text-[18px] text-center md:text-left`}
                     >
                       ON OUR BLOG
                     </h2>
