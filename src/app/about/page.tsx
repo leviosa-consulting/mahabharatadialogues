@@ -56,7 +56,7 @@ const AboutPage = () => {
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
         <NavbarScroll textColor="#1D5C75" />
-
+ <NavbarScroll textColor="#1D5C75" />
         <div className="mx-4 xl:mx-30 my-10">
           <div className="grid grid-cols-12 gap-3">
             <div className="col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
