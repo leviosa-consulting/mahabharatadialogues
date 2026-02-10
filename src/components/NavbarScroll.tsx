@@ -55,7 +55,7 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
       `}
     >
       <div
-        className={`flex items-center justify-center py-1
+        className={`flex items-center justify-center py-0.5 min-h-[52px]
         ${isNotHome ? 'gap-12 w-full px-12' : 'gap-10 max-w-4xl'}
         `}
       >
@@ -96,7 +96,7 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
             alt="Logo"
             className={`
      object-contain cursor-pointer
-      transition-all duration-300 w-32
+      transition-all duration-300 w-24
     `}
           />
         </Link>

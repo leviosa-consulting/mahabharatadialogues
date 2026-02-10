@@ -10,6 +10,7 @@ import { MapPin, X } from 'lucide-react'
 import Footer from '@/components/Footer'
 import UpcomingEvents from '@/components/Upcomingevents'
 import PastEventsShimmer from '@/components/shimmer/PastEventsShimmer'
+import NavbarScroll from '@/components/NavbarScroll'
 
 interface Event {
   id: string
@@ -210,6 +211,7 @@ const EventsPage = () => {
       </div>
       <div className="hidden sm:block relative pt-5 z-10">
         <Navbar textColor="#1D5C75" isNotHome />
+        {/* <NavbarScroll textColor="#1D5C75" isNotHome/> */}
       </div>
       <div
         className="w-full relative -mt-7 md:-mt-10 xl:-mt-8"
