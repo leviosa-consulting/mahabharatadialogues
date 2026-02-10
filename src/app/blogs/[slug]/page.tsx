@@ -19,27 +19,11 @@ interface Props {
   }>
 }
 
-// Helper function to get a shareable image URL
-function getSocialShareImageUrl(imageUrl: string): string {
-  if (!imageUrl) {
-    return 'https://mahabharatadialogues.com/default-og-image.jpg'
-  }
-  
- 
-  if (imageUrl.includes('.avif')) {
-   
-    return imageUrl.replace('.avif', '.jpg')
-  }
-  
- 
-  return imageUrl
-}
-
 // Fetch blog data on the server
 async function getBlogData(slug: string) {
   try {
     // Replace with your actual API URL
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const url = `${baseUrl}/api/blogs/${slug}`
     
     console.log('Fetching blog from:', url)
@@ -66,7 +50,7 @@ async function getBlogData(slug: string) {
   }
 }
 
-// Generate metadata for SEO and social sharing
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const blog = await getBlogData(slug)
@@ -78,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  // Extract text from HTML content
+ 
   const contentText = blog.content.replace(/<[^>]*>/g, '').trim()
   const description = blog.subtitle || contentText.substring(0, 160) + '...'
   
@@ -87,9 +71,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const readTime = Math.ceil(wordCount / 200)
 
   const blogUrl = `https://mahabharatadialogues.com/blogs/${blog.slug}`
-  
-  // Get shareable image URL (converts AVIF to JPEG if needed)
-  const shareableImageUrl = getSocialShareImageUrl(blog.image_url)
 
   return {
     title: `${blog.title} | Mahabharata Dialogues`,
@@ -105,7 +86,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'Mahabharata Dialogues',
       images: [
         {
-          url: shareableImageUrl,
+          url: blog.image_url,
           width: 1200,
           height: 630,
           alt: blog.title,
@@ -127,10 +108,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: description,
       creator: `@${blog.author.replace(/\s+/g, '')}`,
       images: {
-        url: shareableImageUrl,
+        url: blog.image_url,
         alt: blog.title,
       },
-      site: '@MahabharataDialogues',
+      site: '@MahabharataDialogues', 
     },
 
     // Robots metadata
@@ -151,9 +132,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: blogUrl,
     },
 
-   
-    verification: {
     
+    verification: {
+   
     },
 
     // Additional metadata
@@ -202,7 +183,7 @@ export default async function BlogDetailPage({ params }: Props) {
         description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
         image: {
           '@type': 'ImageObject',
-          url: getSocialShareImageUrl(blog.image_url),
+          url: blog.image_url,
           width: 1200,
           height: 630,
           caption: blog.title,
