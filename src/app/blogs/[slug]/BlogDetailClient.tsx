@@ -1,0 +1,567 @@
+'use client'
+
+import React, { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import {
+  ArrowLeft,
+  X,
+  Share2,
+} from 'lucide-react'
+import { merri } from '@/app/fonts/merri'
+import BlogCard from '@/components/BlogCard'
+import BlogDetailShimmer from '@/components/shimmer/BlogDetailShimmer'
+
+interface Blog {
+  id: string
+  title: string
+  subtitle: string
+  image_url: string
+  slug: string
+  content: string
+  author: string
+  categories: string[]
+  created_at: string
+}
+
+interface BlogDetailClientProps {
+  initialBlog: Blog | null
+  slug: string
+}
+
+const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug }) => {
+  const router = useRouter()
+
+  const [blog, setBlog] = useState<Blog | null>(initialBlog)
+  const [relatedBlogs, setRelatedBlogs] = useState<Blog[]>([])
+  const [loading, setLoading] = useState(!initialBlog)
+  const [error, setError] = useState(false)
+  const [shareTooltip, setShareTooltip] = useState(false)
+
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // If we already have initial blog data from server, just fetch related blogs
+    if (initialBlog) {
+      fetchRelatedBlogs()
+    } else {
+      // Fallback: fetch blog data if not provided by server
+      fetchBlog()
+    }
+  }, [slug, initialBlog])
+
+  const fetchBlog = async () => {
+    try {
+      setLoading(true)
+      setError(false)
+
+      const response = await fetch(`/api/blogs/${slug}`)
+      const data = await response.json()
+
+      if (!data.success) {
+        setError(true)
+        setLoading(false)
+        return
+      }
+
+      setBlog(data.data)
+      await fetchRelatedBlogs(data.data)
+      setLoading(false)
+    } catch (err) {
+      console.error('Failed to fetch blog:', err)
+      setError(true)
+      setLoading(false)
+    }
+  }
+
+  const fetchRelatedBlogs = async (blogData?: Blog) => {
+    try {
+      const currentBlog = blogData || blog
+      if (!currentBlog) return
+
+      const allBlogsResponse = await fetch('/api/blogs')
+      const allBlogsData = await allBlogsResponse.json()
+
+      if (allBlogsData.success) {
+        const relatedByCategory = allBlogsData.data.filter(
+          (b: Blog) =>
+            b.slug !== slug &&
+            b.categories?.some((cat) => currentBlog.categories?.includes(cat)),
+        )
+
+        setRelatedBlogs(relatedByCategory.slice(0, 3))
+      }
+    } catch (err) {
+      console.error('Failed to fetch related blogs:', err)
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+    } catch {
+      return 'Unknown date'
+    }
+  }
+
+  const estimateReadTime = (content: string) => {
+    const wordsPerMinute = 200
+    const text = content.replace(/<[^>]*>/g, '')
+    const wordCount = text.split(/\s+/).length
+    const minutes = Math.ceil(wordCount / wordsPerMinute)
+    return minutes
+  }
+
+  const handleShare = async () => {
+    const currentUrl = window.location.href
+
+    if (navigator.share && blog) {
+      try {
+        await navigator.share({
+          title: blog.title,
+          text: blog.subtitle || blog.title,
+          url: currentUrl,
+        })
+      } catch (err) {
+        console.log('Share cancelled or failed:', err)
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(currentUrl)
+        setShareTooltip(true)
+        setTimeout(() => setShareTooltip(false), 2000)
+      } catch (err) {
+        alert('Link copied to clipboard!')
+      }
+    }
+  }
+
+  const handleClose = () => {
+    router.push('/blogs')
+  }
+
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (contentRef.current && !contentRef.current.contains(e.target as Node)) {
+      handleClose()
+    }
+  }
+
+  const handleCategoryClick = (category: string) => {
+    router.push(`/blogs?category=${encodeURIComponent(category)}`)
+  }
+
+  if (loading) {
+    return <BlogDetailShimmer />
+  }
+
+  if (error || !blog) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Blog Not Found
+          </h1>
+          <p className="text-gray-600 mb-8">
+            The blog post you're looking for doesn't exist.
+          </p>
+          <Link
+            href="/blogs"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white hover:bg-black transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Back to Blogs
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div onClick={handleBackgroundClick}>
+      <div
+        className="w-full min-h-screen"
+        style={{
+          backgroundImage: `
+    linear-gradient(
+      to bottom,
+      #47ABD880 50%,
+      #1D5C75 100%
+    ),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'cover, 240px 240px',
+          backgroundPosition: 'center, top left',
+        }}
+      >
+        <div className="md:mx-1 lg:mx-4 xl:mx-30 2xl:mx-40">
+          <div className="grid grid-cols-12">
+            <div
+              className="col-span-12 md:col-start-2 md:col-span-10"
+              ref={contentRef}
+            >
+              {blog.image_url && (
+                <figure className="overflow-hidden">
+                  <img
+                    src={blog.image_url}
+                    alt={blog.title}
+                    className="w-full md:aspect-963/462 object-cover"
+                  />
+                </figure>
+              )}
+
+              <div className="bg-white">
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4 lg:p-8">
+                    <div className="w-full">
+                      <div className="flex flex-col items-start text-start  w-full">
+                        <div className="flex justify-between items-start w-full gap-4">
+                          <span className="font-neco font-bold text-[#1D5C75] text-xl sm:text-2xl md:text-3xl lg:text-[40px] leading-6 md:leading-10 mb-4 md:mb-8">
+                            {blog.title}
+                          </span>
+
+                          <button
+                            onClick={handleClose}
+                            className="flex-shrink-0 text-[#1D5C75] hover:bg-gray-100 p-1 transition-colors"
+                            aria-label="Close"
+                          >
+                            <X className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-[45px] lg:h-[45px]" />
+                          </button>
+                        </div>
+
+                        <div className="flex  justify-between items-start sm:items-center w-full gap-3 mb-6 sm:mb-10">
+                          <div>
+                            <div>
+                              <h3
+                                className={`${merri.className} italic text-[#1D5C75] text-lg  font-bold`}
+                              >
+                                {blog.author}
+                              </h3>
+                            </div>
+                            <div
+                              className={`${merri.className} flex items-center font-normal gap-2 text-[#1D5C75] text-sm sm:text-base md:text-lg`}
+                            >
+                              <time dateTime={blog.created_at}>
+                                {formatDate(blog.created_at)}
+                              </time>
+                            </div>
+                          </div>
+
+                          <div className="relative">
+                            <button
+                              onClick={handleShare}
+                              className="flex items-center gap-2 border-2 border-[#1D5C75] py-1.5 px-4 sm:py-2 sm:px-5 text-[#1D5C75] text-sm sm:text-base hover:bg-[#1D5C75] hover:text-white "
+                            >
+                              <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                              <span>Share</span>
+                            </button>
+                            {shareTooltip && (
+                              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1.5 whitespace-nowrap">
+                                Link copied!
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div>
+                          {blog.categories?.length > 0 && (
+                            <div className="flex flex-wrap text-center items-center  mb-8 sm:mb-10">
+                              <span
+                                className={`${merri.className} flex items-center font-bold gap-2 text-[#1D5C75] text-sm sm:text-base md:text-lg mr-4 md:mr-6`}
+                              >
+                                {estimateReadTime(blog.content)} min read
+                              </span>
+
+                              {blog.categories.map((cat, index) => (
+                                <div
+                                  key={cat}
+                                  className={`${merri.className} flex items-center font-normal text-[78B0C7] text-sm sm:text-base md:text-lg`}
+                                >
+                                  <button
+                                    onClick={() => handleCategoryClick(cat)}
+                                    className="hover:underline text-[#78B0C7] hover:text-[#47ABD8] transition-colors cursor-pointer"
+                                  >
+                                    {cat}
+                                  </button>
+
+                                  {index !== blog.categories.length - 1 && (
+                                    <span className=" flex text-[#78B0C7] items-center mx-2">
+                                      |
+                                    </span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mb-4 sm:mb-6">
+                        <p
+                          className={`${merri.className} font-bold italic text-lg sm:text-xl md:text-[22px] text-[#1D5C75]`}
+                        >
+                          {blog.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                    <style jsx global>{`
+                      .blog-content {
+                        font-size: 16px;
+                        line-height: 1.8;
+                      }
+                      .blog-content ul,
+                      .blog-content ol {
+                       padding-left: 2rem;
+                       margin: 1.25em 0;
+                      }
+
+                    .blog-content ul {
+                    list-style-type: disc;
+                    }
+
+                   .blog-content ol {
+                     list-style-type: decimal;
+                    }
+                     .blog-content [data-youtube-video] {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  margin: 1.5em auto;
+}
+
+.blog-content [data-youtube-video] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  border: none;
+}
+
+                    .blog-content li {
+                      margin: 0.6em 0;
+                      line-height: 1.8;
+                      display: list-item;
+                  }
+                   .blog-content ul li p {
+  font-size: 1em;
+}
+.blog-content .font-hindi {
+  font-family: var(--font-merri), serif;
+  font-weight: 400;
+  line-height: 1.9;
+}
+
+                      @media (min-width: 640px) {
+                        .blog-content {
+                          font-size: 17px;
+                        }
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content {
+                          font-size: 18px;
+                        }
+                      }
+
+                      .blog-content h1 {
+                        font-size: 1em;
+                        font-weight: 700;
+                        line-height: 1.2;
+                        margin-top: 1.6em;
+                        margin-bottom: 0.6em;
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content h1 {
+                          font-size: 2.25em;
+                        }
+                      }
+
+                      .blog-content h2 {
+                        font-size: 1em;
+                        font-weight: 400;
+                        line-height: 1.3;
+                        margin-top: 1.6em;
+                        margin-bottom: 0.7em;
+                        padding-bottom: 0.3em;
+                        border-bottom: 2px solid #e5e7eb;
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content h2 {
+                          font-size: 1.75em;
+                        }
+                      }
+
+                      .blog-content h3 {
+                        font-size: 1.25em;
+                        font-weight: 600;
+                        line-height: 1.4;
+                        margin-top: 1.4em;
+                        margin-bottom: 0.6em;
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content h3 {
+                          font-size: 1.4em;
+                        }
+                      }
+
+                     .blog-content p:not(:where(ul li p, ol li p)) {
+                   font-size: 1em;
+                   line-height: 1.8;
+                   margin: 1em 0;
+                  }
+
+                      @media (min-width: 768px) {
+                      .blog-content ul,
+                     .blog-content ol {
+                      padding-left: 2rem;
+                       margin: 1.25em 0;
+                    }
+
+                    .blog-content ul {
+                     list-style-type: disc;
+                    }
+
+                   .blog-content ol {
+                     list-style-type: decimal;
+                    }
+
+                    .blog-content li {
+                     margin: 0.1em 0;
+                     line-height: 1.8;
+                     display: list-item;
+                    }
+
+                      .blog-content img {
+                        max-width: 100%;
+                        height: auto;
+                        margin: 1.5em auto;
+                        display: block;
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content img {
+                          margin: 2em auto;
+                        }
+                      }
+
+                      .blog-content iframe {
+                        max-width: 640px;
+                        width: 100%;
+                        height: 250px;
+                        margin: 1.5em auto;
+                        display: block;
+                        border: none;
+                      }
+
+                      @media (min-width: 640px) {
+                        .blog-content iframe {
+                          height: 315px;
+                        }
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content iframe {
+                          height: 360px;
+                          margin: 2em auto;
+                        }
+                      }
+
+                      .blog-content em {
+                        font-style: italic;
+                      }
+
+                      .blog-content u {
+                        text-decoration: underline;
+                      }
+
+                      .blog-content code {
+                        font-size: 0.9em;
+                        padding: 0.2em 0.4em;
+                        background-color: #f3f4f6;
+                        border-radius: 0.25rem;
+                      }
+
+                      .blog-content pre {
+                        font-size: 0.85em;
+                        padding: 1em;
+                        border-radius: 0.5rem;
+                        overflow-x: auto;
+                        margin: 1.5em 0;
+                        background-color: #1f2937;
+                      }
+
+                      @media (min-width: 768px) {
+                        .blog-content pre {
+                          font-size: 0.9em;
+                          padding: 1.5em;
+                        }
+                      }
+
+                      .blog-content pre code {
+                        background-color: transparent;
+                        padding: 0;
+                      }
+                    `}</style>
+                    <div className={`${merri.className} text-black`}>
+                      <div
+                        className="blog-content font-light"
+                        dangerouslySetInnerHTML={{ __html: blog.content }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Related Blogs Section */}
+              <div className="bg-[#47ABD8B2] mt-8">
+                <div className="grid grid-cols-12">
+                  {/* Centered content */}
+                  <div className="col-span-12 lg:col-span-10 lg:col-start-2 px-4 sm:px-6 lg:px-8 py-8">
+                    {relatedBlogs.length > 0 && (
+                      <>
+                        <h2
+                          className={`${merri.className}
+              text-center
+              text-white
+              text-[20px]
+              font-bold
+              my-9
+              uppercase
+            `}
+                        >
+                          Next Story
+                        </h2>
+
+                        <div className="flex flex-col items-center gap-6 pb-10">
+                          {relatedBlogs.map((relatedBlog) => (
+                            <div
+                              key={relatedBlog.id}
+                              className="w-full max-w-2xl"
+                            >
+                              <BlogCard blog={relatedBlog} />
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default BlogDetailClient
