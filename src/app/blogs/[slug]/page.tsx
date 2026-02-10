@@ -19,10 +19,10 @@ interface Props {
   }>
 }
 
-
+// Fetch blog data on the server
 async function getBlogData(slug: string) {
   try {
-   
+    // Replace with your actual API URL
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const url = `${baseUrl}/api/blogs/${slug}`
     
@@ -62,9 +62,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  
+ 
   const contentText = blog.content.replace(/<[^>]*>/g, '').trim()
-  const description = blog.subtitle || contentText.substring(0, 60) + '...'
+  const description = blog.subtitle || contentText.substring(0, 160) + '...'
   
   // Calculate reading time
   const wordCount = contentText.split(/\s+/).length
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: blog.categories?.join(', ') || '',
     authors: [{ name: blog.author }],
     
-    
+    // Open Graph metadata (Facebook, LinkedIn, etc.)
     openGraph: {
       title: blog.title,
       description: description,
@@ -90,11 +90,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           width: 1200,
           height: 630,
           alt: blog.title,
+          type: 'image/jpeg',
         },
       ],
       locale: 'en_US',
       type: 'article',
       publishedTime: blog.created_at,
+      modifiedTime: blog.created_at,
       authors: [blog.author],
       tags: blog.categories,
     },
@@ -105,7 +107,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: blog.title,
       description: description,
       creator: `@${blog.author.replace(/\s+/g, '')}`,
-      images: [blog.image_url],
+      images: {
+        url: blog.image_url,
+        alt: blog.title,
+      },
+      site: '@MahabharataDialogues', 
     },
 
     // Robots metadata
@@ -126,6 +132,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: blogUrl,
     },
 
+    
+    verification: {
+   
+    },
+
     // Additional metadata
     other: {
       'article:published_time': blog.created_at,
@@ -136,7 +147,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-
+// Optional: Generate static params for all blogs (for static site generation)
 export async function generateStaticParams() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -156,12 +167,12 @@ export async function generateStaticParams() {
   }
 }
 
-
+// Server Component - This renders on the server
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params
   const blog = await getBlogData(slug)
 
- 
+  // Generate structured data for rich snippets
   const structuredData = blog ? {
     '@context': 'https://schema.org',
     '@graph': [
@@ -175,6 +186,7 @@ export default async function BlogDetailPage({ params }: Props) {
           url: blog.image_url,
           width: 1200,
           height: 630,
+          caption: blog.title,
         },
         author: {
           '@type': 'Person',
@@ -258,7 +270,7 @@ export default async function BlogDetailPage({ params }: Props) {
         />
       )}
       
-     
+      {/* Client Component handles all interactivity */}
       <BlogDetailClient initialBlog={blog} slug={slug} />
     </>
   )
