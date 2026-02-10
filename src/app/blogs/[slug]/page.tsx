@@ -19,17 +19,17 @@ interface Props {
   }>
 }
 
-// Fetch blog data on the server
+
 async function getBlogData(slug: string) {
   try {
-    // Replace with your actual API URL
+   
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const url = `${baseUrl}/api/blogs/${slug}`
     
     console.log('Fetching blog from:', url)
     
     const response = await fetch(url, {
-      cache: 'no-store', // Use 'force-cache' if you want to cache, or add revalidation
+      cache: 'no-store', 
       // next: { revalidate: 3600 } // Revalidate every hour
     })
 
@@ -50,7 +50,7 @@ async function getBlogData(slug: string) {
   }
 }
 
-// Generate metadata for SEO and social sharing
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const blog = await getBlogData(slug)
@@ -62,9 +62,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  // Extract text from HTML content
+  
   const contentText = blog.content.replace(/<[^>]*>/g, '').trim()
-  const description = blog.subtitle || contentText.substring(0, 160) + '...'
+  const description = blog.subtitle || contentText.substring(0, 60) + '...'
   
   // Calculate reading time
   const wordCount = contentText.split(/\s+/).length
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: blog.categories?.join(', ') || '',
     authors: [{ name: blog.author }],
     
-    // Open Graph metadata (Facebook, LinkedIn, etc.)
+    
     openGraph: {
       title: blog.title,
       description: description,
@@ -136,7 +136,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-// Optional: Generate static params for all blogs (for static site generation)
+
 export async function generateStaticParams() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -156,12 +156,12 @@ export async function generateStaticParams() {
   }
 }
 
-// Server Component - This renders on the server
+
 export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params
   const blog = await getBlogData(slug)
 
-  // Generate structured data for rich snippets
+ 
   const structuredData = blog ? {
     '@context': 'https://schema.org',
     '@graph': [
@@ -258,7 +258,7 @@ export default async function BlogDetailPage({ params }: Props) {
         />
       )}
       
-      {/* Client Component handles all interactivity */}
+     
       <BlogDetailClient initialBlog={blog} slug={slug} />
     </>
   )
