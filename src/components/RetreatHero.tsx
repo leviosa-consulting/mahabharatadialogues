@@ -123,27 +123,36 @@ export default async function RetreatHero() {
       : `/retreats/past/${retreat.id}`
   }
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr)
 
-    const day = date.getDate()
-    const month = date.toLocaleString('en-US', { month: 'long' })
-    const year = date.getFullYear()
+  return {
+    day: date.getDate(),
+    month: date.toLocaleString("en-US", { month: "short" }),
+    year: date.getFullYear(),
+  }
+}
 
-    return { day, month, year }
+
+const getDateRange = (retreat: Retreat) => {
+  const start = formatDate(retreat.day1.date)
+  const endDateStr = retreat.day3 ? retreat.day3.date : retreat.day2.date
+  const end = formatDate(endDateStr)
+
+  // Same month + same year
+  if (start.month === end.month && start.year === end.year) {
+    return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
   }
 
-  const getDateRange = (retreat: Retreat) => {
-    const start = formatDate(retreat.day1.date)
-    const endDateStr = retreat.day3 ? retreat.day3.date : retreat.day2.date
-    const end = formatDate(endDateStr)
-
-    if (start.month === end.month && start.year === end.year) {
-      return `${start.day} ${start.month} - ${end.day} ${start.month}. ${start.year}`
-    }
-
-    return `${start.day} ${start.month}. ${start.year} - ${end.day} ${end.month}. ${end.year}`
+  // Different month but same year
+  if (start.year === end.year) {
+    return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
   }
+
+  // Different year
+  return `${start.day} ${start.month} ${start.year} - ${end.day} ${end.month} ${end.year}`
+}
+
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
     try {
@@ -241,7 +250,7 @@ export default async function RetreatHero() {
                       {upcomingRetreat.venue}, {upcomingRetreat.city}
                     </h4>
                     <p
-                      className={`${merri.className} text-[20px] text-white font-light italic py-6 lg:pr-19`}
+                      className={`${merri.className} text-[16px] md:text-[18px] text-white font-light italic py-6 lg:pr-19`}
                     >
                       {upcomingRetreat.description ||
                         'Join us for an immersive retreat experience.'}

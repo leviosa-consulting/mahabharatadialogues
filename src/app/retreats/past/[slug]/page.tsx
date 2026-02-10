@@ -236,11 +236,32 @@ const PastRetreatPage: React.FC = () => {
     }
   }
 
-  const getDateRange = () => {
-    if (!retreat) return ''
-    const endDate = retreat.day3 ? retreat.day3.date : retreat.day2.date
-    return `${retreat.day1.date} - ${endDate}`
+const getDateRange = () => {
+  if (!retreat) return ""
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+
+    return {
+      day: date.getDate(),
+      month: date.toLocaleString("en-US", { month: "short" }),
+      year: date.getFullYear(),
+    }
   }
+
+  const start = formatDate(retreat.day1.date)
+  const endDateStr = retreat.day3 ? retreat.day3.date : retreat.day2.date
+  const end = formatDate(endDateStr)
+
+  // Same year
+  if (start.year === end.year) {
+    return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
+  }
+
+  // Different year
+  return `${start.day} ${start.month} ${start.year} - ${end.day} ${end.month} ${end.year}`
+}
+
 
   const getScheduleUrl = (retreat: Retreat) => {
     return retreat.slug
@@ -313,39 +334,39 @@ const PastRetreatPage: React.FC = () => {
         </div>
 
         {/* Retreat Details Section */}
-        <div className="w-full">
-          <div className="mx-4 xl:mx-40 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-1 overflow-hidden p-3 lg:p-0">
-              <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 md:my-6">
+        <div className="w-full"> 
+          <div className="xl:mx-40 bg-white">
+            <div className="grid  md:grid-cols-12 gap-1 overflow-hidden">
+              <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 p-4 md:p-0 md:my-6">
                 <div className="text-left mt-16">
                   <p
-                    className={`${merri.className} text-[20px] text-[#78B0C7] font-bold`}
+                    className={`${merri.className} text-[16px] md:text-[18px] text-[#78B0C7] font-bold my-6`}
                   >
                     PAST RETREATS
                   </p>
                   <h2
-                    className={`font-neco text-[28px] text-[#1D5C75] font-bold`}
+                    className={`font-neco text-[24px] leading-none text-[#1D5C75] font-bold`}
                   >
                     Mahabharata Dialogues
                   </h2>
                   <h1
-                    className={`${merri.className} text-[44px] text-[#1D5C75] font-extrabold italic`}
+                    className={`${merri.className} text-[32px] text-[#1D5C75] font-extrabold italic leading-none mb-6`}
                   >
                     {retreat.title}
                   </h1>
                   <p
-                    className={`${merri.className} text-[20px] text-[#1D5C75] italic font-bold`}
+                    className={`${merri.className} text-[16px] md:text-[18px] text-[#1D5C75] font-bold `}
                   >
                     {getDateRange()}
                   </p>
                   <h4
-                    className={`${merri.className} text-[20px] text-[#1D5C75] font-normal italic`}
+                    className={`${merri.className} text-[16px] md:text-[18px] text-[#1D5C75] font-normal leading-6 pb-2`}
                   >
                     {retreat.venue}, {retreat.city}
                   </h4>
                   {retreat.description && (
                     <p
-                      className={`${merri.className} text-[20px] text-[#1D5C75] font-light italic py-6 max-w-4xl`}
+                      className={`${merri.className} text-[16px] md:text-[18px] text-[#1D5C75] font-light italic py-6 max-w-4xl`}
                     >
                       {retreat.description}
                     </p>
@@ -355,7 +376,7 @@ const PastRetreatPage: React.FC = () => {
                   <TestimonialsCarousel textColor={'#1D5C75'}/>
 
                   {/* button */}
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center mb-12">
                     <CustomButton
                       text="VIEW SCHEDULE"
                       bgColor="#1D5C75"

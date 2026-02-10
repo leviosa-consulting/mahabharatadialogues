@@ -224,20 +224,20 @@ const EventsPage = () => {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="max-w-xl mx-auto py-28 flex flex-col justify-center items-center text-center">
+        <div className="max-w-xl mx-auto pt-28 pb-10 flex flex-col justify-center items-center text-center">
           <h2
             className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
           >
             Events
           </h2>
           <p
-            className={`${merri.className} text-[#D9D9D9] italic  text-[24px] font-light `}
+            className={`${merri.className} text-[#D9D9D9] italic  text-[24px] font-light px-4`}
           >
             Discover our upcoming events and relive the memories from past
             gatherings
           </p>
         </div>
-        <div className="pb-34">
+        <div className="pb-28">
           {upcomingEvents.length > 0 && (
             <h2
               className={`${merri.className} text-[#D9D9D9] uppercase text-center text-[16px] md:text-[18px] font-bold`}
@@ -375,7 +375,7 @@ const EventsPage = () => {
 
       {/* past events container */}
       <div
-        className="w-full pt-20"
+        className="w-full"
         style={{
           backgroundImage: `
     linear-gradient(#47ABD8CC, #47ABD8CC),
@@ -387,7 +387,7 @@ const EventsPage = () => {
       >
         <div>
           <h2
-            className={`${merri.className} text-[#1D5C75] uppercase text-center text-[16px] md:text-[18px] font-bold mb-12`}
+            className={`${merri.className} text-[#1D5C75] uppercase text-center text-[16px] md:text-[18px] font-bold mb-8`}
           >
             PAST EVENTS
           </h2>
