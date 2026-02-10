@@ -61,23 +61,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const contentText = blog.content.replace(/<[^>]*>/g, '').trim()
   const description = blog.subtitle || contentText.substring(0, 160) + '...'
   
-  const wordCount = contentText.split(/\s+/).length
-  const readTime = Math.ceil(wordCount / 200)
-
   const blogUrl = `https://mahabharatadialogues.com/blogs/${blog.slug}`
   
-
+  // CRITICAL: Ensure image URL is absolute
   const imageUrl = blog.image_url.startsWith('http') 
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog.image_url}`
+
+  console.log('Blog metadata - Image URL:', imageUrl) // Debug log
 
   return {
     title: `${blog.title} | Mahabharata Dialogues`,
     description: description,
     keywords: blog.categories?.join(', ') || '',
-    authors: [{ name: blog.author }],
     
-
+    // OpenGraph - CRITICAL for WhatsApp, Facebook, LinkedIn
     openGraph: {
       title: blog.title,
       description: description,
@@ -89,57 +87,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           width: 1200,
           height: 630,
           alt: blog.title,
-          type: 'image/jpeg',
+          type: 'image/jpeg', // Change to image/jpeg since you're converting
         },
       ],
       locale: 'en_US',
       type: 'article',
       publishedTime: blog.created_at,
-      modifiedTime: blog.created_at,
       authors: [blog.author],
-      tags: blog.categories,
     },
 
-   
+    // Twitter metadata
     twitter: {
       card: 'summary_large_image',
       title: blog.title,
       description: description,
-      creator: `@${blog.author.replace(/\s+/g, '')}`,
-      images: [imageUrl], 
-      site: '@MahabharataDialogues',
-    },
-
-    // Robots metadata
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
+      images: [imageUrl],
     },
 
     // Canonical URL
     alternates: {
       canonical: blogUrl,
-    },
-
-    // Additional metadata
-    other: {
-      'article:published_time': blog.created_at,
-      'article:author': blog.author,
-      'article:section': blog.categories?.[0] || 'Blog',
-      'article:tag': blog.categories?.join(', ') || '',
-      
-      'og:image': imageUrl,
-      'og:image:width': '1200',
-      'og:image:height': '630',
-      'og:image:alt': blog.title,
-      'og:image:type': 'image/jpeg',
     },
   }
 }

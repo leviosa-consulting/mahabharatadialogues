@@ -17,8 +17,9 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://mahabharatadialogues.com'), 
   title: 'Mahabharata Dialogues',
-  description: 'Mahabharata Dialogues',
+  description: 'Explore the profound wisdom and timeless dialogues from the Mahabharata',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -26,6 +27,20 @@ export const metadata: Metadata = {
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
     apple: '/apple-touch-icon.png',
+  },
+  
+  openGraph: {
+    title: 'Mahabharata Dialogues',
+    description: 'Explore the profound wisdom and timeless dialogues from the Mahabharata',
+    url: 'https://mahabharatadialogues.com',
+    siteName: 'Mahabharata Dialogues',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mahabharata Dialogues',
+    description: 'Explore the profound wisdom and timeless dialogues from the Mahabharata',
   },
 }
 
@@ -35,12 +50,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      className={`
-       
-      `}
-    >
+    <html lang="en">
       <body className={`${geistSans.variable} ${roboto.variable} ${merri.variable} antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
