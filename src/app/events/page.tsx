@@ -203,6 +203,15 @@ const EventsPage = () => {
     setSelectedImage(null)
   }
 
+  const renderTextWithLineBreaks = (text: string) => {
+    return text.split('\n').map((line, index, array) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < array.length - 1 && <br />}
+      </React.Fragment>
+    ))
+  }
+
   return (
     <div>
       <div>
@@ -423,6 +432,12 @@ const EventsPage = () => {
                           >
                             {event.venue}, {event.city}
                           </p>
+
+                          <p
+                            className={`${merri.className} text-[#1D5C75] font-light text-[16px] md:text-[18px] italic text-center md:text-left line-clamp-3 my-3 `}
+                          >
+                            {event.description}
+                          </p>
                         </div>
 
                         {/* DESKTOP BUTTON */}
@@ -451,27 +466,52 @@ const EventsPage = () => {
                         </div>
 
                         {/* GALLERY COLUMN */}
-                        <div className="flex md:flex-col flex-row gap-2 w-full md:w-[140px] h-20 mt-3 md:mt-0 md:h-[240px] lg:h-[260px]">
-                          {[0, 1, 2].map((slot) => {
-                            const image = event.gallery?.[slot]
+                        {event.gallery > 0 && (
+                          <div className="flex md:flex-col flex-row gap-2 w-full md:w-[140px] h-20 mt-3 md:mt-0 md:h-[240px] lg:h-[260px]">
+                            {[0, 1, 2].map((slot) => {
+                              const image = event.gallery?.[slot]
 
-                            return (
-                              <div
-                                key={slot}
-                                className="flex-1 overflow-hidden cursor-pointer "
-                                onClick={() => image && openImageModal(image)}
-                              >
-                                {image && (
-                                  <img
-                                    src={image}
-                                    alt=""
-                                    className="w-full h-full object-cover"
-                                  />
-                                )}
-                              </div>
-                            )
-                          })}
-                        </div>
+                              return (
+                                <div
+                                  key={slot}
+                                  className="flex-1 overflow-hidden cursor-pointer "
+                                  onClick={() => image && openImageModal(image)}
+                                >
+                                  {image && (
+                                    <img
+                                      src={image}
+                                      alt=""
+                                      className="w-full h-full object-cover"
+                                    />
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                        {event.gallery?.length > 0 && (
+                          <div className="flex md:flex-col flex-row gap-2 w-full md:w-[140px] h-20 mt-3 md:mt-0 md:h-[240px] lg:h-[260px]">
+                            {[0, 1, 2].map((slot) => {
+                              const image = event.gallery?.[slot]
+
+                              return (
+                                <div
+                                  key={slot}
+                                  className="flex-1 overflow-hidden cursor-pointer"
+                                  onClick={() => image && openImageModal(image)}
+                                >
+                                  {image && (
+                                    <img
+                                      src={image}
+                                      alt=""
+                                      className="w-full h-full object-cover"
+                                    />
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
                       </div>
 
                       {/* MOBILE BUTTON */}
