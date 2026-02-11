@@ -270,21 +270,27 @@ export default async function RetreatHero() {
                     </div>
 
                     {/* PRICE + CONTENT */}
-                    <div className="flex justify-between text-left">
-                      <div>
-                        <p className="font-neco pr-8 border-r font-bold text-white flex items-center gap-1 justify-center md:justify-start">
-                          <span className="text-[16px] leading-none">₹</span>
-                          <span className="text-[34px] leading-none">
+                    <div className="flex items-center justify-between text-left">
+                      {/* LEFT SIDE - PRICE */}
+                      <div className="flex flex-col items-start pr-8">
+                        <p className="font-neco font-bold text-white flex items-center gap-1">
+                          <span className="text-[22px] leading-none">₹</span>
+                          <span className="text-[56px] leading-none">
                             {upcomingRetreat.price?.toLocaleString('en-IN')}
                           </span>
                         </p>
-                        <span className="font-neco border-r text-[18px] font-medium italic text-white flex items-center gap-1 justify-center md:justify-start">
+
+                        <span className="font-neco text-[18px] font-medium italic text-white">
                           per participant
                         </span>
                       </div>
 
-                      <div>
-                        <p className="font-neco px-8 py-2 font-normal text-[18px] text-white">
+                      {/* CENTER WHITE LINE */}
+                      <div className="h-20 w-[2px] bg-white opacity-80"></div>
+
+                      {/* RIGHT SIDE - INCLUSIONS */}
+                      <div className="pl-8">
+                        <p className="font-neco py-2 font-normal text-[18px] text-white">
                           {upcomingRetreat.inclusions}
                         </p>
                       </div>
