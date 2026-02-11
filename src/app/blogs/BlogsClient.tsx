@@ -507,7 +507,7 @@ const BlogsClient = () => {
                 <p
                   className={`${merri.className} text-white font-bold pt-5 pb-20 text-[32px] md:text-[48px]`}
                 >
-                  Showing {filteredBlogs.length} of {blogs.length}
+                  Showing {filteredBlogs.length} of {blogs.length} {' '}
                   <span className="text-[24px] md:text-[36px]">
                     {filteredBlogs.length === 1 ? 'Blog' : 'Blogs'}
                   </span>
