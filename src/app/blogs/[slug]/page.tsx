@@ -27,7 +27,7 @@ async function getBlogData(slug: string) {
     console.log('Fetching blog from:', url)
     
     const response = await fetch(url, {
-      cache: 'no-store', 
+      cache: 'force-cache', 
     })
 
     console.log('Response status:', response.status)
