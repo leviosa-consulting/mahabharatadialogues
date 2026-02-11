@@ -149,7 +149,7 @@ export default async function BlogDetailPage({ params }: Props) {
         '@type': 'BlogPosting',
         '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}#article`,
         headline: blog.title,
-        description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
+        // description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
         image: {
           '@type': 'ImageObject',
           url: imageUrl,
@@ -211,7 +211,7 @@ export default async function BlogDetailPage({ params }: Props) {
         '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}#webpage`,
         url: `https://mahabharatadialogues.com/blogs/${blog.slug}`,
         name: blog.title,
-        description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
+        // description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
         inLanguage: 'en-US',
         isPartOf: {
           '@type': 'WebSite',
@@ -231,7 +231,7 @@ export default async function BlogDetailPage({ params }: Props) {
 
   return (
     <>
-      {/* Structured Data for SEO */}
+      
       {structuredData && (
         <script
           type="application/ld+json"
