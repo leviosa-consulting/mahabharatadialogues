@@ -10,6 +10,7 @@ import Footer from '@/components/Footer'
 import BlogsShimmer from '@/components/shimmer/BlogsShimmer'
 import { useSearchParams } from 'next/navigation'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import NavbarScroll from '@/components/NavbarScroll'
 
 interface Blog {
   id: string
@@ -306,6 +307,7 @@ const BlogsClient = () => {
       <div className="hidden sm:block relative pt-5 z-10">
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
+      <NavbarScroll textColor="#1D5C75"/>
 
       {/* first section */}
       <div

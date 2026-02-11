@@ -223,6 +223,7 @@ const EventsPage = () => {
         <Navbar textColor="#1D5C75" isNotHome />
         {/* <NavbarScroll textColor="#1D5C75" isNotHome/> */}
       </div>
+      <NavbarScroll textColor="#1D5C75"/>
       <div
         className="w-full relative -mt-7 md:-mt-10 xl:-mt-8"
         style={{

@@ -17,6 +17,7 @@ import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import RetreatScheduleShimmer from '@/components/shimmer/RetreatScheduleShimmer'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import NavbarScroll from '@/components/NavbarScroll'
 
 interface ScheduleItem {
   title: string
@@ -289,6 +290,7 @@ const RetreatSchedulePage: React.FC = () => {
       >
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
+      <NavbarScroll textColor="#1D5C75"/>
 
       {/* Header */}
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">

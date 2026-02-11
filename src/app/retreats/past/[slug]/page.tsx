@@ -13,6 +13,7 @@ import Footer from '@/components/Footer'
 import TestimonialsCarousel from '@/components/TestimonialsCarousel'
 import PastRetreatShimmer from '@/components/shimmer/PastRetreatShimmer'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import NavbarScroll from '@/components/NavbarScroll'
 
 interface Testimonial {
   id: string
@@ -313,7 +314,7 @@ const getDateRange = () => {
           <div className="hidden sm:block relative pt-5 z-10">
             <Navbar textColor="#fff" isNotHome />
           </div>
-
+          <NavbarScroll textColor="#1D5C75"/>
           {/* Video */}
           {youtubeEmbedUrl && (
             <div className="mx-4 xl:mx-30 -mt-7 md:-mt-10 xl:-mt-8">
