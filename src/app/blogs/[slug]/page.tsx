@@ -24,15 +24,22 @@ async function getBlogData(slug: string) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     const url = `${baseUrl}/api/blogs/${slug}`
     
+    console.log('Fetching blog from:', url)
+    
     const response = await fetch(url, {
-      next: { revalidate: 3600 }
+      next: { revalidate: 3600 } 
     })
 
+    console.log('Response status:', response.status)
+
     if (!response.ok) {
+      console.error('Failed to fetch blog, status:', response.status)
       return null
     }
 
     const data = await response.json()
+    console.log('Blog data received:', data.success ? 'Success' : 'Failed')
+    
     return data.success ? data.data : null
   } catch (error) {
     console.error('Error fetching blog:', error)
@@ -56,14 +63,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const blogUrl = `https://mahabharatadialogues.com/blogs/${blog.slug}`
   
+  
   const imageUrl = blog.image_url.startsWith('http') 
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog.image_url}`
 
+  console.log('Blog metadata - Image URL:', imageUrl) 
+
   return {
     title: `${blog.title} | Mahabharata Dialogues`,
     description: description,
+    keywords: blog.categories?.join(', ') || '',
     
+   
     openGraph: {
       title: blog.title,
       description: description,
@@ -75,6 +87,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           width: 1200,
           height: 630,
           alt: blog.title,
+          type: 'image/jpeg', 
         },
       ],
       locale: 'en_US',
@@ -83,6 +96,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       authors: [blog.author],
     },
 
+    // Twitter metadata
     twitter: {
       card: 'summary_large_image',
       title: blog.title,
@@ -90,23 +104,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [imageUrl],
     },
 
+ 
     alternates: {
       canonical: blogUrl,
     },
-
-
-    other: {
-      'og:image': imageUrl,
-      'og:image:secure_url': imageUrl,
-      'og:image:type': 'image/jpeg',
-      'og:image:width': '1200',
-      'og:image:height': '630',
-      'og:image:alt': blog.title,
-      'twitter:image': imageUrl,
-      'twitter:card': 'summary_large_image',
-    },
   }
 }
+
 
 export async function generateStaticParams() {
   try {
@@ -133,6 +137,7 @@ export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params
   const blog = await getBlogData(slug)
 
+
   const imageUrl = blog?.image_url?.startsWith('http') 
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog?.image_url || ''}`
@@ -155,6 +160,7 @@ export default async function BlogDetailPage({ params }: Props) {
         author: {
           '@type': 'Person',
           name: blog.author,
+          url: `https://mahabharatadialogues.com/author/${blog.author.toLowerCase().replace(/\s+/g, '-')}`,
         },
         publisher: {
           '@type': 'Organization',
@@ -170,32 +176,62 @@ export default async function BlogDetailPage({ params }: Props) {
           '@type': 'WebPage',
           '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}`,
         },
+        keywords: blog.categories?.join(', '),
+        articleSection: blog.categories?.[0] || 'Blog',
+        wordCount: blog.content.replace(/<[^>]*>/g, '').split(/\s+/).length,
+        timeRequired: `PT${Math.ceil(blog.content.replace(/<[^>]*>/g, '').split(/\s+/).length / 200)}M`,
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: 'https://mahabharatadialogues.com',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Blogs',
+            item: 'https://mahabharatadialogues.com/blogs',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: blog.title,
+            item: `https://mahabharatadialogues.com/blogs/${blog.slug}`,
+          },
+        ],
+      },
+      {
+        '@type': 'WebPage',
+        '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}#webpage`,
+        url: `https://mahabharatadialogues.com/blogs/${blog.slug}`,
+        name: blog.title,
+        description: blog.subtitle || blog.content.replace(/<[^>]*>/g, '').trim().substring(0, 160),
+        inLanguage: 'en-US',
+        isPartOf: {
+          '@type': 'WebSite',
+          '@id': 'https://mahabharatadialogues.com#website',
+          name: 'Mahabharata Dialogues',
+          url: 'https://mahabharatadialogues.com',
+        },
+        breadcrumb: {
+          '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}#breadcrumb`,
+        },
+        about: {
+          '@id': `https://mahabharatadialogues.com/blogs/${blog.slug}#article`,
+        },
       },
     ],
   } : null
 
   return (
     <>
-      
-      {blog && (
-        <>
-          <meta property="og:title" content={blog.title} />
-          <meta property="og:description" content={blog.subtitle.substring(0, 60) || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)} />
-          <meta property="og:image" content={imageUrl} />
-          <meta property="og:image:secure_url" content={imageUrl} />
-          <meta property="og:image:type" content="image/jpeg" />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
-          <meta property="og:image:alt" content={blog.title} />
-          <meta property="og:url" content={`https://mahabharatadialogues.com/blogs/${blog.slug}`} />
-          <meta property="og:type" content="article" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={blog.title} />
-          <meta name="twitter:description" content={blog.subtitle || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)} />
-          <meta name="twitter:image" content={imageUrl} />
-        </>
-      )}
-      
+      {/* Structured Data for SEO */}
       {structuredData && (
         <script
           type="application/ld+json"
