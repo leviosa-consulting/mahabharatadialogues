@@ -27,7 +27,7 @@ async function getBlogData(slug: string) {
     console.log('Fetching blog from:', url)
     
     const response = await fetch(url, {
-      cache: 'force-cache', 
+      next: { revalidate: 3600 } 
     })
 
     console.log('Response status:', response.status)
@@ -45,7 +45,7 @@ async function getBlogData(slug: string) {
     console.error('Error fetching blog:', error)
     return null
   }
-}``
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   const blogUrl = `https://mahabharatadialogues.com/blogs/${blog.slug}`
   
-  // CRITICAL: Ensure image URL is absolute
+  
   const imageUrl = blog.image_url.startsWith('http') 
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog.image_url}`
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: description,
     keywords: blog.categories?.join(', ') || '',
     
-    // OpenGraph - CRITICAL for WhatsApp, Facebook, LinkedIn
+   
     openGraph: {
       title: blog.title,
       description: description,
@@ -104,17 +104,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [imageUrl],
     },
 
-    // Canonical URL
+ 
     alternates: {
       canonical: blogUrl,
     },
   }
 }
 
+
 export async function generateStaticParams() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    const response = await fetch(`${baseUrl}/api/blogs`)
+    const response = await fetch(`${baseUrl}/api/blogs`, {
+      next: { revalidate: 3600 }
+    })
     const data = await response.json()
  
     if (!data.success) {
@@ -134,7 +137,7 @@ export default async function BlogDetailPage({ params }: Props) {
   const { slug } = await params
   const blog = await getBlogData(slug)
 
-  // Ensure image URL is absolute for structured data
+
   const imageUrl = blog?.image_url?.startsWith('http') 
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog?.image_url || ''}`
@@ -236,7 +239,6 @@ export default async function BlogDetailPage({ params }: Props) {
         />
       )}
       
-     
       <BlogDetailClient initialBlog={blog} slug={slug} />
     </>
   )
