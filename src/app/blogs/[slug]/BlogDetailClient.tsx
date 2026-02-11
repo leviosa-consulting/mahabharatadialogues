@@ -124,7 +124,6 @@ const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug }
       try {
         await navigator.share({
           title: blog.title,
-          text: blog.subtitle || blog.title,
           url: currentUrl,
         })
       } catch (err) {
