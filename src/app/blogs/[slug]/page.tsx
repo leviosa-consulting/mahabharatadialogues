@@ -45,7 +45,7 @@ async function getBlogData(slug: string) {
     console.error('Error fetching blog:', error)
     return null
   }
-}
+}``
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
