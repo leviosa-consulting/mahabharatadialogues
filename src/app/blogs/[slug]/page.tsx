@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog.image_url}`
 
-  console.log('Blog metadata - Image URL:', imageUrl) // Debug log
+  console.log('Blog metadata - Image URL:', imageUrl) 
 
   return {
     title: `${blog.title} | Mahabharata Dialogues`,
@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           width: 1200,
           height: 630,
           alt: blog.title,
-          type: 'image/jpeg', // Change to image/jpeg since you're converting
+          type: 'image/jpeg', 
         },
       ],
       locale: 'en_US',
