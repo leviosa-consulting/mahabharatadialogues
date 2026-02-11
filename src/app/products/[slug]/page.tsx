@@ -11,6 +11,7 @@ import { notFound, useParams } from 'next/navigation'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { ArrowLeft } from 'lucide-react'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 export default function ProductDetails() {
   const params = useParams()
@@ -331,7 +332,9 @@ export default function ProductDetails() {
           backgroundSize: '240px 240px',
         }}
       >
-        <Footer />
+        <div className='pt-16'>
+          <FooterWithBlogs />
+        </div>
       </div>
     </div>
   )

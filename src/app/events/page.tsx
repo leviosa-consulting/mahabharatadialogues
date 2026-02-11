@@ -11,6 +11,7 @@ import Footer from '@/components/Footer'
 import UpcomingEvents from '@/components/Upcomingevents'
 import PastEventsShimmer from '@/components/shimmer/PastEventsShimmer'
 import NavbarScroll from '@/components/NavbarScroll'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 interface Event {
   id: string
@@ -538,7 +539,9 @@ const EventsPage = () => {
             </div>
           )}
         </div>
-        <Footer />
+        <div className='mt-12'>
+          <FooterWithBlogs count={2} />
+        </div>
       </div>
       {/* Image Modal */}
       {selectedImage && (

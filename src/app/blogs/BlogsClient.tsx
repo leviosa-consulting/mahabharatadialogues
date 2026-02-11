@@ -9,6 +9,7 @@ import Link from 'next/link'
 import Footer from '@/components/Footer'
 import BlogsShimmer from '@/components/shimmer/BlogsShimmer'
 import { useSearchParams } from 'next/navigation'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 interface Blog {
   id: string
@@ -596,7 +597,9 @@ const BlogsClient = () => {
             )}
           </div>
         </div>
-        <Footer />
+          <div className='mt-16'>
+            <FooterWithBlogs />
+          </div>
       </div>
     </div>
   )

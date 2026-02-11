@@ -5,6 +5,7 @@ import NavbarScroll from '@/components/NavbarScroll'
 import { merri } from '../fonts/merri'
 import CustomButton from '@/components/CustomButton'
 import Footer from '@/components/Footer'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 const AboutPage = () => {
   const team = [
@@ -56,7 +57,7 @@ const AboutPage = () => {
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
         <NavbarScroll textColor="#1D5C75" />
- <NavbarScroll textColor="#1D5C75" />
+        <NavbarScroll textColor="#1D5C75" />
         <div className="mx-4 xl:mx-30 my-10">
           <div className="grid grid-cols-12 gap-3">
             <div className="col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
@@ -178,15 +179,20 @@ const AboutPage = () => {
         </div>
       </div>
 
-      <div className=''style={{
+      <div
+        className=""
+        style={{
           backgroundImage: `
-    linear-gradient(#1D5C75, #1D5C7580),
+    linear-gradient(#1D5C75, #1D5C75),
     url('/MD-Texture_BG_Blue-01-04.png')
   `,
           backgroundRepeat: 'repeat',
           backgroundSize: '240px 240px',
-        }}>
-        <Footer />
+        }}
+      >
+        <div className="pt-16">
+          <FooterWithBlogs />
+        </div>
       </div>
     </div>
   )

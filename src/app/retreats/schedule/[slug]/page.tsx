@@ -16,6 +16,7 @@ import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import RetreatScheduleShimmer from '@/components/shimmer/RetreatScheduleShimmer'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 interface ScheduleItem {
   title: string
@@ -276,17 +277,7 @@ const RetreatSchedulePage: React.FC = () => {
     <div className="min-h-screen">
       <div
         className="sm:hidden"
-        style={{
-          backgroundImage: `
-      linear-gradient(
-        rgba(255, 255, 255, 0.6),
-        rgba(255, 255, 255, 0.6)
-      ),
-      url('/MD-Texture_BG_White-04.png')
-    `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '240px 240px',
-        }}
+      
       >
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
@@ -294,47 +285,26 @@ const RetreatSchedulePage: React.FC = () => {
       </div>
       <div
         className="hidden sm:block relative pt-5  z-10"
-        style={{
-          backgroundImage: `
-      linear-gradient(
-        rgba(255, 255, 255, 0.6),
-        rgba(255, 255, 255, 0.6)
-      ),
-      url('/MD-Texture_BG_White-04.png')
-    `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '240px 240px',
-        }}
+       
       >
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
 
       {/* Header */}
-      <div className="bg-[#282828] text-white py-12 md:py-24  px-6 relative overflow-hidden">
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Left */}
-          <div className={`text-center md:text-left ${merri.className}`}>
-            <div className="text-lg mb-2">Mahabharata Dialogues</div>
-            <h1 className="text-4xl md:text-5xl font-bold">The Retreat</h1>
+          <div className={`text-center md:text-left`}>
+            <div  className={`font-neco text-[24px] leading-none text-white font-bold mb-2`}>Mahabharata Dialogues</div>
+            <h1 className={`${merri.className} text-[44px] leading-none text-white font-extrabold italic mb-6`}>The Retreat</h1>
 
-            <div className="flex items-center justify-center md:justify-start gap-3 mt-4 text-white/90">
-              <span className="text-sm md:text-base tracking-wide">
+            <div className="flex flex-col items-center justify-center md:justify-start md:items-start">
+              <span className={`${merri.className} text-white text-[16px] md:text-[18px] font-bold`}>
                 {retreat.day1.date} <span className="mx-1">–</span>{' '}
                 {isThreeDay ? retreat.day3!.date : retreat.day2.date}
               </span>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="hidden md:block w-px h-28 bg-white/60" />
-
-          {/* Right */}
-          <div className="text-center md:text-left md:max-w-lg">
-            <p className="text-lg italic leading-relaxed font-neco">
-              {retreat.description}
-            </p>
-            {retreat.venue && (
-              <div className="flex items-center gap-2 mt-3 justify-center md:justify-start pt-2 md:pt-0">
+                {retreat.venue && (
+              <div className="flex items-center gap-2 justify-center md:justify-start">
                 <span
                   className={`text-sm  md:text-base text-white/90 ${merri.className}`}
                 >
@@ -342,6 +312,18 @@ const RetreatSchedulePage: React.FC = () => {
                 </span>
               </div>
             )}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="hidden md:block w-px h-38 bg-white/60" />
+
+          {/* Right */}
+          <div className="text-center md:text-left md:max-w-lg">
+            <p className="text-lg italic leading-relaxed font-neco">
+              {retreat.description}
+            </p>
+          
           </div>
         </div>
       </div>
@@ -551,8 +533,8 @@ const RetreatSchedulePage: React.FC = () => {
           </button>
         </div>
       )}
-      <div className="bg-[#1D5C75CC]">
-        <Footer />
+      <div className="bg-[#1D5C75CC] pt-16">
+        <FooterWithBlogs />
       </div>
     </div>
   )

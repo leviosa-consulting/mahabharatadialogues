@@ -10,6 +10,7 @@ import CustomButton from '@/components/CustomButton'
 import { Product } from '@/data/productsData'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<
@@ -233,7 +234,7 @@ const ProductsPage = () => {
       </div>
 
       <div
-        className="w-full relative"
+        className="w-full relative pt-16"
         style={{
           backgroundImage: `
       linear-gradient(#1D5C75CC, #1D5C75CC),
@@ -243,7 +244,7 @@ const ProductsPage = () => {
           backgroundSize: '240px 240px',
         }}
       >
-        <Footer />
+        <FooterWithBlogs />
       </div>
     </div>
   )

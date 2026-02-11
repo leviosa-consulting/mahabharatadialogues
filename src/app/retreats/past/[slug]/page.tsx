@@ -12,6 +12,7 @@ import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import TestimonialsCarousel from '@/components/TestimonialsCarousel'
 import PastRetreatShimmer from '@/components/shimmer/PastRetreatShimmer'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 interface Testimonial {
   id: string
@@ -475,7 +476,9 @@ const getDateRange = () => {
         </div>
       )}
 
-      <Footer />
+      <div className='mt-16'>
+        <FooterWithBlogs />
+      </div>
     </div>
   )
 }

@@ -12,6 +12,7 @@ import MobileNavbar from './MobileNavbar'
 import MobileNavbarScroll from './MobileNavbarScroll'
 import CustomButtonRetreat from './CustomButtonRetreat'
 import NavbarScroll from './NavbarScroll'
+import FooterWithBlogs from './FooterWithBlogs'
 
 interface DaySchedule {
   date: string
@@ -123,36 +124,34 @@ export default async function RetreatHero() {
       : `/retreats/past/${retreat.id}`
   }
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr)
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
 
-  return {
-    day: date.getDate(),
-    month: date.toLocaleString("en-US", { month: "short" }),
-    year: date.getFullYear(),
-  }
-}
-
-
-const getDateRange = (retreat: Retreat) => {
-  const start = formatDate(retreat.day1.date)
-  const endDateStr = retreat.day3 ? retreat.day3.date : retreat.day2.date
-  const end = formatDate(endDateStr)
-
-  // Same month + same year
-  if (start.month === end.month && start.year === end.year) {
-    return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
+    return {
+      day: date.getDate(),
+      month: date.toLocaleString('en-US', { month: 'short' }),
+      year: date.getFullYear(),
+    }
   }
 
-  // Different month but same year
-  if (start.year === end.year) {
-    return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
+  const getDateRange = (retreat: Retreat) => {
+    const start = formatDate(retreat.day1.date)
+    const endDateStr = retreat.day3 ? retreat.day3.date : retreat.day2.date
+    const end = formatDate(endDateStr)
+
+    // Same month + same year
+    if (start.month === end.month && start.year === end.year) {
+      return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
+    }
+
+    // Different month but same year
+    if (start.year === end.year) {
+      return `${start.day} ${start.month} - ${end.day} ${end.month} ${end.year}`
+    }
+
+    // Different year
+    return `${start.day} ${start.month} ${start.year} - ${end.day} ${end.month} ${end.year}`
   }
-
-  // Different year
-  return `${start.day} ${start.month} ${start.year} - ${end.day} ${end.month} ${end.year}`
-}
-
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
     try {
@@ -279,14 +278,16 @@ const getDateRange = (retreat: Retreat) => {
                             {upcomingRetreat.price?.toLocaleString('en-IN')}
                           </span>
                         </p>
-                        <span className='font-neco border-r text-[18px] font-medium italic text-white flex items-center gap-1 justify-center md:justify-start'>per participant</span>
+                        <span className="font-neco border-r text-[18px] font-medium italic text-white flex items-center gap-1 justify-center md:justify-start">
+                          per participant
+                        </span>
                       </div>
 
-                     <div>
-                       <p className="font-neco px-8 py-2 font-normal text-[18px] text-white">
-                        {upcomingRetreat.inclusions}
-                      </p>
-                     </div>
+                      <div>
+                        <p className="font-neco px-8 py-2 font-normal text-[18px] text-white">
+                          {upcomingRetreat.inclusions}
+                        </p>
+                      </div>
                     </div>
 
                     {/* BOTTOM BUTTON */}
@@ -441,39 +442,7 @@ const getDateRange = (retreat: Retreat) => {
             </div>
           )}
 
-          {/* youtube/blogs */}
-          <div>
-            <div className="mx-4 xl:mx-40 overflow-hidden bg-[#1D5C7580]">
-              <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
-                {/* YOUTUBE*/}
-                <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
-                  <div className="flex flex-col gap-6 px-6 py-8">
-                    <h2
-                      className={`${merri.className} text-[18px] text-center md:text-left text-white font-bold`}
-                    >
-                      LATEST ON YOUTUBE
-                    </h2>
-
-                    <YouTubeSection videos={videos} count={1} layout="row" />
-                  </div>
-                </div>
-
-                {/* BLOG */}
-                <div className="order-2 md:order-0 md:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
-                  <div className="flex flex-col px-6 py-8">
-                    <h2
-                      className={`${merri.className} text-white font-bold text-[18px] text-center md:text-left`}
-                    >
-                      ON OUR BLOG
-                    </h2>
-
-                    <LatestBlogs count={2} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <Footer />
-          </div>
+          <FooterWithBlogs count={2} />
         </div>
       </div>
     </div>

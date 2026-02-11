@@ -5,6 +5,7 @@ import LatestBlogs from '@/lib/LatestBlogs'
 import { merri } from '@/app/fonts/merri'
 import Footer from './Footer'
 import { getLatestVideos } from '@/lib/youtube'
+import LatestBlog from '@/lib/LatestBlog'
 export default async function Retreats() {
   const videos = await getLatestVideos()
   return (
@@ -84,7 +85,7 @@ export default async function Retreats() {
                 ON OUR BLOG
               </h2>
 
-              <LatestBlogs />
+              <LatestBlog />
             </div>
           </div>
         </div>
