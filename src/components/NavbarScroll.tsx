@@ -91,7 +91,7 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
          <Link href="/" className="flex justify-center">
           <img
             src={
-              isNotHome ? '/Logo_for_video_Corner-04.png' : '/Web_Assets-08.png'
+              '/Logo_for_video_Corner-04.png' 
             }
             alt="Logo"
             className={`

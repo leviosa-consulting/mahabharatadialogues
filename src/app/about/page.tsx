@@ -92,9 +92,9 @@ const AboutPage = () => {
         <div className="mx-4 xl:mx-30 py-20">
           <div className="grid grid-cols-12 ">
             <div className="col-start-2 col-span-10">
-              <div className="flex justify-between gap-4">
+              <div className="flex flex-col md:flex-row justify-between gap-4">
                 <p
-                  className={`text-white ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
+                  className={`text-white ${merri.className} font-bold italic text-center md:text-left text-[20px] md:text-[24px]`}
                 >
                   We have done Think you want to take the story of Mahabharata
                   ahead and see what is left to explore?
