@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
@@ -6,46 +9,58 @@ import { merri } from '../fonts/merri'
 import CustomButton from '@/components/CustomButton'
 import Footer from '@/components/Footer'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import { X, Linkedin, Twitter, Instagram } from 'lucide-react'
+
+interface SocialLinks {
+  linkedin?: string
+  twitter?: string
+  instagram?: string
+}
+
+interface Member {
+  id: string
+  name: string
+  roles: string[]
+  description: string
+  imageUrl: string
+  socialLinks?: SocialLinks
+  teamType: 'core' | 'collaborators'
+}
 
 const AboutPage = () => {
-  const team = [
-    {
-      name: 'Abhilash Purohit',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Rakshith Bhagvwath',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Radha Sawana',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Namitha Vijaykumar',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Saishraddha Balla',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Deepika',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Nikhil Joshi',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Saurabh Dubey',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-    {
-      name: 'Ruchika Kadam',
-      role: 'STORIES | AUTHOR | SPEAKER',
-    },
-  ]
+  const [members, setMembers] = useState<Member[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null)
+
+  useEffect(() => {
+    fetchMembers()
+  }, [])
+
+  const fetchMembers = async () => {
+    try {
+      const response = await fetch('/api/about')
+      const data = await response.json()
+      setMembers(data.data || [])
+      setLoading(false)
+    } catch (err) {
+      console.error('Failed to fetch members:', err)
+      setLoading(false)
+    }
+  }
+
+  const coreTeamMembers = members.filter((member) => member.teamType === 'core')
+  const collaboratorMembers = members.filter(
+    (member) => member.teamType === 'collaborators'
+  )
+
+  const handleMemberClick = (member: Member) => {
+    setSelectedMember(member)
+  }
+
+  const closeOverlay = () => {
+    setSelectedMember(null)
+  }
+
   return (
     <div>
       <div>
@@ -80,14 +95,14 @@ const AboutPage = () => {
 
       {/* second section */}
       <div
-        style={{
-          backgroundImage: `
-    linear-gradient(#1D5C75, #1D5C7580),
+       style={{
+  backgroundImage: `
+  
     url('/MD-Texture_BG_Blue-01-04.png')
   `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '240px 240px',
-        }}
+  backgroundRepeat: 'repeat',
+  backgroundSize: '240px 240px',
+}} 
       >
         <div className="mx-4 xl:mx-30 py-20">
           <div className="grid grid-cols-12 ">
@@ -111,8 +126,8 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* third section */}
-      <div className=" my-30">
+      {/* CORE TEAM */}
+      <div className="my-30">
         <div className="flex flex-col md:flex-row justify-center items-center my-6 ">
           <h2
             className={`${merri.className} font-bold text-[#1D5C75] text-[18px]`}
@@ -121,43 +136,53 @@ const AboutPage = () => {
           </h2>
         </div>
         <div className="w-full">
-          {/* GRID CONTAINER */}
-          <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center max-w-7xl">
-            {team.map((item, index) => (
-              <div
-                key={index}
-                className="relative w-full max-w-[400px] h-[440px] flex flex-col items-center justify-center"
-              >
-                {/* Image background */}
-                <div className="absolute top-0 w-full h-[71%] bg-[#D9D9D9]/60" />
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#1D5C75] border-t-transparent"></div>
+            </div>
+          ) : coreTeamMembers.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-600">No core team members found.</p>
+            </div>
+          ) : (
+            <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center px-2 md:px-0 max-w-7xl">
+              {coreTeamMembers.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative w-full max-w-[400px] h-[440px] flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
+                  onClick={() => handleMemberClick(item)}
+                >
+                  {/* Image background */}
+                  <div className="absolute top-0 w-full h-[80%] md:h-[74%] bg-[#D9D9D9]/20" />
 
-                <img
-                  src="/teamImg.png"
-                  alt={item.name}
-                  className="w-full h-full object-contain"
-                />
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
 
-                {/* Bottom gradient content */}
-                <div className="w-full flex flex-col justify-center items-center h-full -mt-32 p-4 bg-gradient-to-b from-[#1D5C75] to-[#1D5C75]/50 text-center">
-                  <h2
-                    className={`${merri.className} italic font-extrabold text-[28px] md:text-[34px] text-white`}
-                  >
-                    {item.name}
-                  </h2>
+                  {/* Bottom gradient content */}
+                  <div className="w-full flex flex-col justify-center items-center absolute bottom-0 left-0 p-4 bg-gradient-to-b from-[#1D5C75] to-[#1D5C75]/50 text-center">
+                    <h2
+                      className={`${merri.className} italic font-extrabold text-[28px] md:text-[34px] text-white`}
+                    >
+                      {item.name}
+                    </h2>
 
-                  <h3
-                    className={`${merri.className} font-normal text-[18px] md:text-[24px] text-white`}
-                  >
-                    {item.role}
-                  </h3>
+                    <h3
+                      className={`${merri.className} font-normal text-[18px] md:text-[24px] text-white uppercase`}
+                    >
+                      {item.roles.join(' | ')}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* fourth section */}
+      {/* COLLABORATORS */}
       <div className="my-30">
         <div className="flex justify-center items-center my-6 ">
           <h2
@@ -166,16 +191,44 @@ const AboutPage = () => {
             COLLABORATORS
           </h2>
         </div>
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-4">
-          <div className="bg-gray-400 w-full h-80"></div>
-          <div className="bg-gray-200 w-full h-80"></div>
-          <div className="bg-gray-200 w-full h-80"></div>
-          <div className="bg-gray-200 w-full h-80"></div>
-
-          <div className="bg-gray-400 w-full h-80"></div>
-          <div className="bg-gray-200 w-full h-80"></div>
-          <div className="bg-gray-200 w-full h-80"></div>
-          <div className="bg-gray-200 w-full h-80"></div>
+        <div className="w-full">
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#1D5C75] border-t-transparent"></div>
+            </div>
+          ) : collaboratorMembers.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-600">No collaborators found.</p>
+            </div>
+          ) : (
+            <div className="w-full mx-auto px-2 md:px-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-4">
+              {collaboratorMembers.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative w-full h-80 cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                  onClick={() => handleMemberClick(item)}
+                >
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#1D5C75] to-transparent p-4">
+                    <h3
+                      className={`${merri.className} font-bold text-white text-[16px] md:text-[18px]`}
+                    >
+                      {item.name}
+                    </h3>
+                    <p
+                      className={`${merri.className} text-white text-[12px] md:text-[14px] uppercase`}
+                    >
+                      {item.roles.join(' | ')}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -194,6 +247,108 @@ const AboutPage = () => {
           <FooterWithBlogs />
         </div>
       </div>
+
+      {/* Member Detail Overlay */}
+      {selectedMember && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={closeOverlay}
+        >
+          <div
+            className="bg-white  max-w-4xl w-full relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={closeOverlay}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+            >
+              <X size={24} />
+            </button>
+
+            <div className="flex flex-col md:flex-row">
+              {/* Left side - Image */}
+              <div className="md:w-1/3 flex-shrink-0">
+                <img
+                  src={selectedMember.imageUrl}
+                  alt={selectedMember.name}
+                  className="w-full h-64 md:h-full object-cover rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
+                />
+              </div>
+
+              {/* Right side - Content */}
+              <div className="md:w-2/3 p-6 md:p-8">
+                <h2
+                  className={`${merri.className} font-bold italic text-[#1D5C75] text-[24px] md:text-[28px] mb-2`}
+                >
+                  {selectedMember.name}
+                </h2>
+                <p
+                  className={`${merri.className} text-[#1D5C75] text-[14px] md:text-[16px] uppercase mb-4`}
+                >
+                  {selectedMember.roles.join(' | ')}
+                </p>
+
+                {selectedMember.description && (
+                  <p className="text-gray-600 text-[14px] md:text-[16px] mb-6 leading-relaxed">
+                    {selectedMember.description.split('\n').map((line, idx) => (
+                      <span key={idx}>
+                        {line}
+                        {idx <
+                          selectedMember.description.split('\n').length - 1 && (
+                          <br />
+                        )}
+                      </span>
+                    ))}
+                  </p>
+                )}
+
+                {/* Social Links */}
+                {selectedMember.socialLinks &&
+                  (selectedMember.socialLinks.linkedin ||
+                    selectedMember.socialLinks.twitter ||
+                    selectedMember.socialLinks.instagram) && (
+                    <div className="flex gap-4 mt-6">
+                      {selectedMember.socialLinks.linkedin && (
+                        <a
+                          href={selectedMember.socialLinks.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1D5C75] hover:text-[#1D5C75]/70 transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Linkedin size={24} />
+                        </a>
+                      )}
+                      {selectedMember.socialLinks.twitter && (
+                        <a
+                          href={selectedMember.socialLinks.twitter}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1D5C75] hover:text-[#1D5C75]/70 transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Twitter size={24} />
+                        </a>
+                      )}
+                      {selectedMember.socialLinks.instagram && (
+                        <a
+                          href={selectedMember.socialLinks.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1D5C75] hover:text-[#1D5C75]/70 transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Instagram size={24} />
+                        </a>
+                      )}
+                    </div>
+                  )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

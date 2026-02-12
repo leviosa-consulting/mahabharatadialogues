@@ -63,33 +63,35 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
 
   return (
     <div className="sm:hidden relative z-50">
-      {/* TOP AREA (hide when menu open) */}
-      {!open && (
+      {/* TOP AREA */}
+      {!open && shouldShow && (
         <div
-          className={`
-            fixed top-0 left-0 right-0
-            flex items-center justify-center py-1 px-12
-            bg-white/95 backdrop-blur-sm
-            transition-all duration-300
-            ${shouldShow ? 'translate-y-0 shadow-md' : '-translate-y-full'}
-          `}
+           className={`
+    fixed top-0 left-0 right-0
+    h-18
+    bg-white/95 backdrop-blur-sm
+    transition-all duration-300
+    flex items-center justify-center
+    overflow-visible
+    ${shouldShow ? 'translate-y-0 shadow-md' : '-translate-y-full'}
+  `}
         >
-          {/* Clickable circle logo */}
+          {/* Clickable circle logo  */}
           <Link
             href="/"
-            className="rounded-full flex items-center justify-center transition-all duration-300 w-[28%]"
+            className="relative flex items-center justify-center mt-8 z-50 transition-all duration-300 w-[89.15] h-[89.15"
           >
             <img
               src="/Logo_for_video_Corner-04.png"
               alt="Logo"
-              className="w-full h-auto"
+              className="w-full h-full object-cover rounded-full"
             />
           </Link>
 
           {/* Toggle icon */}
           <button
             onClick={() => setOpen(true)}
-            className="absolute right-4"
+            className="absolute right-4 top-1/2 -translate-y-1/2"
             style={{ color: textColor }}
           >
             <Menu size={32} />
