@@ -137,9 +137,9 @@ const AdminDashboard = () => {
             className="bg-white shadow-sm border rounded-xl p-6 hover:shadow-md transition flex items-center justify-between"
           >
             <div>
-              <h2 className="text-xl font-semibold">Manage About</h2>
+              <h2 className="text-xl font-semibold">Manage About Us</h2>
               <p className="text-gray-500 text-sm mt-1">
-                Add, edit & manage About.
+                Add, edit & manage About Us.
               </p>
             </div>
             <span className="text-gray-400 text-2xl">→</span>

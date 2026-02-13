@@ -89,7 +89,7 @@ const AdminNavbar: React.FC<NavbarProps> = ({ currentTab }) => {
                 : "text-gray-700 hover:text-purple-600"
             )}
           >
-           About
+           About Us
           </span>
         </Link>
 

@@ -50,7 +50,7 @@ const AboutPage = () => {
 
   const coreTeamMembers = members.filter((member) => member.teamType === 'core')
   const collaboratorMembers = members.filter(
-    (member) => member.teamType === 'collaborators'
+    (member) => member.teamType === 'collaborators',
   )
 
   const handleMemberClick = (member: Member) => {
@@ -95,14 +95,14 @@ const AboutPage = () => {
 
       {/* second section */}
       <div
-       style={{
-  backgroundImage: `
+        style={{
+          backgroundImage: `
   
     url('/MD-Texture_BG_Blue-01-04.png')
   `,
-  backgroundRepeat: 'repeat',
-  backgroundSize: '240px 240px',
-}} 
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
       >
         <div className="mx-4 xl:mx-30 py-20">
           <div className="grid grid-cols-12 ">
@@ -205,22 +205,28 @@ const AboutPage = () => {
               {collaboratorMembers.map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-full h-80 cursor-pointer transition-transform hover:scale-105 overflow-hidden"
+                  className="cursor-pointer transition-transform hover:scale-105"
                   onClick={() => handleMemberClick(item)}
                 >
-                  <img
-                    src={item.imageUrl}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#1D5C75] to-transparent p-4">
+                  {/* IMAGE */}
+                  <div className="w-full h-80 overflow-hidden">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* TEXT BELOW IMAGE */}
+                  <div className="mt-2 px-1">
                     <h3
-                      className={`${merri.className} font-bold text-white text-[16px] md:text-[18px]`}
+                      className={`${merri.className} font-bold text-[#1D5C75] italic text-[18px] md:text-[20px]`}
                     >
                       {item.name}
                     </h3>
+
                     <p
-                      className={`${merri.className} text-white text-[12px] md:text-[14px] uppercase`}
+                      className={`${merri.className} text-[#1D5C75] text-[14px] md:text-[16px] uppercase`}
                     >
                       {item.roles.join(' | ')}
                     </p>
