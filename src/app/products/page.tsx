@@ -285,7 +285,7 @@ const ProductsPage = () => {
                             textColor="#FFFFFF"
                             isArrow
                             isOutSideLink
-                            url=""
+                            url={product.productUrl}
                           />
                         </div>
                       </div>
