@@ -1,4 +1,4 @@
-// admin/events/page.tsx
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -15,6 +15,7 @@ import {
   MessageSquare,
   Youtube,
   MapPin,
+  Settings,
 } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 import { generateFullSlug } from '@/utils/slugUtils'
@@ -37,17 +38,30 @@ interface Event {
   mapUrl?: string
 }
 
+interface PageSettings {
+  title: string
+  subtitle: string
+}
+
 const FALLBACK_IMAGE = '/assets/fallbackImg.jpeg'
 
 const EventsAdminPage = () => {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [uploadingCover, setUploadingCover] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [savingSettings, setSavingSettings] = useState(false)
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming')
+  
+  const [pageSettings, setPageSettings] = useState<PageSettings>({
+    title: 'Events',
+    subtitle: 'Discover our upcoming events and relive the memories from past gatherings',
+  })
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -65,13 +79,13 @@ const EventsAdminPage = () => {
 
   useEffect(() => {
     fetchEvents()
+    fetchPageSettings()
   }, [])
 
   const fetchEvents = async () => {
     try {
       const response = await fetch('/api/events')
       const data = await response.json()
-      // Sort events by date in ascending order
       const sortedEvents = (data.data || []).sort((a: Event, b: Event) => {
         const dateA = new Date(a.eventDate).getTime()
         const dateB = new Date(b.eventDate).getTime()
@@ -82,6 +96,47 @@ const EventsAdminPage = () => {
     } catch (err) {
       alert('Failed to fetch events')
       setLoading(false)
+    }
+  }
+
+  const fetchPageSettings = async () => {
+    try {
+      const response = await fetch('/api/events/page-settings')
+      const data = await response.json()
+      if (data.success) {
+        setPageSettings(data.data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch page settings:', err)
+    }
+  }
+
+  const handleSavePageSettings = async () => {
+    if (!pageSettings.title.trim() || !pageSettings.subtitle.trim()) {
+      alert('Title and subtitle are required')
+      return
+    }
+
+    setSavingSettings(true)
+    try {
+      const response = await fetch('/api/events/page-settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pageSettings),
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to save settings')
+      }
+
+      alert('Page settings updated successfully!')
+      setShowSettingsModal(false)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setSavingSettings(false)
     }
   }
 
@@ -99,7 +154,6 @@ const EventsAdminPage = () => {
     setFormData((prev) => {
       const updated = { ...prev, [name]: value }
 
-      // Auto-generate slug when title changes (for both new and existing events)
       if (name === 'title') {
         updated.slug = generateFullSlug(value)
       }
@@ -208,7 +262,6 @@ const EventsAdminPage = () => {
   }
 
   const handleSubmit = async () => {
-    // Validation
     if (
       !formData.title ||
       !formData.description ||
@@ -225,7 +278,6 @@ const EventsAdminPage = () => {
       return
     }
 
-
     if (submitting) {
       return
     }
@@ -233,7 +285,6 @@ const EventsAdminPage = () => {
     setSubmitting(true)
 
     try {
-    
       const dataToSubmit = {
         ...formData,
         coverImage: formData.coverImage || FALLBACK_IMAGE,
@@ -296,7 +347,6 @@ const EventsAdminPage = () => {
     })
   }
 
-  // Check if form is valid for submission
   const isFormValid = () => {
     return (
       formData.title.trim() !== '' &&
@@ -309,7 +359,6 @@ const EventsAdminPage = () => {
     )
   }
 
-  // Helper function to render description with line breaks
   const renderDescriptionWithLineBreaks = (text: string) => {
     return text.split('\n').map((line, index, array) => (
       <React.Fragment key={index}>
@@ -319,7 +368,6 @@ const EventsAdminPage = () => {
     ))
   }
 
-  // Render event cards
   const renderEventCards = (eventsList: Event[]) => {
     if (eventsList.length === 0) {
       return (
@@ -447,12 +495,38 @@ const EventsAdminPage = () => {
                 </p>
               </div>
 
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button
+                  onClick={() => setShowSettingsModal(true)}
+                  className="flex items-center justify-center gap-2 bg-gray-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-gray-700 transition-colors flex-1 sm:flex-initial"
+                >
+                  <Settings size={20} />
+                  Page Settings
+                </button>
+                <button
+                  onClick={handleCreate}
+                  className="flex items-center justify-center cursor-pointer gap-2 bg-purple-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-purple-700 transition-colors flex-1 sm:flex-initial"
+                >
+                  <Plus size={20} />
+                  New Event
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Page Settings Preview */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg shadow-md p-6 mb-6 border-l-4 border-purple-600">
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">{pageSettings.title}</h2>
+                <p className="text-gray-600 mt-1">{pageSettings.subtitle}</p>
+              </div>
               <button
-                onClick={handleCreate}
-                className="flex items-center justify-center cursor-pointer gap-2 bg-purple-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-purple-700 transition-colors w-full sm:w-auto"
+                onClick={() => setShowSettingsModal(true)}
+                className="text-purple-600 hover:text-purple-700 p-2"
+                title="Edit page settings"
               >
-                <Plus size={20} />
-                New Event
+                <Pencil size={18} />
               </button>
             </div>
           </div>
@@ -496,6 +570,98 @@ const EventsAdminPage = () => {
             </div>
           )}
 
+          {/* Page Settings Modal */}
+          {showSettingsModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full">
+                <div className="flex justify-between items-center p-6 border-b">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Page Settings
+                  </h2>
+                  <button
+                    onClick={() => setShowSettingsModal(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                    disabled={savingSettings}
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <div className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Page Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.title}
+                      onChange={(e) =>
+                        setPageSettings((prev) => ({
+                          ...prev,
+                          title: e.target.value,
+                        }))
+                      }
+                      disabled={savingSettings}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="e.g., Events"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Page Subtitle *
+                    </label>
+                    <textarea
+                      value={pageSettings.subtitle}
+                      onChange={(e) =>
+                        setPageSettings((prev) => ({
+                          ...prev,
+                          subtitle: e.target.value,
+                        }))
+                      }
+                      rows={3}
+                      disabled={savingSettings}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="e.g., Discover our upcoming events and relive the memories from past gatherings"
+                    />
+                  </div>
+
+                  <div className="flex gap-4 pt-4">
+                    <button
+                      onClick={() => setShowSettingsModal(false)}
+                      disabled={savingSettings}
+                      className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSavePageSettings}
+                      disabled={
+                        savingSettings ||
+                        !pageSettings.title.trim() ||
+                        !pageSettings.subtitle.trim()
+                      }
+                      className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {savingSettings ? (
+                        <>
+                          <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <Save size={20} />
+                          Save Settings
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Event Modal - Keep existing modal code */}
           {showModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
               <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full my-8">
