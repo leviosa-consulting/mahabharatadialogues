@@ -117,6 +117,7 @@ export async function PUT(
       images: body.images || [],
       description,
       slug: uniqueSlug,
+      productUrl: body.productUrl || "",
       updated_at: new Date().toISOString(),
     };
 

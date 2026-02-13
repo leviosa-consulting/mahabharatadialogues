@@ -92,6 +92,7 @@ export async function POST(req: NextRequest) {
       images: body.images || [],
       description,
       slug: uniqueSlug,
+      productUrl: body.productUrl || "",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };

@@ -14,6 +14,7 @@ import {
   Gamepad2,
   IndianRupee,
   Settings,
+  ExternalLink,
 } from 'lucide-react'
 import { uploadToFirebaseStorage } from '@/utils/firebaseStorageUpload'
 import { generateFullSlug } from '@/utils/slugUtils'
@@ -30,6 +31,7 @@ interface Product {
   images?: string[]
   description: string
   slug: string
+  productUrl?: string
 }
 
 interface PageSettings {
@@ -65,6 +67,7 @@ const ProductsAdminPage = () => {
     images: [] as string[],
     description: '',
     slug: '',
+    productUrl: '',
   })
 
   useEffect(() => {
@@ -214,6 +217,7 @@ const ProductsAdminPage = () => {
       images: [],
       description: '',
       slug: '',
+      productUrl: '',
     })
     setEditingId(null)
     setShowModal(false)
@@ -234,6 +238,7 @@ const ProductsAdminPage = () => {
       images: product.images || [],
       description: product.description || '',
       slug: product.slug || '',
+      productUrl: product.productUrl || '',
     })
     setEditingId(product.id)
     setShowModal(true)
@@ -413,6 +418,19 @@ const ProductsAdminPage = () => {
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 <ImageIcon size={14} />
                 <span>{product.images.length} gallery image(s)</span>
+              </div>
+            )}
+            {product.productUrl && (
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <ExternalLink size={14} />
+                <a 
+                  href={product.productUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-700 truncate"
+                >
+                  Product Link
+                </a>
               </div>
             )}
           </div>
@@ -688,6 +706,27 @@ const ProductsAdminPage = () => {
                       <option value="Books">Books</option>
                       <option value="Games">Games</option>
                     </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Product URL{' '}
+                      <span className="text-xs text-gray-500">
+                        (Optional - External purchase link)
+                      </span>
+                    </label>
+                    <input
+                      type="url"
+                      name="productUrl"
+                      value={formData.productUrl}
+                      onChange={handleInputChange}
+                      disabled={submitting}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      placeholder="e.g., https://amazon.in/product-link"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      💡 Tip: Add Amazon, Flipkart, or any external purchase link
+                    </p>
                   </div>
 
                   <div>
