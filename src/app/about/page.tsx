@@ -10,7 +10,7 @@ import CustomButton from '@/components/CustomButton'
 import Footer from '@/components/Footer'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { X, Linkedin, Twitter, Instagram } from 'lucide-react'
-
+import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 interface SocialLinks {
   linkedin?: string
   twitter?: string
@@ -31,7 +31,7 @@ const AboutPage = () => {
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
-
+ const settings = usePageSettingsStore((state) => state.settings)
   useEffect(() => {
     fetchMembers()
   }, [])
@@ -77,16 +77,7 @@ const AboutPage = () => {
           <div className="grid grid-cols-12 gap-3">
             <div className="col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
               <p className="font-neco font-medium italic text-[#1D5C75] text-[20px] md:text-[28px] text-center">
-                Mahabharata Dialogues stemed from iscover our upcoming events
-                and relive the memories from past gatherings Dive into the
-                mystical world of Indian mythology with 'Kiriti & Kirata', part
-                of the Heroes of Bharata series by Abhilash Purohit. This
-                captivating tale follows Arjuna's transformative journey as he
-                prepares for an unprecedented war. Dive into the mystical world
-                of Indian mythology with 'Kiriti & Kirata', part of the Heroes
-                of Bharata series by Abhilash Purohit. This captivating tale
-                follows Arjuna's transformative journey as he prepares for an
-                unprecedented war.
+              {settings?.about.title}
               </p>
             </div>
           </div>
@@ -111,8 +102,7 @@ const AboutPage = () => {
                 <p
                   className={`text-white ${merri.className} font-bold italic text-center md:text-left text-[20px] md:text-[24px]`}
                 >
-                  We have done Think you want to take the story of Mahabharata
-                  ahead and see what is left to explore?
+               {settings?.about.subtitle}
                 </p>
                 <CustomButton
                   text="REACH US"

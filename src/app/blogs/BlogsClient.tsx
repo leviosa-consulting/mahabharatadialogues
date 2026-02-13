@@ -11,7 +11,7 @@ import BlogsShimmer from '@/components/shimmer/BlogsShimmer'
 import { useSearchParams } from 'next/navigation'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import NavbarScroll from '@/components/NavbarScroll'
-
+import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 interface Blog {
   id: string
   title: string
@@ -45,7 +45,7 @@ const BlogsClient = () => {
   const [showAllReadingTimes, setShowAllReadingTimes] = useState(false)
 
   const [isMobile, setIsMobile] = useState(false)
-
+ const settings = usePageSettingsStore((state) => state.settings)
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
@@ -325,13 +325,12 @@ const BlogsClient = () => {
           <h2
             className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
           >
-            BLOG
+            {settings?.blogs.title}
           </h2>
           <p
             className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-light px-1`}
           >
-            Discover our upcoming events and relive the memories from past
-            gatherings
+            {settings?.blogs.subtitle}
           </p>
         </div>
 

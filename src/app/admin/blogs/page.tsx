@@ -1,3 +1,4 @@
+// admin/blogs/page.tsx
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -24,6 +25,7 @@ import {
   YoutubeIcon,
   Link as LinkIcon,
   Unlink,
+  Settings,
 } from 'lucide-react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -46,6 +48,11 @@ interface Blog {
   content: string
   author: string
   categories: string[]
+}
+
+interface PageSettings {
+  title: string
+  subtitle: string
 }
 
 const MenuBar = ({ editor }: any) => {
@@ -76,7 +83,6 @@ const MenuBar = ({ editor }: any) => {
     if (!url) return
 
     try {
-      // Extract video ID from various YouTube URL formats
       let videoId = ''
 
       if (url.includes('youtube.com/watch?v=')) {
@@ -92,7 +98,6 @@ const MenuBar = ({ editor }: any) => {
         return
       }
 
-      // Insert YouTube video using TipTap command
       editor.commands.setYoutubeVideo({
         src: `https://www.youtube.com/watch?v=${videoId}`,
       })
@@ -106,18 +111,15 @@ const MenuBar = ({ editor }: any) => {
     const previousUrl = editor.getAttributes('link').href
     const url = prompt('Enter URL:', previousUrl)
 
-    // cancelled
     if (url === null) {
       return
     }
 
-    // empty
     if (url === '') {
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
       return
     }
 
-    // update link
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }
 
@@ -309,7 +311,9 @@ const BlogAdminPage = () => {
   const [Blogs, setBlogs] = useState<Blog[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [savingSettings, setSavingSettings] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
@@ -321,6 +325,11 @@ const BlogAdminPage = () => {
   })
   const [uploadingCoverImage, setUploadingCoverImage] = useState(false)
   const [categoryInput, setCategoryInput] = useState('')
+
+  const [pageSettings, setPageSettings] = useState<PageSettings>({
+    title: 'Blogs',
+    subtitle: 'Read our latest articles and insights',
+  })
 
   const editor = useEditor({
     extensions: [
@@ -392,6 +401,7 @@ const BlogAdminPage = () => {
 
   useEffect(() => {
     fetchBlogs()
+    fetchPageSettings()
   }, [])
 
   useEffect(() => {
@@ -409,6 +419,47 @@ const BlogAdminPage = () => {
     } catch (err) {
       alert('Failed to fetch Blogs')
       setLoading(false)
+    }
+  }
+
+  const fetchPageSettings = async () => {
+    try {
+      const response = await fetch('/api/blogs/page-settings')
+      const data = await response.json()
+      if (data.success) {
+        setPageSettings(data.data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch page settings:', err)
+    }
+  }
+
+  const handleSavePageSettings = async () => {
+    if (!pageSettings.title.trim() || !pageSettings.subtitle.trim()) {
+      alert('Title and subtitle are required')
+      return
+    }
+
+    setSavingSettings(true)
+    try {
+      const response = await fetch('/api/blogs/page-settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pageSettings),
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to save settings')
+      }
+
+      alert('Page settings updated successfully!')
+      setShowSettingsModal(false)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setSavingSettings(false)
     }
   }
 
@@ -637,7 +688,6 @@ const BlogAdminPage = () => {
               display: list-item;
             }
 
-            /* Optional: improve marker visibility */
             .ProseMirror li::marker {
               color: #4a4a4a;
             }
@@ -725,16 +775,26 @@ const BlogAdminPage = () => {
                   </p>
                 </div>
 
-                <button
-                  onClick={handleCreate}
-                  className="flex items-center justify-center cursor-pointer gap-2 bg-purple-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-purple-700 transition-colors w-full sm:w-auto"
-                >
-                  <Plus size={20} />
-                  New Blog
-                </button>
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={() => setShowSettingsModal(true)}
+                    className="flex items-center justify-center gap-2 bg-gray-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-gray-700 transition-colors flex-1 sm:flex-initial"
+                  >
+                    <Settings size={20} />
+                    Page Settings
+                  </button>
+                  <button
+                    onClick={handleCreate}
+                    className="flex items-center justify-center cursor-pointer gap-2 bg-purple-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-purple-700 transition-colors flex-1 sm:flex-initial"
+                  >
+                    <Plus size={20} />
+                    New Blog
+                  </button>
+                </div>
               </div>
             </div>
 
+           
             {loading ? (
               <div className="bg-white rounded-lg shadow-md p-12 text-center">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-600 border-t-transparent"></div>
@@ -823,6 +883,97 @@ const BlogAdminPage = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Page Settings Modal */}
+            {showSettingsModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full">
+                  <div className="flex justify-between items-center p-6 border-b">
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Page Settings
+                    </h2>
+                    <button
+                      onClick={() => setShowSettingsModal(false)}
+                      className="text-gray-400 hover:text-gray-600"
+                      disabled={savingSettings}
+                    >
+                      <X size={24} />
+                    </button>
+                  </div>
+
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Page Title *
+                      </label>
+                      <input
+                        type="text"
+                        value={pageSettings.title}
+                        onChange={(e) =>
+                          setPageSettings((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }))
+                        }
+                        disabled={savingSettings}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        placeholder="e.g., Blogs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Page Subtitle *
+                      </label>
+                      <textarea
+                        value={pageSettings.subtitle}
+                        onChange={(e) =>
+                          setPageSettings((prev) => ({
+                            ...prev,
+                            subtitle: e.target.value,
+                          }))
+                        }
+                        rows={3}
+                        disabled={savingSettings}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        placeholder="e.g., Read our latest articles and insights"
+                      />
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                      <button
+                        onClick={() => setShowSettingsModal(false)}
+                        disabled={savingSettings}
+                        className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleSavePageSettings}
+                        disabled={
+                          savingSettings ||
+                          !pageSettings.title.trim() ||
+                          !pageSettings.subtitle.trim()
+                        }
+                        className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {savingSettings ? (
+                          <>
+                            <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <Save size={20} />
+                            Save Settings
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 

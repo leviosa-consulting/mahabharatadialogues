@@ -6,7 +6,7 @@ import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
 import CustomButton from '@/components/CustomButton'
-
+import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 import { Product } from '@/data/productsData'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
@@ -67,7 +67,7 @@ const ProductsPage = () => {
   useEffect(() => {
     fetchProducts()
   }, [])
-
+ const settings = usePageSettingsStore((state) => state.settings)
   const fetchProducts = async () => {
     try {
       const response = await fetch('/api/products')
@@ -116,12 +116,12 @@ const ProductsPage = () => {
           <h2
             className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
           >
-            PRODUCTS
+           {settings?.products.title}
           </h2>
           <p
             className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-light px-1`}
           >
-            Discover our products
+           {settings?.products.subtitle}
           </p>
         </div>
       </div>

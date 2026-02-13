@@ -12,7 +12,7 @@ import UpcomingEvents from '@/components/Upcomingevents'
 import PastEventsShimmer from '@/components/shimmer/PastEventsShimmer'
 import NavbarScroll from '@/components/NavbarScroll'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
-
+import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 interface Event {
   id: string
   type: 'event' | 'retreat'
@@ -50,7 +50,7 @@ const EventsPage = () => {
   const [pastEvents, setPastEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-
+ const settings = usePageSettingsStore((state) => state.settings)
   useEffect(() => {
     fetchEvents()
   }, [])
@@ -237,15 +237,14 @@ const EventsPage = () => {
       >
         <div className="max-w-xl mx-auto pt-28 pb-10 flex flex-col justify-center items-center text-center">
           <h2
-            className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
+            className={`${merri.className} text-white uppercase text-[24px] font-extrabold `}
           >
-            Events
+          {settings?.events.title}
           </h2>
           <p
             className={`${merri.className} text-[#D9D9D9] italic  text-[24px] font-light px-4`}
           >
-            Discover our upcoming events and relive the memories from past
-            gatherings
+           {settings?.events.subtitle}
           </p>
         </div>
         <div className="pb-28">

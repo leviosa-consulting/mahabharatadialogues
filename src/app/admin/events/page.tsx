@@ -514,22 +514,7 @@ const EventsAdminPage = () => {
             </div>
           </div>
 
-          {/* Page Settings Preview */}
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg shadow-md p-6 mb-6 border-l-4 border-purple-600">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">{pageSettings.title}</h2>
-                <p className="text-gray-600 mt-1">{pageSettings.subtitle}</p>
-              </div>
-              <button
-                onClick={() => setShowSettingsModal(true)}
-                className="text-purple-600 hover:text-purple-700 p-2"
-                title="Edit page settings"
-              >
-                <Pencil size={18} />
-              </button>
-            </div>
-          </div>
+       
 
           {/* Tabs */}
           <div className="bg-white rounded-lg shadow-md mb-6">

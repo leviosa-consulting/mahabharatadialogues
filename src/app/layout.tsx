@@ -4,6 +4,7 @@ import { Geist, Roboto } from 'next/font/google'
 import { merri } from '@/app/fonts/merri'
 import './globals.css'
 import { AuthProvider } from '@/lib/authContext'
+import PageSettingsProvider from '@/components/PageSettingsProvider'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -52,7 +53,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${roboto.variable} ${merri.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <PageSettingsProvider>
+            {children}
+          </PageSettingsProvider>
+        </AuthProvider>
       </body>
     </html>
   )
