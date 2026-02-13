@@ -12,7 +12,7 @@ import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { ArrowLeft } from 'lucide-react'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
-
+import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 export default function ProductDetails() {
   const params = useParams()
   const slug = params.slug as string
@@ -21,7 +21,7 @@ export default function ProductDetails() {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
+  const settings = usePageSettingsStore((state) => state.settings)
   useEffect(() => {
     if (slug) {
       fetchProduct()
@@ -32,13 +32,14 @@ export default function ProductDetails() {
   useEffect(() => {
     if (!product || !product.images || product.images.length <= 1) return
 
-    const productImages = product.images && product.images.length > 0
-      ? product.images
-      : [product.image]
+    const productImages =
+      product.images && product.images.length > 0
+        ? product.images
+        : [product.image]
 
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % productImages.length
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % productImages.length,
       )
     }, 3000) // Change image every 3 seconds
 
@@ -67,7 +68,7 @@ export default function ProductDetails() {
         const related = (allProductsData.data || [])
           .filter(
             (p: Product) =>
-              p.category === data.data.category && p.id !== data.data.id
+              p.category === data.data.category && p.id !== data.data.id,
           )
           .slice(0, 3) // This ensures maximum 3 products
         setRelatedProducts(related)
@@ -109,13 +110,12 @@ export default function ProductDetails() {
             <h2
               className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
             >
-              PRODUCTS
+              {settings?.products.title}
             </h2>
             <p
               className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-normal px-1`}
             >
-              Discover our upcoming events and relive the memories from past
-              gatherings
+              {settings?.products.subtitle}
             </p>
           </div>
         </div>
@@ -189,7 +189,6 @@ export default function ProductDetails() {
                 <ArrowLeft size={20} />
                 <span>Back to Products</span>
               </Link>
-              <img src="/cart.png" alt="cart" className="w-8 md:w-10" />
             </div>
           </div>
 
@@ -198,11 +197,13 @@ export default function ProductDetails() {
             {/* Image Carousel */}
             <div className="mb-6">
               <div className="w-full mx-auto">
-                <img
-                  src={productImages[currentImageIndex]}
-                  alt={product.name}
-                  className="w-full h-60 md:h-112 object-cover transition-opacity duration-500"
-                />
+                <div className="w-full flex justify-center bg-gray-100">
+                  <img
+                    src={productImages[currentImageIndex]}
+                    alt={product.name}
+                    className="w-full max-h-[350px] md:max-h-[450px] object-contain transition-opacity duration-500"
+                  />
+                </div>
 
                 {/* Carousel Dots */}
                 <div className="flex justify-center md:justify-start gap-3.5 mt-4">
@@ -252,13 +253,17 @@ export default function ProductDetails() {
                   <span className="text-[20px]">₹</span>
                   {product.price}
                 </div>
-
-                {/* BUTTON */}
-                <button
-                  className={`${merri.className} w-full font-bold text-[14px] md:text-[16px] py-2 bg-[#D12127] text-white`}
+                <Link
+                  href={product.productUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  GO TO CART
-                </button>
+                  <span
+                    className={`${merri.className}  w-[160px] font-bold text-[14px] md:text-[16px] py-2 bg-[#D12127] text-white flex items-center justify-center cursor-pointer`}
+                  >
+                    GO TO SHOP
+                  </span>
+                </Link>
               </div>
             </div>
           </div>
@@ -332,7 +337,7 @@ export default function ProductDetails() {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className='pt-16'>
+        <div className="pt-16">
           <FooterWithBlogs />
         </div>
       </div>

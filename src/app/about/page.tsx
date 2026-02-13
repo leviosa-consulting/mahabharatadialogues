@@ -154,13 +154,13 @@ const AboutPage = () => {
                   {/* Bottom gradient content */}
                   <div className="w-full flex flex-col justify-center items-center absolute bottom-0 left-0 p-4 bg-gradient-to-b from-[#1D5C75] to-[#1D5C75]/50 text-center">
                     <h2
-                      className={`${merri.className} italic font-extrabold text-[28px] md:text-[34px] text-white`}
+                      className={`${merri.className} italic font-extrabold text-[24px] md:text-[28px] text-white`}
                     >
                       {item.name}
                     </h2>
 
                     <h3
-                      className={`${merri.className} font-normal text-[18px] md:text-[24px] text-white uppercase`}
+                      className={`${merri.className} font-normal text-[16px] md:text-[20px] text-white uppercase`}
                     >
                       {item.roles.join(' | ')}
                     </h3>

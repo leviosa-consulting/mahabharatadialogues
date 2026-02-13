@@ -67,7 +67,7 @@ const ProductsPage = () => {
   useEffect(() => {
     fetchProducts()
   }, [])
- const settings = usePageSettingsStore((state) => state.settings)
+  const settings = usePageSettingsStore((state) => state.settings)
   const fetchProducts = async () => {
     try {
       const response = await fetch('/api/products')
@@ -98,7 +98,7 @@ const ProductsPage = () => {
       <div className="hidden sm:block relative pt-5 z-10">
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
-      <NavbarScroll textColor="#1D5C75"/>
+      <NavbarScroll textColor="#1D5C75" />
 
       {/* first section */}
       <div
@@ -116,12 +116,12 @@ const ProductsPage = () => {
           <h2
             className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
           >
-           {settings?.products.title}
+            {settings?.products.title}
           </h2>
           <p
             className={`${merri.className} text-[#D9D9D9] italic text-[24px] font-light px-1`}
           >
-           {settings?.products.subtitle}
+            {settings?.products.subtitle}
           </p>
         </div>
       </div>
@@ -139,7 +139,7 @@ const ProductsPage = () => {
                 ) : (
                   <>
                     Showing {filteredProducts.length} of {products.length}{' '}
-                    products
+                    {products.length > 1 ? 'products' : 'product'}
                   </>
                 )}
               </h2>
@@ -186,11 +186,6 @@ const ProductsPage = () => {
                     Books
                   </button>
                 </div>
-
-                {/* CART (second row right on mobile) */}
-                <div className="flex justify-end items-center md:ml-auto">
-                  <img src="/cart.png" alt="cart" className="w-8 md:w-10" />
-                </div>
               </div>
             </div>
           </div>
@@ -205,8 +200,21 @@ const ProductsPage = () => {
                   <ProductSkeleton />
                   <ProductSkeleton />
                 </>
+              ) : filteredProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <h2
+                    className={`${merri.className} text-[#1D5C75] text-[28px] md:text-[32px] italic font-bold`}
+                  >
+                    No Products Found
+                  </h2>
+                  <p
+                    className={`${merri.className} text-[16px] md:text-[18px] text-gray-600 mt-4 max-w-[500px]`}
+                  >
+                    We couldn't find any products matching your selected filter.
+                    Try changing the category.
+                  </p>
+                </div>
               ) : (
-                // Show actual products when loaded
                 filteredProducts.map((product, index) => (
                   <div
                     key={product.id}
