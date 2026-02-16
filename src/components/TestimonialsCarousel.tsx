@@ -36,7 +36,7 @@ const TestimonialsCarousel = ({
     }
   }, [initialTestimonials])
 
-  // Auto-scroll effect with transition
+  
   useEffect(() => {
     if (testimonials.length > 0 && !isAutoScrollPaused) {
       autoScrollInterval.current = setInterval(() => {
@@ -44,7 +44,7 @@ const TestimonialsCarousel = ({
         setTimeout(() => {
           setCurrentIndex((prev) => (prev + 1) % testimonials.length)
           setIsTransitioning(false)
-        }, 300) // Half of transition time for smooth effect
+        }, 300) 
       }, 3000)
 
       return () => {

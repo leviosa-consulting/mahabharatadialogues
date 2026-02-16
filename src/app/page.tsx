@@ -3,8 +3,9 @@ import HeroSection from '@/components/Hero'
 import Testimonials from '@/components/Testimonials'
 import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
-import UpcomingEvents from '@/components/Upcomingevents'
+import UpcomingEvents from '@/components/UpcomingEventsClient'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll' // Add this import
+import UpcomingEventsServer from '@/components/UpcomingEventsServer'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -22,7 +23,7 @@ export default function Home() {
       <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
 
       <HeroSection />
-      <UpcomingEvents />
+      <UpcomingEventsServer />
       <ImageCarousel />
       <Retreats />
     </div>

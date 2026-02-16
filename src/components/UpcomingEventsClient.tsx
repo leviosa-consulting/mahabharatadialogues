@@ -25,49 +25,20 @@ interface Event {
   city?: string
 }
 
-interface RetreatData {
-  id: string
-  title: string
-  description: string
-  photos?: string[]
-  venue?: string
-  city?: string
-  mapUrl?: string
-  day1: {
-    date: string
-    dayName: string
-  }
-  day2?: {
-    date: string
-    dayName: string
-  }
-  day3?: {
-    date: string
-    dayName: string
-  }
-  slug?: string
-  bookingUrl: string
-  coverImage: string
+
+
+interface Props {
+  initialFeaturedItem: Event | null
+  initialUpcomingItems: Event[]
 }
 
-interface EventData {
-  id: string
-  title: string
-  coverImage: string
-  eventDate: string
-  eventTime?: string
-  venue: string
-  mapUrl?: string
-  city?: string
-  description?: string
-  bookingUrl?: string
-  slug?: string
-}
-
-const UpcomingEvents = () => {
-  const [upcomingItems, setUpcomingItems] = useState<Event[]>([])
-  const [featuredItem, setFeaturedItem] = useState<Event | null>(null)
-  const [loading, setLoading] = useState(true)
+const UpcomingEventsClient =  ({ 
+  initialFeaturedItem, 
+  initialUpcomingItems 
+}: Props) => {
+  const [upcomingItems, setUpcomingItems] = useState(initialUpcomingItems)
+  const [featuredItem, setFeaturedItem] = useState(initialFeaturedItem)
+  const [loading, setLoading] = useState(false)
   const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -75,9 +46,7 @@ const UpcomingEvents = () => {
   const router = useRouter()
   const MAX_CHARS = 80
 
-  useEffect(() => {
-    fetchUpcomingItems()
-  }, [])
+  
 
   useEffect(() => {
     if (featuredCardRef.current && featuredItem) {
@@ -244,91 +213,7 @@ const UpcomingEvents = () => {
 }
 
 
-  const fetchUpcomingItems = async () => {
-    try {
-      setLoading(true)
-      const now = new Date()
-      const thirtyDaysLater = new Date(now)
-      thirtyDaysLater.setDate(now.getDate() + 300)
 
-      const retreatsResponse = await fetch('/api/retreats')
-      const retreatsData = await retreatsResponse.json()
-
-      const eventsResponse = await fetch('/api/events')
-      const eventsData = await eventsResponse.json()
-
-      const allItems: Event[] = []
-
-      if (retreatsData.success && retreatsData.data) {
-        retreatsData.data.forEach((retreat: RetreatData) => {
-          const retreatDate = parseDate(retreat.day1.date)
-
-          retreatDate.setHours(23, 59, 59, 999)
-
-          if (retreatDate >= now && retreatDate <= thirtyDaysLater) {
-            const endDate =
-              retreat.day3?.date || retreat.day2?.date || retreat.day1.date
-
-            allItems.push({
-              id: retreat.id,
-              type: 'retreat',
-              title: retreat.title,
-              description: retreat.description || '',
-              coverImage: retreat.coverImage || '/assets/fallbackImg.jpeg',
-              date: retreat.day1.date,
-              endDate: endDate,
-              time: '',
-              venue: retreat.venue || 'Venue TBA',
-              mapUrl: retreat.mapUrl || '',
-              city: retreat.city,
-              slug: retreat.slug,
-              bookingUrl: retreat.bookingUrl,
-            })
-          }
-        })
-      }
-
-      if (eventsData.success && eventsData.data) {
-        eventsData.data.forEach((event: EventData) => {
-          const eventDateTime = new Date(event.eventDate)
-
-          if (eventDateTime >= now && eventDateTime <= thirtyDaysLater) {
-            allItems.push({
-              id: event.id,
-              type: 'event',
-              title: event.title,
-              coverImage: event.coverImage || '/assets/fallbackImg.jpeg',
-              date: event.eventDate,
-              time: event.eventTime || '',
-              venue: event.venue || 'Venue TBA',
-              mapUrl: event.mapUrl || '',
-              description: event.description || '',
-              bookingUrl: event.bookingUrl,
-              slug: event.slug,
-              city: event.city,
-            })
-          }
-        })
-      }
-
-      // Sort by date (earliest first)
-      allItems.sort((a, b) => {
-        const dateA = a.type === 'event' ? new Date(a.date) : parseDate(a.date)
-        const dateB = b.type === 'event' ? new Date(b.date) : parseDate(b.date)
-        return dateA.getTime() - dateB.getTime()
-      })
-
-      if (allItems.length > 0) {
-        setFeaturedItem(allItems[0])
-        setUpcomingItems(allItems.slice(1))
-      }
-
-      setLoading(false)
-    } catch (error) {
-      console.error('Error fetching upcoming items:', error)
-      setLoading(false)
-    }
-  }
 
   const getDisplayDate = (item: Event): string => {
     if (item.type === 'retreat' && item.endDate && item.endDate !== item.date) {
@@ -339,34 +224,7 @@ const UpcomingEvents = () => {
     return formatDate(item.date)
   }
 
-  const handleShare = async (bookingUrl?: string) => {
-    if (!bookingUrl) {
-      alert('No booking URL available')
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(bookingUrl)
-      alert('Booking URL copied to clipboard!')
-    } catch (err) {
-      console.error('Failed to copy:', err)
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea')
-      textArea.value = bookingUrl
-      textArea.style.position = 'fixed'
-      textArea.style.left = '-999999px'
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      try {
-        document.execCommand('copy')
-        alert('Booking URL copied to clipboard!')
-      } catch (err) {
-        alert('Failed to copy URL')
-      }
-      document.body.removeChild(textArea)
-    }
-  }
+ 
 
   const renderTextWithLineBreaks = (text: string) => {
     return text.split('\n').map((line, index, array) => (
@@ -730,4 +588,4 @@ const UpcomingEvents = () => {
   )
 }
 
-export default UpcomingEvents
+export default UpcomingEventsClient
