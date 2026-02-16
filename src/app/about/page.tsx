@@ -143,7 +143,7 @@ const AboutPage = () => {
                   onClick={() => handleMemberClick(item)}
                 >
                   {/* Image background */}
-                  <div className="absolute top-0 w-full h-[80%] md:h-[74%] bg-[#D9D9D9]/20" />
+                  <div className="absolute top-0 w-full h-[80%] md:h-[78%] bg-[#D9D9D9]/20" />
 
                   <img
                     src={item.imageUrl}

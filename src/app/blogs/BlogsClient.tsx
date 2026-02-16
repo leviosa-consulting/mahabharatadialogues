@@ -37,7 +37,7 @@ const BlogsClient = () => {
   const [allAuthors, setAllAuthors] = useState<string[]>([])
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
-  const [showFilters, setShowFilters] = useState(false) // NEW: Toggle filter visibility
+  const [showFilters, setShowFilters] = useState(false)
 
   const hasAppliedUrlParams = useRef(false)
 
