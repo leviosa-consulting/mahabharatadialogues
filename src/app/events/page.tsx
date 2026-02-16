@@ -1,5 +1,5 @@
 
-import EventsClient from '@/components/EventsClient'
+import EventsClient from "./EventsClient"
 
 interface EventData {
   id: string

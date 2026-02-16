@@ -1,6 +1,6 @@
-
 import { cache } from 'react'
 import UpcomingEventsClient from './UpcomingEventsClient'
+import TestimonialsSection from './TestimonialsSection'
 
 interface Event {
   id: string
@@ -57,7 +57,6 @@ interface EventData {
   slug?: string
 }
 
-
 const parseDate = (dateStr: string): Date => {
   if (dateStr.includes('-')) {
     return new Date(dateStr)
@@ -90,11 +89,11 @@ const getUpcomingItems = cache(async () => {
   try {
     const [retreatsResponse, eventsResponse] = await Promise.all([
       fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`, {
-        next: { revalidate: 3600 } 
+        next: { revalidate: 3600 },
       }),
       fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
-        next: { revalidate: 3600 }
-      })
+        next: { revalidate: 3600 },
+      }),
     ])
 
     const retreatsData = await retreatsResponse.json()
@@ -164,24 +163,41 @@ const getUpcomingItems = cache(async () => {
 
     return {
       featuredItem: allItems.length > 0 ? allItems[0] : null,
-      upcomingItems: allItems.slice(1)
+      upcomingItems: allItems.slice(1),
     }
   } catch (error) {
     console.error('Error fetching upcoming items:', error)
     return {
       featuredItem: null,
-      upcomingItems: []
+      upcomingItems: [],
     }
   }
 })
 
 export default async function UpcomingEventsServer() {
   const { featuredItem, upcomingItems } = await getUpcomingItems()
-  
+
   return (
-    <UpcomingEventsClient 
-      initialFeaturedItem={featuredItem}
-      initialUpcomingItems={upcomingItems}
-    />
+    <div
+      className="w-full relative mb-30"
+      style={{
+        backgroundImage: `
+          linear-gradient(
+            rgba(29, 92, 117, 0.5),
+            rgba(29, 92, 117, 0.5)
+          ),
+          url('/MD-Texture_BG_Blue-01-04.png')
+        `,
+        backgroundRepeat: "repeat",
+        backgroundSize: "240px 240px",
+      }}
+    >
+      <UpcomingEventsClient
+        initialFeaturedItem={featuredItem}
+        initialUpcomingItems={upcomingItems}
+      />
+
+      <TestimonialsSection textColor="#fff" />
+    </div>
   )
 }

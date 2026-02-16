@@ -1,3 +1,5 @@
+
+// app/blogs/page.tsx
 import { Metadata } from "next";
 import BlogsClient from "./BlogsClient";
 import { getBlogs } from "@/lib/data/blogs";

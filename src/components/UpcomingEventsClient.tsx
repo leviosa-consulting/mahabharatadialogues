@@ -8,6 +8,7 @@ import { MapPin } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import TestimonialsCarousel from './TestimonialsCarousel'
 import MobileNavbarScroll from './MobileNavbarScroll'
+import TestimonialsSection from './TestimonialsSection'
 
 interface Event {
   id: string
@@ -243,7 +244,7 @@ const UpcomingEventsClient =  ({
     text.length > max ? text.slice(0, max) + '...' : text
 
   return (
-    <div className="w-full pb-30">
+    <div className="w-full">
       {/* BACKGROUND SECTION */}
       <div
         className="w-full relative"
@@ -580,8 +581,7 @@ const UpcomingEventsClient =  ({
             </div>
           )}
 
-          {/* Testimonials Section */}
-          <TestimonialsCarousel textColor={'#fff'}/>
+       
         </div>
       </div>
     </div>

@@ -12,6 +12,8 @@ import { useSearchParams } from 'next/navigation'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import NavbarScroll from '@/components/NavbarScroll'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
+
+
 interface Blog {
   id: string
   title: string

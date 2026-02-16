@@ -24,6 +24,7 @@ export default function Home() {
 
       <HeroSection />
       <UpcomingEventsServer />
+      
       <ImageCarousel />
       <Retreats />
     </div>
