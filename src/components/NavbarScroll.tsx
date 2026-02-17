@@ -108,7 +108,7 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
             className={`${merri.className} font-bold uppercase text-[14px]`}
             style={{ color: textColor }}
           >
-            Blogs
+            Blog
           </Link>
 
           <Link

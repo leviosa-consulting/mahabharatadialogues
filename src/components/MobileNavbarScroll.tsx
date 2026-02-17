@@ -147,7 +147,7 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
             onClick={() => setOpen(false)}
             className={`${merri.className} text-white font-bold uppercase text-[18px]`}
           >
-            Blogs
+            Blog
           </Link>
           <Link
             href="/about"

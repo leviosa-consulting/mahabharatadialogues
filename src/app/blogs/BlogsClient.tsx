@@ -6,8 +6,7 @@ import Navbar from '@/components/Navbar'
 import React, { useState, useEffect, useRef } from 'react'
 import { merri } from '../fonts/merri'
 import Link from 'next/link'
-import Footer from '@/components/Footer'
-import BlogsShimmer from '@/components/shimmer/BlogsShimmer'
+
 import { useSearchParams } from 'next/navigation'
 import NavbarScroll from '@/components/NavbarScroll'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
@@ -469,10 +468,8 @@ useEffect(() => {
                 <p
                   className={`${merri.className} text-white font-bold pt-5 pb-20 text-[32px] md:text-[48px]`}
                 >
-                  Showing {filteredBlogs.length} of {blogs.length} {' '}
-                  <span className="text-[24px] md:text-[36px]">
-                    {filteredBlogs.length === 1 ? 'Blog' : 'Blogs'}
-                  </span>
+                  Showing {filteredBlogs.length} of {blogs.length} {' '} Articles
+                 
                 </p>
               </div>
             </div>
@@ -543,7 +540,7 @@ useEffect(() => {
                   <p
                     className={`${merri.className} text-[#1D5C75] text-xl mb-4`}
                   >
-                    No blogs found
+                    No blog found
                   </p>
                   <button
                     onClick={clearAllFilters}
