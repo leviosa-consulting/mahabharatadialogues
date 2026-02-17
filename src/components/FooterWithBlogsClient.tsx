@@ -1,11 +1,10 @@
+'use client'
 
-
+import { useState, useEffect } from 'react'
 import { Mail, Phone, Youtube, Instagram, Linkedin } from 'lucide-react'
 import LatestBlogs from '@/lib/LatestBlogs'
 import YouTubeSection from './YouTubeSection'
 import { merri } from '@/app/fonts/merri'
-import { getLatestVideos } from '@/lib/youtube'
-import { getBlogs } from '@/lib/data/blogs'
 
 type Blog = {
   id: string
@@ -15,16 +14,37 @@ type Blog = {
   updated_at?: string
 }
 
+const FALLBACK_VIDEOS = [
+  { id: 'tw7d2hMHyRY', title: 'A Weekend of Wisdom: Inside the Mahabharata Retreat (Second Edition) Experience', publishedAt: '2025-02-28' },
+  { id: 'vzIB3zXqMVk', title: 'Join us for a 2-day Mahabharata Retreat at Fireflies Ashram!', publishedAt: '2025-01-24' },
+];
+
 export default function FooterWithBlogsClient({
-  blogs,
-  videos,
+  blogs: initialBlogs = [],
+  videos: initialVideos,
   count = 2,
 }: {
-  blogs: Blog[]
-  videos: any[]
+  blogs?: Blog[]
+  videos?: any[]
   count?: number
 }) { 
+  const [blogs, setBlogs] = useState<Blog[]>(initialBlogs)
+  const [videos] = useState<any[]>(initialVideos || FALLBACK_VIDEOS)
 
+  useEffect(() => {
+    if (blogs.length === 0) {
+      fetch('/api/blogs')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data) {
+            setBlogs(data.data)
+          } else if (Array.isArray(data)) {
+            setBlogs(data)
+          }
+        })
+        .catch(() => {})
+    }
+  }, [])
 
   return (
     <div>

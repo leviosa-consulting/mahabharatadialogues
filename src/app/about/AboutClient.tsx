@@ -28,14 +28,35 @@ interface Member {
   teamType: 'core' | 'collaborators'
 }
 
-export default function AboutClient({ members }: { members: Member[] }) {
+export default function AboutClient({ members: initialMembers }: { members: Member[] }) {
+  const [members, setMembers] = useState<Member[]>(initialMembers)
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
+  const [loading, setLoading] = useState(initialMembers.length === 0)
   const settings = usePageSettingsStore((s) => s.settings)
 
+<<<<<<< HEAD
   const coreTeamMembers = members.filter((m) => m.teamType === 'core')
   const collaboratorMembers = members.filter(
     (m) => m.teamType === 'collaborators',
   )
+=======
+  useEffect(() => {
+    if (initialMembers.length === 0) {
+      fetch('/api/about')
+        .then(res => res.json())
+        .then(data => {
+          const fetched = data.data || (Array.isArray(data) ? data : [])
+          setMembers(fetched)
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false))
+    }
+  }, [])
+
+  const coreTeamMembers = members.filter(m => m.teamType === 'core')
+  const collaboratorMembers = members.filter(m => m.teamType === 'collaborators')
+  
+>>>>>>> 157eb12 (Convert pages and components to fetch data client-side)
 
   const handleMemberClick = (member: Member) => {
     setSelectedMember(member)

@@ -66,8 +66,21 @@ export const ProductsClient = ({ initialProducts }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<
     'All' | 'Books' | 'Games'
   >('All')
- const [products] = useState<Product[]>(initialProducts)
-const [loading] = useState(false)
+ const [products, setProducts] = useState<Product[]>(initialProducts)
+const [loading, setLoading] = useState(initialProducts.length === 0)
+
+useEffect(() => {
+  if (initialProducts.length === 0) {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        const fetched = data.success && data.data ? data.data : Array.isArray(data) ? data : []
+        setProducts(fetched)
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }
+}, [])
 
   const settings = usePageSettingsStore((state) => state.settings)
 

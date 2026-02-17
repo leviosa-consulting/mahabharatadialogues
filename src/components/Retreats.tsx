@@ -1,13 +1,42 @@
-import React from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 import CustomButton from './CustomButton'
 import YouTubeSection from './YouTubeSection'
 import LatestBlogs from '@/lib/LatestBlogs'
 import { merri } from '@/app/fonts/merri'
 import Footer from './Footer'
-import { getLatestVideos } from '@/lib/youtube'
-import LatestBlog from '@/lib/LatestBlog'
-export default async function Retreats() {
-  const videos = await getLatestVideos()
+
+type Blog = {
+  id: string
+  title: string
+  slug: string
+  image_url?: string
+  updated_at?: string
+}
+
+const FALLBACK_VIDEOS = [
+  { id: 'tw7d2hMHyRY', title: 'A Weekend of Wisdom: Inside the Mahabharata Retreat (Second Edition) Experience', publishedAt: '2025-02-28' },
+  { id: 'vzIB3zXqMVk', title: 'Join us for a 2-day Mahabharata Retreat at Fireflies Ashram!', publishedAt: '2025-01-24' },
+];
+
+export default function Retreats() {
+  const [videos] = useState(FALLBACK_VIDEOS)
+  const [blogs, setBlogs] = useState<Blog[]>([])
+
+  useEffect(() => {
+    fetch('/api/blogs')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data) {
+          setBlogs(data.data)
+        } else if (Array.isArray(data)) {
+          setBlogs(data)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <section
       className="relative w-full overflow-hidden flex flex-col justify-center "
@@ -85,7 +114,7 @@ export default async function Retreats() {
                 ON OUR BLOG
               </h2>
 
-              <LatestBlog />
+              <LatestBlogs blogs={blogs} />
             </div>
           </div>
         </div>

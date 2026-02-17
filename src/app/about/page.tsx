@@ -1,24 +1,10 @@
 import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
-import { notFound } from 'next/navigation'
 
-async function getMembers() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/about`, {
-    cache: 'no-store',
-  })
-
-  const data = await res.json()
-  return data.data || []
-}
-
-export default async function Page() {
-  const members = await getMembers()
-
-  if (!members) notFound()
-
+export default function Page() {
   return (
     <>
-      <AboutClient members={members} />
+      <AboutClient members={[]} />
       <div className='pt-20'
         style={{
           backgroundImage: `

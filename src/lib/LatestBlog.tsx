@@ -1,6 +1,16 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { merri } from "@/app/fonts/merri";
 import Link from "next/link";
-import { getBlogs } from "./data/blogs";
+
+type Blog = {
+  id: string
+  title: string
+  slug: string
+  image_url?: string
+  updated_at?: string
+}
 
 const formatDate = (date?: string) => {
   if (!date) return "";
@@ -13,21 +23,44 @@ const formatDate = (date?: string) => {
   });
 };
 
-export default async function LatestBlog({
+export default function LatestBlog({
   count = 4,
 }: {
   count?: number;
 }) {
-  const blogs = await getBlogs();
+  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/blogs')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data) {
+          setBlogs(data.data)
+        } else if (Array.isArray(data)) {
+          setBlogs(data)
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
 
   const latestBlogs = blogs
     .filter((b) => b.updated_at)
     .sort(
       (a, b) =>
-        new Date(b.updated_at).getTime() -
-        new Date(a.updated_at).getTime()
+        new Date(b.updated_at!).getTime() -
+        new Date(a.updated_at!).getTime()
     )
     .slice(0, count);
+
+  if (loading) {
+    return (
+      <p className="text-white/70 mt-12 text-center md:text-left">
+        Loading blogs...
+      </p>
+    );
+  }
 
   if (latestBlogs.length === 0) {
     return (

@@ -7,9 +7,6 @@ import UpcomingEvents from '@/components/UpcomingEventsClient'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll' 
 import UpcomingEventsServer from '@/components/UpcomingEventsServer'
 
-export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
-
 export default function Home() {
   return (
     <div
