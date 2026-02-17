@@ -1,6 +1,8 @@
 // app/events/[slug]/page.tsx
 
-import EventDetailClient from "./EventDetailClient.tsx"
+
+import FooterWithBlogs from '@/components/FooterWithBlogs'
+import EventDetailClient from './EventDetailClient.tsx'
 
 interface Event {
   id: string
@@ -22,29 +24,47 @@ async function getEvent(slug: string): Promise<Event | null> {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}`,
-      { cache: "no-store" }
-    );
+      { cache: 'no-store' },
+    )
 
-    const data = await res.json();
+    const data = await res.json()
 
-    if (data.success) return data.data;
+    if (data.success) return data.data
 
-    return null;
+    return null
   } catch {
-    return null;
+    return null
   }
 }
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params;
+  const { slug } = await params
 
-  const event = await getEvent(slug);
+  const event = await getEvent(slug)
 
-  if (!event) return null;
+  if (!event) return null
 
-  return <EventDetailClient event={event} />;
+  return (
+    <>
+      <EventDetailClient event={event} />
+
+      <div
+        style={{
+          backgroundImage: `
+            linear-gradient(#1D5C75CC, #1D5C75CC),
+            url('/MD-Texture_BG_Blue-01-04.png')
+          `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}
+        className="mt-12"
+      >
+        <FooterWithBlogs />
+      </div>
+    </>
+  )
 }

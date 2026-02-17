@@ -12,7 +12,8 @@ import {
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import CustomButton from '@/components/CustomButton'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
+
+
 
 interface Event {
   id: string
@@ -252,9 +253,7 @@ export default function EventDetailClient({ event }: { event: Event }) {
           </div>
         </div>
 
-        <div className='mt-16'>
-          <FooterWithBlogs />
-        </div>
+      
       </div>
 
       {selectedImageIndex !== null && event.gallery && (

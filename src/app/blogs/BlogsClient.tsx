@@ -9,9 +9,9 @@ import Link from 'next/link'
 import Footer from '@/components/Footer'
 import BlogsShimmer from '@/components/shimmer/BlogsShimmer'
 import { useSearchParams } from 'next/navigation'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
 import NavbarScroll from '@/components/NavbarScroll'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
+
 
 
 interface Blog {
@@ -26,11 +26,16 @@ interface Blog {
   created_at: string
 }
 
-const BlogsClient = () => {
+interface Props {
+  initialBlogs: Blog[];
+}
+
+const BlogsClient = ({ initialBlogs }: Props) => {
   const searchParams = useSearchParams()
 
-  const [blogs, setBlogs] = useState<Blog[]>([])
-  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([])
+const [blogs] = useState<Blog[]>(initialBlogs)
+const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(initialBlogs)
+const [loading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [selectedAuthor, setSelectedAuthor] = useState<string>('All')
@@ -38,7 +43,7 @@ const BlogsClient = () => {
   const [allCategories, setAllCategories] = useState<string[]>([])
   const [allAuthors, setAllAuthors] = useState<string[]>([])
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
+ 
   const [showFilters, setShowFilters] = useState(false)
 
   const hasAppliedUrlParams = useRef(false)
@@ -48,6 +53,8 @@ const BlogsClient = () => {
 
   const [isMobile, setIsMobile] = useState(false)
  const settings = usePageSettingsStore((state) => state.settings)
+
+ console.log("settings = ",settings)
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
@@ -58,40 +65,30 @@ const BlogsClient = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  useEffect(() => {
-    fetchBlogs()
-  }, [])
 
-  useEffect(() => {
-    if (blogs.length > 0 && !loading && !hasAppliedUrlParams.current) {
-      const categoryParam = searchParams.get('category')
-      const authorParam = searchParams.get('author')
-      const readingTimeParam = searchParams.get('readingTime')
+useEffect(() => {
+  if (!blogs.length) return;
 
-      if (categoryParam || authorParam || readingTimeParam) {
-        if (categoryParam) {
-          setSelectedCategory(categoryParam)
-        }
-        if (authorParam) {
-          setSelectedAuthor(authorParam)
-        }
-        if (readingTimeParam) {
-          setSelectedReadingTime(readingTimeParam)
-        }
+  setFilteredBlogs(blogs);
 
-        applyFilters(
-          '',
-          categoryParam || 'All',
-          authorParam || 'All',
-          readingTimeParam || 'All',
-        )
+  const categories = Array.from(
+    new Set(blogs.flatMap((b: Blog) => b.categories || [])),
+  ) as string[];
 
-        hasAppliedUrlParams.current = true
-      } else {
-        setFilteredBlogs(blogs)
-      }
-    }
-  }, [blogs.length, loading])
+  setAllCategories(categories.sort());
+
+  const authors = Array.from(
+    new Set(blogs.map((b: Blog) => b.author).filter(Boolean)),
+  ) as string[];
+
+  setAllAuthors(authors.sort());
+
+  const readingTimes = Array.from(
+    new Set(blogs.map((b: Blog) => estimateReadTime(b.content))),
+  ).sort((a, b) => a - b);
+
+  setAllReadingTimes(readingTimes.map((t) => `${t} min read`));
+}, [blogs]);
 
   // NEW: Real-time search as user types
   useEffect(() => {
@@ -103,45 +100,6 @@ const BlogsClient = () => {
     )
   }, [searchQuery])
 
-  // Fetch blogs from API
-  const fetchBlogs = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch('/api/blogs')
-      const data = await res.json()
-      const fetchedBlogs = data.data || data.blogs || []
-
-      setBlogs(fetchedBlogs)
-
-      const categoryParam = searchParams.get('category')
-      const authorParam = searchParams.get('author')
-      const readingTimeParam = searchParams.get('readingTime')
-
-      if (!categoryParam && !authorParam && !readingTimeParam) {
-        setFilteredBlogs(fetchedBlogs)
-      }
-
-      const categories = Array.from(
-        new Set(fetchedBlogs.flatMap((b: Blog) => b.categories || [])),
-      ) as string[]
-      setAllCategories(categories.sort())
-
-      const authors = Array.from(
-        new Set(fetchedBlogs.map((b: Blog) => b.author).filter(Boolean)),
-      ) as string[]
-      setAllAuthors(authors.sort())
-
-      const readingTimes = Array.from(
-        new Set(fetchedBlogs.map((b: Blog) => estimateReadTime(b.content))),
-      ).sort((a, b) => a - b)
-      setAllReadingTimes(readingTimes.map((time) => `${time} min read`))
-
-      setLoading(false)
-    } catch (error) {
-      console.error('Error fetching blogs:', error)
-      setLoading(false)
-    }
-  }
 
   const formatDate = (dateString: string) => {
     try {
@@ -536,9 +494,7 @@ const BlogsClient = () => {
       >
         <div className="px-4 relative xl:mx-30 -mt-20 max-w-full overflow-x-hidden">
           <div className="grid grid-cols-12 gap-0 md:gap-8">
-            {loading ? (
-              <BlogsShimmer />
-            ) : filteredBlogs.length > 0 ? (
+            { filteredBlogs.length > 0 ? (
               filteredBlogs.map((blog) => (
                 <div
                   key={blog.id}
@@ -559,7 +515,7 @@ const BlogsClient = () => {
                       <div className="flex-1 flex p-4 md:p-6 flex-col justify-between">
                         <div>
                           <h2
-                            className={`${merri.className} text-[#1D5C75] font-bold text-[32px] italic leading-tight mb-2`}
+                            className={`${merri.className} text-[#1D5C75] font-bold text-[32px] md:text-[24px] xl:text-[32px] italic leading-tight mb-2`}
                           >
                             {blog.title}
                           </h2>
@@ -600,9 +556,7 @@ const BlogsClient = () => {
             )}
           </div>
         </div>
-          <div className='mt-16'>
-            <FooterWithBlogs />
-          </div>
+        
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import { merri } from '@/app/fonts/merri'
 import './globals.css'
 import { AuthProvider } from '@/lib/authContext'
 import PageSettingsProvider from '@/components/PageSettingsProvider'
+import { getPageSettings } from '@/lib/data/pageSettings'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,10 +16,10 @@ const roboto = Roboto({
   subsets: ['latin'],
   weight: ['100','300','400','500','700','900'],
   variable: '--font-roboto',
-});
+})
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mahabharatadialogues.com'), 
+  metadataBase: new URL('https://mahabharatadialogues.com'),
   title: 'Mahabharata Dialogues',
   description: 'Explore the profound wisdom and timeless dialogues from the Mahabharata',
   icons: {
@@ -29,7 +30,6 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-touch-icon.png',
   },
-  
   openGraph: {
     title: 'Mahabharata Dialogues',
     description: 'Explore the profound wisdom and timeless dialogues from the Mahabharata',
@@ -45,16 +45,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
+  // SERVER FETCH (runs once per request)
+  const settings = await getPageSettings()
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${roboto.variable} ${merri.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${roboto.variable} ${merri.variable} antialiased`}
+      >
         <AuthProvider>
-          <PageSettingsProvider>
+          <PageSettingsProvider initialSettings={settings}>
             {children}
           </PageSettingsProvider>
         </AuthProvider>

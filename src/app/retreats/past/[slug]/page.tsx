@@ -12,8 +12,8 @@ import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import TestimonialsCarousel from '@/components/TestimonialsCarousel'
 import PastRetreatShimmer from '@/components/shimmer/PastRetreatShimmer'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
 import NavbarScroll from '@/components/NavbarScroll'
+
 
 interface Testimonial {
   id: string
@@ -477,9 +477,9 @@ const getDateRange = () => {
         </div>
       )}
 
-      <div className='mt-16'>
-        <FooterWithBlogs />
-      </div>
+      {/* <div className='mt-16'>
+      <FooterBridge />
+      </div> */}
     </div>
   )
 }

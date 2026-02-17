@@ -1,19 +1,20 @@
-// components/PageSettingsProvider.tsx
 'use client'
 
 import { useEffect } from 'react'
-import { usePageSettingsStore } from '../store/usePageSettingsStore'
+import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 
 export default function PageSettingsProvider({
   children,
+  initialSettings,
 }: {
   children: React.ReactNode
+  initialSettings: any
 }) {
-  const fetchSettings = usePageSettingsStore((state) => state.fetchSettings)
+  const setSettings = usePageSettingsStore((s) => s.setSettings)
 
   useEffect(() => {
-    fetchSettings()
-  }, [fetchSettings])
+    setSettings(initialSettings)
+  }, [initialSettings, setSettings])
 
   return <>{children}</>
 }

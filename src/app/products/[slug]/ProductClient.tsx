@@ -1,4 +1,3 @@
-// app/products/[slug]/page.tsx
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -7,11 +6,10 @@ import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
 import { Product } from '@/data/productsData'
-import { notFound, useParams } from 'next/navigation'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import { ArrowLeft } from 'lucide-react'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
+
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 
 interface Props {
@@ -24,11 +22,23 @@ export default function ProductClient({ product, relatedProducts }: Props) {
 
   const settings = usePageSettingsStore((state) => state.settings)
 
-  // Get product images (use images array if available, otherwise fallback to single image)
   const productImages =
     product.images && product.images.length > 0
       ? product.images
       : [product.image]
+
+  /* AUTO SCROLL EFFECT */
+  useEffect(() => {
+    if (productImages.length <= 1) return
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) =>
+        prev === productImages.length - 1 ? 0 : prev + 1
+      )
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [productImages.length])
 
   return (
     <div className="overflow-x-hidden">
@@ -71,7 +81,6 @@ export default function ProductClient({ product, relatedProducts }: Props) {
       <div className="px-4 relative xl:mx-30 max-w-full overflow-x-hidden">
         <div className="grid grid-cols-12 mt-12 mb-4">
           <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 border-b border-[#1D5C75] mb-10">
-            {/* Back to Products Link and Cart */}
             <div className="flex justify-between items-center pb-4">
               <Link
                 href="/products"
@@ -116,7 +125,6 @@ export default function ProductClient({ product, relatedProducts }: Props) {
 
             {/* Product Info */}
             <div className="flex flex-col md:flex-row justify-between mx-auto items-center md:items-start">
-              {/* Left: Title and Description */}
               <div className="flex-1">
                 <h1
                   className={`${merri.className} text-[#1D5C75] text-center md:text-start font-bold text-[32px] md:text-[36px] italic leading-tight mb-2`}
@@ -135,9 +143,7 @@ export default function ProductClient({ product, relatedProducts }: Props) {
                 </p>
               </div>
 
-              {/* Right: Price and Add to Bag */}
               <div className="flex flex-col items-end mt-6 md:mt-0 w-[160px]">
-                {/* PRICE */}
                 <div
                   className={`${merri.className} w-full italic font-extrabold text-[32px] md:text-[36px] bg-[#78B0C74D] text-[#1D5C75] px-4 py-3 flex items-baseline justify-center gap-1`}
                 >
@@ -160,7 +166,8 @@ export default function ProductClient({ product, relatedProducts }: Props) {
           </div>
 
           <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 border-b border-[#1D5C75] mb-10"></div>
-          {/* Related Products Section */}
+
+          {/* Related Products */}
           <div className="mb-10 col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
             {relatedProducts.length > 0 && (
               <div className="mb-10 pt-10">
@@ -177,7 +184,6 @@ export default function ProductClient({ product, relatedProducts }: Props) {
                       href={`/products/${relatedProduct.slug}`}
                     >
                       <div className="cursor-pointer transition-shadow h-full flex flex-col">
-                        {/* Product Image */}
                         <div className="w-full h-52 overflow-hidden flex items-center justify-center">
                           <img
                             src={relatedProduct.image}
@@ -186,9 +192,8 @@ export default function ProductClient({ product, relatedProducts }: Props) {
                           />
                         </div>
 
-                        {/* Product Info */}
                         <div className="flex my-2 justify-between">
-                          <div className="">
+                          <div>
                             <h4
                               className={`${merri.className} leading-tight text-[#1D5C75] font-bold text-[20px] md:text-[24px] italic`}
                             >
@@ -214,22 +219,6 @@ export default function ProductClient({ product, relatedProducts }: Props) {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      <div
-        className="w-full relative"
-        style={{
-          backgroundImage: `
-      linear-gradient(#1D5C75CC, #1D5C75CC),
-      url('/MD-Texture_BG_Blue-01-04.png')
-    `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '240px 240px',
-        }}
-      >
-        <div className="pt-16">
-          <FooterWithBlogs />
         </div>
       </div>
     </div>

@@ -13,7 +13,6 @@ import MobileNavbarScroll from './MobileNavbarScroll'
 import CustomButtonRetreat from './CustomButtonRetreat'
 import NavbarScroll from './NavbarScroll'
 import FooterWithBlogs from './FooterWithBlogs'
-
 interface DaySchedule {
   date: string
   dayName: string
@@ -448,7 +447,7 @@ export default async function RetreatHero() {
             </div>
           )}
 
-          <FooterWithBlogs count={2} />
+          <FooterWithBlogs />
         </div>
       </div>
     </div>

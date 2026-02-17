@@ -1,5 +1,5 @@
-
-import EventsClient from "./EventsClient"
+import FooterWithBlogs from '@/components/FooterWithBlogs'
+import EventsClient from './EventsClient'
 
 interface EventData {
   id: string
@@ -39,13 +39,13 @@ async function getEvents() {
     const response = await fetch(`${baseUrl}/api/events`, {
       cache: 'no-store',
     })
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch events')
     }
-    
+
     const data = await response.json()
-    
+
     if (!data.success || !data.data) {
       return { upcoming: [], past: [] }
     }
@@ -105,5 +105,19 @@ async function getEvents() {
 export default async function EventsPage() {
   const { upcoming, past } = await getEvents()
 
-  return <EventsClient upcomingEvents={upcoming} pastEvents={past} />
+  return (
+    <>
+      <EventsClient upcomingEvents={upcoming} pastEvents={past} />
+      <div className="pt-16" style={{
+          backgroundImage: `
+            linear-gradient(#47ABD8CC, #47ABD8CC),
+            url('/MD-Texture_BG_Blue-01-04.png')
+          `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}>
+        <FooterWithBlogs />
+      </div>
+    </>
+  )
 }

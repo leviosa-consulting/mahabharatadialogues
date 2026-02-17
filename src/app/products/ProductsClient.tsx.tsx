@@ -11,8 +11,8 @@ import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 import { Product } from '@/data/productsData'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
 import NavbarScroll from '@/components/NavbarScroll'
+
 
 interface Props {
   initialProducts: Product[];
@@ -295,19 +295,7 @@ const [loading] = useState(false)
         </div>
       </div>
 
-      <div
-        className="w-full relative pt-16"
-        style={{
-          backgroundImage: `
-      linear-gradient(#1D5C75CC, #1D5C75CC),
-      url('/MD-Texture_BG_Blue-01-04.png')
-    `,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '240px 240px',
-        }}
-      >
-        <FooterWithBlogs />
-      </div>
+     
     </div>
   )
 }

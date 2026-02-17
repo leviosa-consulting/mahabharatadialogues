@@ -9,8 +9,9 @@ import { merri } from '../fonts/merri'
 import CustomButton from '@/components/CustomButton'
 import { MapPin, X } from 'lucide-react'
 import NavbarScroll from '@/components/NavbarScroll'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
+
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
+
 
 interface Event {
   id: string
@@ -415,9 +416,7 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
             </div>
           )}
         </div>
-        <div className="mt-12">
-          <FooterWithBlogs count={2} />
-        </div>
+       
       </div>
 
       {/* Image Modal */}

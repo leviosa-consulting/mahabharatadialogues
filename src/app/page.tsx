@@ -4,7 +4,7 @@ import Testimonials from '@/components/Testimonials'
 import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
 import UpcomingEvents from '@/components/UpcomingEventsClient'
-import MobileNavbarScroll from '@/components/MobileNavbarScroll' // Add this import
+import MobileNavbarScroll from '@/components/MobileNavbarScroll' 
 import UpcomingEventsServer from '@/components/UpcomingEventsServer'
 
 export const runtime = 'nodejs'

@@ -1,37 +1,34 @@
-
 // app/blogs/page.tsx
-import { Metadata } from "next";
-import BlogsClient from "./BlogsClient";
-import { getBlogs } from "@/lib/data/blogs";
+import { Metadata } from 'next'
+import BlogsClient from './BlogsClient'
+import { getBlogs } from '@/lib/data/blogs'
+import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 export const metadata: Metadata = {
-  title: "Blogs | Mahabharata Dialogues",
+  title: 'Blogs | Mahabharata Dialogues',
   description:
-    "Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.",
-  keywords: "Mahabharata blogs, Indian mythology, spirituality, wisdom, philosophy",
-  openGraph: {
-    title: "Blogs | Mahabharata Dialogues",
-    description: "Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.",
-    type: "website",
-    url: "https://mahabharatadialogues.com/blogs",
-    siteName: "Mahabharata Dialogues",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blogs | Mahabharata Dialogues",
-    description: "Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
-
-export default async function BlogsPage() {
-  const blogs = await getBlogs();
-  
-  return <BlogsClient  />;
+    'Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.',
 }
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+export default async function BlogsPage() {
+  const blogs = await getBlogs()
+
+  return (
+    <>
+      <BlogsClient initialBlogs={blogs} />
+      <div className="pt-16"  style={{
+          backgroundImage: `
+    linear-gradient(#47ABD8CC, #47ABD8CC),
+    url('/MD-Texture_BG_Blue-01-04.png')
+  `,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '240px 240px',
+        }}>
+        <FooterWithBlogs />
+      </div>
+    </>
+  )
+}

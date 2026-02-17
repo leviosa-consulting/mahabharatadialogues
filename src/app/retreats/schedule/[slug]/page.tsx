@@ -16,8 +16,8 @@ import Navbar from '@/components/Navbar'
 import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import RetreatScheduleShimmer from '@/components/shimmer/RetreatScheduleShimmer'
-import FooterWithBlogs from '@/components/FooterWithBlogs'
 import NavbarScroll from '@/components/NavbarScroll'
+// import FooterBridge from '@/components/FooterBridge'
 
 interface ScheduleItem {
   title: string
@@ -535,9 +535,9 @@ const RetreatSchedulePage: React.FC = () => {
           </button>
         </div>
       )}
-      <div className="bg-[#1D5C75CC] pt-16">
-        <FooterWithBlogs />
-      </div>
+      {/* <div className="bg-[#1D5C75CC] pt-16">
+      <FooterBridge />
+      </div> */}
     </div>
   )
 }
