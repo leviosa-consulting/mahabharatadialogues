@@ -270,7 +270,7 @@ useEffect(() => {
 
       {/* first section */}
       <div
-        className="w-full relative pb-10 -mt-7 md:-mt-10 xl:-mt-8"
+        className="w-full relative -mt-7 md:-mt-10 xl:-mt-8"
         style={{
           backgroundImage: `
       linear-gradient(#1D5C75CC, #1D5C75CC),
@@ -280,7 +280,7 @@ useEffect(() => {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="max-w-xl mx-auto py-28 flex flex-col justify-center items-center text-center">
+        <div className="max-w-xl mx-auto pt-28 pb-4 flex flex-col justify-center items-center text-center">
           <h2
             className={`${merri.className} text-white uppercase text-[24px] font-extrabold`}
           >
@@ -466,7 +466,7 @@ useEffect(() => {
               {/* Results count */}
               <div className="mb-5">
                 <p
-                  className={`${merri.className} text-white font-bold pt-5 pb-20 text-[32px] md:text-[48px]`}
+                  className={`${merri.className} text-white font-bold pt-5 pb-20 text-[32px] `}
                 >
                   Showing {filteredBlogs.length} of {blogs.length} {' '} Articles
                  

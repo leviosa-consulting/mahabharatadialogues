@@ -1,4 +1,4 @@
-// src/store/usePageSettingStore.ts
+
 import { create } from "zustand";
 
 interface PageSection {
@@ -25,4 +25,4 @@ export const usePageSettingsStore = create<PageSettingsStore>((set) => ({
     set({
       settings,
     }),
-}));
+})); 
