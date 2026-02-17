@@ -45,3 +45,6 @@ NEXT_PUBLIC_BASE_URL = "https://mahabharatadialogues.com"
 
 [userenv.production]
 NEXT_PUBLIC_BASE_URL = "https://mahabharatadialogues.com"
+
+[userenv.shared]
+NEXT_PUBLIC_SITE_URL = "https://mahabharatadialogues.com"
