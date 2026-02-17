@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import BlogsClient from './BlogsClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
 export default function BlogsPage() {
   return (
     <>
-      <BlogsClient initialBlogs={[]} />
+      <Suspense>
+        <BlogsClient initialBlogs={[]} />
+      </Suspense>
       <div className="pt-16"  style={{
           backgroundImage: `
     linear-gradient(#47ABD8CC, #47ABD8CC),
