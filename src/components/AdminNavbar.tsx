@@ -71,7 +71,7 @@ const AdminNavbar: React.FC<NavbarProps> = ({ currentTab }) => {
           <span
             className={clsx(
               "text-lg font-semibold cursor-pointer transition-all duration-200 px-3 py-1 rounded-md",
-              currentTab === "testimonials"
+              currentTab === "products"
                 ? "text-purple-600 border-b-2 border-purple-600"
                 : "text-gray-700 hover:text-purple-600"
             )}
@@ -84,7 +84,7 @@ const AdminNavbar: React.FC<NavbarProps> = ({ currentTab }) => {
           <span
             className={clsx(
               "text-lg font-semibold cursor-pointer transition-all duration-200 px-3 py-1 rounded-md",
-              currentTab === "testimonials"
+              currentTab === "about"
                 ? "text-purple-600 border-b-2 border-purple-600"
                 : "text-gray-700 hover:text-purple-600"
             )}
