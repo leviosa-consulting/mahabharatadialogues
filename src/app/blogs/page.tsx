@@ -1,6 +1,7 @@
+// app/blogs/page.tsx
 import { Metadata } from 'next'
-import { Suspense } from 'react'
 import BlogsClient from './BlogsClient'
+import { getBlogs } from '@/lib/data/blogs'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 export const metadata: Metadata = {
@@ -9,12 +10,15 @@ export const metadata: Metadata = {
     'Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.',
 }
 
-export default function BlogsPage() {
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+export default async function BlogsPage() {
+  const blogs = await getBlogs()
+
   return (
     <>
-      <Suspense>
-        <BlogsClient initialBlogs={[]} />
-      </Suspense>
+      <BlogsClient initialBlogs={blogs} />
       <div className="pt-16"  style={{
           backgroundImage: `
     linear-gradient(#47ABD8CC, #47ABD8CC),

@@ -306,4 +306,3 @@ export default function EventDetailClient({ event }: { event: Event }) {
   )
 }
 
-

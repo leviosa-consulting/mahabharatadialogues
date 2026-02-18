@@ -3,7 +3,7 @@
 import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { merri } from '../fonts/merri'
 import Link from 'next/link'
 
@@ -32,7 +32,6 @@ interface Props {
 const BlogsClient = ({ initialBlogs }: Props) => {
   const searchParams = useSearchParams()
 
-<<<<<<< HEAD
   const estimateReadTime = (content: string) => {
     const wordsPerMinute = 200
     const text = content.replace(/<[^>]*>/g, '')
@@ -69,25 +68,6 @@ const BlogsClient = ({ initialBlogs }: Props) => {
   const [blogs] = useState<Blog[]>(initialBlogs)
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(getInitialFiltered)
   const [loading] = useState(false)
-=======
-const [blogs, setBlogs] = useState<Blog[]>(initialBlogs)
-const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(initialBlogs)
-const [loading, setLoading] = useState(initialBlogs.length === 0)
-
-useEffect(() => {
-  if (initialBlogs.length === 0) {
-    fetch('/api/blogs')
-      .then(res => res.json())
-      .then(data => {
-        const fetched = data.success && data.data ? data.data : Array.isArray(data) ? data : []
-        setBlogs(fetched)
-        setFilteredBlogs(fetched)
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }
-}, [])
->>>>>>> 157eb12 (Convert pages and components to fetch data client-side)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory)
   const [selectedAuthor, setSelectedAuthor] = useState<string>(initialAuthor)
@@ -152,7 +132,6 @@ useEffect(() => {
       return 'Unknown date'
     }
   }
-
 
   const applyFilters = (
     search: string,
@@ -257,7 +236,7 @@ useEffect(() => {
 
   const getCategoriesToDisplay = () => {
     const allItems = ['All', ...allCategories]
-    const limit = isMobile ? 4 : 7
+    const limit = isMobile ? 4 : 12
 
     if (showAllCategories || allItems.length <= limit) {
       return allItems

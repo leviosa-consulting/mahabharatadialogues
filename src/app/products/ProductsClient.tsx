@@ -66,21 +66,8 @@ export const ProductsClient = ({ initialProducts }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<
     'All' | 'Books' | 'Games'
   >('All')
- const [products, setProducts] = useState<Product[]>(initialProducts)
-const [loading, setLoading] = useState(initialProducts.length === 0)
+ const [products] = useState<Product[]>(initialProducts)
 
-useEffect(() => {
-  if (initialProducts.length === 0) {
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(data => {
-        const fetched = data.success && data.data ? data.data : Array.isArray(data) ? data : []
-        setProducts(fetched)
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }
-}, [])
 
   const settings = usePageSettingsStore((state) => state.settings)
 
@@ -136,9 +123,7 @@ useEffect(() => {
               <h2
                 className={`${merri.className} text-[#78B0C7] font-bold text-[18px] md:text-[20px]`}
               >
-                {loading ? (
-                  <div className="h-7 bg-gray-300 rounded w-64 animate-pulse" />
-                ) : (
+                { (
                   <>
                     Showing {filteredProducts.length} of {products.length}{' '}
                     {products.length > 1 ? 'products' : 'product'}
@@ -152,12 +137,12 @@ useEffect(() => {
                   {/* All */}
                   <button
                     onClick={() => setSelectedCategory('All')}
-                    disabled={loading}
+                    
                     className={`${merri.className} font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-4 ${
                       selectedCategory === 'All'
                         ? 'bg-[#1D5C75] text-white'
-                        : 'bg-[#78B0C7] text-[#1D5C75]'
-                    } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        : 'bg-[#78B0C7] text-[#1D5C75]'}
+                    `} 
                   >
                     All
                   </button>
@@ -165,12 +150,12 @@ useEffect(() => {
                   {/* Games */}
                   <button
                     onClick={() => setSelectedCategory('Games')}
-                    disabled={loading}
+                  
                     className={`${merri.className} font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-4 ${
                       selectedCategory === 'Games'
                         ? 'bg-[#1D5C75] text-white'
                         : 'bg-[#78B0C7] text-[#1D5C75]'
-                    } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    } `}
                   >
                     Games
                   </button>
@@ -178,12 +163,12 @@ useEffect(() => {
                   {/* Books (forces second row, left) */}
                   <button
                     onClick={() => setSelectedCategory('Books')}
-                    disabled={loading}
+                  
                     className={`${merri.className} col-start-1 font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-4 ${
                       selectedCategory === 'Books'
                         ? 'bg-[#1D5C75] text-white'
                         : 'bg-[#78B0C7] text-[#1D5C75]'
-                    } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    }`}
                   >
                     Books
                   </button>
@@ -195,14 +180,7 @@ useEffect(() => {
           <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
             {/* products list */}
             <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10">
-              {loading ? (
-                // Show skeleton loaders while loading
-                <>
-                  <ProductSkeleton />
-                  <ProductSkeleton />
-                  <ProductSkeleton />
-                </>
-              ) : filteredProducts.length === 0 ? (
+              {filteredProducts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                   <h2
                     className={`${merri.className} text-[#1D5C75] text-[28px] md:text-[32px] italic font-bold`}
@@ -312,4 +290,3 @@ useEffect(() => {
     </div>
   )
 }
-

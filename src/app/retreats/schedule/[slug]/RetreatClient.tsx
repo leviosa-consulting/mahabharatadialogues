@@ -228,7 +228,7 @@ export default function RetreatClient({ retreat }: any) {
       <NavbarScroll textColor="#1D5C75"/>
 
       {/* Header */}
-      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 relative overflow-hidden">
+      <div className="bg-[#282828] text-white py-12 md:py-24 px-6 -mt-7 md:-mt-10 xl:-mt-8 relative overflow-hidden">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Left */}
           <div className={`text-center md:text-left`}>
@@ -476,5 +476,4 @@ export default function RetreatClient({ retreat }: any) {
     </div>
   )
 }
-
 

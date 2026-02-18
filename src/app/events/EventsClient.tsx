@@ -4,7 +4,7 @@
 import MobileNavbar from '@/components/MobileNavbar'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import Navbar from '@/components/Navbar'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { merri } from '../fonts/merri'
 import CustomButton from '@/components/CustomButton'
 import { MapPin, X } from 'lucide-react'
@@ -35,54 +35,9 @@ interface EventsClientProps {
   pastEvents: Event[]
 }
 
-const EventsClient = ({ upcomingEvents: initialUpcoming, pastEvents: initialPast }: EventsClientProps) => {
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>(initialUpcoming)
-  const [pastEvents, setPastEvents] = useState<Event[]>(initialPast)
+const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [loading, setLoading] = useState(initialUpcoming.length === 0 && initialPast.length === 0)
   const settings = usePageSettingsStore((state) => state.settings)
-
-  useEffect(() => {
-    if (initialUpcoming.length === 0 && initialPast.length === 0) {
-      fetch('/api/events')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data) {
-            const now = new Date()
-            const upcoming: Event[] = []
-            const past: Event[] = []
-            data.data.forEach((event: any) => {
-              const eventItem: Event = {
-                id: event.id,
-                type: 'event',
-                title: event.title,
-                coverImage: event.coverImage || '/assets/fallbackImg.jpeg',
-                date: event.eventDate,
-                time: event.eventTime || '',
-                venue: event.venue || 'Venue TBA',
-                mapUrl: event.mapUrl || '',
-                description: event.description || '',
-                bookingUrl: event.bookingUrl,
-                slug: event.slug,
-                city: event.city,
-                gallery: event.gallery || [],
-              }
-              if (new Date(event.eventDate) >= now) {
-                upcoming.push(eventItem)
-              } else {
-                past.push(eventItem)
-              }
-            })
-            upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-            past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            setUpcomingEvents(upcoming)
-            setPastEvents(past)
-          }
-        })
-        .catch(() => {})
-        .finally(() => setLoading(false))
-    }
-  }, [])
 
   const formatEventDateTime = (dateTimeStr: string): string => {
     const date = new Date(dateTimeStr)
