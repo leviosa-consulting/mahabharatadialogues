@@ -60,7 +60,7 @@ export default async function Page({
           backgroundRepeat: 'repeat',
           backgroundSize: '240px 240px',
         }}
-        className="mt-12"
+        className="pt-12"
       >
         <FooterWithBlogs />
       </div>

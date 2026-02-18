@@ -17,12 +17,8 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
-
-      const heroSection =
-        document.querySelector('[class*="Hero"]')?.parentElement
-
+      const heroSection = document.querySelector('[class*="Hero"]')?.parentElement
       const heroHeight = heroSection?.offsetHeight || window.innerHeight
-
       const pastHero = currentScrollY > heroHeight - 100
       setIsPastHero(pastHero)
 
@@ -38,100 +34,91 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
 
   const shouldShow = isNotHome || (scrollingUp && isPastHero)
 
   return (
-    <div
-      className={`
-        hidden sm:flex fixed top-0 left-0 right-0 z-40
-        justify-center
-        bg-white backdrop-blur-sm
-        transition-all duration-300
-        ${shouldShow ? 'translate-y-0 shadow-md' : '-translate-y-full'}
-      `}
-    >
-      <div
-        className={`flex items-center justify-center py-0.5 min-h-[52px]
-        ${isNotHome ? 'gap-12 w-full px-12' : 'gap-10 max-w-4xl'}
-        `}
-      >
-        {/* LEFT */}
-        <div className={`flex ${isNotHome ? 'gap-12' : 'gap-6'}`}>
-          <Link
-            href="/events"
-            className={`${merri.className} font-bold uppercase text-[14px]`}
-            style={{ color: textColor }}
-          >
-            Events
-          </Link>
+    <div>
+      {shouldShow && (
+        <div
+          className={`
+            hidden sm:flex fixed top-0 left-0 right-0 z-40
+            justify-center
+            bg-white backdrop-blur-sm 
+            transition-all duration-300
+            ${shouldShow ? 'translate-y-0 shadow-md' : '-translate-y-full'}
+          `}
+        >
+          <div className="relative flex items-center pt-16 pb-8 max-w-3xl w-full">
+            
+            {/* LEFT — flex-1 so it takes equal half */}
+            <div className="flex flex-1 gap-8">
+              <Link
+                href="/events"
+                className={`${merri.className} font-bold uppercase text-[14px]`}
+                style={{ color: textColor }}
+              >
+                Events
+              </Link>
+              <Link
+                href="/retreats"
+                className={`${merri.className} font-bold uppercase text-[14px]`}
+                style={{ color: textColor }}
+              >
+                Retreats
+              </Link>
+              <Link
+                href="/products"
+                className={`${merri.className} font-bold uppercase text-[14px]`}
+                style={{ color: textColor }}
+              >
+                Products
+              </Link>
+            </div>
 
-          <Link
-            href="/retreats"
-            className={`${merri.className} font-bold uppercase text-[14px]`}
-            style={{ color: textColor }}
-          >
-            Retreats
-          </Link>
+            {/* LOGO — absolutely centered in the full nav bar */}
+            <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+              <img
+                src="/Logo_for_video_Corner-04.png"
+                alt="Logo"
+                className="object-contain cursor-pointer transition-all duration-300 w-31"
+              />
+            </Link>
 
-          <Link
-            href="/products"
-            className={`${merri.className} font-bold uppercase text-[14px]`}
-            style={{ color: textColor }}
-          >
-            Products
-          </Link>
+            {/* RIGHT — flex-1 + justify-end so it takes equal half and aligns right */}
+            <div className="flex flex-1 justify-end gap-8">
+              <Link
+                href="/blogs"
+                className={`${merri.className} font-bold uppercase text-[14px]`}
+                style={{ color: textColor }}
+              >
+                Blog
+              </Link>
+              <Link
+                href="/about"
+                className={`${merri.className} font-bold uppercase text-[14px]`}
+                style={{ color: textColor }}
+              >
+                About Us
+              </Link>
+              <button
+                onClick={() =>
+                  document
+                    .getElementById('contact')
+                    ?.scrollIntoView({ behavior: 'smooth' })
+                }
+                className={`${merri.className} font-bold uppercase text-[14px]`}
+                style={{ color: textColor }}
+              >
+                Contact
+              </button>
+            </div>
+
+          </div>
         </div>
-
-     
-
-         <Link href="/" className="flex justify-center">
-          <img
-            src={
-              '/Logo_for_video_Corner-04.png' 
-            }
-            alt="Logo"
-            className={`
-     object-contain cursor-pointer
-      transition-all duration-300 w-24
-    `}
-          />
-        </Link>
-
-        {/* RIGHT */}
-        <div className={`flex ${isNotHome ? 'gap-12' : 'gap-6'}`}>
-          <Link
-            href="/blogs"
-            className={`${merri.className} font-bold uppercase text-[14px]`}
-            style={{ color: textColor }}
-          >
-            Blog
-          </Link>
-
-          <Link
-            href="/about"
-            className={`${merri.className} font-bold uppercase text-[14px]`}
-            style={{ color: textColor }}
-          >
-            About Us
-          </Link>
-
-          <button
-            onClick={() =>
-              document
-                .getElementById('contact')
-                ?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className={`${merri.className} font-bold uppercase text-[14px]`}
-            style={{ color: textColor }}
-          >
-            Contact
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }

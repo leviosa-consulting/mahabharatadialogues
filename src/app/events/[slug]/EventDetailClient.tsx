@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -12,8 +12,6 @@ import {
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import CustomButton from '@/components/CustomButton'
-
-
 
 interface Event {
   id: string
@@ -117,17 +115,10 @@ export default function EventDetailClient({ event }: { event: Event }) {
       {/* CONTENT */}
       <div
         style={{
-          backgroundImage: `
-    linear-gradient(
-      to bottom,
-      #47ABD880 50%,
-      #1D5C75 100%
-    ),
-    url('/MD-Texture_BG_Blue-01-04.png')
-  `,
+          backgroundImage: "url('/MD-Texture_BG_Blue-01-04.png')",
           backgroundRepeat: 'repeat',
-          backgroundSize: 'cover, 240px 240px',
-          backgroundPosition: 'center, top left',
+          backgroundSize: '240px 240px',
+          backgroundPosition: 'top left',
         }}
       >
         <div className={`max-w-7xl ${merri.className} mx-auto px-6 py-12`}>
@@ -252,8 +243,6 @@ export default function EventDetailClient({ event }: { event: Event }) {
             </div>
           </div>
         </div>
-
-      
       </div>
 
       {selectedImageIndex !== null && event.gallery && (
@@ -305,4 +294,3 @@ export default function EventDetailClient({ event }: { event: Event }) {
     </div>
   )
 }
-
