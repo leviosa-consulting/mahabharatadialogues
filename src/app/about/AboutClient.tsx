@@ -12,7 +12,6 @@ import Footer from '@/components/Footer'
 import { X, Linkedin, Twitter, Instagram } from 'lucide-react'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 
-
 interface SocialLinks {
   linkedin?: string
   twitter?: string
@@ -33,9 +32,10 @@ export default function AboutClient({ members }: { members: Member[] }) {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
   const settings = usePageSettingsStore((s) => s.settings)
 
-  const coreTeamMembers = members.filter(m => m.teamType === 'core')
-  const collaboratorMembers = members.filter(m => m.teamType === 'collaborators')
-  
+  const coreTeamMembers = members.filter((m) => m.teamType === 'core')
+  const collaboratorMembers = members.filter(
+    (m) => m.teamType === 'collaborators',
+  )
 
   const handleMemberClick = (member: Member) => {
     setSelectedMember(member)
@@ -61,7 +61,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
           <div className="grid grid-cols-12 gap-3">
             <div className="col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
               <p className="font-neco font-medium italic text-[#1D5C75] text-[20px] md:text-[28px] text-center">
-              {settings?.about.title}
+                {settings?.about.title}
               </p>
             </div>
           </div>
@@ -79,25 +79,46 @@ export default function AboutClient({ members }: { members: Member[] }) {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="mx-4 xl:mx-30 py-20">
-          <div className="grid grid-cols-12 ">
-            <div className="col-start-2 col-span-10">
-              <div className="flex flex-col md:flex-row justify-between gap-4">
-                <p
-                  className={`text-white ${merri.className} font-bold italic text-center md:text-left text-[20px] md:text-[24px]`}
-                >
-               {settings?.about.subtitle}
-                </p>
-                <CustomButton
-                  text="REACH US"
-                  bgColor="#1D5C75"
-                  textColor="#FFFFFF"
-                  url={''}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+     <div className="py-20">
+
+  <div className="max-w-6xl mx-auto px-6">
+
+  <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-0">
+
+  {/* TEXT */}
+ <div>
+   <p
+    className={`text-white ${merri.className} font-bold italic text-center md:text-left text-[20px] md:text-[24px] max-w-2xl`}
+  >
+    {settings?.about.subtitle}
+  </p>
+ </div>
+
+  {/* BUTTON */}
+  <div
+    onClick={() =>
+      document
+        .getElementById('contact')
+        ?.scrollIntoView({ behavior: 'smooth' })
+    }
+    className="flex w-80"
+  >
+    <CustomButton
+      text="REACH US"
+      bgColor="#1D5C75"
+      textColor="#FFFFFF"
+      url=""
+    />
+  </div>
+
+</div>
+
+
+  </div>
+
+</div>
+
+
       </div>
 
       {/* CORE TEAM */}
@@ -158,7 +179,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
           </h2>
         </div>
         <div className="w-full">
-          { collaboratorMembers.length === 0 ? (
+          {collaboratorMembers.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-gray-600">No collaborators found.</p>
             </div>
@@ -320,5 +341,3 @@ export default function AboutClient({ members }: { members: Member[] }) {
     </div>
   )
 }
-
-

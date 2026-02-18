@@ -32,71 +32,91 @@ interface Props {
 const BlogsClient = ({ initialBlogs }: Props) => {
   const searchParams = useSearchParams()
 
-const [blogs] = useState<Blog[]>(initialBlogs)
-const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(initialBlogs)
-const [loading] = useState(false)
+  const estimateReadTime = (content: string) => {
+    const wordsPerMinute = 200
+    const text = content.replace(/<[^>]*>/g, '')
+    const wordCount = text.split(/\s+/).length
+    const minutes = Math.ceil(wordCount / wordsPerMinute)
+    return minutes
+  }
+
+  // Read URL params synchronously before any state initialisation
+  const initialCategory = searchParams.get('category') || 'All'
+  const initialAuthor = searchParams.get('author') || 'All'
+  const initialReadingTime = searchParams.get('readingTime')
+    ? `${searchParams.get('readingTime')} min read`
+    : 'All'
+  const hasUrlParams =
+    initialCategory !== 'All' || initialAuthor !== 'All' || initialReadingTime !== 'All'
+
+  // Pre-filter blogs immediately so the correct list is shown on first render
+  const getInitialFiltered = () => {
+    let filtered = initialBlogs
+    if (initialCategory !== 'All') {
+      filtered = filtered.filter((b) => b.categories?.includes(initialCategory))
+    }
+    if (initialAuthor !== 'All') {
+      filtered = filtered.filter((b) => b.author === initialAuthor)
+    }
+    if (initialReadingTime !== 'All') {
+      const mins = parseInt(initialReadingTime.split(' ')[0])
+      filtered = filtered.filter((b) => estimateReadTime(b.content) === mins)
+    }
+    return filtered
+  }
+
+  const [blogs] = useState<Blog[]>(initialBlogs)
+  const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(getInitialFiltered)
+  const [loading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('All')
-  const [selectedAuthor, setSelectedAuthor] = useState<string>('All')
-  const [selectedReadingTime, setSelectedReadingTime] = useState<string>('All')
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory)
+  const [selectedAuthor, setSelectedAuthor] = useState<string>(initialAuthor)
+  const [selectedReadingTime, setSelectedReadingTime] = useState<string>(initialReadingTime)
   const [allCategories, setAllCategories] = useState<string[]>([])
   const [allAuthors, setAllAuthors] = useState<string[]>([])
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
- 
-  const [showFilters, setShowFilters] = useState(false)
 
-  const hasAppliedUrlParams = useRef(false)
+  const [showFilters, setShowFilters] = useState(hasUrlParams)
 
   const [showAllCategories, setShowAllCategories] = useState(false)
   const [showAllReadingTimes, setShowAllReadingTimes] = useState(false)
 
   const [isMobile, setIsMobile] = useState(false)
- const settings = usePageSettingsStore((state) => state.settings)
+  const settings = usePageSettingsStore((state) => state.settings)
 
- console.log("settings = ",settings)
+  console.log("settings = ", settings)
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
-
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-
-useEffect(() => {
-  if (!blogs.length) return;
-
-  setFilteredBlogs(blogs);
-
-  const categories = Array.from(
-    new Set(blogs.flatMap((b: Blog) => b.categories || [])),
-  ) as string[];
-
-  setAllCategories(categories.sort());
-
-  const authors = Array.from(
-    new Set(blogs.map((b: Blog) => b.author).filter(Boolean)),
-  ) as string[];
-
-  setAllAuthors(authors.sort());
-
-  const readingTimes = Array.from(
-    new Set(blogs.map((b: Blog) => estimateReadTime(b.content))),
-  ).sort((a, b) => a - b);
-
-  setAllReadingTimes(readingTimes.map((t) => `${t} min read`));
-}, [blogs]);
-
-  // NEW: Real-time search as user types
   useEffect(() => {
-    applyFilters(
-      searchQuery,
-      selectedCategory,
-      selectedAuthor,
-      selectedReadingTime,
-    )
+    if (!blogs.length) return
+
+    const categories = Array.from(
+      new Set(blogs.flatMap((b: Blog) => b.categories || [])),
+    ) as string[]
+    setAllCategories(categories.sort())
+
+    const authors = Array.from(
+      new Set(blogs.map((b: Blog) => b.author).filter(Boolean)),
+    ) as string[]
+    setAllAuthors(authors.sort())
+
+    const readingTimes = Array.from(
+      new Set(blogs.map((b: Blog) => estimateReadTime(b.content))),
+    ).sort((a, b) => a - b)
+    setAllReadingTimes(readingTimes.map((t) => `${t} min read`))
+  }, [blogs])
+
+  // Real-time search as user types
+  useEffect(() => {
+    applyFilters(searchQuery, selectedCategory, selectedAuthor, selectedReadingTime)
   }, [searchQuery])
 
 
@@ -113,13 +133,6 @@ useEffect(() => {
     }
   }
 
-  const estimateReadTime = (content: string) => {
-    const wordsPerMinute = 200
-    const text = content.replace(/<[^>]*>/g, '')
-    const wordCount = text.split(/\s+/).length
-    const minutes = Math.ceil(wordCount / wordsPerMinute)
-    return minutes
-  }
 
   const applyFilters = (
     search: string,
