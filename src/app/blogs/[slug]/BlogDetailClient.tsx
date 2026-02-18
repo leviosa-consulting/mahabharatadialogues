@@ -216,17 +216,17 @@ const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug }
 
               <div className="bg-white">
                 <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4 lg:p-8">
+                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4 ">
                     <div className="w-full">
                       <div className="flex flex-col items-start text-start  w-full">
-                        <div className="flex justify-between items-start w-full gap-4">
-                          <span className="font-neco font-bold text-[#1D5C75] text-xl sm:text-2xl md:text-3xl lg:text-[40px] leading-6 md:leading-10 mb-4 md:mb-8">
+                        <div className="flex justify-between items-start w-full gap-4 my-4 md:my-8">
+                          <span className="font-neco font-bold text-[#1D5C75] text-xl sm:text-2xl md:text-3xl lg:text-[40px] leading-6 md:leading-10">
                             {blog.title}
                           </span>
 
                           <button
                             onClick={handleClose}
-                            className="flex-shrink-0 text-[#1D5C75] hover:bg-gray-100 p-1 transition-colors"
+                            className="flex-shrink-0 text-[#1D5C75] flex justify-end items-end hover:bg-gray-100 p-1 transition-colors"
                             aria-label="Close"
                           >
                             <X className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-[45px] lg:h-[45px]" />

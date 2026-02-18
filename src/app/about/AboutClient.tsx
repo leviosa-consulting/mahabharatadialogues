@@ -121,7 +121,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
 
       {/* CORE TEAM */}
       <div className="my-30">
-        <div className="flex flex-col md:flex-row justify-center items-center my-6 ">
+        <div className="flex flex-col md:flex-row justify-center items-center my-12 ">
           <h2
             className={`${merri.className} font-bold text-[#1D5C75] text-[18px]`}
           >
@@ -130,7 +130,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
         </div>
         <div className="w-full">
           {collaboratorMembers.length > 0 && (
-            <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center px-2 md:px-0 max-w-7xl">
+            <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 place-items-center px-2 md:px-0 max-w-7xl">
               {coreTeamMembers.map((item, index) => (
                 <div
                   key={index}
@@ -155,7 +155,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
                     </h2>
 
                     <h3
-                      className={`${merri.className} font-normal text-[16px] md:text-[20px] text-white uppercase`}
+                      className={`${merri.className} font-normal text-[16px] text-white uppercase`}
                     >
                       {item.roles.join(' | ')}
                     </h3>
@@ -169,7 +169,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
 
       {/* COLLABORATORS */}
       <div className="my-30">
-        <div className="flex justify-center items-center my-6 ">
+        <div className="flex justify-center items-center my-12 ">
           <h2
             className={`${merri.className} font-bold text-[#1D5C75] text-[18px]`}
           >
@@ -182,7 +182,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
               <p className="text-gray-600">No collaborators found.</p>
             </div>
           ) : (
-            <div className="w-full mx-auto px-2 md:px-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-4">
+            <div className="w-full mx-auto px-2 md:px-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-16">
               {collaboratorMembers.map((item, index) => (
                 <div
                   key={index}

@@ -88,7 +88,7 @@ export default function RetreatClient({ retreat }: any) {
       return (
         <div
           key={index}
-          className={`bg-[#60a5fa] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
+          className={`bg-[#78B0C7] text-white ${merri.className} px-2 py-2 font-bold text-[16px] md:text-lg flex justify-between items-center`}
         >
           <span
             className={`${merri.className} font-bold text-[16px] md:text-[18px]`}
@@ -274,7 +274,7 @@ export default function RetreatClient({ retreat }: any) {
         {days.map((dayInfo) => (
           <div key={dayInfo.day} className="flex items-center justify-center">
             <div
-              className={`w-40 ${merri.className} h-40 md:w-44 md:h-44 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center`}
+              className={`w-70 ${merri.className} h-36  rounded-md bg-[#1D5C75] shadow-xl text-white flex items-center justify-center`}
             >
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">

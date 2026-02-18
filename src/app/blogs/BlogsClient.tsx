@@ -282,7 +282,7 @@ const BlogsClient = ({ initialBlogs }: Props) => {
 
       {/* first section */}
       <div
-        className="w-full relative -mt-7 md:-mt-10 xl:-mt-8"
+        className="w-full relative -mt-7 md:-mt-10 xl:-mt-8 pb-20"
         style={{
           backgroundImage: `
       linear-gradient(#1D5C75CC, #1D5C75CC),
@@ -476,9 +476,9 @@ const BlogsClient = ({ initialBlogs }: Props) => {
               )}
 
               {/* Results count */}
-              <div className="mb-5">
+              <div className="my-5">
                 <p
-                  className={`${merri.className} text-white font-bold pt-5 pb-20 text-[32px] `}
+                  className={`${merri.className} text-[#78B0C7] font-bold text-[18px] md:text-[20px]`}
                 >
                   Showing {filteredBlogs.length} of {blogs.length} {' '} Articles
                  
@@ -501,7 +501,7 @@ const BlogsClient = ({ initialBlogs }: Props) => {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="px-4 relative xl:mx-30 -mt-20 max-w-full overflow-x-hidden">
+        <div className="px-4 relative xl:mx-30 -mt-16 max-w-full overflow-x-hidden">
           <div className="grid grid-cols-12 gap-0 md:gap-8">
             { filteredBlogs.length > 0 ? (
               filteredBlogs.map((blog) => (

@@ -196,9 +196,9 @@ export default function PastRetreatClient({
 
         {/* Retreat Details Section */}
         <div className="w-full">
-          <div className="xl:mx-40 bg-white">
-            <div className="grid  md:grid-cols-12 gap-1 overflow-hidden">
-              <div className="w-full order-1 sm:order-0 md:col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 p-4 md:p-0 md:my-6">
+          <div className="mx-4 xl:mx-30 ">
+            <div className="grid grid-cols-12 gap-3">
+              <div className="col-start-1 lg:col-start-2 col-span-12 lg:col-span-10 p-6 md:my-6 bg-white ">
                 <div className="text-left mt-16">
                   <p
                     className={`${merri.className} text-[16px] md:text-[18px] text-[#78B0C7] font-bold my-6`}
