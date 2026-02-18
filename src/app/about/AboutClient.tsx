@@ -79,46 +79,44 @@ export default function AboutClient({ members }: { members: Member[] }) {
           backgroundSize: '240px 240px',
         }}
       >
-     <div className="py-20">
+        <div className="py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-0">
+              {/* TEXT */}
+              <div>
+                <p
+                  className={`text-white ${merri.className} font-bold italic text-center md:text-left text-[20px] md:text-[24px] max-w-2xl`}
+                >
+                  {settings?.about.subtitle}
+                </p>
+              </div>
 
-  <div className="max-w-6xl mx-auto px-6">
-
-  <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-0">
-
-  {/* TEXT */}
- <div>
-   <p
-    className={`text-white ${merri.className} font-bold italic text-center md:text-left text-[20px] md:text-[24px] max-w-2xl`}
-  >
-    {settings?.about.subtitle}
-  </p>
- </div>
-
-  {/* BUTTON */}
-  <div
-    onClick={() =>
-      document
-        .getElementById('contact')
-        ?.scrollIntoView({ behavior: 'smooth' })
-    }
-    className="flex w-80"
-  >
-    <CustomButton
-      text="REACH US"
-      bgColor="#1D5C75"
-      textColor="#FFFFFF"
-      url=""
-    />
-  </div>
-
-</div>
-
-
-  </div>
-
-</div>
-
-
+              {/* BUTTON */}
+              <div className="flex w-80">
+                <button
+                  onClick={() =>
+                    document
+                      .getElementById('contact')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }
+                  className={`
+                    ${merri.className}
+                    inline-flex items-center justify-center
+                    font-bold cursor-pointer
+                    w-full max-w-[350px]
+                    h-14
+                    px-6 sm:px-0 lg:px-12
+                    text-[14px] lg:text-[16px]
+                    leading-none 
+                   bg-[#1D5C75] text-white
+                  `}
+                >
+                  REACH US
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* CORE TEAM */}
