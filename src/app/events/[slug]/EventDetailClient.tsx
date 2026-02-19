@@ -12,6 +12,8 @@ import {
 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import CustomButton from '@/components/CustomButton'
+import MobileNavbarScroll from '@/components/MobileNavbarScroll'
+import NavbarScroll from '@/components/NavbarScroll'
 
 interface Event {
   id: string
@@ -85,7 +87,15 @@ export default function EventDetailClient({ event }: { event: Event }) {
   const youtubeId = event.youtubeUrl ? extractYouTubeId(event.youtubeUrl) : null
 
   return (
-    <div className="min-h-screen">
+    <div className="">
+
+      <div>
+      
+        <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
+        <NavbarScroll textColor="#1D5C75" />
+      </div>
+     
+      
       {/* HERO */}
       <div className="relative h-96 bg-[#1D5C75]">
         <img

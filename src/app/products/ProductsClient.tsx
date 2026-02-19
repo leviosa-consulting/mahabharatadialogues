@@ -138,7 +138,7 @@ export const ProductsClient = ({ initialProducts }: Props) => {
                   <button
                     onClick={() => setSelectedCategory('All')}
                     
-                    className={`${merri.className} font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-4 ${
+                    className={`${merri.className} font-bold text-[14px] md:text-[16px] px-6 md:px-16 ${
                       selectedCategory === 'All'
                         ? 'bg-[#1D5C75] text-white'
                         : 'bg-[#78B0C7] text-[#1D5C75]'}
@@ -151,7 +151,7 @@ export const ProductsClient = ({ initialProducts }: Props) => {
                   <button
                     onClick={() => setSelectedCategory('Games')}
                   
-                    className={`${merri.className} font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-4 ${
+                    className={`${merri.className} font-bold text-[14px] md:text-[16px] px-6 md:px-16  ${
                       selectedCategory === 'Games'
                         ? 'bg-[#1D5C75] text-white'
                         : 'bg-[#78B0C7] text-[#1D5C75]'
@@ -164,7 +164,7 @@ export const ProductsClient = ({ initialProducts }: Props) => {
                   <button
                     onClick={() => setSelectedCategory('Books')}
                   
-                    className={`${merri.className} col-start-1 font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-4 ${
+                    className={`${merri.className} col-start-1 font-bold text-[14px] md:text-[16px] px-6 md:px-16 py-2 ${
                       selectedCategory === 'Books'
                         ? 'bg-[#1D5C75] text-white'
                         : 'bg-[#78B0C7] text-[#1D5C75]'
@@ -290,3 +290,4 @@ export const ProductsClient = ({ initialProducts }: Props) => {
     </div>
   )
 }
+

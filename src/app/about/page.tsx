@@ -8,8 +8,17 @@ async function getMembers() {
   })
 
   const data = await res.json()
-  return data.data || []
+
+  const members = data.data || []
+
+  members.sort(
+    (a: any, b: any) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+  )
+
+  return members
 }
+
 
 export default async function Page() {
   const members = await getMembers()

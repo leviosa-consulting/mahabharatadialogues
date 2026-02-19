@@ -1,4 +1,3 @@
-
 'use client'
 
 import MobileNavbar from '@/components/MobileNavbar'
@@ -11,7 +10,7 @@ import { MapPin, X } from 'lucide-react'
 import NavbarScroll from '@/components/NavbarScroll'
 
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
-
+import { useRouter } from 'next/navigation'
 
 interface Event {
   id: string
@@ -38,6 +37,7 @@ interface EventsClientProps {
 const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const settings = usePageSettingsStore((state) => state.settings)
+  const router = useRouter()
 
   const formatEventDateTime = (dateTimeStr: string): string => {
     const date = new Date(dateTimeStr)
@@ -105,17 +105,7 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
     const month = months[date.getMonth()]
     const year = date.getFullYear()
 
-    let hours = date.getHours()
-    const minutes = date.getMinutes()
-    const ampm = hours >= 12 ? 'pm' : 'am'
-    hours = hours % 12
-    hours = hours ? hours : 12
-
-    const timeStr = `${hours}${
-      minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
-    }${ampm}`
-
-    return `${day} ${month} ${year} | ${timeStr}`
+    return `${day} ${month} ${year}`
   }
 
   const openImageModal = (imageSrc: string) => {
@@ -124,6 +114,13 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
 
   const closeImageModal = () => {
     setSelectedImage(null)
+  }
+
+  const truncateWords = (text: string, limit: number) => {
+    return {
+      text: text.slice(0, limit),
+      isTruncated: text.length > limit,
+    }
   }
 
   return (
@@ -136,7 +133,7 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
       <NavbarScroll textColor="#1D5C75" />
-      
+
       <div
         className="w-full relative -mt-7 md:-mt-10 xl:-mt-8"
         style={{
@@ -312,14 +309,15 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
 
           {pastEvents.length > 0 ? (
             <div className="px-4 relative xl:mx-30 max-w-full overflow-x-hidden">
-              <div className="grid grid-cols-12 gap-0 md:gap-8">
+              <div className="grid grid-cols-12 md:gap-8">
                 {pastEvents.map((event) => (
                   <div
                     key={event.id}
                     className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFFCC] mb-6 min-w-0"
                   >
-                    <div className="grid grid-cols-12 gap-4 md:flex md:flex-row md:justify-between px-4 md:px-8 py-6">
-                      <div className="col-span-12 md:flex-1 flex flex-col justify-between max-w-full md:max-w-[400px] text-center md:text-left">
+                    <div className="flex flex-col md:flex-row md:justify-between gap-10 px-4 md:px-8 py-6">
+                      {/* Left Content */}
+                      <div className="flex-1 flex flex-col justify-center text-center md:text-left min-w-0">
                         <div>
                           <h1
                             className={`${merri.className} text-[#1D5C75] font-bold text-[22px] md:text-[28px] italic leading-tight mb-2`}
@@ -330,23 +328,45 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
                           <p
                             className={`${merri.className} text-[#1D5C75] font-bold text-[14px] md:text-[16px]`}
                           >
-                            {formatPastEventDate(event.date)}
+                            {formatPastEventDate(event.date)} | {event.venue},{' '}
+                            {event.city}
                           </p>
 
                           <p
-                            className={`${merri.className} text-[#1D5C75] text-[14px] md:text-[16px]`}
+                            className={`${merri.className} text-[#1D5C75] font-light text-[16px] md:text-[18px] italic text-center md:text-left my-3`}
                           >
-                            {event.venue}, {event.city}
-                          </p>
+                            {(() => {
+                              const { text, isTruncated } = truncateWords(
+                                event.description,
+                                140,
+                              )
 
-                          <p
-                            className={`${merri.className} text-[#1D5C75] font-light text-[16px] md:text-[18px] italic text-center md:text-left line-clamp-3 my-3`}
-                          >
-                            {event.description}
+                              return (
+                                <>
+                                  <span>
+                                    {text}
+                                    {isTruncated && '... '}
+                                  </span>
+
+                                  {isTruncated && (
+                                    <span
+                                      onClick={() =>
+                                        router.push(
+                                          `/events/${event.slug ?? ''}`,
+                                        )
+                                      }
+                                      className="cursor-pointer font-bold italic text-[14px] md:text-[15px] hover:underline"
+                                    >
+                                      view more
+                                    </span>
+                                  )}
+                                </>
+                              )
+                            })()}
                           </p>
                         </div>
 
-                        <div className="hidden md:block mt-4 w-[80%]">
+                        <div className="hidden mt-4 w-[80%]">
                           <CustomButton
                             text="LEARN MORE"
                             bgColor="#1D5C75"
@@ -356,50 +376,15 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
                         </div>
                       </div>
 
-                      <div className="col-span-12 xl:flex gap-2 mt-4 md:mt-0 items-stretch min-w-0">
-                        <div
-                          className="cursor-pointer w-full md:w-[320px] lg:w-[380px] h-[220px] md:h-[240px] lg:h-[260px] overflow-hidden"
-                          onClick={() => openImageModal(event.coverImage)}
-                        >
+                      {/* Right Image */}
+                      <div className="flex justify-center md:justify-end items-center min-w-0">
+                        <div className="w-full max-w-[292px] aspect-[4/3] overflow-hidden">
                           <img
                             src={event.coverImage}
                             alt={event.title}
                             className="w-full h-full object-cover"
                           />
                         </div>
-
-                        {event.gallery?.length > 0 && (
-                          <div className="flex xl:flex-col flex-row gap-2 w-full xl:w-[140px] h-20 mt-3 xl:mt-0  xl:h-[260px]">
-                            {[0, 1, 2].map((slot) => {
-                              const image = event.gallery?.[slot]
-
-                              return (
-                                <div
-                                  key={slot}
-                                  className="flex-1 overflow-hidden cursor-pointer"
-                                  onClick={() => image && openImageModal(image)}
-                                >
-                                  {image && (
-                                    <img
-                                      src={image}
-                                      alt={image}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  )}
-                                </div>
-                              )
-                            })}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="col-span-12 mt-4 md:hidden flex justify-center">
-                        <CustomButton
-                          text="LEARN MORE"
-                          bgColor="#1D5C75"
-                          textColor="#FFFFFF"
-                          url={`/events/${event.slug ?? ''}`}
-                        />
                       </div>
                     </div>
                   </div>
@@ -416,7 +401,6 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
             </div>
           )}
         </div>
-       
       </div>
 
       {/* Image Modal */}

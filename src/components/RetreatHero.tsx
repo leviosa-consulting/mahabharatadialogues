@@ -271,7 +271,7 @@ export default async function RetreatHero() {
                     {/* PRICE + CONTENT */}
                     <div className="flex items-center justify-between text-left">
                       {/* LEFT SIDE - PRICE */}
-                      <div className="flex flex-col items-start pr-8">
+                      <div className="flex flex-col items-center pr-8 text-center">
                         <p className="font-neco font-bold text-white flex items-center gap-1">
                           <span className="text-[22px] leading-none">₹</span>
                           <span className="text-[56px] leading-none">

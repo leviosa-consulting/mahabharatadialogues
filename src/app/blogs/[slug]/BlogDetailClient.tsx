@@ -216,7 +216,7 @@ const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug }
 
               <div className="bg-white">
                 <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4 ">
+                  <div className="col-span-12 col-start-1 lg:col-start-2 lg:col-span-10 p-4 sm:py-4">
                     <div className="w-full">
                       <div className="flex flex-col items-start text-start  w-full">
                         <div className="flex justify-between items-start w-full gap-4 my-4 md:my-8">

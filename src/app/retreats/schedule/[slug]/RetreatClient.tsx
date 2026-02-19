@@ -18,6 +18,7 @@ import MobileNavbar from '@/components/MobileNavbar'
 import Footer from '@/components/Footer'
 import RetreatScheduleShimmer from '@/components/shimmer/RetreatScheduleShimmer'
 import NavbarScroll from '@/components/NavbarScroll'
+import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 // import FooterBridge from '@/components/FooterBridge'
 
 interface ScheduleItem {
@@ -55,10 +56,9 @@ interface Retreat {
 }
 
 export default function RetreatClient({ retreat }: any) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
-
- 
-
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null,
+  )
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -76,7 +76,6 @@ export default function RetreatClient({ retreat }: any) {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedImageIndex])
-
 
   const renderScheduleSection = (
     section: ScheduleSection,
@@ -187,9 +186,6 @@ export default function RetreatClient({ retreat }: any) {
     }
   }
 
- 
-
-
   const days = [
     { day: 1, date: retreat.day1.date, dayName: retreat.day1.dayName },
     { day: 2, date: retreat.day2.date, dayName: retreat.day2.dayName },
@@ -211,44 +207,49 @@ export default function RetreatClient({ retreat }: any) {
 
   return (
     <div className="min-h-screen">
-      <div
-        className="sm:hidden"
-      
-      >
+      <div className="sm:hidden">
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
+           <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
         </div>
       </div>
-      <div
-        className="hidden sm:block relative pt-5  z-10"
-       
-      >
+      <div className="hidden sm:block relative pt-5  z-10">
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
-      <NavbarScroll textColor="#1D5C75"/>
+      <NavbarScroll textColor="#1D5C75" />
 
       {/* Header */}
       <div className="bg-[#282828] text-white py-12 md:py-24 px-6 -mt-7 md:-mt-10 xl:-mt-8 relative overflow-hidden">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
           {/* Left */}
           <div className={`text-center md:text-left`}>
-            <div  className={`font-neco text-[24px] leading-none text-white font-bold mb-2`}>Mahabharata Dialogues</div>
-            <h1 className={`${merri.className} text-[44px] leading-none text-white font-extrabold italic mb-6`}>The Retreat</h1>
+            <div
+              className={`font-neco text-[24px] leading-none text-white font-bold mb-2`}
+            >
+              Mahabharata Dialogues
+            </div>
+            <h1
+              className={`${merri.className} text-[44px] leading-none text-white font-extrabold italic mb-6`}
+            >
+              The Retreat
+            </h1>
 
             <div className="flex flex-col items-center justify-center md:justify-start md:items-start">
-              <span className={`${merri.className} text-white text-[16px] md:text-[18px] font-bold`}>
+              <span
+                className={`${merri.className} text-white text-[16px] md:text-[18px] font-bold`}
+              >
                 {retreat.day1.date} <span className="mx-1">–</span>{' '}
                 {isThreeDay ? retreat.day3!.date : retreat.day2.date}
               </span>
-                {retreat.venue && (
-              <div className="flex items-center gap-2 justify-center md:justify-start">
-                <span
-                  className={`text-sm  md:text-base text-white/90 ${merri.className}`}
-                >
-                  {retreat.venue}, {retreat.city}
-                </span>
-              </div>
-            )}
+              {retreat.venue && (
+                <div className="flex items-center gap-2 justify-center md:justify-start">
+                  <span
+                    className={`text-sm  md:text-base text-white/90 ${merri.className}`}
+                  >
+                    {retreat.venue}, {retreat.city}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -260,7 +261,6 @@ export default function RetreatClient({ retreat }: any) {
             <p className="text-lg italic leading-relaxed font-neco">
               {retreat.description}
             </p>
-          
           </div>
         </div>
       </div>
@@ -476,4 +476,3 @@ export default function RetreatClient({ retreat }: any) {
     </div>
   )
 }
-

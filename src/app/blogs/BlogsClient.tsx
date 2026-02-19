@@ -11,8 +11,6 @@ import { useSearchParams } from 'next/navigation'
 import NavbarScroll from '@/components/NavbarScroll'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 
-
-
 interface Blog {
   id: string
   title: string
@@ -26,7 +24,7 @@ interface Blog {
 }
 
 interface Props {
-  initialBlogs: Blog[];
+  initialBlogs: Blog[]
 }
 
 const BlogsClient = ({ initialBlogs }: Props) => {
@@ -47,7 +45,9 @@ const BlogsClient = ({ initialBlogs }: Props) => {
     ? `${searchParams.get('readingTime')} min read`
     : 'All'
   const hasUrlParams =
-    initialCategory !== 'All' || initialAuthor !== 'All' || initialReadingTime !== 'All'
+    initialCategory !== 'All' ||
+    initialAuthor !== 'All' ||
+    initialReadingTime !== 'All'
 
   // Pre-filter blogs immediately so the correct list is shown on first render
   const getInitialFiltered = () => {
@@ -69,9 +69,11 @@ const BlogsClient = ({ initialBlogs }: Props) => {
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>(getInitialFiltered)
   const [loading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory)
+  const [selectedCategory, setSelectedCategory] =
+    useState<string>(initialCategory)
   const [selectedAuthor, setSelectedAuthor] = useState<string>(initialAuthor)
-  const [selectedReadingTime, setSelectedReadingTime] = useState<string>(initialReadingTime)
+  const [selectedReadingTime, setSelectedReadingTime] =
+    useState<string>(initialReadingTime)
   const [allCategories, setAllCategories] = useState<string[]>([])
   const [allAuthors, setAllAuthors] = useState<string[]>([])
   const [allReadingTimes, setAllReadingTimes] = useState<string[]>([])
@@ -84,7 +86,7 @@ const BlogsClient = ({ initialBlogs }: Props) => {
   const [isMobile, setIsMobile] = useState(false)
   const settings = usePageSettingsStore((state) => state.settings)
 
-  console.log("settings = ", settings)
+  // console.log("settings = ", settings)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -116,9 +118,13 @@ const BlogsClient = ({ initialBlogs }: Props) => {
 
   // Real-time search as user types
   useEffect(() => {
-    applyFilters(searchQuery, selectedCategory, selectedAuthor, selectedReadingTime)
+    applyFilters(
+      searchQuery,
+      selectedCategory,
+      selectedAuthor,
+      selectedReadingTime,
+    )
   }, [searchQuery])
-
 
   const formatDate = (dateString: string) => {
     try {
@@ -278,11 +284,11 @@ const BlogsClient = ({ initialBlogs }: Props) => {
       <div className="hidden sm:block relative pt-5 z-10">
         <Navbar textColor="#1D5C75" isNotHome />
       </div>
-      <NavbarScroll textColor="#1D5C75"/>
+      <NavbarScroll textColor="#1D5C75" />
 
       {/* first section */}
       <div
-        className="w-full relative -mt-7 md:-mt-10 xl:-mt-8 pb-20"
+        className="w-full relative -mt-7 md:-mt-10 xl:-mt-8 pb-40"
         style={{
           backgroundImage: `
       linear-gradient(#1D5C75CC, #1D5C75CC),
@@ -474,16 +480,6 @@ const BlogsClient = ({ initialBlogs }: Props) => {
                   </div>
                 </>
               )}
-
-              {/* Results count */}
-              <div className="my-5">
-                <p
-                  className={`${merri.className} text-[#78B0C7] font-bold text-[18px] md:text-[20px]`}
-                >
-                  Showing {filteredBlogs.length} of {blogs.length} {' '} Articles
-                 
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -501,49 +497,64 @@ const BlogsClient = ({ initialBlogs }: Props) => {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="px-4 relative xl:mx-30 -mt-16 max-w-full overflow-x-hidden">
+        <div className="px-4 relative xl:mx-30 -mt-30 max-w-full overflow-x-hidden">
           <div className="grid grid-cols-12 gap-0 md:gap-8">
-            { filteredBlogs.length > 0 ? (
+            {filteredBlogs.length > 0 && (
+              <div className="col-span-12 md:col-start-2 md:col-span-10">
+                {/* Results count */}
+                <div className="my-2">
+                  <p
+                    className={`${merri.className} text-[#78B0C7] font-bold text-[18px] md:text-[20px]`}
+                  >
+                    Showing {filteredBlogs.length} of {blogs.length} Articles
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {filteredBlogs.length > 0 ? (
               filteredBlogs.map((blog) => (
                 <div
                   key={blog.id}
-                  className="col-span-12 md:col-start-2 md:col-span-10 bg-[#FFFFFF] mb-4 min-w-0"
+                  className="col-span-12 md:col-start-2 md:col-span-10"
                 >
-                  <Link href={`/blogs/${blog.slug}`}>
-                    <div className="flex flex-col md:flex-row cursor-pointer">
-                      {/* LEFT IMAGE */}
-                      <div className="w-full md:w-[340px] flex-shrink-0">
-                        <img
-                          src={blog.image_url || '/assets/fallbackImg.jpeg'}
-                          alt={blog.title}
-                          className="w-full h-auto md:w-[340px] md:h-[226px] object-cover"
-                        />
-                      </div>
+                  <div className="bg-[#FFFFFF] mb-4">
+                    <Link href={`/blogs/${blog.slug}`}>
+                      <div className="flex flex-col md:flex-row cursor-pointer">
+                        {/* LEFT IMAGE */}
+                        <div className="w-full md:w-[340px] flex-shrink-0">
+                          <img
+                            src={blog.image_url || '/assets/fallbackImg.jpeg'}
+                            alt={blog.title}
+                            className="w-full h-auto md:w-[340px] md:h-[226px] object-cover"
+                          />
+                        </div>
 
-                      {/* RIGHT CONTENT */}
-                      <div className="flex-1 flex p-4 md:p-6 flex-col justify-between">
-                        <div>
-                          <h2
-                            className={`${merri.className} text-[#1D5C75] font-bold text-[32px] md:text-[24px] xl:text-[32px] italic leading-tight mb-2`}
-                          >
-                            {blog.title}
-                          </h2>
+                        {/* RIGHT CONTENT */}
+                        <div className="flex-1 flex p-4 md:p-6 flex-col justify-between">
+                          <div>
+                            <h2
+                              className={`${merri.className} text-[#1D5C75] font-bold text-[32px] md:text-[24px] xl:text-[32px] italic leading-tight mb-2`}
+                            >
+                              {blog.title}
+                            </h2>
 
-                          <p
-                            className={`${merri.className} text-[#1D5C75] font-normal text-[14px] md:text-[16px] mb-1`}
-                          >
-                            {formatDate(blog.created_at)} | {blog.author}
-                          </p>
+                            <p
+                              className={`${merri.className} text-[#1D5C75] font-normal text-[14px] md:text-[16px] mb-1`}
+                            >
+                              {formatDate(blog.created_at)} | {blog.author}
+                            </p>
 
-                          <p
-                            className={`${merri.className} text-black font-light italic text-[16px] md:text-[18px] line-clamp-3 md:line-clamp-2 mt-4`}
-                          >
-                            {blog.subtitle}
-                          </p>
+                            <p
+                              className={`${merri.className} text-black font-light italic text-[16px] md:text-[18px] line-clamp-3 md:line-clamp-2 mt-4`}
+                            >
+                              {blog.subtitle}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 </div>
               ))
             ) : (
@@ -565,7 +576,6 @@ const BlogsClient = ({ initialBlogs }: Props) => {
             )}
           </div>
         </div>
-        
       </div>
     </div>
   )

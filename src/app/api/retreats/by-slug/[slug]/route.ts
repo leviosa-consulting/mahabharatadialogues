@@ -15,7 +15,7 @@ export async function GET(
       )
     }
 
-    console.log("SLUG RECEIVED:", slug)
+    // console.log("SLUG RECEIVED:", slug)
 
     const snapshot = await adminDB
       .collection("retreats")

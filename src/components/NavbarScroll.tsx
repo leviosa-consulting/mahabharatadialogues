@@ -51,10 +51,10 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
             ${shouldShow ? 'translate-y-0 shadow-md' : '-translate-y-full'}
           `}
         >
-          <div className="relative flex items-center pt-16 pb-8 max-w-3xl w-full">
+          <div className="relative flex items-center pt-18 pb-5 max-w-[812px] w-full">
             
             {/* LEFT — flex-1 so it takes equal half */}
-            <div className="flex flex-1 gap-8">
+            <div className="flex flex-1 gap-12">
               <Link
                 href="/events"
                 className={`${merri.className} font-bold uppercase text-[14px]`}
@@ -88,7 +88,7 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
             </Link>
 
             {/* RIGHT — flex-1 + justify-end so it takes equal half and aligns right */}
-            <div className="flex flex-1 justify-end gap-8">
+            <div className="flex flex-1 justify-end mr-7 gap-12">
               <Link
                 href="/blogs"
                 className={`${merri.className} font-bold uppercase text-[14px]`}

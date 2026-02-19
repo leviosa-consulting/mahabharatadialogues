@@ -68,7 +68,7 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
         <div
            className={`
     fixed top-0 left-0 right-0
-    h-18
+    h-22
     bg-white/95 backdrop-blur-sm
     transition-all duration-300
     flex items-center justify-center
@@ -79,7 +79,7 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
           {/* Clickable circle logo  */}
           <Link
             href="/"
-            className="relative flex items-center justify-center mt-8 z-50 transition-all duration-300 w-[89.15] h-[89.15"
+            className="relative flex items-center justify-center mt-8 z-50 transition-all duration-300 w-[82.43]"
           >
             <img
               src="/Logo_for_video_Corner-04.png"
