@@ -2,11 +2,11 @@ import React from 'react'
 import HeroSection from '@/components/Hero'
 import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
-import MobileNavbarScroll from '@/components/MobileNavbarScroll' 
+import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import UpcomingEventsServer from '@/components/UpcomingEventsServer'
 
 export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export default function Home() {
   return (
@@ -22,7 +22,7 @@ export default function Home() {
 
       <HeroSection />
       <UpcomingEventsServer />
-      
+
       <ImageCarousel />
       <Retreats />
     </div>
