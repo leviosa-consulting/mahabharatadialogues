@@ -113,6 +113,8 @@ const TestimonialsCarousel = ({
     return null
   }
 
+  // console.log("textcolor", textColor)
+
   return (
     <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-16 pb-24">
       <div
@@ -132,12 +134,14 @@ const TestimonialsCarousel = ({
             }`}
           >
             <p
-              className={`text-[${textColor}] font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7`}
+            style={{ color: textColor }}
+              className={`font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7`}
             >
               {testimonials[currentIndex]?.quote}
             </p>
             <div
-              className={`text-[${textColor}] ${merri.className} mt-4 text-center`}
+            style={{ color: textColor }}
+              className={` ${merri.className} mt-4 text-center`}
             >
               <p className="uppercase font-bold text-[14px] md:text-[16px]">
                 {testimonials[currentIndex]?.name},
