@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     };
 
     const docRef = await adminDB.collection("events").add(newEvent);
-   revalidatePath('/events')
+    revalidatePath('/events')
 
     return NextResponse.json({
       success: true,

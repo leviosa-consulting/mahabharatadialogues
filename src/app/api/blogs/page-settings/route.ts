@@ -1,6 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -64,8 +65,10 @@ export async function PUT(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    // Use set with merge to create if doesn't exist
+   
     await docRef.set(updateData, { merge: true });
+revalidatePath("/blogs");
+revalidatePath("/");
 
     return NextResponse.json({
       success: true,

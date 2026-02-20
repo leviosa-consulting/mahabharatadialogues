@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { generateFullSlug } from "@/utils/slugUtils";
+import { revalidatePath } from 'next/cache'
 
 export async function PUT(
   req: NextRequest,
@@ -92,6 +93,11 @@ export async function PUT(
       .doc(id)
       .update(updateData);
 
+      revalidatePath('/retreats')
+      revalidatePath(`/retreats/${slug}`)
+      revalidatePath('/')
+
+
     return NextResponse.json({
       success: true,
       data: { id, ...updateData },
@@ -113,6 +119,8 @@ export async function DELETE(
     const { id } = await params;
     
     await adminDB.collection("retreats").doc(id).delete();
+    revalidatePath('/retreats')
+    revalidatePath('/')
 
     return NextResponse.json({
       success: true,

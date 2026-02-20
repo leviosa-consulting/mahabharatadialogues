@@ -21,7 +21,8 @@ export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/testimonials`,
       {
-        next: { revalidate: 3600 }, // 1 hour ISR
+        next: { revalidate: 43200
+ }, 
       }
     )
 

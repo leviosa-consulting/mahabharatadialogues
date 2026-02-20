@@ -1,6 +1,7 @@
 // app/api/about/page-settings/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -66,7 +67,8 @@ export async function PUT(req: NextRequest) {
 
     // Use set with merge to create if doesn't exist
     await docRef.set(updateData, { merge: true });
-
+revalidatePath("/about");
+revalidatePath("/");
     return NextResponse.json({
       success: true,
       data: updateData,

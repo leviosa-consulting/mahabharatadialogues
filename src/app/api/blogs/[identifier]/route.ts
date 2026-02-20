@@ -2,6 +2,7 @@
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from 'next/cache'
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { deleteFromFirebaseStorageServer } from "@/utils/firebaseDeleteServer";
 
@@ -115,6 +116,10 @@ export async function PUT(
     };
 
     await docRef.update(updated);
+   revalidatePath('/blogs')
+   revalidatePath(`/blogs/${existing?.slug}`)
+   revalidatePath('/')
+
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
@@ -157,6 +162,9 @@ export async function DELETE(
     }
 
     await docRef.delete();
+    revalidatePath('/blogs')
+    revalidatePath('/')
+
 
     return NextResponse.json({
       success: true,

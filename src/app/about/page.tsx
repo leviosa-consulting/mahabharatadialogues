@@ -1,24 +1,30 @@
 import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { notFound } from 'next/navigation'
+import { cache } from 'react'
 
-async function getMembers() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/about`, {
-    cache: 'no-store',
-  })
+export const revalidate = 43200
 
-  const data = await res.json()
+const getMembers = cache(async () => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/about`, {
+      next: { revalidate: 43200 },
+    })
 
-  const members = data.data || []
+    const data = await res.json()
 
-  members.sort(
-    (a: any, b: any) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-  )
+    const members = data.data || []
 
-  return members
-}
+    members.sort(
+      (a: any, b: any) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+    )
 
+    return members
+  } catch {
+    return []
+  }
+})
 
 export default async function Page() {
   const members = await getMembers()
@@ -28,7 +34,9 @@ export default async function Page() {
   return (
     <>
       <AboutClient members={members} />
-      <div className='pt-20'
+
+      <div
+        className="pt-20"
         style={{
           backgroundImage: `
     linear-gradient(#1D5C75, #1D5C75),

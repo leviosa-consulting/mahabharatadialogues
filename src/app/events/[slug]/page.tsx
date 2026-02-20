@@ -4,7 +4,8 @@ import FooterWithBlogs from '@/components/FooterWithBlogs'
 import EventDetailClient from './EventDetailClient'
 import { cache } from 'react'
 
-export const revalidate = 3600
+export const revalidate = 43200
+
 interface Event {
   id: string
   title: string
@@ -26,7 +27,8 @@ const getEvent = cache(async (slug: string): Promise<Event | null> => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}`,
       {
-        next: { revalidate: 3600 }, 
+        next: { revalidate: 43200
+ }, 
       }
     )
 

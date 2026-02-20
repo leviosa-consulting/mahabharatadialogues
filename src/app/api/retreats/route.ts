@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { generateFullSlug } from "@/utils/slugUtils";
+import { revalidatePath } from 'next/cache'
 
 export const dynamic = "force-dynamic";
 
@@ -98,6 +99,8 @@ export async function POST(req: NextRequest) {
     }
 
     const docRef = await adminDB.collection("retreats").add(newRetreat);
+    revalidatePath('/retreats')
+   revalidatePath('/')
 
     return NextResponse.json({
       success: true,

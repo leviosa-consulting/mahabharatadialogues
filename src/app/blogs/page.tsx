@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 }
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
+export const revalidate = 43200
+
 
 export default async function BlogsPage() {
   const blogs = await getBlogs()

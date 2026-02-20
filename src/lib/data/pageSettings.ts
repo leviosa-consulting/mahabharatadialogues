@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { adminDB } from "@/firebase/firebaseAdmin";
 
 interface PageSection {
@@ -12,7 +13,7 @@ interface PageSettings {
   about: PageSection;
 }
 
-export async function getPageSettings(): Promise<PageSettings> {
+export const getPageSettings = cache(async (): Promise<PageSettings> => {
   try {
     const [
       aboutSnap,
@@ -42,4 +43,4 @@ export async function getPageSettings(): Promise<PageSettings> {
       products: { title: "Products", subtitle: "" },
     };
   }
-}
+});

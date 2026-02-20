@@ -6,7 +6,8 @@ import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import UpcomingEventsServer from '@/components/UpcomingEventsServer'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600
+export const revalidate = 43200
+
 
 export default function Home() {
   return (

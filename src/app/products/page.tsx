@@ -3,12 +3,19 @@
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { ProductsClient } from './ProductsClient'
 import { Product } from '@/data/productsData'
+import { cache } from 'react'
 
-async function getProducts(): Promise<Product[]> {
+export const revalidate = 43200
+
+
+const getProducts = cache(async (): Promise<Product[]> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/products`,
-      { cache: 'no-store' },
+      {
+        next: { revalidate: 43200
+ },
+      },
     )
 
     const data = await res.json()
@@ -19,7 +26,7 @@ async function getProducts(): Promise<Product[]> {
   } catch {
     return []
   }
-}
+})
 
 export default async function Page() {
   const products = await getProducts()

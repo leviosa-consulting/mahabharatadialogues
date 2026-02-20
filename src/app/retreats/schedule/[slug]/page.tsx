@@ -1,39 +1,43 @@
 import RetreatClient from './RetreatClient'
 import { notFound } from 'next/navigation'
-import { headers } from 'next/headers'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import { cache } from 'react'
 
-async function getBaseUrl() {
-  const h = await headers()
-  const host = h.get('host')
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-  return `${protocol}://${host}`
-}
+export const revalidate = 43200
 
-async function getRetreat(slug: string) {
-  const baseUrl = await getBaseUrl()
 
-  // try slug first
-  const slugRes = await fetch(`${baseUrl}/api/retreats/by-slug/${slug}`, {
-    cache: 'no-store',
-  })
+const getRetreat = cache(async (slug: string) => {
+  try {
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
-  if (slugRes.ok) {
-    const slugData = await slugRes.json()
-    if (slugData.success && slugData.data) return slugData.data
+    const slugRes = await fetch(
+      `${baseUrl}/api/retreats/by-slug/${slug}`,
+      {
+        next: { revalidate: 43200
+ },
+      }
+    )
+
+    if (slugRes.ok) {
+      const slugData = await slugRes.json()
+      if (slugData.success && slugData.data) return slugData.data
+    }
+
+    const allRes = await fetch(`${baseUrl}/api/retreats`, {
+      next: { revalidate: 43200
+ },
+    })
+
+    const allData = await allRes.json()
+
+    if (!allData.success) return null
+
+    return allData.data.find((r: any) => r.id === slug) || null
+  } catch {
+    return null
   }
-
-  // fallback by id
-  const allRes = await fetch(`${baseUrl}/api/retreats`, {
-    cache: 'no-store',
-  })
-
-  const allData = await allRes.json()
-
-  if (!allData.success) return null
-
-  return allData.data.find((r: any) => r.id === slug) || null
-}
+})
 
 export default async function Page({
   params,
@@ -49,6 +53,7 @@ export default async function Page({
   return (
     <>
       <RetreatClient retreat={retreat} />
+
       <div className="bg-[#1D5C75CC] pt-18">
         <FooterWithBlogs />
       </div>

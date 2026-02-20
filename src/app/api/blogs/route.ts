@@ -1,6 +1,7 @@
 // app/api/blogs/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { revalidatePath } from 'next/cache'
 
 export const dynamic = "force-dynamic";
 
@@ -77,6 +78,9 @@ export async function POST(request: NextRequest) {
     };
 
     const docRef = await adminDB.collection("blogs").add(data);
+    revalidatePath('/blogs')
+    revalidatePath('/')
+
 
     return NextResponse.json(
       {

@@ -37,11 +37,10 @@ import { cache } from 'react'
 
 const getEvents = cache(async () => {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
     const response = await fetch(`${baseUrl}/api/events`, {
-      next: { revalidate: 3600 }, // 1 hour
+      next: { revalidate: 43200 },
     })
 
     if (!response.ok) throw new Error('Failed to fetch events')
@@ -80,11 +79,11 @@ const getEvents = cache(async () => {
     })
 
     upcomingEventsList.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     )
 
     pastEventsList.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
     )
 
     return {
@@ -97,9 +96,7 @@ const getEvents = cache(async () => {
   }
 })
 
-
-export const revalidate = 3600
-
+export const revalidate = 43200
 
 export default async function EventsPage() {
   const { upcoming, past } = await getEvents()
@@ -107,14 +104,17 @@ export default async function EventsPage() {
   return (
     <>
       <EventsClient upcomingEvents={upcoming} pastEvents={past} />
-      <div className="pt-16" style={{
+      <div
+        className="pt-16"
+        style={{
           backgroundImage: `
             linear-gradient(#47ABD8CC, #47ABD8CC),
             url('/MD-Texture_BG_Blue-01-04.png')
           `,
           backgroundRepeat: 'repeat',
           backgroundSize: '240px 240px',
-        }}>
+        }}
+      >
         <FooterWithBlogs />
       </div>
     </>

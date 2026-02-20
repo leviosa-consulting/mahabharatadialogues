@@ -1,6 +1,7 @@
 // app/api/products/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { revalidatePath } from 'next/cache'
 
 export const dynamic = "force-dynamic";
 
@@ -122,6 +123,9 @@ export async function PUT(
     };
 
     await adminDB.collection("products").doc(id).update(updatedProduct);
+    revalidatePath('/products')
+    revalidatePath(`/products/${uniqueSlug}`)
+    revalidatePath('/')
 
     return NextResponse.json({
       success: true,
@@ -151,6 +155,8 @@ export async function DELETE(
     }
 
     await adminDB.collection("products").doc(id).delete();
+    revalidatePath('/products')
+    revalidatePath('/')
 
     return NextResponse.json({
       success: true,
