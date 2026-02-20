@@ -194,8 +194,8 @@ export async function DELETE(
     }
 
     await docRef.delete();
-revalidatePath('/events')
-
+    revalidatePath('/events')
+    revalidatePath('/')
     return NextResponse.json({
       success: true,
       message: "Event deleted successfully",

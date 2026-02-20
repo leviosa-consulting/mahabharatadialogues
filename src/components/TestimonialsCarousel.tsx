@@ -17,7 +17,7 @@ interface TestimonialsCarouselProps {
 
 const TestimonialsCarousel = ({
   testimonials,
-  textColor = '#000',
+  textColor,
 }: TestimonialsCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false)
@@ -170,7 +170,7 @@ const TestimonialsCarousel = ({
           ${isActive ? 'scale-125' : ''}
         `}
                 style={{
-                  backgroundColor: isActive ? textColor : '#9CA3AF', // gray-400
+                  backgroundColor: isActive ? textColor : '#9CA3AF', 
                 }}
               />
             )
