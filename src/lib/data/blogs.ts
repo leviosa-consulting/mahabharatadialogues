@@ -1,4 +1,5 @@
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { cache } from "react";
 
 export const runtime = "nodejs";
 
@@ -15,7 +16,7 @@ export interface Blog {
   updated_at: string;
 }
 
-export async function getBlogs(category?: string): Promise<Blog[]> {
+export const getBlogs = cache(async (category?: string): Promise<Blog[]> => {
   try {
     let query = adminDB.collection("blogs").orderBy("created_at", "desc");
 
@@ -25,14 +26,12 @@ export async function getBlogs(category?: string): Promise<Blog[]> {
 
     const snapshot = await query.get();
 
-    const blogs = snapshot.docs.map((doc) => ({
+    return snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     })) as Blog[];
-
-    return blogs;
   } catch (error) {
     console.error("Error fetching blogs:", error);
     return [];
   }
-}
+});

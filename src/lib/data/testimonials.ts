@@ -1,3 +1,5 @@
+import { cache } from 'react'
+
 export interface Testimonial {
   id: string
   quote: string
@@ -8,20 +10,19 @@ export interface Testimonial {
 const FALLBACK: Testimonial[] = [
   {
     id: '1',
-    quote:
-      'Quotes on how amazing it is to be in any of the workshop...',
+    quote: 'Quotes on how amazing it is to be in any of the workshop...',
     name: 'Hansini',
     designation: 'President of Rotary Club, Bengaluru',
   },
 ]
 
-export async function getTestimonials(): Promise<Testimonial[]> {
+export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/testimonials`,
       {
-        cache: 'no-store',
-      },
+        next: { revalidate: 3600 }, // 1 hour ISR
+      }
     )
 
     const data = await res.json()
@@ -34,4 +35,4 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   } catch {
     return FALLBACK
   }
-}
+})

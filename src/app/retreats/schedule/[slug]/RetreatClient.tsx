@@ -294,7 +294,7 @@ export default function RetreatClient({ retreat }: any) {
       <div
         className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
       >
-        <div className="w-40 h-40 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center">
+        <div className={`w-70 ${merri.className} h-36 my-4 rounded-md bg-[#1D5C75] shadow-xl text-white flex items-center justify-center`}>
           <div className="text-center leading-tight">
             <div className="text-xs tracking-wide mb-1">-DAY 1-</div>
             <div className="text-xl font-semibold">{days[0].date}</div>
@@ -329,7 +329,7 @@ export default function RetreatClient({ retreat }: any) {
           <div
             className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
           >
-            <div className="w-40 h-40 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center">
+            <div className={`w-70 ${merri.className} h-36 my-4 rounded-md bg-[#1D5C75] shadow-xl text-white flex items-center justify-center`}>
               <div className="text-center leading-tight">
                 <div className="text-xs tracking-wide mb-1">-DAY 2-</div>
                 <div className="text-xl font-semibold">{days[1].date}</div>
@@ -356,7 +356,7 @@ export default function RetreatClient({ retreat }: any) {
             <div
               className={`md:hidden flex justify-center items-center mt-4 ${merri.className}`}
             >
-              <div className="w-40 h-40 rounded-full bg-[#D12127] shadow-xl text-white flex items-center justify-center">
+              <div className={`w-70 ${merri.className} h-36 my-4 rounded-md bg-[#1D5C75] shadow-xl text-white flex items-center justify-center`}>
                 <div className="text-center leading-tight">
                   <div className="text-xs tracking-wide mb-1">-DAY 3-</div>
                   <div className="text-xl font-semibold">{days[2].date}</div>

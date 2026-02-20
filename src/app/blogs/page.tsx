@@ -10,8 +10,10 @@ export const metadata: Metadata = {
     'Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.',
 }
 
-export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
+export const revalidate = 3600
+
 
 export default async function BlogsPage() {
   const blogs = await getBlogs()

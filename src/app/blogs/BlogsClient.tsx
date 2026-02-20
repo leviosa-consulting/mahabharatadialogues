@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar'
 import React, { useState, useEffect } from 'react'
 import { merri } from '../fonts/merri'
 import Link from 'next/link'
-
+import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import NavbarScroll from '@/components/NavbarScroll'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
@@ -29,7 +29,7 @@ interface Props {
 
 const BlogsClient = ({ initialBlogs }: Props) => {
   const searchParams = useSearchParams()
-
+  const router = useRouter()
   const estimateReadTime = (content: string) => {
     const wordsPerMinute = 200
     const text = content.replace(/<[^>]*>/g, '')
@@ -116,7 +116,6 @@ const BlogsClient = ({ initialBlogs }: Props) => {
     setAllReadingTimes(readingTimes.map((t) => `${t} min read`))
   }, [blogs])
 
-  // Real-time search as user types
   useEffect(() => {
     applyFilters(
       searchQuery,
@@ -272,6 +271,13 @@ const BlogsClient = ({ initialBlogs }: Props) => {
     const allItems = ['All', ...allReadingTimes]
     const limit = isMobile ? 3 : 6
     return allItems.length > limit && !showAllReadingTimes
+  }
+
+  const truncateWords = (text: string, limit: number) => {
+    return {
+      text: text.slice(0, limit),
+      isTruncated: text.length > limit,
+    }
   }
 
   return (
@@ -502,7 +508,7 @@ const BlogsClient = ({ initialBlogs }: Props) => {
             {filteredBlogs.length > 0 && (
               <div className="col-span-12 md:col-start-2 md:col-span-10">
                 {/* Results count */}
-                <div className="my-2">
+                <div className="my-3">
                   <p
                     className={`${merri.className} text-[#78B0C7] font-bold text-[18px] md:text-[20px]`}
                   >
@@ -531,7 +537,7 @@ const BlogsClient = ({ initialBlogs }: Props) => {
                         </div>
 
                         {/* RIGHT CONTENT */}
-                        <div className="flex-1 flex p-4 md:p-6 flex-col justify-between">
+                        <div className="flex-1 flex flex-col justify-center text-left min-w-0 p-4 md:p-6">
                           <div>
                             <h2
                               className={`${merri.className} text-[#1D5C75] font-bold text-[32px] md:text-[24px] xl:text-[32px] italic leading-tight mb-2`}
@@ -546,9 +552,36 @@ const BlogsClient = ({ initialBlogs }: Props) => {
                             </p>
 
                             <p
-                              className={`${merri.className} text-black font-light italic text-[16px] md:text-[18px] line-clamp-3 md:line-clamp-2 mt-4`}
+                              className={`${merri.className} text-black font-light text-[16px] md:text-[18px] italic text-left my-3`}
                             >
-                              {blog.subtitle}
+                              {(() => {
+                                const { text, isTruncated } = truncateWords(
+                                  blog.subtitle,
+                                  isMobile ? 84 : 140,
+                                )
+
+                                return (
+                                  <>
+                                    <span>
+                                      {text}
+                                      {isTruncated && '... '}
+                                    </span>
+
+                                    {isTruncated && (
+                                      <span
+                                        onClick={() =>
+                                          router.push(
+                                            `/blogs/${blog.slug ?? ''}`,
+                                          )
+                                        }
+                                        className="cursor-pointer font-bold italic text-[14px] md:text-[15px] hover:underline"
+                                      >
+                                        view more
+                                      </span>
+                                    )}
+                                  </>
+                                )
+                              })()}
                             </p>
                           </div>
                         </div>

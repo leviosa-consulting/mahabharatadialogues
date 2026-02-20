@@ -1,6 +1,7 @@
 // app/api/events/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
+import { revalidatePath } from 'next/cache'
 
 export const dynamic = "force-dynamic";
 
@@ -90,6 +91,7 @@ export async function POST(req: NextRequest) {
     };
 
     const docRef = await adminDB.collection("events").add(newEvent);
+   revalidatePath('/events')
 
     return NextResponse.json({
       success: true,

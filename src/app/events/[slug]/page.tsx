@@ -2,7 +2,9 @@
 
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import EventDetailClient from './EventDetailClient'
+import { cache } from 'react'
 
+export const revalidate = 3600
 interface Event {
   id: string
   title: string
@@ -19,11 +21,13 @@ interface Event {
   city?: string
 }
 
-async function getEvent(slug: string): Promise<Event | null> {
+const getEvent = cache(async (slug: string): Promise<Event | null> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}`,
-      { cache: 'no-store' },
+      {
+        next: { revalidate: 3600 }, 
+      }
     )
 
     const data = await res.json()
@@ -34,7 +38,7 @@ async function getEvent(slug: string): Promise<Event | null> {
   } catch {
     return null
   }
-}
+})
 
 export default async function Page({
   params,

@@ -26,7 +26,7 @@ export async function GET(
 ) {
   try {
     const { identifier } = await context.params;
-    console.log("🟢 Identifier =", identifier);
+    // console.log("🟢 Identifier =", identifier);
 
     if (!identifier) {
       return NextResponse.json(

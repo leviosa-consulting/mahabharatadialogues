@@ -4,6 +4,9 @@ import FooterWithBlogsClient from "./FooterWithBlogsClient";
 import { getBlogs } from "@/lib/data/blogs";
 import { getLatestVideos } from "@/lib/youtube";
 
+export const revalidate = 3600
+
+
 export default async function FooterWithBlogs({ count = 2 }) {
   const [blogs, videos] = await Promise.all([
     getBlogs(),

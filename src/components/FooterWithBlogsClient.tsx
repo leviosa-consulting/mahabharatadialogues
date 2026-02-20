@@ -4,8 +4,7 @@ import { Mail, Phone, Youtube, Instagram, Linkedin } from 'lucide-react'
 import LatestBlogs from '@/lib/LatestBlogs'
 import YouTubeSection from './YouTubeSection'
 import { merri } from '@/app/fonts/merri'
-import { getLatestVideos } from '@/lib/youtube'
-import { getBlogs } from '@/lib/data/blogs'
+
 
 type Blog = {
   id: string

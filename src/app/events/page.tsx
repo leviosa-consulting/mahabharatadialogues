@@ -33,16 +33,18 @@ interface Event {
   gallery?: string[]
 }
 
-async function getEvents() {
+import { cache } from 'react'
+
+const getEvents = cache(async () => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
     const response = await fetch(`${baseUrl}/api/events`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 }, // 1 hour
     })
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch events')
-    }
+    if (!response.ok) throw new Error('Failed to fetch events')
 
     const data = await response.json()
 
@@ -73,24 +75,17 @@ async function getEvents() {
         gallery: event.gallery || [],
       }
 
-      if (eventDateTime >= now) {
-        upcomingEventsList.push(eventItem)
-      } else {
-        pastEventsList.push(eventItem)
-      }
+      if (eventDateTime >= now) upcomingEventsList.push(eventItem)
+      else pastEventsList.push(eventItem)
     })
 
-    upcomingEventsList.sort((a, b) => {
-      const dateA = new Date(a.date)
-      const dateB = new Date(b.date)
-      return dateA.getTime() - dateB.getTime()
-    })
+    upcomingEventsList.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
 
-    pastEventsList.sort((a, b) => {
-      const dateA = new Date(a.date)
-      const dateB = new Date(b.date)
-      return dateB.getTime() - dateA.getTime()
-    })
+    pastEventsList.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
 
     return {
       upcoming: upcomingEventsList,
@@ -100,7 +95,11 @@ async function getEvents() {
     console.error('Error fetching events:', error)
     return { upcoming: [], past: [] }
   }
-}
+})
+
+
+export const revalidate = 3600
+
 
 export default async function EventsPage() {
   const { upcoming, past } = await getEvents()

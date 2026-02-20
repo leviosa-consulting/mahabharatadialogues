@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import BlogDetailClient from './BlogDetailClient'
+import { cache } from 'react'
+import { getBlogs } from '@/lib/data/blogs'
 
 interface Blog {
   id: string
@@ -19,33 +21,26 @@ interface Props {
   }>
 }
 
-async function getBlogData(slug: string) {
+const getBlogData = cache(async (slug: string) => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    const url = `${baseUrl}/api/blogs/${slug}`
-    
-    console.log('Fetching blog from:', url)
-    
-    const response = await fetch(url, {
-      next: { revalidate: 3600 } 
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+    const response = await fetch(`${baseUrl}/api/blogs/${slug}`, {
+      next: {
+        revalidate: 3600, 
+      },
     })
 
-    console.log('Response status:', response.status)
-
-    if (!response.ok) {
-      console.error('Failed to fetch blog, status:', response.status)
-      return null
-    }
+    if (!response.ok) return null
 
     const data = await response.json()
-    console.log('Blog data received:', data.success ? 'Success' : 'Failed')
-    
     return data.success ? data.data : null
   } catch (error) {
     console.error('Error fetching blog:', error)
     return null
   }
-}
+})
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -68,7 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? blog.image_url 
     : `https://mahabharatadialogues.com${blog.image_url}`
 
-  console.log('Blog metadata - Image URL:', imageUrl) 
+  // console.log('Blog metadata - Image URL:', imageUrl) 
 
   return {
     title: `${blog.title} | Mahabharata Dialogues`,
@@ -134,9 +129,20 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogDetailPage({ params }: Props) {
-  const { slug } = await params
+   const { slug } = await params
   const blog = await getBlogData(slug)
 
+  if (!blog) return null
+
+  const allBlogs = await getBlogs()
+
+  const relatedBlogs = allBlogs
+    .filter(
+      (b) =>
+        b.slug !== slug &&
+        b.categories?.some((cat) => blog.categories?.includes(cat))
+    )
+    .slice(0, 3)
 
   const imageUrl = blog?.image_url?.startsWith('http') 
     ? blog.image_url 
@@ -239,7 +245,12 @@ export default async function BlogDetailPage({ params }: Props) {
         />
       )}
       
-      <BlogDetailClient initialBlog={blog} slug={slug} />
+      <BlogDetailClient
+  initialBlog={blog}
+  slug={slug}
+  relatedBlogs={relatedBlogs}
+/>
+
     </>
   )
 }

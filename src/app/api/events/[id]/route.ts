@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { deleteFromFirebaseStorageServer } from "@/utils/firebaseDeleteServer";
+import { revalidatePath } from 'next/cache'
 
 export const dynamic = "force-dynamic";
 
@@ -129,7 +130,20 @@ export async function PUT(
       updated_at: new Date().toISOString(),
     };
 
-    await docRef.update(updated);
+await docRef.update(updated)
+
+
+revalidatePath('/events')
+
+if (existing?.slug) {
+  revalidatePath(`/events/${existing.slug}`)
+}
+
+if (body.slug && body.slug !== existing?.slug) {
+  revalidatePath(`/events/${body.slug}`)
+}
+
+
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
@@ -180,6 +194,7 @@ export async function DELETE(
     }
 
     await docRef.delete();
+revalidatePath('/events')
 
     return NextResponse.json({
       success: true,

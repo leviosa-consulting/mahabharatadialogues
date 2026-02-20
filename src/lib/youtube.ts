@@ -1,3 +1,5 @@
+import { cache } from 'react'
+
 type Video = {
   id: string
   title: string
@@ -19,7 +21,7 @@ const FALLBACK_VIDEOS: Video[] = [
   },
 ]
 
-export async function getLatestVideos(): Promise<Video[]> {
+export const getLatestVideos = cache(async (): Promise<Video[]> => {
   try {
     const API_KEY = process.env.YOUTUBE_API_KEY
     const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID
@@ -37,10 +39,10 @@ export async function getLatestVideos(): Promise<Video[]> {
       `&order=date` +
       `&maxResults=5` +
       `&type=video` +
-      `&videoDuration=medium` 
+      `&videoDuration=medium`
 
     const res = await fetch(url, {
-      next: { revalidate: 3600 }, 
+      next: { revalidate: 3600 }, // 1 hour ISR
     })
 
     if (!res.ok) {
@@ -55,17 +57,15 @@ export async function getLatestVideos(): Promise<Video[]> {
       return FALLBACK_VIDEOS
     }
 
-    const videos = data.items
-      .slice(0, 2)
-      .map((item: any) => ({
-        id: item.id.videoId,
-        title: item.snippet.title,
-        publishedAt: item.snippet.publishedAt,
-      }))
+    const videos = data.items.slice(0, 2).map((item: any) => ({
+      id: item.id.videoId,
+      title: item.snippet.title,
+      publishedAt: item.snippet.publishedAt,
+    }))
 
     return videos.length === 2 ? videos : FALLBACK_VIDEOS
   } catch (error) {
     console.error('YouTube fetch error:', error)
     return FALLBACK_VIDEOS
   }
-}
+})

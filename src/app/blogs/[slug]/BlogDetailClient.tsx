@@ -27,74 +27,23 @@ interface Blog {
 interface BlogDetailClientProps {
   initialBlog: Blog | null
   slug: string
+  relatedBlogs: Blog[]
 }
 
-const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug }) => {
+
+const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug, relatedBlogs }) => {
   const router = useRouter()
 
-  const [blog, setBlog] = useState<Blog | null>(initialBlog)
-  const [relatedBlogs, setRelatedBlogs] = useState<Blog[]>([])
-  const [loading, setLoading] = useState(!initialBlog)
+const [blog] = useState<Blog | null>(initialBlog)
+// const [relatedBlogs] = useState<Blog[]>(relatedBlogs)
+
+ 
   const [error, setError] = useState(false)
   const [shareTooltip, setShareTooltip] = useState(false)
 
   const contentRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    // If we already have initial blog data from server, just fetch related blogs
-    if (initialBlog) {
-      fetchRelatedBlogs()
-    } else {
-      // Fallback: fetch blog data if not provided by server
-      fetchBlog()
-    }
-  }, [slug, initialBlog])
 
-  const fetchBlog = async () => {
-    try {
-      setLoading(true)
-      setError(false)
-
-      const response = await fetch(`/api/blogs/${slug}`)
-      const data = await response.json()
-
-      if (!data.success) {
-        setError(true)
-        setLoading(false)
-        return
-      }
-
-      setBlog(data.data)
-      await fetchRelatedBlogs(data.data)
-      setLoading(false)
-    } catch (err) {
-      console.error('Failed to fetch blog:', err)
-      setError(true)
-      setLoading(false)
-    }
-  }
-
-  const fetchRelatedBlogs = async (blogData?: Blog) => {
-    try {
-      const currentBlog = blogData || blog
-      if (!currentBlog) return
-
-      const allBlogsResponse = await fetch('/api/blogs')
-      const allBlogsData = await allBlogsResponse.json()
-
-      if (allBlogsData.success) {
-        const relatedByCategory = allBlogsData.data.filter(
-          (b: Blog) =>
-            b.slug !== slug &&
-            b.categories?.some((cat) => currentBlog.categories?.includes(cat)),
-        )
-
-        setRelatedBlogs(relatedByCategory.slice(0, 3))
-      }
-    } catch (err) {
-      console.error('Failed to fetch related blogs:', err)
-    }
-  }
 
   const formatDate = (dateString: string) => {
     try {
@@ -154,9 +103,6 @@ const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug }
     router.push(`/blogs?category=${encodeURIComponent(category)}`)
   }
 
-  if (loading) {
-    return <BlogDetailShimmer />
-  }
 
   if (error || !blog) {
     return (
