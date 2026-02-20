@@ -6,7 +6,7 @@ import YouTubeSection from './YouTubeSection'
 import LatestBlogs from '@/lib/LatestBlogs'
 import { merri } from '@/app/fonts/merri'
 import Footer from './Footer'
-import LatestBlog from '@/lib/LatestBlog'
+
 
 
 const FALLBACK_VIDEOS = [
