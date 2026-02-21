@@ -37,9 +37,13 @@ const getEvent = cache(async (slug: string): Promise<Event | null> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}`,
+<<<<<<< HEAD
       {
         next: { revalidate: 43200 }, 
       }
+=======
+      { cache: 'no-store', signal: AbortSignal.timeout(8000) },
+>>>>>>> fc2a5da (Add error handling and timeouts to server-side data fetching)
     )
 
     const data = await res.json()

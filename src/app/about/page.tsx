@@ -1,5 +1,6 @@
 import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+<<<<<<< HEAD
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { cache } from 'react'
@@ -14,6 +15,24 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://mahabharatadialogues.com/about',
   },
+=======
+
+async function getMembers() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/about`, {
+      cache: 'no-store',
+      signal: AbortSignal.timeout(8000),
+    })
+
+    if (!res.ok) return []
+
+    const data = await res.json()
+    return data.data || []
+  } catch (error) {
+    console.error('Error fetching members:', error)
+    return []
+  }
+>>>>>>> fc2a5da (Add error handling and timeouts to server-side data fetching)
 }
 
 
@@ -40,8 +59,6 @@ const getMembers = cache(async () => {
 
 export default async function Page() {
   const members = await getMembers()
-
-  if (!members) notFound()
 
   return (
     <>

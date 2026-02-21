@@ -23,12 +23,23 @@ interface Props {
 
 const getBlogData = cache(async (slug: string) => {
   try {
+<<<<<<< HEAD
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
     const response = await fetch(`${baseUrl}/api/blogs/${slug}`, {
       next: {
         revalidate: 43200,
       },
+=======
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
+    const url = `${baseUrl}/api/blogs/${slug}`
+    
+    console.log('Fetching blog from:', url)
+    
+    const response = await fetch(url, {
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(8000),
+>>>>>>> fc2a5da (Add error handling and timeouts to server-side data fetching)
     })
 
     if (!response.ok) return null
@@ -104,9 +115,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
     const response = await fetch(`${baseUrl}/api/blogs`, {
+<<<<<<< HEAD
       next: { revalidate: 43200 },
+=======
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(8000),
+>>>>>>> fc2a5da (Add error handling and timeouts to server-side data fetching)
     })
     const data = await response.json()
 
