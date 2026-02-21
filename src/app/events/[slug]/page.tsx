@@ -3,6 +3,7 @@
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import EventDetailClient from './EventDetailClient'
 import { cache } from 'react'
+import { Metadata } from 'next'
 
 export const revalidate = 43200
 
@@ -22,13 +23,22 @@ interface Event {
   city?: string
 }
 
+export const metadata: Metadata = {
+  title: 'Events | Mahabharata Dialogues',
+  description:
+    'Explore upcoming and past events, spiritual gatherings, retreats, and immersive experiences by Mahabharata Dialogues across India.',
+
+  alternates: {
+    canonical: 'https://mahabharatadialogues.com/events',
+  },
+}
+
 const getEvent = cache(async (slug: string): Promise<Event | null> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}`,
       {
-        next: { revalidate: 43200
- }, 
+        next: { revalidate: 43200 }, 
       }
     )
 

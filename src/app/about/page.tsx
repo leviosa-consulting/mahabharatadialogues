@@ -1,9 +1,21 @@
 import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { cache } from 'react'
 
 export const revalidate = 43200
+
+export const metadata: Metadata = {
+  title: 'About Us | Mahabharata Dialogues',
+  description:
+    'Learn about Mahabharata Dialogues — a platform dedicated to sharing timeless wisdom, spiritual insights, and stories from the Mahabharata through events, retreats, and conversations.',
+
+  alternates: {
+    canonical: 'https://mahabharatadialogues.com/about',
+  },
+}
+
 
 const getMembers = cache(async () => {
   try {

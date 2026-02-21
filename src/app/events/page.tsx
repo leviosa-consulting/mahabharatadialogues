@@ -1,6 +1,6 @@
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import EventsClient from './EventsClient'
-
+import { Metadata } from 'next'
 interface EventData {
   id: string
   title: string
@@ -34,6 +34,18 @@ interface Event {
 }
 
 import { cache } from 'react'
+
+export const metadata: Metadata = {
+  title: 'Events | Mahabharata Dialogues',
+  description:
+    'Explore upcoming and past events, spiritual gatherings, retreats, and immersive experiences by Mahabharata Dialogues across India.',
+
+  alternates: {
+    canonical: 'https://mahabharatadialogues.com/events',
+  },
+}
+
+
 
 const getEvents = cache(async () => {
   try {
