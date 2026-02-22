@@ -5,12 +5,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
-  allowedDevOrigins: [
-    '*.replit.dev',
-    '*.replit.app',
-    '*.pike.replit.dev',
-  ],
-
   images: {
     remotePatterns: [
       {

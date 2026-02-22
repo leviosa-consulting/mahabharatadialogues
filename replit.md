@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Next.js 16 application for "Mahabharata Dialogues" - a platform that hosts retreats, events, blogs, and educational content related to the Mahabharata epic. The application serves both public-facing content pages and an admin dashboard for content management.
+This is a Next.js 15 application for "Mahabharata Dialogues" - a platform that hosts retreats, events, blogs, and educational content related to the Mahabharata epic. The application serves both public-facing content pages and an admin dashboard for content management.
 
 The platform features:
 - Public pages for retreats, events, and blogs
@@ -19,7 +19,7 @@ Preferred communication style: Simple, everyday language.
 ## System Architecture
 
 ### Frontend Architecture
-- **Framework**: Next.js 16 with App Router
+- **Framework**: Next.js 15 with App Router
 - **Styling**: Tailwind CSS v4 with custom theme configuration
 - **State Management**: Zustand for global client-side state
 - **Rich Text Editor**: TipTap with extensions for images, links, YouTube embeds, and text formatting

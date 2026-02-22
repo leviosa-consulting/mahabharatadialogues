@@ -88,9 +88,16 @@ const getUpcomingItems = cache(async () => {
 
   try {
     const [retreatsResponse, eventsResponse] = await Promise.all([
+<<<<<<< HEAD
       fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`),
+=======
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`, {
+        next: { revalidate: 43200 },
+        signal: AbortSignal.timeout(8000),
+      }),
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
       fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
-        next: { revalidate: 3600 },
+        next: { revalidate: 43200 },
         signal: AbortSignal.timeout(8000),
       }),
     ])

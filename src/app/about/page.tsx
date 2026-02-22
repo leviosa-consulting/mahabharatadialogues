@@ -2,6 +2,12 @@ import { cache } from 'react'
 import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { Metadata } from 'next'
+<<<<<<< HEAD
+=======
+import { cache } from 'react'
+
+export const revalidate = 43200
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -15,7 +21,12 @@ export const metadata: Metadata = {
 const getMembers = cache(async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/about`, {
+<<<<<<< HEAD
       next: { revalidate: 3600 },
+=======
+      next: { revalidate: 43200 },
+      signal: AbortSignal.timeout(8000),
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
     })
 
     const data = await res.json()

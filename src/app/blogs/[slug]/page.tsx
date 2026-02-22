@@ -24,12 +24,18 @@ interface Props {
 const getBlogData = cache(async (slug: string) => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
+<<<<<<< HEAD
     const url = `${baseUrl}/api/blogs/${slug}`
     
     // console.log('Fetching blog from:', url)
     
     const response = await fetch(url, {
       next: { revalidate: 3600 },
+=======
+
+    const response = await fetch(`${baseUrl}/api/blogs/${slug}`, {
+      next: { revalidate: 43200 },
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
       signal: AbortSignal.timeout(8000),
     })
 
@@ -108,7 +114,11 @@ export async function generateStaticParams() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
     const response = await fetch(`${baseUrl}/api/blogs`, {
+<<<<<<< HEAD
       next: { revalidate: 3600 },
+=======
+      next: { revalidate: 43200 },
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
       signal: AbortSignal.timeout(8000),
     })
     const data = await response.json()

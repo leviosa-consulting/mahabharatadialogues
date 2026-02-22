@@ -22,7 +22,14 @@ const getProducts = cache(async (): Promise<Product[]> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/products`,
+<<<<<<< HEAD
       { cache: 'no-store', signal: AbortSignal.timeout(8000) },
+=======
+      {
+        next: { revalidate: 43200 },
+        signal: AbortSignal.timeout(8000),
+      },
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
     )
 
     const data = await res.json()

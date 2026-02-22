@@ -4,11 +4,26 @@ import { notFound } from 'next/navigation'
 import { getTestimonials } from '@/lib/data/testimonials'
 import { Metadata } from 'next'
 
+<<<<<<< HEAD
 async function getRetreat(slug: string) {
   try {
     const slugRes = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats/by-slug/${slug}`,
       { cache: 'no-store', signal: AbortSignal.timeout(8000) },
+=======
+export const revalidate = 43200
+
+const getRetreat = cache(async (slug: string) => {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
+
+    const slugRes = await fetch(
+      `${baseUrl}/api/retreats/by-slug/${slug}`,
+      {
+        next: { revalidate: 43200 },
+        signal: AbortSignal.timeout(8000),
+      }
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
     )
 
     if (slugRes.ok) {
@@ -16,10 +31,17 @@ async function getRetreat(slug: string) {
       if (slugData.success && slugData.data) return slugData.data
     }
 
+<<<<<<< HEAD
     const allRes = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`,
       { cache: 'no-store', signal: AbortSignal.timeout(8000) },
     )
+=======
+    const allRes = await fetch(`${baseUrl}/api/retreats`, {
+      next: { revalidate: 43200 },
+      signal: AbortSignal.timeout(8000),
+    })
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
 
     if (!allRes.ok) return null
 
@@ -28,6 +50,7 @@ async function getRetreat(slug: string) {
     if (!allData.success) return null
 
     return allData.data.find((r: any) => r.id === slug) || null
+<<<<<<< HEAD
   } catch (error) {
     console.error('Error fetching retreat:', error)
     return null
@@ -58,6 +81,12 @@ export async function generateMetadata({
   },
   }
 }
+=======
+  } catch {
+    return null
+  }
+})
+>>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
 
 export default async function Page({
   params,
