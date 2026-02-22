@@ -99,12 +99,6 @@ const LoginContent = () => {
       Cookies.set('userRole', userRole, cookieOptions)
       Cookies.set('userId', user.uid, cookieOptions)
       
-      console.log('Login successful - Cookies set:', {
-        authToken: 'Set',
-        userRole,
-        userEmail: user.email
-      })
-      
       router.push('/admin')
     } catch (err: any) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
