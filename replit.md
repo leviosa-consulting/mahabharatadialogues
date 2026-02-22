@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Next.js 15.1.8 application for "Mahabharata Dialogues" - a platform that hosts retreats, events, blogs, and educational content related to the Mahabharata epic. The application serves both public-facing content pages and an admin dashboard for content management.
+This is a Next.js 15.0.8 application for "Mahabharata Dialogues" - a platform that hosts retreats, events, blogs, and educational content related to the Mahabharata epic. The application serves both public-facing content pages and an admin dashboard for content management.
 
 The platform features:
 - Public pages for retreats, events, and blogs
