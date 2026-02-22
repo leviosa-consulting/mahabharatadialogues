@@ -1,13 +1,14 @@
 import { MetadataRoute } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://mahabharatadialogues.com'
 
-  // Fetch all blogs
   let blogs: any[] = []
   try {
     const response = await fetch(`${baseUrl}/api/blogs`, {
-      cache: 'no-store'
+      next: { revalidate: 43200 },
     })
     const data = await response.json()
     if (data.success) {
@@ -17,7 +18,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching blogs for sitemap:', error)
   }
 
-  // Static pages
   const staticPages = [
     {
       url: baseUrl,
@@ -33,7 +33,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic blog pages
   const blogPages = blogs.map((blog) => ({
     url: `${baseUrl}/blogs/${blog.slug}`,
     lastModified: new Date(blog.created_at),
