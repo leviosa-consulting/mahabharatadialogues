@@ -38,7 +38,7 @@ import { cache } from 'react'
 export const metadata: Metadata = {
   title: 'Events | Mahabharata Dialogues',
   description:
-    'Explore upcoming and past events, spiritual gatherings, retreats, and immersive experiences by Mahabharata Dialogues across India.',
+    'Explore upcoming and past events, spiritual gatherings, retreats, and immersive experiences by Mahabharata Dialogues',
 
   alternates: {
     canonical: 'https://mahabharatadialogues.com/events',
@@ -49,17 +49,10 @@ export const metadata: Metadata = {
 
 const getEvents = cache(async () => {
   try {
-<<<<<<< HEAD
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-
-    const response = await fetch(`${baseUrl}/api/events`, {
-      next: { revalidate: 43200 },
-=======
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
     const response = await fetch(`${baseUrl}/api/events`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(8000),
->>>>>>> fc2a5da (Add error handling and timeouts to server-side data fetching)
     })
 
     if (!response.ok) throw new Error('Failed to fetch events')

@@ -4,22 +4,25 @@ import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { ProductsClient } from './ProductsClient'
 import { Product } from '@/data/productsData'
 import { cache } from 'react'
+import { Metadata } from 'next'
 
 export const revalidate = 43200
 
+export const metadata: Metadata = {
+  title: 'Products | Mahabharata Dialogues',
+  description:
+    'Explore producs by Mahabharata Dialogues',
+
+  alternates: {
+    canonical: 'https://mahabharatadialogues.com/events',
+  },
+}
 
 const getProducts = cache(async (): Promise<Product[]> => {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/products`,
-<<<<<<< HEAD
-      {
-        next: { revalidate: 43200
- },
-      },
-=======
       { cache: 'no-store', signal: AbortSignal.timeout(8000) },
->>>>>>> fc2a5da (Add error handling and timeouts to server-side data fetching)
     )
 
     const data = await res.json()

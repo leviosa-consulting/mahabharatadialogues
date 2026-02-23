@@ -27,13 +27,13 @@ export default function ProductClient({ product, relatedProducts }: Props) {
       ? product.images
       : [product.image]
 
-  /* AUTO SCROLL EFFECT */
+  
   useEffect(() => {
     if (productImages.length <= 1) return
 
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) =>
-        prev === productImages.length - 1 ? 0 : prev + 1
+        prev === productImages.length - 1 ? 0 : prev + 1,
       )
     }, 3000)
 
@@ -178,7 +178,7 @@ export default function ProductClient({ product, relatedProducts }: Props) {
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">
-                  {relatedProducts.slice(0, 3).map((relatedProduct) => (
+                  {relatedProducts.map((relatedProduct) => (
                     <Link
                       key={relatedProduct.id}
                       href={`/products/${relatedProduct.slug}`}
@@ -195,7 +195,7 @@ export default function ProductClient({ product, relatedProducts }: Props) {
                         <div className="flex my-2 justify-between">
                           <div>
                             <h4
-                              className={`${merri.className} leading-tight text-[#1D5C75] font-bold text-[20px] md:text-[24px] italic`}
+                              className={`${merri.className} leading-tight text-[#1D5C75] font-bold text-[20px]  italic`}
                             >
                               {relatedProduct.name}
                             </h4>
@@ -206,7 +206,7 @@ export default function ProductClient({ product, relatedProducts }: Props) {
                             </p>
                           </div>
                           <div
-                            className={`${merri.className} italic font-extrabold text-[20px] md:text-[24px] bg-[#78B0C74D] text-[#1D5C75] flex items-center px-2 gap-1`}
+                            className={`${merri.className} italic font-extrabold text-[20px]  bg-[#78B0C74D] text-[#1D5C75] flex items-center px-2 gap-1`}
                           >
                             <span className="text-[20px]">₹</span>
                             {relatedProduct.price}
