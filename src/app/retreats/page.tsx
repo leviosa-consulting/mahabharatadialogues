@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/retreats30.jpeg',
+        url: 'https://mahabharatadialogues.com/retreat30.jpg',
         width: 1200,
         height: 630,
         alt: 'Mahabharata Dialogues Retreat',
@@ -28,19 +28,14 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Retreats | Mahabharata Dialogues',
-    description:
-      'A 2-day immersive residential experience that brought the Mahabharata alive through stories, dialogue, games, art, and reflection.',
-    images: ['/retreat30.jpg'],
+    images: ['https://mahabharatadialogues.com/retreats30.jpeg'],
   },
 }
 
-const RetreatsPage: React.FC = () => {
+export default function RetreatsPage() {
   return (
     <div>
       <RetreatHero />
     </div>
   )
 }
-
-export default RetreatsPage
