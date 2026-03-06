@@ -50,7 +50,7 @@ export async function generateMetadata({
   const eventUrl = `https://mahabharatadialogues.com/events/${event.slug}`
 
   return {
-    title: `${event.title} | Mahabharata Dialogues`,
+    title: `${event.title}`,
     description,
 
     openGraph: {

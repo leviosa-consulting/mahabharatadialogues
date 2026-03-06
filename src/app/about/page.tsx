@@ -1,6 +1,16 @@
 import { cache } from 'react'
 import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description:
+    'Learn about Mahabharata Dialogues, our mission, vision, and the team dedicated to spreading timeless wisdom and spiritual growth.',
+      alternates: {
+    canonical: `https://mahabharatadialogues.com/about`,
+  },
+}
 
 const getMembers = cache(async () => {
   try {
@@ -10,7 +20,7 @@ const getMembers = cache(async () => {
 
     const data = await res.json()
 
-    const members = data.data || []  
+    const members = data.data || []
 
     members.sort(
       (a: any, b: any) =>
@@ -34,9 +44,9 @@ export default async function Page() {
         className="pt-20"
         style={{
           backgroundImage: `
-    linear-gradient(#1D5C75, #1D5C75),
-    url('/MD-Texture_BG_Blue-01-04.png')
-  `,
+            linear-gradient(#1D5C75, #1D5C75),
+            url('/MD-Texture_BG_Blue-01-04.png')
+          `,
           backgroundRepeat: 'repeat',
           backgroundSize: '240px 240px',
         }}

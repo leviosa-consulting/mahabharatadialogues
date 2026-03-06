@@ -34,41 +34,55 @@ const GalleryCarousel: React.FC<{
   title: string
 }> = ({ images, columns, title }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-  const scroll = (dir: 'left' | 'right') => {
-    if (!scrollRef.current) return
-    const itemWidth = scrollRef.current.offsetWidth / columns
-    scrollRef.current.scrollBy({
-      left: dir === 'left' ? -itemWidth * columns : itemWidth * columns,
-      behavior: 'smooth',
-    })
-  }
-
+  const totalPages = Math.ceil(images.length / columns)
   const showArrows = images.length > columns
 
+  const goTo = (pageIndex: number) => {
+    if (!scrollRef.current) return
+    const container = scrollRef.current
+    const itemWidth = container.offsetWidth / columns
+    const scrollAmount = pageIndex * itemWidth * columns
+    container.scrollTo({ left: scrollAmount, behavior: 'smooth' })
+    setCurrentIndex(pageIndex)
+  }
+
+  const handleLeft = () => {
+    const prev = Math.max(0, currentIndex - 1)
+    goTo(prev)
+  }
+
+  const handleRight = () => {
+    const next = Math.min(totalPages - 1, currentIndex + 1)
+    goTo(next)
+  }
+
   return (
-    <div className="relative">
+    <div className="relative ">
       {/* Left Arrow */}
       {showArrows && (
         <button
-          onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all"
+          onClick={handleLeft}
+          disabled={currentIndex === 0}
+         className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Previous images"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5C75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5C75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
         </button>
       )}
 
-      {/* Scrollable strip */}
+      {/* Scrollable strip — overflow hidden so only columns-count images show */}
       <div
         ref={scrollRef}
-        className="flex gap-2 sm:gap-3 overflow-x-auto scroll-smooth"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-2 sm:gap-3 overflow-x-hidden"
       >
         {images.map((url, index) => (
           <div
             key={index}
-            className="flex-shrink-0 overflow-hidden rounded-lg"
+            className="flex-shrink-0 overflow-hidden "
             style={{
               width: `calc((100% - ${(columns - 1) * 12}px) / ${columns})`,
               aspectRatio: '1 / 1',
@@ -86,12 +100,30 @@ const GalleryCarousel: React.FC<{
       {/* Right Arrow */}
       {showArrows && (
         <button
-          onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all"
+          onClick={handleRight}
+          disabled={currentIndex >= totalPages - 1}
+         className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Next images"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5C75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5C75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
         </button>
+      )}
+
+      {/* Dot indicators */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-1.5 mt-3">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === currentIndex ? 'bg-[#1D5C75] w-4' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
       )}
     </div>
   )
@@ -320,15 +352,15 @@ const BlogDetailClient: React.FC<BlogDetailClientProps> = ({
                       </div>
 
                       {/*  Gallery Section */}
-                     {blog.gallery && blog.gallery.length > 0 && (
-  <div className="mb-6 sm:mb-8">
-    <GalleryCarousel
-      images={blog.gallery}
-      columns={blog.gallery_columns ?? 1}
-      title={blog.title}
-    />
-  </div>
-)}
+                      {blog.gallery && blog.gallery.length > 0 && (
+                        <div className="mb-6 sm:mb-8">
+                          <GalleryCarousel
+                            images={blog.gallery}
+                            columns={blog.gallery_columns ?? 1}
+                            title={blog.title}
+                          />
+                        </div>
+                      )}
                     </div>
                     <style jsx global>{`
                       .blog-content {

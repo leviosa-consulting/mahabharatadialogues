@@ -2,9 +2,9 @@ import RetreatClient from './RetreatClient'
 import { notFound } from 'next/navigation'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { cache } from 'react'
+import { Metadata } from 'next'
 
 export const revalidate = 3600
-
 
 const getRetreat = cache(async (slug: string) => {
   try {
@@ -14,8 +14,7 @@ const getRetreat = cache(async (slug: string) => {
     const slugRes = await fetch(
       `${baseUrl}/api/retreats/by-slug/${slug}`,
       {
-        next: { revalidate: 3600
- },
+        next: { revalidate: 3600 },
       }
     )
 
@@ -25,8 +24,7 @@ const getRetreat = cache(async (slug: string) => {
     }
 
     const allRes = await fetch(`${baseUrl}/api/retreats`, {
-      next: { revalidate: 3600
- },
+      next: { revalidate: 3600 },
     })
 
     const allData = await allRes.json()
@@ -38,6 +36,32 @@ const getRetreat = cache(async (slug: string) => {
     return null
   }
 })
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const retreat = await getRetreat(slug)
+
+  if (!retreat) {
+    return {
+      title: 'Retreat Schedule Not Found',
+      description: 'The requested retreat schedule could not be found.',
+      
+    }
+  }
+
+  return {
+    title: `${retreat.title} | Schedule`,
+    description: retreat.description,
+      alternates: {
+    canonical: `https://mahabharatadialogues.com/retreats/schedule/${retreat.slug}`,
+  },
+  }
+}
 
 export default async function Page({
   params,

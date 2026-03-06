@@ -35,7 +35,7 @@ interface Event {
 }
 
 export const metadata: Metadata = {
-  title: 'Events | Mahabharata Dialogues',
+  title: 'Events',
   description:
     'Explore upcoming and past events, spiritual gatherings, retreats, and immersive experiences by Mahabharata Dialogues',
 

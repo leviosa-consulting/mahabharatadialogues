@@ -2,7 +2,7 @@ import FooterWithBlogs from '@/components/FooterWithBlogs'
 import PastRetreatClient from './PastRetreatClient'
 import { notFound } from 'next/navigation'
 import { getTestimonials } from '@/lib/data/testimonials'
-import { cache } from 'react'
+import { Metadata } from 'next'
 
 async function getRetreat(slug: string) {
   try {
@@ -31,6 +31,31 @@ async function getRetreat(slug: string) {
   } catch (error) {
     console.error('Error fetching retreat:', error)
     return null
+  }
+}
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const retreat = await getRetreat(slug)
+
+  if (!retreat) {
+    return {
+      title: 'Retreat Not Found',
+      description: 'The requested retreat could not be found.',
+    }
+  }
+
+  return {
+    title: retreat.title,
+    description: retreat.description,
+     alternates: {
+    canonical: `https://mahabharatadialogues.com/retreats/past/${retreat.slug}`,
+  },
   }
 }
 

@@ -9,12 +9,12 @@ import { Metadata } from 'next'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Products | Mahabharata Dialogues',
+  title: 'Products',
   description:
     'Explore producs by Mahabharata Dialogues',
 
   alternates: {
-    canonical: 'https://mahabharatadialogues.com/events',
+    canonical: 'https://mahabharatadialogues.com/products',
   },
 }
 

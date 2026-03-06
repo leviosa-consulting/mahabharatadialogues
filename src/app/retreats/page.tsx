@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Retreats | Mahabharata Dialogues',
   description:
-    'Discover immersive spiritual retreats by Mahabharata Dialogues—experience self-reflection, ancient wisdom, guided practices, and transformative journeys inspired by the Mahabharata.',
+    'A 2-day immersive residential experience that brought the Mahabharata alive through stories, dialogue, games, art, and reflection.',
 
   alternates: {
     canonical: 'https://mahabharatadialogues.com/retreats',

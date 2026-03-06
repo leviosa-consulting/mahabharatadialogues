@@ -6,9 +6,12 @@ import { getBlogs } from '@/lib/data/blogs'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 
 export const metadata: Metadata = {
-  title: 'Blogs | Mahabharata Dialogues',
+  title: 'Blogs',
   description:
     'Read insightful blogs, research articles, teachings, and stories related to Mahabharata, spirituality, history, and Indian culture.',
+     alternates: {
+    canonical: 'https://mahabharatadialogues.com/blogs',
+  },
 }
 
 export const runtime = 'nodejs'

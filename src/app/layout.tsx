@@ -14,7 +14,7 @@ const geistSans = Geist({
 
 const roboto = Roboto({
   subsets: ['latin'],
-  weight: ['100','300','400','500','700','900'],
+  weight: ['100', '300', '400', '500', '700', '900'],
   variable: '--font-roboto',
 })
 
@@ -28,6 +28,10 @@ export const metadata: Metadata = {
 
   description:
     'Explore the profound wisdom and timeless dialogues from the Mahabharata',
+
+  alternates: {
+    canonical: 'https://mahabharatadialogues.com',
+  },
 
   icons: {
     icon: [
@@ -55,7 +59,6 @@ export const metadata: Metadata = {
       'Explore the profound wisdom and timeless dialogues from the Mahabharata',
   },
 }
-
 
 export default async function RootLayout({
   children,

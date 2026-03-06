@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // console.log('Blog metadata - Image URL:', imageUrl)
 
   return {
-    title: `${blog.title} | Mahabharata Dialogues`,
+    title: `${blog.title}`,
     description: description,
     keywords: blog.categories?.join(', ') || '',
 
