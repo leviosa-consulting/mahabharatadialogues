@@ -809,7 +809,7 @@ const AboutAdminPage = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Description{' '}
                       <span className="text-xs text-gray-500">
-                        (Optional - Press Enter for new line)
+                        (Optional)
                       </span>
                     </label>
                     <textarea

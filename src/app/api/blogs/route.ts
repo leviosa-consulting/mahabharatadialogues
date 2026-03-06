@@ -1,11 +1,9 @@
-// app/api/blogs/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { revalidatePath } from 'next/cache'
 
 export const dynamic = "force-dynamic";
 
-// GET — fetch all blogs with optional category filter
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,7 +11,6 @@ export async function GET(request: NextRequest) {
 
     let query = adminDB.collection("blogs").orderBy("created_at", "desc");
 
-    // If category filter is provided, filter by category
     if (category) {
       query = query.where("categories", "array-contains", category) as any;
     }
@@ -35,11 +32,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST — create new blog
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
     const { title, slug, content, author } = body;
 
     if (!title || !slug || !content || !author) {
@@ -49,7 +44,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check slug uniqueness
     const slugCheck = await adminDB
       .collection("blogs")
       .where("slug", "==", slug)
@@ -73,6 +67,8 @@ export async function POST(request: NextRequest) {
       author,
       categories: body.categories || [],
       content,
+      gallery: body.gallery || [],
+      gallery_columns: body.gallery_columns ?? 1,
       created_at: now,
       updated_at: now,
     };
@@ -81,14 +77,8 @@ export async function POST(request: NextRequest) {
     revalidatePath('/blogs')
     revalidatePath('/')
 
-
     return NextResponse.json(
-      {
-        success: true,
-        message: "Blog created successfully",
-        id: docRef.id,
-        ...data,
-      },
+      { success: true, message: "Blog created successfully", id: docRef.id, ...data },
       { status: 201 }
     );
   } catch (err) {

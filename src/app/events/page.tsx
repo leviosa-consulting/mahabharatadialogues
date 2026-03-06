@@ -1,6 +1,7 @@
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import EventsClient from './EventsClient'
 import { Metadata } from 'next'
+import { cache } from 'react'
 interface EventData {
   id: string
   title: string
@@ -32,8 +33,6 @@ interface Event {
   city?: string
   gallery?: string[]
 }
-
-import { cache } from 'react'
 
 export const metadata: Metadata = {
   title: 'Events | Mahabharata Dialogues',
@@ -108,7 +107,7 @@ const getEvents = cache(async () => {
   }
 })
 
-export const revalidate = 43200
+export const revalidate = 3600
 
 export default async function EventsPage() {
   const { upcoming, past } = await getEvents()

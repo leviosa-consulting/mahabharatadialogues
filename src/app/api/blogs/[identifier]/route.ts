@@ -1,4 +1,3 @@
-// app/api/blogs/[identifier]/route.ts
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
@@ -27,7 +26,6 @@ export async function GET(
 ) {
   try {
     const { identifier } = await context.params;
-    // console.log("🟢 Identifier =", identifier);
 
     if (!identifier) {
       return NextResponse.json(
@@ -105,21 +103,30 @@ export async function PUT(
 
     const existing = docSnap.data();
 
+    // Delete old cover image if replaced
     if (body.image_url && body.image_url !== existing?.image_url) {
       await deleteFirebaseImage(existing?.image_url || "");
     }
 
+    // ✅ Delete removed gallery images from Firebase Storage
+    const existingGallery: string[] = existing?.gallery || [];
+    const newGallery: string[] = body.gallery || [];
+    const removedImages = existingGallery.filter((url) => !newGallery.includes(url));
+    await Promise.all(removedImages.map((url) => deleteFirebaseImage(url)));
+
     const updated = {
       ...existing,
       ...body,
+      // ✅ Ensure gallery fields are always persisted
+      gallery: newGallery,
+      gallery_columns: body.gallery_columns ?? existing?.gallery_columns ?? 1,
       updated_at: new Date().toISOString(),
     };
 
     await docRef.update(updated);
-   revalidatePath('/blogs')
-   revalidatePath(`/blogs/${existing?.slug}`)
-   revalidatePath('/')
-
+    revalidatePath('/blogs')
+    revalidatePath(`/blogs/${existing?.slug}`)
+    revalidatePath('/')
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err) {
@@ -157,19 +164,20 @@ export async function DELETE(
 
     const data = docSnap.data();
 
+    // Delete cover image
     if (data?.image_url) {
       await deleteFirebaseImage(data.image_url);
     }
+
+    // ✅ Delete all gallery images
+    const gallery: string[] = data?.gallery || [];
+    await Promise.all(gallery.map((url) => deleteFirebaseImage(url)));
 
     await docRef.delete();
     revalidatePath('/blogs')
     revalidatePath('/')
 
-
-    return NextResponse.json({
-      success: true,
-      message: "Deleted successfully"
-    });
+    return NextResponse.json({ success: true, message: "Deleted successfully" });
   } catch (err) {
     console.error("Error deleting blog:", err);
     return NextResponse.json(

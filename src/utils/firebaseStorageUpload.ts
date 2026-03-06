@@ -93,7 +93,7 @@ function isImageFile(file: File): boolean {
  */
 export async function uploadToFirebaseStorage(
   file: File,
-  folder: "blogs" | "events" | "retreats" | "products" | "about"
+  folder: "blogs" | "events" | "retreats" | "products" | "about" | "blogs/gallery"
 
 ): Promise<string> {
   return new Promise(async (resolve, reject) => {
@@ -214,7 +214,7 @@ export async function deleteFromFirebaseStorage(
 
 export const uploadImage = async (
   file: File,
-  folder: "blogs" | "events" | "retreats" | "products" | "about"
+  folder: "blogs" | "events" | "retreats" | "products" | "about" | "blogs/gallery"
 ): Promise<string | null> => {
   try {
     const downloadURL = await uploadToFirebaseStorage(file, folder);

@@ -5,7 +5,7 @@ import FooterWithBlogs from '@/components/FooterWithBlogs'
 const getMembers = cache(async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/about`, {
-      next: { revalidate: 43200 },
+      next: { revalidate: 3600 },
     })
 
     const data = await res.json()

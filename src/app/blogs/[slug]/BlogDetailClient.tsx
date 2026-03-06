@@ -3,11 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import {
-  ArrowLeft,
-  X,
-  Share2,
-} from 'lucide-react'
+import { ArrowLeft, X, Share2 } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import BlogCard from '@/components/BlogCard'
 import BlogDetailShimmer from '@/components/shimmer/BlogDetailShimmer'
@@ -22,6 +18,8 @@ interface Blog {
   author: string
   categories: string[]
   created_at: string
+  gallery: string[]
+  gallery_columns: number
 }
 
 interface BlogDetailClientProps {
@@ -30,20 +28,89 @@ interface BlogDetailClientProps {
   relatedBlogs: Blog[]
 }
 
+const GalleryCarousel: React.FC<{
+  images: string[]
+  columns: number
+  title: string
+}> = ({ images, columns, title }) => {
+  const scrollRef = useRef<HTMLDivElement>(null)
 
-const BlogDetailClient: React.FC<BlogDetailClientProps> = ({ initialBlog, slug, relatedBlogs }) => {
+  const scroll = (dir: 'left' | 'right') => {
+    if (!scrollRef.current) return
+    const itemWidth = scrollRef.current.offsetWidth / columns
+    scrollRef.current.scrollBy({
+      left: dir === 'left' ? -itemWidth * columns : itemWidth * columns,
+      behavior: 'smooth',
+    })
+  }
+
+  const showArrows = images.length > columns
+
+  return (
+    <div className="relative">
+      {/* Left Arrow */}
+      {showArrows && (
+        <button
+          onClick={() => scroll('left')}
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all"
+          aria-label="Previous images"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5C75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      )}
+
+      {/* Scrollable strip */}
+      <div
+        ref={scrollRef}
+        className="flex gap-2 sm:gap-3 overflow-x-auto scroll-smooth"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {images.map((url, index) => (
+          <div
+            key={index}
+            className="flex-shrink-0 overflow-hidden rounded-lg"
+            style={{
+              width: `calc((100% - ${(columns - 1) * 12}px) / ${columns})`,
+              aspectRatio: '1 / 1',
+            }}
+          >
+            <img
+              src={url}
+              alt={`${title} image ${index + 1}`}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Right Arrow */}
+      {showArrows && (
+        <button
+          onClick={() => scroll('right')}
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white border border-gray-200 shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all"
+          aria-label="Next images"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5C75" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      )}
+    </div>
+  )
+}
+
+const BlogDetailClient: React.FC<BlogDetailClientProps> = ({
+  initialBlog,
+  slug,
+  relatedBlogs,
+}) => {
   const router = useRouter()
 
-const [blog] = useState<Blog | null>(initialBlog)
-// const [relatedBlogs] = useState<Blog[]>(relatedBlogs)
+  const [blog] = useState<Blog | null>(initialBlog)
+  // const [relatedBlogs] = useState<Blog[]>(relatedBlogs)
 
- 
   const [error, setError] = useState(false)
   const [shareTooltip, setShareTooltip] = useState(false)
 
   const contentRef = useRef<HTMLDivElement>(null)
-
-
 
   const formatDate = (dateString: string) => {
     try {
@@ -102,7 +169,6 @@ const [blog] = useState<Blog | null>(initialBlog)
   const handleCategoryClick = (category: string) => {
     router.push(`/blogs?category=${encodeURIComponent(category)}`)
   }
-
 
   if (error || !blog) {
     return (
@@ -252,6 +318,17 @@ const [blog] = useState<Blog | null>(initialBlog)
                           {blog.subtitle}
                         </p>
                       </div>
+
+                      {/*  Gallery Section */}
+                     {blog.gallery && blog.gallery.length > 0 && (
+  <div className="mb-6 sm:mb-8">
+    <GalleryCarousel
+      images={blog.gallery}
+      columns={blog.gallery_columns ?? 1}
+      title={blog.title}
+    />
+  </div>
+)}
                     </div>
                     <style jsx global>{`
                       .blog-content {

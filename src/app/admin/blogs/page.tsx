@@ -48,6 +48,8 @@ interface Blog {
   content: string
   author: string
   categories: string[]
+   gallery: string[]        
+  gallery_columns: number   
 }
 
 interface PageSettings {
@@ -322,8 +324,11 @@ const BlogAdminPage = () => {
     content: '',
     author: '',
     categories: [] as string[],
+     gallery: [] as string[],     
+  gallery_columns: 1,          
   })
   const [uploadingCoverImage, setUploadingCoverImage] = useState(false)
+  const [uploadingGallery, setUploadingGallery] = useState(false)
   const [categoryInput, setCategoryInput] = useState('')
 
   const [pageSettings, setPageSettings] = useState<PageSettings>({
@@ -510,6 +515,43 @@ const BlogAdminPage = () => {
     }
   }
 
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files
+  if (!files || files.length === 0) return
+
+  const invalidFiles = Array.from(files).filter((f) => !f.type.startsWith('image/'))
+  if (invalidFiles.length > 0) {
+    alert('Please upload image files only')
+    return
+  }
+
+  setUploadingGallery(true)
+  try {
+    const uploadPromises = Array.from(files).map((file) =>
+      uploadToFirebaseStorage(file, 'blogs/gallery')
+    )
+    const urls = await Promise.all(uploadPromises)
+    setFormData((prev) => ({
+      ...prev,
+      gallery: [...prev.gallery, ...urls],
+    }))
+  } catch (error) {
+    console.error('Error uploading gallery images:', error)
+    alert('Failed to upload one or more gallery images')
+  } finally {
+    setUploadingGallery(false)
+    // Reset file input
+    e.target.value = ''
+  }
+}
+
+const removeGalleryImage = (index: number) => {
+  setFormData((prev) => ({
+    ...prev,
+    gallery: prev.gallery.filter((_, i) => i !== index),
+  }))
+}
+
   const addCategory = () => {
     if (!categoryInput.trim()) return
     if (formData.categories.includes(categoryInput.trim())) {
@@ -539,6 +581,8 @@ const BlogAdminPage = () => {
       content: '',
       author: '',
       categories: [],
+      gallery: [],         
+    gallery_columns: 1,  
     })
     setEditingId(null)
     setShowModal(false)
@@ -562,6 +606,8 @@ const BlogAdminPage = () => {
       content: blog.content || '',
       author: blog.author || '',
       categories: blog.categories || [],
+       gallery: blog.gallery || [],             
+    gallery_columns: blog.gallery_columns ?? 1, 
     })
     setEditingId(blog.id)
     setShowModal(true)
@@ -1151,6 +1197,145 @@ const BlogAdminPage = () => {
                       </p>
                     </div>
 
+                    {/* Gallery Upload */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Gallery Images
+  </label>
+  <div className="flex flex-wrap items-center gap-4 mb-3">
+    <input
+      type="file"
+      accept="image/*"
+      multiple
+      onChange={handleGalleryUpload}
+      className="hidden"
+      id="gallery-upload"
+    />
+    <label
+      htmlFor="gallery-upload"
+      className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
+    >
+      <ImageIcon size={20} />
+      {uploadingGallery ? 'Uploading...' : 'Add Gallery Images'}
+    </label>
+
+    {/* Columns control */}
+    <div className="flex items-center gap-2">
+      <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+        Columns:
+      </label>
+      <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+        <button
+          type="button"
+          onClick={() =>
+            setFormData((prev) => ({
+              ...prev,
+              gallery_columns: Math.max(1, prev.gallery_columns - 1),
+            }))
+          }
+          className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors"
+        >
+          −
+        </button>
+        <span className="px-4 py-2 text-gray-900 font-semibold min-w-[40px] text-center">
+          {formData.gallery_columns}
+        </span>
+        <button
+          type="button"
+          onClick={() =>
+            setFormData((prev) => ({
+              ...prev,
+              gallery_columns: Math.min(6, prev.gallery_columns + 1),
+            }))
+          }
+          className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition-colors"
+        >
+          +
+        </button>
+      </div>
+      <span className="text-xs text-gray-500">
+        ({formData.gallery_columns} image{formData.gallery_columns > 1 ? 's' : ''} per row)
+      </span>
+    </div>
+  </div>
+
+ {/* Gallery Preview */}
+{formData.gallery.length > 0 && (
+  <div className="relative mt-2">
+    {/* Left Arrow */}
+    {formData.gallery.length > formData.gallery_columns && (
+      <button
+        type="button"
+        onClick={() => {
+          const el = document.getElementById('admin-gallery-scroll')
+          if (el) el.scrollBy({ left: -220, behavior: 'smooth' })
+        }}
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 bg-white border border-gray-300 shadow-md rounded-full p-1.5 hover:bg-gray-100 transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    )}
+
+    {/* Scrollable Row */}
+    <div
+      id="admin-gallery-scroll"
+      className="flex gap-2 overflow-x-auto scroll-smooth pb-2"
+      style={{ scrollbarWidth: 'none' }}
+    >
+      {formData.gallery.map((url, index) => (
+        <div
+          key={index}
+          className="relative group flex-shrink-0"
+          style={{
+            width: `calc((100% - ${(formData.gallery_columns - 1) * 8}px) / ${formData.gallery_columns})`,
+            aspectRatio: '1 / 1',
+          }}
+        >
+          <img
+            src={url}
+            alt={`Gallery ${index + 1}`}
+            className="w-full h-full object-cover rounded-lg"
+          />
+          <button
+            type="button"
+            onClick={() => removeGalleryImage(index)}
+            className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <X size={14} />
+          </button>
+          <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded">
+            {index + 1}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Right Arrow */}
+    {formData.gallery.length > formData.gallery_columns && (
+      <button
+        type="button"
+        onClick={() => {
+          const el = document.getElementById('admin-gallery-scroll')
+          if (el) el.scrollBy({ left: 220, behavior: 'smooth' })
+        }}
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 bg-white border border-gray-300 shadow-md rounded-full p-1.5 hover:bg-gray-100 transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    )}
+  </div>
+)}
+
+  {formData.gallery.length === 0 && (
+    <p className="text-sm text-gray-400 italic">
+      No gallery images added yet. Upload multiple images above.
+    </p>
+  )}
+  <p className="text-sm text-gray-500 mt-1">
+    You can select multiple images at once. Hover over an image to remove it.
+  </p>
+</div>
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Content *{' '}
@@ -1206,3 +1391,4 @@ const BlogAdminPage = () => {
 }
 
 export default BlogAdminPage
+

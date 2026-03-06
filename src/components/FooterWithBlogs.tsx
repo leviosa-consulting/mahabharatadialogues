@@ -4,7 +4,7 @@ import FooterWithBlogsClient from "./FooterWithBlogsClient";
 import { getBlogs } from "@/lib/data/blogs";
 import { getLatestVideos } from "@/lib/youtube";
 
-export const revalidate = 43200
+export const revalidate = 3600
 
 
 

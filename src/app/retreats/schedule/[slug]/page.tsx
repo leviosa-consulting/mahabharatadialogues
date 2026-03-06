@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { cache } from 'react'
 
-export const revalidate = 43200
+export const revalidate = 3600
 
 
 const getRetreat = cache(async (slug: string) => {
@@ -14,7 +14,7 @@ const getRetreat = cache(async (slug: string) => {
     const slugRes = await fetch(
       `${baseUrl}/api/retreats/by-slug/${slug}`,
       {
-        next: { revalidate: 43200
+        next: { revalidate: 3600
  },
       }
     )
@@ -25,7 +25,7 @@ const getRetreat = cache(async (slug: string) => {
     }
 
     const allRes = await fetch(`${baseUrl}/api/retreats`, {
-      next: { revalidate: 43200
+      next: { revalidate: 3600
  },
     })
 

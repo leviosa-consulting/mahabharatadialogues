@@ -88,10 +88,7 @@ const getUpcomingItems = cache(async () => {
 
   try {
     const [retreatsResponse, eventsResponse] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`, {
-        next: { revalidate: 3600 },
-        signal: AbortSignal.timeout(8000),
-      }),
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`),
       fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
         next: { revalidate: 3600 },
         signal: AbortSignal.timeout(8000),

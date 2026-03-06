@@ -42,7 +42,7 @@ export const getLatestVideos = cache(async (): Promise<Video[]> => {
       `&videoDuration=medium`
 
     const res = await fetch(url, {
-      next: { revalidate: 43200
+      next: { revalidate: 3600
  }, 
     })
 

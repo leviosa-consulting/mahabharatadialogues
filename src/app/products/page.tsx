@@ -6,7 +6,7 @@ import { Product } from '@/data/productsData'
 import { cache } from 'react'
 import { Metadata } from 'next'
 
-export const revalidate = 43200
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Products | Mahabharata Dialogues',

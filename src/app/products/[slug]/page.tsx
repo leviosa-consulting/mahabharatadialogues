@@ -5,14 +5,14 @@ import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { cache } from 'react'
 import type { Metadata } from 'next'
 
-export const revalidate = 43200
+export const revalidate = 3600
 
 const getProductAndRelated = cache(async (slug: string) => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
     const res = await fetch(`${baseUrl}/api/products/slug/${slug}`, {
-      next: { revalidate: 43200 },
+      next: { revalidate: 3600 },
     })
 
     const data = await res.json()
@@ -22,7 +22,7 @@ const getProductAndRelated = cache(async (slug: string) => {
     const product = data.data as Product
 
     const allRes = await fetch(`${baseUrl}/api/products`, {
-      next: { revalidate: 43200 },
+      next: { revalidate: 3600 },
     })
 
     const allData = await allRes.json()
