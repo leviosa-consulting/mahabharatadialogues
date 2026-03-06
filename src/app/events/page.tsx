@@ -49,14 +49,9 @@ export const metadata: Metadata = {
 const getEvents = cache(async () => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
-<<<<<<< HEAD
-    const response = await fetch(`${baseUrl}/api/events`, {
-      cache: 'no-store',
-=======
 
     const response = await fetch(`${baseUrl}/api/events`, {
       next: { revalidate: 43200 },
->>>>>>> 137802a (Update project dependencies and improve data fetching reliability)
       signal: AbortSignal.timeout(8000),
     })
 
