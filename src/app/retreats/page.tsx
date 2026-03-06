@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/retreat30.jpg',
+        url: '/retreats30.jpeg',
         width: 1200,
         height: 630,
         alt: 'Mahabharata Dialogues Retreat',
