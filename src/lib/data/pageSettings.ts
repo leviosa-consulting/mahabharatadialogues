@@ -27,11 +27,16 @@ export const getPageSettings = cache(async (): Promise<PageSettings> => {
       adminDB.collection("pageSettings").doc("products-page-settings").get(),
     ]);
 
+    const pick = (data: FirebaseFirestore.DocumentData | undefined): PageSection => ({
+      title: String(data?.title ?? ''),
+      subtitle: String(data?.subtitle ?? ''),
+    });
+
     return {
-      about: aboutSnap.data() as PageSection,
-      blogs: blogsSnap.data() as PageSection,
-      events: eventsSnap.data() as PageSection,
-      products: productsSnap.data() as PageSection,
+      about: pick(aboutSnap.data()),
+      blogs: pick(blogsSnap.data()),
+      events: pick(eventsSnap.data()),
+      products: pick(productsSnap.data()),
     };
   } catch (error) {
     console.error("getPageSettings failed:", error);
