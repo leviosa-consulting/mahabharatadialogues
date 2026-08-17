@@ -71,20 +71,20 @@ export default function HeroSection() {
           Stories from the past. Conversations for today.
         </p>
 
-        {/* Characters — flex-1 claims all remaining height */}
-        <div className="flex-1 flex overflow-hidden">
+        {/* Characters — explicit height so full portrait shows at natural size */}
+        <div className="flex h-[87vw] overflow-hidden">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
               alt="Left character"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-contain object-top"
             />
           </div>
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-09.png"
               alt="Right character"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-contain object-top"
             />
           </div>
         </div>
