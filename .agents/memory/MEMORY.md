@@ -1,0 +1,2 @@
+- [Featured event layout](featured-event-layout.md) — featured card moved to normal-flow section below the CTA strip; old absolute-positioning + dynamic spacer pattern removed.
+- [RSC Firestore leak fix](rsc-firestore-fix.md) — Admin SDK objects must never be passed as RSC props; use explicit field picks or toPlain() helper before returning from server data functions.

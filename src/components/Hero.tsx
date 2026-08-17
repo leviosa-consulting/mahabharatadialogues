@@ -9,7 +9,7 @@ import NavbarScroll from './NavbarScroll'
 export default function HeroSection() {
   return (
     <section
-      className="relative w-full xl:h-screen overflow-hidden"
+      className="relative w-full h-[78vh] sm:h-[82vh] overflow-hidden"
       // style={{
       //   backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
       //   backgroundSize: 'cover',
@@ -18,7 +18,7 @@ export default function HeroSection() {
       // }}
     >
       {/* ipad/desktop */}
-      <div className="hidden sm:flex w-full overflow-hidden items-start">
+      <div className="hidden sm:flex w-full h-full overflow-hidden items-start">
         {/* left image */}
         <div className="flex-1 -mt-20 -ml-20">
           <img

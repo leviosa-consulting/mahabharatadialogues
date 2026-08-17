@@ -1,14 +1,10 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import CustomButton from './CustomButton'
 import { merri } from '@/app/fonts/merri'
 import TestimonialsShimmer from './shimmer/TestimonialsShimmer'
 import { MapPin } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import TestimonialsCarousel from './TestimonialsCarousel'
-import MobileNavbarScroll from './MobileNavbarScroll'
-import TestimonialsSection from './TestimonialsSection'
 
 interface Event {
   id: string
@@ -40,39 +36,9 @@ const UpcomingEventsClient =  ({
   const [upcomingItems, setUpcomingItems] = useState(initialUpcomingItems)
   const [featuredItem, setFeaturedItem] = useState(initialFeaturedItem)
   const [loading, setLoading] = useState(false)
-  const [featuredCardHeight, setFeaturedCardHeight] = useState(0)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const featuredCardRef = useRef<HTMLDivElement>(null)
-  const router = useRouter()
   const MAX_CHARS = 80
-
-  
-
-  useEffect(() => {
-    if (featuredCardRef.current && featuredItem) {
-      const updateHeight = () => {
-        const height = featuredCardRef.current?.offsetHeight || 0
-        setFeaturedCardHeight((prevHeight) => {
-          if (prevHeight !== height) {
-            return height
-          }
-          return prevHeight
-        })
-      }
-
-      updateHeight()
-
-      window.addEventListener('resize', updateHeight)
-
-      const timeoutId = setTimeout(updateHeight, 100)
-
-      return () => {
-        window.removeEventListener('resize', updateHeight)
-        clearTimeout(timeoutId)
-      }
-    }
-  }, [featuredItem])
 
   const parseDate = (dateStr: string): Date => {
     if (dateStr.includes('-')) {
@@ -261,155 +227,8 @@ const UpcomingEventsClient =  ({
           backgroundSize: '240px 240px',
         }}
       >
-        {/* <div className="sm:hidden">
-          <MobileNavbarScroll textColor="#fff" />
-        </div> */}
-        {featuredItem && featuredCardHeight > 0 && (
-          <div
-            style={
-              {
-                '--card-height-mobile': `${featuredCardHeight}px`,
-                '--card-height-md': `${featuredCardHeight}px`,
-                '--card-height-xl': `${featuredCardHeight * 0.8}px`,
-              } as React.CSSProperties
-            }
-            className="
-      h-[var(--card-height-mobile)]
-      md:h-[var(--card-height-md)]
-      xl:h-[var(--card-height-xl)]
-    "
-          ></div>
-        )}
-
-        {featuredItem && (
-          <div
-            ref={featuredCardRef}
-            className="
-    absolute top-0 left-1/2 -translate-x-1/2
-    flex flex-col max-w-94 w-[calc(100%-2rem)] sm:max-w-100 sm:mx-0 lg:max-w-[520px]
-    justify-center items-center
-    -mt-[20%] sm:-mt-[10%] xl:-mt-[20%]
-    bg-[#1D5C75CC]
-    z-10
-  "
-          >
-            <p
-              className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] pt-6`}
-            >
-              COMING UP NEXT
-            </p>
-            <h2
-              className={`${merri.className} text-white font-extrabold text-[32px] italic px-4 md:px-10 text-center leading-relaxed mt-2`}
-            >
-              {featuredItem.title}
-            </h2>
-            <div className="flex flex-col px-4 justify-center items-center my-2">
-              <h3
-                className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] text-center pb-3`}
-              >
-                {getDisplayDate(featuredItem)}
-              </h3>
-              {featuredItem.venue && (
-                <div className="flex justify-center pb-4">
-                  <div
-                    className="
-      flex items-start gap-2
-      md:gap-2
-      max-w-xl
-    "
-                  >
-                    {/* Text block */}
-                    <div className="text-center md:text-center  md:max-w-none">
-                      <h4
-                        className={`${merri.className} text-white font-normal text-[16px] px-4 md:text-[18px] leading-snug`}
-                      >
-                        {featuredItem.venue},
-                      </h4>
-                      <h4
-                        className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}
-                      >
-                        {featuredItem.city}
-                      </h4>
-                      {featuredItem.mapUrl && (
-                        <a
-                          href={featuredItem.mapUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Open in Google Maps"
-                          className={` ${merri.className}
-    inline-flex items-center gap-1
-    text-white hover:text-blue-300
-    transition-colors
-    shrink-0
-    text-[14px] uppercase
-    mt-[6px] 
-  `}
-                        >
-                          <MapPin size={18} />
-                          <span className="">View in Map</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="">
-              <img
-                src={featuredItem.coverImage || '/assets/videoImg.png'}
-                alt={featuredItem.title}
-                className="w-full h-full object-cover"
-                onLoad={() => {
-                  if (featuredCardRef.current) {
-                    const newHeight = featuredCardRef.current.offsetHeight
-                    setFeaturedCardHeight((prevHeight) => {
-                      if (prevHeight !== newHeight) {
-                        return newHeight
-                      }
-                      return prevHeight
-                    })
-                  }
-                }}
-              />
-            </div>
-
-            {featuredItem.description && (
-              <p
-                className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-4 md:px-10 italic py-6 text-center whitespace-pre-line`}
-              >
-                {renderTextWithLineBreaks(featuredItem.description)}
-              </p>
-            )}
-            <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
-              <div className="flex-1">
-                <CustomButton
-                  text={'LEARN MORE'}
-                  bgColor="#78B0C7"
-                  textColor="#FFFFFF"
-                  url={
-                    featuredItem.type === 'retreat'
-                      ? '/retreats'
-                      : `/events/${featuredItem.slug}`
-                  }
-                  //   isOutSideLink={featuredItem.type !== 'retreat'}
-                />
-              </div>
-              <div
-                className="bg-[#D12127] p-[16px]  cursor-pointer"
-                onClick={() => window.open(featuredItem.bookingUrl, '_blank')}
-              >
-                <img
-                  src="/Arrow_up-right.png"
-                  alt="share"
-                  className="w-6 h-6"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-         {/* button */}
-          <div className="flex flex-col relative md:flex-row justify-center gap-6  items-center text-center md:text-left bg-white/70 py-24 px-4 sm:px-10 xl:px-40">
+        {/* Tagline + CTA strip — always directly below the hero */}
+          <div className="flex flex-col relative md:flex-row justify-center gap-6 items-center text-center md:text-left bg-white/70 py-8 sm:py-12 xl:py-20 px-4 sm:px-10 xl:px-40">
             <p
               className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
             >
@@ -565,25 +384,101 @@ const UpcomingEventsClient =  ({
           </div>
         )}
 
-        <div
-          className={`relative ${
-            featuredItem ? 'mt-[1%] md:mt-[1%]' : 'mt-0'
-          }`}
-        >
-          {/* No Upcoming Events */}
-          {!featuredItem && upcomingItems.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20">
-              <p
-                className={`${merri.className} text-white text-2xl text-center`}
-              >
-                No upcoming events in the next 30 days
-              </p>
-            </div>
-          )}
-
-       
-        </div>
+        {/* No Upcoming Events */}
+        {!featuredItem && upcomingItems.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <p className={`${merri.className} text-white text-2xl text-center`}>
+              No upcoming events in the next 30 days
+            </p>
+          </div>
+        )}
       </div>
+
+      {/* Featured Event — dedicated section in normal document flow, below the strip */}
+      {featuredItem && (
+        <section
+          className="w-full flex justify-center"
+          style={{
+            backgroundImage: `
+              linear-gradient(
+                rgba(29, 92, 117, 0.5),
+                rgba(29, 92, 117, 0.5)
+              ),
+              url('/MD-Texture_BG_Blue-01-04.png')
+            `,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '240px 240px',
+          }}
+        >
+          <div className="flex flex-col w-[calc(100%-2rem)] max-w-[520px] items-center bg-[#1D5C75CC] my-10">
+            <p className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] pt-6`}>
+              COMING UP NEXT
+            </p>
+            <h2 className={`${merri.className} text-white font-extrabold text-[32px] italic px-4 md:px-10 text-center leading-relaxed mt-2`}>
+              {featuredItem.title}
+            </h2>
+            <div className="flex flex-col px-4 justify-center items-center my-2">
+              <h3 className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] text-center pb-3`}>
+                {getDisplayDate(featuredItem)}
+              </h3>
+              {featuredItem.venue && (
+                <div className="flex justify-center pb-4">
+                  <div className="flex items-start gap-2 max-w-xl">
+                    <div className="text-center md:max-w-none">
+                      <h4 className={`${merri.className} text-white font-normal text-[16px] px-4 md:text-[18px] leading-snug`}>
+                        {featuredItem.venue},
+                      </h4>
+                      <h4 className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}>
+                        {featuredItem.city}
+                      </h4>
+                      {featuredItem.mapUrl && (
+                        <a
+                          href={featuredItem.mapUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Open in Google Maps"
+                          className={`${merri.className} inline-flex items-center gap-1 text-white hover:text-blue-300 transition-colors shrink-0 text-[14px] uppercase mt-[6px]`}
+                        >
+                          <MapPin size={18} />
+                          <span>View in Map</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="w-full">
+              <img
+                src={featuredItem.coverImage || '/assets/videoImg.png'}
+                alt={featuredItem.title}
+                className="w-full object-cover"
+              />
+            </div>
+            {featuredItem.description && (
+              <p className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-4 md:px-10 italic py-6 text-center whitespace-pre-line`}>
+                {renderTextWithLineBreaks(featuredItem.description)}
+              </p>
+            )}
+            <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
+              <div className="flex-1">
+                <CustomButton
+                  text={'LEARN MORE'}
+                  bgColor="#78B0C7"
+                  textColor="#FFFFFF"
+                  url={featuredItem.type === 'retreat' ? '/retreats' : `/events/${featuredItem.slug}`}
+                />
+              </div>
+              <div
+                className="bg-[#D12127] p-[16px] cursor-pointer"
+                onClick={() => window.open(featuredItem.bookingUrl, '_blank')}
+              >
+                <img src="/Arrow_up-right.png" alt="share" className="w-6 h-6" />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }
