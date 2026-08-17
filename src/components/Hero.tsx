@@ -13,21 +13,21 @@ export default function HeroSection() {
       <div className="flex w-full h-full items-stretch overflow-hidden">
 
         {/* ── Left character ──────────────────────────────────────────── */}
-        <div className="flex-1 overflow-hidden -ml-12 sm:-ml-16 lg:-ml-20">
+        {/* Mobile: cover+top (face fills column). sm+: contain+bottom (full character, no crop). */}
+        <div className="flex-1 overflow-hidden -ml-16 sm:-ml-16 lg:-ml-20">
           <img
             src="Web_Assets-02.png"
             alt="Left character"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover object-top sm:object-contain sm:object-bottom"
           />
         </div>
 
         {/* ── Centre column ───────────────────────────────────────────── */}
         {/*
-         * Mobile: narrower (36%) so characters fill more of the screen
-         * and the centre seam is less prominent.
+         * Mobile: 30% wide — narrow to reduce the bare-texture seam.
          * sm+: auto width driven by the navbar / circle content.
          */}
-        <div className="flex flex-col items-center justify-start shrink-0 w-[36%] sm:w-auto">
+        <div className="flex flex-col items-center justify-start shrink-0 w-[30%] sm:w-auto">
 
           {/* Full navbar — large screens only */}
           <div className="hidden lg:flex mt-10">
@@ -55,11 +55,11 @@ export default function HeroSection() {
         </div>
 
         {/* ── Right character ─────────────────────────────────────────── */}
-        <div className="flex-1 overflow-hidden -mr-12 sm:-mr-16 lg:-mr-20">
+        <div className="flex-1 overflow-hidden -mr-16 sm:-mr-16 lg:-mr-20">
           <img
             src="Web_Assets-09.png"
             alt="Right character"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover object-top sm:object-contain sm:object-bottom"
           />
         </div>
 
