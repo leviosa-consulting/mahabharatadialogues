@@ -49,45 +49,44 @@ export default function HeroSection() {
 
       </div>
 
-      {/* ── Mobile (below sm): overlapping panel composition ────────────
-       *  Left char covers left 60%, right char covers right 60%.
-       *  They overlap 20% in the centre — the circle medallion sits
-       *  exactly over that join, hiding it naturally.
-       *  object-right-top / object-left-top pull the face into view
-       *  for each portrait image.
+      {/* ── Mobile (below sm): clean stacked layout — zero overlap ────────
+       *  Zone 1 (top):    Circle logo, centred
+       *  Zone 2 (middle): Tagline text
+       *  Zone 3 (bottom): Characters side-by-side, flex-1 so they fill
+       *                   all remaining height — faces anchored at top.
        */}
-      <div className="sm:hidden relative w-full h-full overflow-hidden">
+      <div className="sm:hidden w-full h-full flex flex-col overflow-hidden">
 
-        {/* Left character panel — 45% width, face shown via object-center-top */}
-        <div className="absolute left-0 top-0 w-[45%] h-full overflow-hidden">
-          <img
-            src="/Web_Assets-02.png"
-            alt="Left character"
-            className="w-full h-full object-cover object-center-top"
-          />
-        </div>
-
-        {/* Right character panel — 45% width, face shown via object-center-top */}
-        <div className="absolute right-0 top-0 w-[45%] h-full overflow-hidden">
-          <img
-            src="/Web_Assets-09.png"
-            alt="Right character"
-            className="w-full h-full object-cover object-center-top"
-          />
-        </div>
-
-        {/* Circle medallion + tagline — floats over the join */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-5">
+        {/* Circle logo */}
+        <div className="flex justify-center pt-3 px-16">
           <img
             src="/Web_Assets-08.png"
             alt="Mahabharata Dialogues"
-            className="w-[52%] max-w-[200px] drop-shadow-xl"
+            className="w-[55%] max-w-[210px]"
           />
-          <p className={`${merri.className} text-white text-center text-xs font-medium italic mt-3 px-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]`}>
-            Stories from the past.
-            <br />
-            Conversations for today.
-          </p>
+        </div>
+
+        {/* Tagline */}
+        <p className={`${merri.className} text-white text-center text-xs font-medium italic mt-2 mb-1 px-6 drop-shadow-md`}>
+          Stories from the past. Conversations for today.
+        </p>
+
+        {/* Characters — flex-1 claims all remaining height */}
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 overflow-hidden">
+            <img
+              src="/Web_Assets-02.png"
+              alt="Left character"
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <img
+              src="/Web_Assets-09.png"
+              alt="Right character"
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
         </div>
 
       </div>
