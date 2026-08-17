@@ -4,28 +4,18 @@ import NavbarScroll from './NavbarScroll'
 
 export default function HeroSection() {
   return (
-    /*
-     * Parent: flex flex-col h-dvh (in page.tsx), so this section has a
-     * known height = dvh minus the CTAStrip below it. Image containers can
-     * safely use h-full inside a row with items-stretch.
-     */
     <section className="relative w-full flex-1 min-h-0 overflow-hidden">
 
       {/* ── Desktop / tablet (sm+) ─────────────────────────────────────── */}
-      {/*
-       * items-stretch: flex items grow to the full row height so the image
-       * containers are height-bounded by the section.  object-top on the
-       * images then ensures the face is always visible; only the lower body
-       * may be cropped if the image is taller than the viewport space.
-       */}
       <div className="hidden sm:flex w-full h-full items-stretch overflow-hidden">
 
-        {/* Left character image */}
-        <div className="flex-1 overflow-hidden -ml-20">
+        {/* Left character — object-contain keeps full image visible; transparent
+            areas show the page's blue texture background */}
+        <div className="flex-1 overflow-hidden -ml-20 flex items-end">
           <img
             src="Web_Assets-02.png"
             alt="Left character"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-contain object-bottom"
           />
         </div>
 
@@ -52,55 +42,52 @@ export default function HeroSection() {
           </p>
         </div>
 
-        {/* Right character image */}
-        <div className="flex-1 overflow-hidden -mr-20">
+        {/* Right character — same contain treatment */}
+        <div className="flex-1 overflow-hidden -mr-20 flex items-end">
           <img
             src="Web_Assets-09.png"
             alt="Right character"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-contain object-bottom"
           />
         </div>
       </div>
 
       {/* ── Mobile (below sm) ──────────────────────────────────────────── */}
       {/*
-       * Fills the same h-dvh-minus-CTA space as desktop.
-       * flex-col keeps everything stacked; the character row is flex-1 so
-       * it claims whatever height remains after the circle + tagline.
-       * object-top on images ensures faces stay visible; feet may be cropped.
+       * Characters fill the full section height as an absolutely-positioned
+       * backdrop (same feel as desktop — faces visible, bleeding from edges).
+       * Circle + tagline float centred on top via a z-10 overlay column.
        */}
-      <div className="sm:hidden h-full flex flex-col overflow-hidden">
+      <div className="sm:hidden relative h-full overflow-hidden">
 
-        {/* Circle logo */}
-        <div className="flex justify-center mt-4 px-12">
-          <div className="w-[70%] rounded-full bg-red-500 flex items-center justify-center text-center">
-            <img src="/Web_Assets-08.png" alt="Mahabharata Dialogues" />
-          </div>
-        </div>
-
-        {/* Tagline */}
-        <p
-          className={`${merri.className} text-white text-center text-xs font-medium italic mt-3 mb-1 px-8 drop-shadow-md`}
-        >
-          Stories from the past. Conversations for today.
-        </p>
-
-        {/* Characters — fill remaining height, faces anchored at top */}
-        <div className="flex-1 flex overflow-hidden">
-          <div className="flex-1 overflow-hidden -ml-8">
+        {/* Character backdrop — full-height row behind everything */}
+        <div className="absolute inset-0 flex">
+          <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
               alt="Left character"
               className="w-full h-full object-cover object-top"
             />
           </div>
-          <div className="flex-1 overflow-hidden -mr-8">
+          <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-09.png"
               alt="Right character"
               className="w-full h-full object-cover object-top"
             />
           </div>
+        </div>
+
+        {/* Overlay: circle + tagline centred */}
+        <div className="relative z-10 h-full flex flex-col items-center justify-start pt-6 px-8">
+          <div className="w-[65%]">
+            <img src="/Web_Assets-08.png" alt="Mahabharata Dialogues" className="w-full" />
+          </div>
+          <p
+            className={`${merri.className} text-white text-center text-sm font-medium italic mt-3 drop-shadow-md`}
+          >
+            Stories from the past. Conversations for today.
+          </p>
         </div>
 
       </div>
