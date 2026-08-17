@@ -37,6 +37,22 @@ interface Retreat {
   created_at: string
 }
 
+/**
+ * Strip all Firestore Admin SDK types (Timestamp, DocumentReference, Serializer,
+ * Query, QuerySnapshot, etc.) from `docs` before they enter the RSC serialisation
+ * layer, where class instances with private-field syntax cause:
+ *   SyntaxError: Invalid or unexpected token
+ *
+ * JSON.parse(JSON.stringify(…)) guarantees the result contains only plain JSON
+ * values (null, boolean, number, string, array, plain object) with no class
+ * instances or functions.  Firestore Timestamps serialise via their toJSON()
+ * method, DocumentReferences serialise as {} (no toJSON), and functions are
+ * silently dropped — all safe for RSC props.
+ */
+function toPlainViaJSON<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
+}
+
 const parseDate = (dateStr: string): Date => {
   const months: { [key: string]: number } = {
     Jan: 0,
@@ -73,10 +89,9 @@ async function getRetreats() {
       .orderBy('created_at', 'desc')
       .get()
 
-    const retreats: Retreat[] = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Retreat[]
+    const retreats = toPlainViaJSON(
+      snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+    ) as Retreat[]
 
     const sorted = retreats.sort((a, b) => {
       const dateA = parseDate(a.day1.date)

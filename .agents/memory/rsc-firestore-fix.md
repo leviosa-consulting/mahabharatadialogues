@@ -1,25 +1,52 @@
 ---
-name: RSC Firestore leak fix
-description: How Firestore Admin SDK objects leak into RSC payloads and how to prevent it.
+name: RSC Firestore serialization fix
+description: How to prevent Firestore Admin SDK objects from leaking into the RSC payload and causing SyntaxError in the browser.
 ---
 
-# RSC Firestore serialization
+## The problem
+When a Next.js RSC (server component) does `{ id: doc.id, ...doc.data() }` and passes the result as props to a client component, the Firestore Admin SDK serializes the **entire SDK class tree** (DocumentReference, Timestamp, QuerySnapshot, Serializer, FieldPath, Query, …) into the RSC payload as `$E(class Foo {...})` eval entries. The browser fails to eval these private-field class definitions → `SyntaxError: Invalid or unexpected token`.
 
-## Rule
-Never pass Firestore Admin SDK objects (Query, QuerySnapshot, DocumentSnapshot, DocumentReference, Timestamp, etc.) as props to client components. They serialize to `$E` eval entries in the RSC payload, which cause `SyntaxError: Invalid or unexpected token` in the browser.
+This also happens transitively: if a data field is a Firestore `Timestamp`, its prototype chain is serialized even if the data looks like a plain object.
 
-## Why
-Next.js 15 RSC serializer uses `$E` (eval) for non-plain values. Firestore Admin SDK class instances contain complex nested objects and function properties that produce malformed JS when eval'd.
+## The fix
+Add a recursive `toPlain` helper and apply it at the Firestore boundary:
 
-## How to apply
-- In server data functions, always map Firestore results to plain objects before returning
-- Use explicit field picks: `{ id: doc.id, title: String(raw.title ?? '') }`
-- For Timestamps: call `.toDate().toISOString()`
-- For DocumentReferences: drop them (return `null`)
-- Use a `toPlain(value)` recursive helper for nested unknown data (see `src/lib/data/blogs.ts`)
-- `getPageSettings` uses `pick()` helper — returns `{ title: String(...), subtitle: String(...) }`
-- `getBlogs` uses explicit field mapping with `toPlain()` for Timestamps
+```typescript
+function toPlain(value: unknown): unknown {
+  if (value === null || value === undefined) return value
+  // Firestore Timestamp has a toDate() method
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).toDate === 'function'
+  ) {
+    return ((value as Record<string, unknown>).toDate as () => Date)().toISOString()
+  }
+  if (Array.isArray(value)) return value.map(toPlain)
+  if (typeof value === 'object') {
+    const out: Record<string, unknown> = {}
+    for (const key of Object.keys(value as object)) {
+      out[key] = toPlain((value as Record<string, unknown>)[key])
+    }
+    return out
+  }
+  return value
+}
 
-## Files fixed
-- `src/lib/data/pageSettings.ts`
-- `src/lib/data/blogs.ts`
+// Usage:
+const items = snapshot.docs.map(doc => toPlain({ id: doc.id, ...doc.data() }) as MyType)
+```
+
+Alternatively, use an explicit field-pick object so no unknown fields can sneak through.
+
+## Files already fixed
+- `src/lib/data/pageSettings.ts` — explicit pick()
+- `src/lib/data/blogs.ts` — toPlain() recursive helper
+- `src/components/RetreatHero.tsx` — toPlain() recursive helper
+
+**Why:** `doc.data()` returns Firestore SDK objects (Timestamp, DocumentReference) for date/reference fields; spreading them makes RSC serialize the entire SDK class tree.
+
+**How to apply:** Any `async function` in a server component that reads from adminDB must apply `toPlain()` (or an explicit field pick) before returning data that will be passed to client components.
+
+## Bonus: `revalidate` in component files
+`export const revalidate = N` only works in **page-level files** (`page.tsx`, `layout.tsx`, `route.ts`). Putting it in a component file causes Next.js to import it outside the React rendering tree, which triggers Fast Refresh full reloads on every HMR cycle. Remove these exports from all component files.
