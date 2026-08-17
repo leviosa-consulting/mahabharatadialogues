@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { getTestimonials } from '@/lib/data/testimonials'
 import { Metadata } from 'next'
 
+export const runtime = 'nodejs'
 export const revalidate = 43200
 
 const getRetreat = cache(async (slug: string) => {

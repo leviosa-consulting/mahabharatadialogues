@@ -1,8 +1,6 @@
 import { adminDB } from "@/firebase/firebaseAdmin";
 import { cache } from "react";
 
-export const runtime = "nodejs";
-
 export interface Blog {
   id: string;
   title: string;

@@ -3,6 +3,8 @@ import BlogDetailClient from './BlogDetailClient'
 import { cache } from 'react'
 import { getBlogs } from '@/lib/data/blogs'
 
+export const runtime = 'nodejs'
+
 interface Blog {
   id: string
   title: string

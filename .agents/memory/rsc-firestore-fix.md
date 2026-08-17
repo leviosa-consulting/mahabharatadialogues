@@ -41,12 +41,23 @@ Alternatively, use an explicit field-pick object so no unknown fields can sneak 
 
 ## Files already fixed
 - `src/lib/data/pageSettings.ts` — explicit pick()
-- `src/lib/data/blogs.ts` — toPlain() recursive helper
-- `src/components/RetreatHero.tsx` — toPlain() recursive helper
+- `src/lib/data/blogs.ts` — toPlain() recursive helper (runtime export removed)
+- `src/components/RetreatHero.tsx` — toPlainViaJSON() helper
 
 **Why:** `doc.data()` returns Firestore SDK objects (Timestamp, DocumentReference) for date/reference fields; spreading them makes RSC serialize the entire SDK class tree.
 
 **How to apply:** Any `async function` in a server component that reads from adminDB must apply `toPlain()` (or an explicit field pick) before returning data that will be passed to client components.
 
-## Bonus: `revalidate` in component files
-`export const revalidate = N` only works in **page-level files** (`page.tsx`, `layout.tsx`, `route.ts`). Putting it in a component file causes Next.js to import it outside the React rendering tree, which triggers Fast Refresh full reloads on every HMR cycle. Remove these exports from all component files.
+## Critical: `runtime` and `revalidate` must only be in page/layout/route files
+`export const runtime = 'nodejs'` and `export const revalidate = N` are only valid in **page-level files** (`page.tsx`, `layout.tsx`, `route.ts`). Putting them in a lib or component file causes Next.js to import the module outside the React rendering tree → Fast Refresh SyntaxError loop + potential 500 errors.
+
+## Root layout must declare `runtime = 'nodejs'`
+`src/app/layout.tsx` calls `getPageSettings()` (firebase-admin). The root layout MUST have `export const runtime = 'nodejs'` or every page fails with a 500 because firebase-admin cannot run in the Edge runtime. This declaration propagates to all child pages automatically.
+
+## Pages that also need `runtime = 'nodejs'` (belt-and-suspenders)
+Any page that imports from a lib that uses firebase-admin directly should also declare `runtime = 'nodejs'`:
+- `src/app/blogs/[slug]/page.tsx` (uses getBlogs)
+- `src/app/events/[slug]/page.tsx` (uses FooterWithBlogs → getBlogs)
+- `src/app/retreats/past/[slug]/page.tsx`
+- `src/app/about/page.tsx`
+- `src/app/products/[slug]/page.tsx`

@@ -5,6 +5,7 @@ import EventDetailClient from './EventDetailClient'
 import { cache } from 'react'
 import { Metadata } from 'next'
 
+export const runtime = 'nodejs'
 export const revalidate = 3600
 
 interface Event {

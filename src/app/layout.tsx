@@ -18,6 +18,8 @@ const roboto = Roboto({
   variable: "--font-roboto",
 });
 
+export const runtime = 'nodejs'
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://mahabharatadialogues.com"),
 

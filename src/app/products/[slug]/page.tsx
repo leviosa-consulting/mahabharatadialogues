@@ -5,6 +5,7 @@ import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { cache } from 'react'
 import type { Metadata } from 'next'
 
+export const runtime = 'nodejs'
 export const revalidate = 3600
 
 const getProductAndRelated = cache(async (slug: string) => {

@@ -3,6 +3,7 @@ import AboutClient from './AboutClient'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import { Metadata } from 'next'
 
+export const runtime = 'nodejs'
 export const revalidate = 43200
 
 export const metadata: Metadata = {
