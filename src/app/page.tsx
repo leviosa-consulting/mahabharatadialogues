@@ -23,7 +23,7 @@ export default function Home() {
       <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
 
       {/* Hero + CTA strip share a full-viewport flex column so both are always visible */}
-      <div className="flex flex-col sm:h-dvh">
+      <div className="flex flex-col h-dvh">
         <HeroSection />
         <CTAStrip />
       </div>
