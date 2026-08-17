@@ -72,7 +72,7 @@ export default function HeroSection() {
         </p>
 
         {/* Characters — explicit height so full portrait shows at natural size */}
-        <div className="flex h-[87vw] overflow-hidden">
+        <div className="flex h-[87vw] gap-6 overflow-hidden">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
