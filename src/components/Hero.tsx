@@ -62,7 +62,7 @@ export default function HeroSection() {
           <img
             src="/Web_Assets-08.png"
             alt="Mahabharata Dialogues"
-            className="w-[55%] max-w-[210px]"
+            className="w-[40%] max-w-[170px]"
           />
         </div>
 
@@ -72,7 +72,7 @@ export default function HeroSection() {
         </p>
 
         {/* Characters — explicit height so full portrait shows at natural size */}
-        <div className="flex h-[87vw] gap-10 overflow-hidden">
+        <div className="flex h-[min(87vw,300px)] gap-10 overflow-hidden">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
