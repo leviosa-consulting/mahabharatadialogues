@@ -9,7 +9,7 @@ import NavbarScroll from './NavbarScroll'
 export default function HeroSection() {
   return (
     <section
-      className="relative w-full h-[78vh] sm:h-[82vh] overflow-hidden"
+      className="relative w-full flex-1 min-h-0 overflow-hidden"
       // style={{
       //   backgroundImage: `url('/Blue_Background_with_Texture-01.png')`,
       //   backgroundSize: 'cover',

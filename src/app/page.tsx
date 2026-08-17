@@ -4,6 +4,7 @@ import ImageCarousel from '@/components/ImageCarousel'
 import Retreats from '@/components/Retreats'
 import MobileNavbarScroll from '@/components/MobileNavbarScroll'
 import UpcomingEventsServer from '@/components/UpcomingEventsServer'
+import CTAStrip from '@/components/CTAStrip'
 
 export const runtime = 'nodejs'
 export const revalidate = 3600
@@ -21,7 +22,12 @@ export default function Home() {
     >
       <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
 
-      <HeroSection />
+      {/* Hero + CTA strip share a full-viewport flex column so both are always visible */}
+      <div className="flex flex-col h-dvh">
+        <HeroSection />
+        <CTAStrip />
+      </div>
+
       <UpcomingEventsServer />
 
       <ImageCarousel />

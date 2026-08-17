@@ -227,22 +227,6 @@ const UpcomingEventsClient =  ({
           backgroundSize: '240px 240px',
         }}
       >
-        {/* Tagline + CTA strip — always directly below the hero */}
-          <div className="flex flex-col relative md:flex-row justify-center gap-6 items-center text-center md:text-left bg-white/70 py-8 sm:py-12 xl:py-20 px-4 sm:px-10 xl:px-40">
-            <p
-              className={`text-[#1D5C75] ${merri.className} font-bold italic text-[20px] md:text-[24px]`}
-            >
-              Dialogues, Retreats, and Evenings with Mahabharata, celebrating
-              art, music, dance, and stories.
-            </p>
-            <CustomButton
-              text="EXPLORE MORE EVENTS"
-              bgColor="#1D5C75"
-              textColor="#FFFFFF"
-              url={'/events'}
-            />
-          </div>
-
         {upcomingItems.length > 0 && (
           <div className="text-center">
             
