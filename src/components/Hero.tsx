@@ -58,21 +58,21 @@ export default function HeroSection() {
        */}
       <div className="sm:hidden relative w-full h-full overflow-hidden">
 
-        {/* Left character panel */}
-        <div className="absolute left-0 top-0 w-[62%] h-full overflow-hidden">
+        {/* Left character panel — 45% width, face shown via object-center-top */}
+        <div className="absolute left-0 top-0 w-[45%] h-full overflow-hidden">
           <img
             src="/Web_Assets-02.png"
             alt="Left character"
-            className="w-full h-full object-cover object-right-top"
+            className="w-full h-full object-cover object-center-top"
           />
         </div>
 
-        {/* Right character panel */}
-        <div className="absolute right-0 top-0 w-[62%] h-full overflow-hidden">
+        {/* Right character panel — 45% width, face shown via object-center-top */}
+        <div className="absolute right-0 top-0 w-[45%] h-full overflow-hidden">
           <img
             src="/Web_Assets-09.png"
             alt="Right character"
-            className="w-full h-full object-cover object-left-top"
+            className="w-full h-full object-cover object-center-top"
           />
         </div>
 
