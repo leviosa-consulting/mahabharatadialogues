@@ -59,3 +59,7 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID = "mahabharta-dailogue"
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET = "mahabharta-dailogue.firebasestorage.app"
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "656996194688"
 NEXT_PUBLIC_FIREBASE_APP_ID = "1:656996194688:web:e3effb7cc9adc013b14965"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 30000
