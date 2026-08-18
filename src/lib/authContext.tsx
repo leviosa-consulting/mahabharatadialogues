@@ -52,19 +52,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               setIsAdmin(data.role === 'admin')
 
             
+              const isProduction = window.location.protocol === 'https:'
               Cookies.set('userEmail', data.email, {
                 expires: 7,
-                secure: true,
+                secure: isProduction,
                 sameSite: 'strict',
               })
               Cookies.set('userDisplayName', data.displayName, {
                 expires: 7,
-                secure: true,
+                secure: isProduction,
                 sameSite: 'strict',
               })
               Cookies.set('userRole', data.role, {
                 expires: 7,
-                secure: true,
+                secure: isProduction,
                 sameSite: 'strict',
               })
             } else {
