@@ -66,7 +66,7 @@ export default function HeroSection() {
         </div>
 
         {/* Characters — prominent, fills most of remaining height */}
-        <div className="flex h-[min(90vw,340px)] -mt-[20vw] relative z-10 overflow-hidden gap-10">
+        <div className="flex h-[min(90vw,340px)] overflow-hidden gap-10">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
