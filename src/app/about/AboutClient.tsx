@@ -7,7 +7,6 @@ import Navbar from '@/components/Navbar'
 import NavbarScroll from '@/components/NavbarScroll'
 import { merri } from '../fonts/merri'
 import CustomButton from '@/components/CustomButton'
-import Footer from '@/components/Footer'
 
 import { X, Linkedin, Twitter, Instagram } from 'lucide-react'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
@@ -55,7 +54,6 @@ export default function AboutClient({ members }: { members: Member[] }) {
         <div className="hidden sm:block relative pt-5 z-10">
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
-        <NavbarScroll textColor="#1D5C75" />
         <NavbarScroll textColor="#1D5C75" />
         <div className="mx-4 xl:mx-30 my-10">
           <div className="grid grid-cols-12 gap-3">
@@ -129,7 +127,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
           </h2>
         </div>
         <div className="w-full">
-          {collaboratorMembers.length > 0 && (
+          {coreTeamMembers.length > 0 && (
             <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 place-items-center px-2 md:px-0 max-w-7xl">
               {coreTeamMembers.map((item, index) => (
                 <div
