@@ -66,19 +66,19 @@ export default function HeroSection() {
         </div>
 
         {/* Characters — prominent, fills most of remaining height */}
-        <div className="flex flex-1 min-h-0 overflow-hidden">
+        <div className="flex h-[min(90vw,340px)] -mt-[20vw] relative z-10 overflow-hidden">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
               alt="Left character"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-contain object-top"
             />
           </div>
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-09.png"
               alt="Right character"
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-contain object-top"
             />
           </div>
         </div>
