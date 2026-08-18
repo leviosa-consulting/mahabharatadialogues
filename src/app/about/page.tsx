@@ -45,7 +45,6 @@ export default async function Page() {
       <AboutClient members={members} />
 
       <div
-        id="contact"
         className="pt-20"
         style={{
           backgroundImage: `

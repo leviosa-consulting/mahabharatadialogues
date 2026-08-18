@@ -236,7 +236,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
       {/* Member Detail Overlay */}
       {selectedMember && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
           onClick={closeOverlay}
         >
           <div
