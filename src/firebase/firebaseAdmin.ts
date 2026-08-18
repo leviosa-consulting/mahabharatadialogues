@@ -18,12 +18,21 @@ function getFirebaseAdmin() {
     throw new Error("Firebase Admin credentials are not configured");
   }
 
+  // Normalise the private key regardless of how it was pasted:
+  // - strip surrounding double-quotes (common when copying from JSON)
+  // - convert literal \n sequences to real newlines
+  let normalizedKey = privateKey.trim();
+  if (normalizedKey.startsWith('"') && normalizedKey.endsWith('"')) {
+    normalizedKey = normalizedKey.slice(1, -1);
+  }
+  normalizedKey = normalizedKey.replace(/\\n/g, "\n");
+
   try {
     admin.initializeApp({
       credential: admin.credential.cert({
         projectId,
         clientEmail,
-        privateKey: privateKey.replace(/\\n/g, "\n"),
+        privateKey: normalizedKey,
       }),
       storageBucket,
     });
