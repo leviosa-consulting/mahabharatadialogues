@@ -51,28 +51,22 @@ export default function HeroSection() {
 
       {/* ── Mobile (below sm): clean stacked layout — zero overlap ────────
        *  Zone 1 (top):    Circle logo, centred
-       *  Zone 2 (middle): Tagline text
-       *  Zone 3 (bottom): Characters side-by-side, flex-1 so they fill
-       *                   all remaining height — faces anchored at top.
+       *  Zone 2 (middle): Characters side-by-side, prominent
+       *  Zone 3 (bottom): Tagline text
        */}
       <div className="sm:hidden w-full h-full flex flex-col overflow-hidden">
 
         {/* Circle logo */}
-        <div className="flex justify-center pt-3 px-16">
+        <div className="flex justify-center pt-3">
           <img
             src="/Web_Assets-08.png"
             alt="Mahabharata Dialogues"
-            className="w-[40%] max-w-[170px]"
+            className="w-[65%] max-w-[260px]"
           />
         </div>
 
-        {/* Tagline */}
-        <p className={`${merri.className} text-white text-center text-xs font-medium italic mt-2 mb-1 px-6 drop-shadow-md`}>
-          Stories from the past. Conversations for today.
-        </p>
-
-        {/* Characters — explicit height so full portrait shows at natural size */}
-        <div className="flex h-[min(87vw,300px)] gap-10 overflow-hidden">
+        {/* Characters — prominent, fills most of remaining height */}
+        <div className="flex h-[min(87vw,360px)] overflow-hidden">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
@@ -88,6 +82,11 @@ export default function HeroSection() {
             />
           </div>
         </div>
+
+        {/* Tagline — below characters */}
+        <p className={`${merri.className} text-white text-center text-xs font-medium italic mt-2 mb-1 px-6 drop-shadow-md`}>
+          Stories from the past. Conversations for today.
+        </p>
 
       </div>
 
