@@ -14,6 +14,7 @@ function getFirebaseAdmin() {
     console.error("Firebase Admin: Missing required environment variables");
     console.error("FIREBASE_PROJECT_ID:", projectId ? "set" : "MISSING");
     console.error("FIREBASE_CLIENT_EMAIL:", clientEmail ? "set" : "MISSING");
+    console.error("FIREBASE_PRIVATE_KEY:", privateKey ? "set" : "MISSING");
     throw new Error("Firebase Admin credentials are not configured");
   }
 

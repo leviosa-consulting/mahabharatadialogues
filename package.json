@@ -29,7 +29,8 @@
     "zustand": "^5.0.8"
   },
   "overrides": {
-    "minimatch": ">=10.2.1"
+    "minimatch": ">=10.2.1",
+    "websocket-driver": ">=0.7.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
