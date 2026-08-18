@@ -1,2 +1,3 @@
 - [Featured event layout](featured-event-layout.md) — featured card moved to normal-flow section below the CTA strip; old absolute-positioning + dynamic spacer pattern removed.
+- [Firebase private key normalization](firebase-private-key-normalization.md) — FIREBASE_PRIVATE_KEY often arrives as raw base64 without PEM headers; normalization in firebaseAdmin.ts handles all copy-paste variants.
 - [RSC Firestore leak fix](rsc-firestore-fix.md) — Admin SDK objects must never be passed as RSC props; use explicit field picks or toPlain() helper before returning from server data functions.

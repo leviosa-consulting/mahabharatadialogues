@@ -19,13 +19,21 @@ function getFirebaseAdmin() {
   }
 
   // Normalise the private key regardless of how it was pasted:
-  // - strip surrounding double-quotes (common when copying from JSON)
-  // - convert literal \n sequences to real newlines
+  // 1. Strip surrounding double-quotes (common when copying from JSON)
+  // 2. Convert literal \n sequences to real newlines
+  // 3. If key has no PEM header (raw base64 only), wrap it in proper PEM format
   let normalizedKey = privateKey.trim();
   if (normalizedKey.startsWith('"') && normalizedKey.endsWith('"')) {
     normalizedKey = normalizedKey.slice(1, -1);
   }
   normalizedKey = normalizedKey.replace(/\\n/g, "\n");
+
+  if (!normalizedKey.includes("-----BEGIN")) {
+    // Raw base64 body — reconstruct proper PEM with 64-char line wrapping
+    const body = normalizedKey.replace(/\s+/g, "");
+    const lines = body.match(/.{1,64}/g) ?? [];
+    normalizedKey = `-----BEGIN PRIVATE KEY-----\n${lines.join("\n")}\n-----END PRIVATE KEY-----\n`;
+  }
 
   try {
     admin.initializeApp({
