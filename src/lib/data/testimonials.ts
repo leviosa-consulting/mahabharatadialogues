@@ -18,8 +18,9 @@ const FALLBACK: Testimonial[] = [
 
 export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/testimonials`,
+      `${baseUrl}/api/testimonials`,
       {
         next: { revalidate: 43200 },
         signal: AbortSignal.timeout(8000),

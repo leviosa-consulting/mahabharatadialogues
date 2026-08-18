@@ -87,12 +87,13 @@ const getUpcomingItems = cache(async () => {
   thirtyDaysLater.setDate(now.getDate() + 300)
 
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
     const [retreatsResponse, eventsResponse] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/retreats`, {
+      fetch(`${baseUrl}/api/retreats`, {
         next: { revalidate: 43200 },
         signal: AbortSignal.timeout(8000),
       }),
-      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/events`, {
+      fetch(`${baseUrl}/api/events`, {
         next: { revalidate: 43200 },
         signal: AbortSignal.timeout(8000),
       }),
