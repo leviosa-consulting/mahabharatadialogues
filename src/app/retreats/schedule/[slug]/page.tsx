@@ -9,7 +9,7 @@ export const revalidate = 3600
 const getRetreat = cache(async (slug: string) => {
   try {
     const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+      process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
 
     const slugRes = await fetch(
       `${baseUrl}/api/retreats/by-slug/${slug}`,

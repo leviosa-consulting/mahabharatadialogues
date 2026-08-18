@@ -85,8 +85,9 @@ export async function generateMetadata({
 
 const getEvent = cache(async (slug: string): Promise<Event | null> => {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/events/slug/${slug}`,
+      `${baseUrl}/api/events/slug/${slug}`,
       {
         next: { revalidate: 43200 },
         signal: AbortSignal.timeout(8000),

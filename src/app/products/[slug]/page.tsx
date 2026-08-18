@@ -10,7 +10,7 @@ export const revalidate = 3600
 
 const getProductAndRelated = cache(async (slug: string) => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
 
     const res = await fetch(`${baseUrl}/api/products/slug/${slug}`, {
       next: { revalidate: 3600 },
