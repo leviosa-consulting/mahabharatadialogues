@@ -9,7 +9,6 @@ import Navbar from '@/components/Navbar'
 import CustomButton from '@/components/CustomButton'
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 import { Product } from '@/data/productsData'
-import Link from 'next/link'
 import Footer from '@/components/Footer'
 import NavbarScroll from '@/components/NavbarScroll'
 
@@ -253,17 +252,12 @@ export const ProductsClient = ({ initialProducts }: Props) => {
 
                       <div className="flex flex-col md:flex-row gap-2 w-full mt-4">
                         <div className="flex-1">
-                          <Link
-                            href={`/products/${product.slug}`}
-                            className="block w-full"
-                          >
-                            <CustomButton
-                              text="MORE DETAILS"
-                              bgColor="#1D5C75"
-                              textColor="#FFFFFF"
-                              url=""
-                            />
-                          </Link>
+                          <CustomButton
+                            text="MORE DETAILS"
+                            bgColor="#1D5C75"
+                            textColor="#FFFFFF"
+                            url={`/products/${product.slug}`}
+                          />
                         </div>
 
                         <div className="flex-1">
