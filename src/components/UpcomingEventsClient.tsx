@@ -396,7 +396,7 @@ const UpcomingEventsClient =  ({
         >
           <div
             className="grid w-[calc(100%-2rem)] max-w-[520px] lg:max-w-[1080px] bg-[#1D5C75CC] my-10
-              grid-cols-1 lg:grid-cols-[1fr_1.1fr] lg:grid-rows-[auto_1fr]"
+              grid-cols-1 lg:grid-cols-[1fr_1.1fr]"
           >
             {/* Image — keeps its native landscape ratio, never cropped to fill.
                 Same 465:285 frame the strip cards use. */}

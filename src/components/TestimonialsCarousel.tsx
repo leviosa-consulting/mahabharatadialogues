@@ -15,6 +15,19 @@ interface TestimonialsCarouselProps {
   textColor?: string
 }
 
+/* Must match the `duration-600` on the fading wrapper below. If the swap fires
+   earlier than this, the text changes while still half-visible and reads as a
+   flicker rather than a crossfade. */
+const FADE_MS = 600
+
+/* How long a testimonial stays on screen, derived from its own length so short
+   quotes don't linger and long ones aren't cut off. 250ms/word ~= 240wpm; the
+   extra 1200ms covers reading the name and designation. */
+const dwellFor = (quote: string) => {
+  const words = quote.trim().split(/\s+/).filter(Boolean).length
+  return Math.min(14000, Math.max(7000, words * 250 + 1200))
+}
+
 const TestimonialsCarousel = ({
   testimonials,
   textColor,
@@ -27,24 +40,31 @@ const TestimonialsCarousel = ({
   const touchEndX = useRef(0)
   const wheelTimeout = useRef<NodeJS.Timeout | null>(null)
   const autoScrollInterval = useRef<NodeJS.Timeout | null>(null)
+  const fadeTimeout = useRef<NodeJS.Timeout | null>(null)
 
+  /* Reschedules per slide rather than running on a fixed interval, so each
+     testimonial gets dwell time proportional to its own length. Depends on
+     currentIndex, which also means a manual dot click restarts the clock. */
   useEffect(() => {
-    if (testimonials.length > 0 && !isAutoScrollPaused) {
-      autoScrollInterval.current = setInterval(() => {
-        setIsTransitioning(true)
-        setTimeout(() => {
-          setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-          setIsTransitioning(false)
-        }, 300)
-      }, 3000)
+    if (testimonials.length === 0 || isAutoScrollPaused) return
 
-      return () => {
-        if (autoScrollInterval.current) {
-          clearInterval(autoScrollInterval.current)
-        }
-      }
+    const dwell = dwellFor(testimonials[currentIndex]?.quote ?? '')
+
+    autoScrollInterval.current = setTimeout(() => {
+      setIsTransitioning(true)
+      fadeTimeout.current = setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % testimonials.length)
+        setIsTransitioning(false)
+      }, FADE_MS)
+    }, dwell)
+
+    return () => {
+      if (autoScrollInterval.current) clearTimeout(autoScrollInterval.current)
+      if (fadeTimeout.current) clearTimeout(fadeTimeout.current)
     }
-  }, [testimonials.length, isAutoScrollPaused])
+    // depends on .length, not the array itself: a changing reference would reset
+    // the timer every render and the carousel would never advance
+  }, [currentIndex, testimonials.length, isAutoScrollPaused])
 
   const handleWheel = (e: React.WheelEvent) => {
     if (wheelTimeout.current) {
@@ -63,7 +83,7 @@ const TestimonialsCarousel = ({
             )
           }
           setIsTransitioning(false)
-        }, 300)
+        }, FADE_MS)
       }
     }, 50)
   }
@@ -91,7 +111,7 @@ const TestimonialsCarousel = ({
           )
         }
         setIsTransitioning(false)
-      }, 300)
+      }, FADE_MS)
     }
   }
 
@@ -105,7 +125,7 @@ const TestimonialsCarousel = ({
       setTimeout(() => {
         setCurrentIndex(index)
         setIsTransitioning(false)
-      }, 300)
+      }, FADE_MS)
     }
   }
 
@@ -116,16 +136,16 @@ const TestimonialsCarousel = ({
   // console.log("textcolor", textColor)
 
   return (
-    <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-16 pb-24">
+    <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-8 pb-10 md:pt-6 md:pb-8">
       <div
-        className="bg-opacity-60 rounded-lg p-6 text-center cursor-pointer relative"
+        className="bg-opacity-60 rounded-lg p-4 text-center cursor-pointer relative"
         onWheel={handleWheel}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onClick={handleTestimonialClick}
       >
-        <div className="h-[300px] flex flex-col justify-center items-center relative overflow-hidden">
+        <div className="h-[300px] md:h-[230px] flex flex-col justify-center items-center relative overflow-hidden">
           <div
             className={`transition-all duration-600 ease-in-out ${
               isTransitioning
@@ -135,7 +155,7 @@ const TestimonialsCarousel = ({
           >
             <p
             style={{ color: textColor }}
-              className={`font-neco italic text-[20px] sm:text-[24px] leading-relaxed line-clamp-7`}
+              className={`font-neco italic text-[20px] leading-relaxed line-clamp-7`}
             >
               {testimonials[currentIndex]?.quote}
             </p>
@@ -155,7 +175,7 @@ const TestimonialsCarousel = ({
         </div>
 
         {/* Navigation Dots */}
-        <div className="flex justify-center gap-3.5 mt-8">
+        <div className="flex justify-center gap-3.5 mt-4">
           {testimonials.map((_, index) => {
             const isActive = index === currentIndex
 

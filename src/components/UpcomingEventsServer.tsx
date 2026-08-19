@@ -1,6 +1,5 @@
 import { cache } from 'react'
 import UpcomingEventsClient from './UpcomingEventsClient'
-import TestimonialsSection from './TestimonialsSection'
 
 interface Event {
   id: string
@@ -182,7 +181,7 @@ export default async function UpcomingEventsServer() {
 
   return (
     <div
-      className="w-full relative mb-30"
+      className="w-full relative"
       style={{
         backgroundImage: `
           linear-gradient(
@@ -199,8 +198,6 @@ export default async function UpcomingEventsServer() {
         initialFeaturedItem={featuredItem}
         initialUpcomingItems={upcomingItems}
       />
-
-      <TestimonialsSection textColor="#fff" />
     </div>
   )
 }
