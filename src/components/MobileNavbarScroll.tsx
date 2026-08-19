@@ -79,11 +79,11 @@ const MobileNavbarScroll = ({ textColor, isNotHome, showOnScrollUp = false }: Mo
           {/* Clickable circle logo  */}
           <Link
             href="/"
-            className="relative flex items-center justify-center mt-8 z-50 transition-all duration-300 w-[82.43]"
+            className="relative flex items-center justify-center mt-8 z-50 transition-all duration-300 w-20 h-20 shrink-0"
           >
             <img
               src="/Logo_for_video_Corner-04.png"
-              alt="Logo"
+              alt="Mahabharata Dialogues"
               className="w-full h-full object-cover rounded-full"
             />
           </Link>

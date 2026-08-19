@@ -394,70 +394,84 @@ const UpcomingEventsClient =  ({
             backgroundSize: '240px 240px',
           }}
         >
-          <div className="flex flex-col w-[calc(100%-2rem)] max-w-[520px] items-center bg-[#1D5C75CC] my-10">
-            <p className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] pt-6`}>
-              COMING UP NEXT
-            </p>
-            <h2 className={`${merri.className} text-white font-extrabold text-[32px] italic px-4 md:px-10 text-center leading-relaxed mt-2`}>
-              {featuredItem.title}
-            </h2>
-            <div className="flex flex-col px-4 justify-center items-center my-2">
-              <h3 className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] text-center pb-3`}>
-                {getDisplayDate(featuredItem)}
-              </h3>
-              {featuredItem.venue && (
-                <div className="flex justify-center pb-4">
-                  <div className="flex items-start gap-2 max-w-xl">
-                    <div className="text-center md:max-w-none">
-                      <h4 className={`${merri.className} text-white font-normal text-[16px] px-4 md:text-[18px] leading-snug`}>
-                        {featuredItem.venue},
-                      </h4>
-                      <h4 className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}>
-                        {featuredItem.city}
-                      </h4>
-                      {featuredItem.mapUrl && (
-                        <a
-                          href={featuredItem.mapUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Open in Google Maps"
-                          className={`${merri.className} inline-flex items-center gap-1 text-white hover:text-blue-300 transition-colors shrink-0 text-[14px] uppercase mt-[6px]`}
-                        >
-                          <MapPin size={18} />
-                          <span>View in Map</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="w-full">
+          <div
+            className="grid w-[calc(100%-2rem)] max-w-[520px] lg:max-w-[1080px] bg-[#1D5C75CC] my-10
+              grid-cols-1 lg:grid-cols-[1fr_1.1fr] lg:grid-rows-[auto_1fr]"
+          >
+            {/* Image — keeps its native landscape ratio, never cropped to fill.
+                Same 465:285 frame the strip cards use. */}
+            <div className="order-3 lg:order-none lg:col-start-1 lg:row-start-1">
               <img
                 src={featuredItem.coverImage || '/assets/videoImg.png'}
                 alt={featuredItem.title}
-                className="w-full object-cover"
+                className="w-full object-cover lg:aspect-465/285"
               />
             </div>
-            {featuredItem.description && (
-              <p className={`${merri.className} text-white font-light text-[16px] md:text-[18px] px-4 md:px-10 italic py-6 text-center whitespace-pre-line`}>
-                {renderTextWithLineBreaks(featuredItem.description)}
-              </p>
-            )}
-            <div className="flex justify-center items-center gap-2 pb-8 w-[80%] mx-auto">
-              <div className="flex-1">
-                <CustomButton
-                  text={'LEARN MORE'}
-                  bgColor="#78B0C7"
-                  textColor="#FFFFFF"
-                  url={featuredItem.type === 'retreat' ? '/retreats' : `/events/${featuredItem.slug}`}
-                />
+
+            {/* When / where — sits under the image on desktop so the left column
+                carries real content instead of dead ground. */}
+            <div className="order-2 lg:order-none lg:col-start-1 lg:row-start-2 flex flex-col items-center lg:items-start text-center lg:text-left px-4 lg:px-10 my-2 lg:my-0 lg:py-8">
+              <h3 className={`${merri.className} text-white font-bold text-[16px] md:text-[18px] pb-3`}>
+                {getDisplayDate(featuredItem)}
+              </h3>
+              {featuredItem.venue && (
+                <div className="flex flex-col items-center lg:items-start pb-4 lg:pb-0">
+                  <h4 className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}>
+                    {featuredItem.venue},
+                  </h4>
+                  <h4 className={`${merri.className} text-white font-normal text-[16px] md:text-[18px] leading-snug`}>
+                    {featuredItem.city}
+                  </h4>
+                  {featuredItem.mapUrl && (
+                    <a
+                      href={featuredItem.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Open in Google Maps"
+                      className={`${merri.className} inline-flex items-center gap-1 text-white hover:text-blue-300 transition-colors shrink-0 text-[14px] uppercase mt-[6px]`}
+                    >
+                      <MapPin size={18} />
+                      <span>View in Map</span>
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* `contents` on mobile lets these two children order individually against
+                the image and meta; on desktop they become one centred right-hand column. */}
+            <div className="contents lg:flex lg:flex-col lg:justify-center lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:px-12 lg:py-12">
+              <div className="order-1 lg:order-none flex flex-col items-center lg:items-start text-center lg:text-left px-4 md:px-10 lg:px-0 pt-6 lg:pt-0">
+                <p className={`${merri.className} text-[#78B0C7] font-bold text-[16px] md:text-[18px] tracking-[0.22em]`}>
+                  COMING UP NEXT
+                </p>
+                <h2 className={`${merri.className} text-white font-extrabold text-[32px] lg:text-[46px] italic leading-relaxed lg:leading-[1.15] text-balance mt-2 lg:mt-3`}>
+                  {featuredItem.title}
+                </h2>
               </div>
-              <div
-                className="bg-[#D12127] p-[16px] cursor-pointer"
-                onClick={() => window.open(featuredItem.bookingUrl, '_blank')}
-              >
-                <img src="/Arrow_up-right.png" alt="share" className="w-6 h-6" />
+
+              <div className="order-4 lg:order-none flex flex-col items-center lg:items-start px-4 md:px-10 lg:px-0">
+                {featuredItem.description && (
+                  <p className={`${merri.className} text-white font-light text-[16px] md:text-[18px] italic py-6 lg:pt-6 lg:pb-8 text-center lg:text-left lg:max-w-[46ch] whitespace-pre-line`}>
+                    {renderTextWithLineBreaks(featuredItem.description)}
+                  </p>
+                )}
+                <div className="flex justify-center lg:justify-start items-center gap-2 pb-8 lg:pb-0 w-[80%] lg:w-auto mx-auto lg:mx-0">
+                  <div className="flex-1 lg:flex-none lg:w-[260px]">
+                    <CustomButton
+                      text={'LEARN MORE'}
+                      bgColor="#78B0C7"
+                      textColor="#FFFFFF"
+                      url={featuredItem.type === 'retreat' ? '/retreats' : `/events/${featuredItem.slug}`}
+                    />
+                  </div>
+                  <div
+                    className="bg-[#D12127] p-[16px] cursor-pointer shrink-0"
+                    onClick={() => window.open(featuredItem.bookingUrl, '_blank')}
+                  >
+                    <img src="/Arrow_up-right.png" alt="share" className="w-6 h-6" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
