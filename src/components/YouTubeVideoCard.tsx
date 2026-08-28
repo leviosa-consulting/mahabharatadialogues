@@ -43,7 +43,7 @@ export default function YouTubeVideoCard({
       <div
         className={`
           text-white
-          ${isRow ? 'text-center md:text-left md:max-w-[300px]' : 'text-left'}
+          ${isRow ? 'text-center md:text-left md:max-w-[300px]' : 'text-center md:text-left'}
         `}
       >
         <h2 className={`${merri.className} font-bold text-[14px] md:text-[16px]`}>

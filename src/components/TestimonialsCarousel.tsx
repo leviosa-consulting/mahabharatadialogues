@@ -136,7 +136,7 @@ const TestimonialsCarousel = ({
   // console.log("textcolor", textColor)
 
   return (
-    <div className="flex flex-col justify-center items-center gap-2 max-w-2xl mx-auto pt-8 pb-10 md:pt-6 md:pb-8">
+    <div className="flex flex-col justify-center items-center gap-2 max-w-3xl mx-auto pt-8 pb-10 md:pt-6 md:pb-8">
       <div
         className="bg-opacity-60 rounded-lg p-4 text-center cursor-pointer relative"
         onWheel={handleWheel}
@@ -145,7 +145,7 @@ const TestimonialsCarousel = ({
         onTouchEnd={handleTouchEnd}
         onClick={handleTestimonialClick}
       >
-        <div className="h-[300px] md:h-[230px] flex flex-col justify-center items-center relative overflow-hidden">
+        <div className="h-[300px] md:h-[250px] flex flex-col justify-center items-center relative overflow-hidden">
           <div
             className={`transition-all duration-600 ease-in-out ${
               isTransitioning
@@ -155,7 +155,7 @@ const TestimonialsCarousel = ({
           >
             <p
             style={{ color: textColor }}
-              className={`font-neco italic text-[20px] leading-relaxed line-clamp-7`}
+              className={`font-neco italic text-[20px] md:text-[22px] leading-relaxed line-clamp-7`}
             >
               {testimonials[currentIndex]?.quote}
             </p>
@@ -175,28 +175,38 @@ const TestimonialsCarousel = ({
         </div>
 
         {/* Navigation Dots */}
-        <div className="flex justify-center gap-3.5 mt-4">
+        <div className="flex justify-center gap-3.5 mt-6">
           {testimonials.map((_, index) => {
             const isActive = index === currentIndex
 
             return (
-              <div
+              /* p-2 -m-2 grows the tap target to 28px — past the 24px minimum —
+                 while the negative margin cancels it in layout, so the dot row
+                 doesn't get taller. A real <button> so it's keyboard reachable;
+                 the old <div onClick> could not be tabbed to or activated. */
+              <button
                 key={index}
+                type="button"
+                aria-label={`Show testimonial ${index + 1} of ${testimonials.length}`}
+                aria-current={isActive ? 'true' : undefined}
                 onClick={(e) => {
                   e.stopPropagation()
                   handleDotClick(index)
                 }}
-                className={`
-          w-2.5 h-2.5
+                className="p-2 -m-2 cursor-pointer"
+              >
+                <span
+                  className={`
+          block w-3 h-3
           rounded-full
-          cursor-pointer
           transition-all duration-300
           ${isActive ? 'scale-125' : ''}
         `}
-                style={{
-                  backgroundColor: isActive ? textColor : '#9CA3AF', 
-                }}
-              />
+                  style={{
+                    backgroundColor: isActive ? textColor : '#9CA3AF',
+                  }}
+                />
+              </button>
             )
           })}
         </div>

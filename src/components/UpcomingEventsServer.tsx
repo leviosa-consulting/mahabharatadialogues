@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import UpcomingEventsClient from './UpcomingEventsClient'
+import { adminDB } from '@/firebase/firebaseAdmin'
 
 interface Event {
   id: string
@@ -86,20 +87,31 @@ const getUpcomingItems = cache(async () => {
   thirtyDaysLater.setDate(now.getDate() + 300)
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
-    const [retreatsResponse, eventsResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/retreats`, {
-        next: { revalidate: 43200 },
-        signal: AbortSignal.timeout(8000),
-      }),
-      fetch(`${baseUrl}/api/events`, {
-        next: { revalidate: 43200 },
-        signal: AbortSignal.timeout(8000),
-      }),
+    /* Read Firestore directly instead of fetching this app's own /api routes over
+       HTTP. The round-trip made rendering depend on NEXT_PUBLIC_SITE_URL matching a
+       live port, and ECONNREFUSED was swallowed by the catch below — producing a
+       200 page with no events and nothing in the browser console.
+
+       The raw docs below never reach a client component: everything is mapped into
+       explicit primitive Event objects further down, which is what keeps Firestore
+       SDK objects out of the RSC payload. */
+    const [retreatsSnapshot, eventsSnapshot] = await Promise.all([
+      adminDB.collection('retreats').orderBy('created_at', 'desc').get(),
+      adminDB.collection('events').orderBy('eventDate', 'desc').get(),
     ])
 
-    const retreatsData = await retreatsResponse.json()
-    const eventsData = await eventsResponse.json()
+    const retreatsData = {
+      success: true,
+      data: retreatsSnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() }) as RetreatData,
+      ),
+    }
+    const eventsData = {
+      success: true,
+      data: eventsSnapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() }) as EventData,
+      ),
+    }
 
     const allItems: Event[] = []
 

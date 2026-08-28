@@ -32,7 +32,7 @@ export default function HeroSection() {
               className="w-full max-w-[220px]"
             />
           </div>
-          <p className={`${merri.className} text-white text-center text-sm lg:text-base font-medium italic mt-4 px-6 drop-shadow-md`}>
+          <p className={`${merri.className} text-white text-center text-2xl lg:text-5xl lg:leading-tight font-normal italic mt-4 lg:mt-8 px-6 drop-shadow-md`}>
             Stories from the past.
             <br />
             Conversations for today.
@@ -56,35 +56,40 @@ export default function HeroSection() {
        */}
       <div className="sm:hidden w-full h-full flex flex-col overflow-hidden">
 
-        {/* Circle logo */}
-        <div className="flex justify-center pt-3">
+        {/* Circle logo — shrink-0 so flex never compresses it */}
+        <div className="flex justify-center pt-3 shrink-0">
           <img
             src="/Web_Assets-08.png"
             alt="Mahabharata Dialogues"
-            className="w-[65%] max-w-[260px]"
+            className="w-[56%] max-w-[220px]"
           />
         </div>
 
-        {/* Characters — prominent, fills most of remaining height */}
-        <div className="flex h-[min(90vw,340px)] overflow-hidden gap-10">
+        {/* Characters — absorbs whatever height the logo and tagline leave.
+            The art is tall and narrow (aspect ~0.58) while these boxes are
+            proportionally wider, so object-contain used to scale by height and
+            leave dead space at the screen edges. w-full h-auto fills the width
+            instead and lets overflow-hidden crop the bottom, which is the right
+            place to lose pixels since the heads sit at the top. */}
+        <div className="flex flex-1 min-h-0 max-h-[min(90vw,340px)] overflow-hidden gap-10">
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-02.png"
               alt="Left character"
-              className="w-full h-full object-contain object-top"
+              className="w-full h-auto"
             />
           </div>
           <div className="flex-1 overflow-hidden">
             <img
               src="/Web_Assets-09.png"
               alt="Right character"
-              className="w-full h-full object-contain object-top"
+              className="w-full h-auto"
             />
           </div>
         </div>
 
         {/* Tagline — below characters */}
-        <p className={`${merri.className} text-white text-center text-xs font-medium italic mt-2 mb-1 px-6 drop-shadow-md`}>
+        <p className={`${merri.className} text-white text-center text-2xl font-normal italic mt-2 mb-4 px-6 shrink-0 drop-shadow-md`}>
           Stories from the past. Conversations for today.
         </p>
 

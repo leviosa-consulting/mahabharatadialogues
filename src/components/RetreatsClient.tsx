@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import CustomButton from './CustomButton'
 import YouTubeSection from './YouTubeSection'
-import LatestBlogs from '@/lib/LatestBlogs'
 import { merri } from '@/app/fonts/merri'
 import Footer from './Footer'
 
@@ -32,7 +31,12 @@ export default function RetreatsClient({
 
   return (
     <section
-      className="relative w-full overflow-hidden flex flex-col justify-center "
+      /* pt matches the horizontal mx-2 xl:mx-36 inset in spirit: without it the
+         first panel sits flush against the section top while being inset left and
+         right. The padding also exposes the gradient's lighter #47ABD880 half,
+         which is what actually separates the panel from the same-toned
+         testimonials section above it. */
+      className="relative w-full overflow-hidden flex flex-col justify-center pt-8 xl:pt-16"
       style={{
         backgroundImage: `
     linear-gradient(
@@ -85,8 +89,8 @@ export default function RetreatsClient({
       {/* blogs */}
       <div className="mx-2 xl:mx-36 overflow-hidden bg-[#1D5C7580]">
         <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
-          {/* YOUTUBE*/}
-          <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
+          {/* YOUTUBE — spans the full row since the blog panel was removed */}
+          <div className="order-1 md:order-0 col-start-1 md:col-span-10 xl:col-span-12 bg-[#D1212780]">
             <div className="flex flex-col gap-6 px-6 py-8">
               <h2
                 className={`${merri.className} text-[18px] text-center md:text-left text-white font-bold`}
@@ -94,21 +98,12 @@ export default function RetreatsClient({
                 LATEST ON YOUTUBE
               </h2>
 
-              <YouTubeSection videos={videos} count={2} layout="row" />
-            </div>
-          </div>
-
-          {/* BLOG */}
-          <div className="order-2 md:order-0 md:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
-            <div className="flex flex-col px-6 py-8">
-              <h2
-                className={`${merri.className} text-white font-bold text-[18px] text-center md:text-left`}
-              >
-                ON OUR BLOG
-              </h2>
-
-             <LatestBlogs blogs={blogs} count={4} />
-
+              <YouTubeSection
+                videos={videos}
+                count={2}
+                columns={2}
+                layout="column"
+              />
             </div>
           </div>
         </div>
