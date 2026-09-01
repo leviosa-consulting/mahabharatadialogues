@@ -11,8 +11,16 @@ interface NavProps {
 const Navbar = ({ textColor, isNotHome }: NavProps) => {
   return (
     <div className="hidden sm:flex justify-center w-full">
+      {/* Home uses a definite w-4xl (the old max-w-4xl cap, now a fixed width) rather than w-full.
+          In the hero this navbar sits inside a content-sized shrink-0 column, so
+          w-full resolved to the content's own width — zero free space, nothing for
+          flex-1 to distribute, and the sides kept their natural widths. Since the
+          left group has one more link than the right (Blog is hidden), that pushed
+          the logo off-centre. A definite width gives flex-1 something to split, so
+          both sides come out equal and the logo lands dead centre.
+          isNotHome keeps w-full: those pages are full-width and already had slack. */}
       <div
-        className={`flex items-center w-full ${isNotHome ? 'px-16' : 'max-w-4xl px-4'}`}
+        className={`flex items-center ${isNotHome ? 'w-full px-16' : 'w-4xl px-4'}`}
       >
         
         <div className={`flex flex-1 justify-end ${isNotHome ? 'gap-12' : 'gap-6'}`}>
@@ -39,7 +47,10 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
           </Link>
         </div>
 
-        {/* CENTER LOGO — fixed width so both sides get truly equal remaining space */}
+        {/* CENTER LOGO — stays in flow between the two flex-1 groups. flex-1 is
+            flex:1 1 0%, so the sides only end up equal when the container has free
+            space to hand out; that is why the home branch below sets a definite
+            width instead of w-full. */}
         <Link href="/" className={`flex justify-center flex-shrink-0 ${isNotHome ? 'mx-12' : 'mx-8'}`}>
           <img
             src={isNotHome ? '/Logo_for_video_Corner-04.png' : '/Web_Assets-08.png'}

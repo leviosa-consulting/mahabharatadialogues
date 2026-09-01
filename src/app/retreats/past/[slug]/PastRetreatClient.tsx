@@ -1,8 +1,7 @@
 // app/retreats/past/[slug]/page.tsx
 'use client'
 
-import React, { useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { merri } from '@/app/fonts/merri'
 import Link from 'next/link'
@@ -43,9 +42,7 @@ export default function PastRetreatClient({
   retreat: Retreat
   testimonials: any
 }) {
-  const router = useRouter()
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
 
   const getYoutubeEmbedUrl = (url: string): string | null => {
     try {
@@ -103,16 +100,6 @@ export default function PastRetreatClient({
       : `/retreats/schedule/${retreat.id}`
   }
 
-  const handleClose = () => {
-    router.push('/retreats')
-  }
-
-  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (contentRef.current && !contentRef.current.contains(e.target as Node)) {
-      handleClose()
-    }
-  }
-
   if (!retreat) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -136,7 +123,7 @@ export default function PastRetreatClient({
     : null
 
   return (
-    <div onClick={handleBackgroundClick}>
+    <div>
     
       <div className="bg-[#1D5C75CC] w-full min-h-screen">
         {/* Navbar*/}
@@ -156,7 +143,6 @@ export default function PastRetreatClient({
           <div className="grid grid-cols-12">
             <div
               className="col-span-12 md:col-start-2 md:col-span-10"
-              ref={contentRef}
             >
               {/* YouTube Video — replaces the blog hero image */}
               {youtubeEmbedUrl && (
@@ -171,6 +157,37 @@ export default function PastRetreatClient({
                     />
                   </div>
                 </figure>
+              )}
+
+              {/* Photos Gallery — placed ahead of the text card on purpose: this is a
+                  recap of an event that already happened, so the visual story leads. */}
+              {retreat.photos && retreat.photos.length > 0 && (
+                <div className="bg-[#47ABD8B2]">
+                  <div className="grid grid-cols-12">
+                    <div className="col-span-12 lg:col-span-10 lg:col-start-2 px-4 sm:px-6 lg:px-8 py-8">
+                      <h2
+                        className={`${merri.className} text-center text-white text-[20px] font-bold my-9 uppercase`}
+                      >
+                        Gallery
+                      </h2>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-10">
+                        {retreat.photos.map((photo, idx) => (
+                          <div
+                            key={idx}
+                            className="aspect-square overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl transition-shadow"
+                            onClick={() => openLightbox(idx)}
+                          >
+                            <img
+                              src={photo}
+                              alt={`Retreat photo ${idx + 1}`}
+                              className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {/* White content card — same as blog detail */}
@@ -197,14 +214,16 @@ export default function PastRetreatClient({
                               {retreat.title}
                             </h1>
                           </div>
-
-                          <button
-                            onClick={handleClose}
-                            className="shrink-0 text-[#1D5C75] flex justify-end items-end hover:bg-gray-100 p-1 transition-colors"
-                            aria-label="Close"
+                          {/* A page route, not a dialog: a back link, not a close X.
+                              Deliberately smaller than the 45px X it replaces so it
+                              does not compete with the retreat title. */}
+                          <Link
+                            href="/retreats"
+                            className={`${merri.className} shrink-0 inline-flex items-center gap-2 text-[#1D5C75] text-[14px] md:text-[16px] font-bold hover:underline`}
                           >
-                            <X className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-[45px] lg:h-[45px]" />
-                          </button>
+                            <ArrowLeft size={18} />
+                            <span>Back to retreats</span>
+                          </Link>
                         </div>
 
                         {/* Date / Venue row */}
@@ -233,14 +252,11 @@ export default function PastRetreatClient({
                         )}
                       </div>
 
-                      {/* Testimonials */}
-                      <TestimonialsCarousel
-                        testimonials={testimonials}
-                        textColor={'#1D5C75'}
-                      />
-
-                      {/* CTA Button */}
-                      <div className="flex justify-center items-center mb-10">
+                      {/* CTA Button — above the testimonials, not below them. The
+                          schedule is the natural next step after reading what the
+                          retreat was; buried under a carousel it was the last thing
+                          on the page. */}
+                      <div className="flex justify-center items-center">
                         <CustomButton
                           text="VIEW SCHEDULE"
                           bgColor="#1D5C75"
@@ -248,40 +264,21 @@ export default function PastRetreatClient({
                           url={getScheduleUrl(retreat)}
                         />
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Photos Gallery — mirrors "Related Blogs" section */}
-              {retreat.photos && retreat.photos.length > 0 && (
-                <div className="bg-[#47ABD8B2] mt-8">
-                  <div className="grid grid-cols-12">
-                    <div className="col-span-12 lg:col-span-10 lg:col-start-2 px-4 sm:px-6 lg:px-8 py-8">
-                      <h2
-                        className={`${merri.className} text-center text-white text-[20px] font-bold my-9 uppercase`}
-                      >
-                        Gallery
-                      </h2>
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-10">
-                        {retreat.photos.map((photo, idx) => (
-                          <div
-                            key={idx}
-                            className="aspect-square overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl transition-shadow"
-                            onClick={() => openLightbox(idx)}
-                          >
-                            <img
-                              src={photo}
-                              alt={`Retreat photo ${idx + 1}`}
-                              className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                            />
-                          </div>
-                        ))}
+                      {/* Testimonials — the negative margin cancels the carousel's
+                          own pt-8 md:pt-6. Done here rather than in the component
+                          because TestimonialsCarousel is shared with the home page,
+                          where that padding is wanted. */}
+                      <div className="-mt-8 md:-mt-6">
+                        <TestimonialsCarousel
+                          testimonials={testimonials}
+                          textColor={'#1D5C75'}
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { cache } from 'react'
+import { adminDB } from '@/firebase/firebaseAdmin'
 import FooterWithBlogs from '@/components/FooterWithBlogs'
 import PastRetreatClient from './PastRetreatClient'
 import { notFound } from 'next/navigation'
@@ -10,34 +11,27 @@ export const revalidate = 43200
 
 const getRetreat = cache(async (slug: string) => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:5000'
+    /* Read Firestore directly rather than fetching this app's own API over HTTP.
+       The round-trip made rendering depend on NEXT_PUBLIC_SITE_URL pointing at a
+       live port and on the API route compiling; when that route 500'd, the page
+       fell through to a fallback matching r.id against a slug — which can never
+       match, since they are unrelated values — and called notFound(). Same
+       reasoning as UpcomingEventsServer. */
+    const snapshot = await adminDB
+      .collection('retreats')
+      .where('slug', '==', slug)
+      .limit(1)
+      .get()
 
-    const slugRes = await fetch(
-      `${baseUrl}/api/retreats/by-slug/${slug}`,
-      {
-        next: { revalidate: 43200 },
-        signal: AbortSignal.timeout(8000),
-      }
-    )
+    if (snapshot.empty) return null
 
-    if (slugRes.ok) {
-      const slugData = await slugRes.json()
-      if (slugData.success && slugData.data) return slugData.data
-    }
+    const doc = snapshot.docs[0]
 
-    const allRes = await fetch(`${baseUrl}/api/retreats`, {
-      next: { revalidate: 43200 },
-      signal: AbortSignal.timeout(8000),
-    })
-
-    if (!allRes.ok) return null
-
-    const allData = await allRes.json()
-
-    if (!allData.success) return null
-
-    return allData.data.find((r: any) => r.id === slug) || null
-  } catch {
+    /* JSON round-trip so the client component receives exactly the plain shapes
+       the HTTP hop used to hand it, whatever field types Firestore returns. */
+    return JSON.parse(JSON.stringify({ id: doc.id, ...doc.data() }))
+  } catch (error) {
+    console.error('Error fetching retreat:', error)
     return null
   }
 })

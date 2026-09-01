@@ -1,5 +1,6 @@
 import React from 'react'
 import { Mail, Phone, Youtube, Instagram, Linkedin } from 'lucide-react'
+import { merri } from '@/app/fonts/merri'
 
 const Footer = () => {
   return (
@@ -14,6 +15,16 @@ const Footer = () => {
           text-center
         "
       >
+        {/* Sized above the rows below (18/22/32) at a steady ~1.25-1.33x so the
+            hierarchy reads top-down at every breakpoint, not just desktop. merri
+            because every section heading on the site is merri, even where the body
+            text — here font-neco — is not. */}
+        <h2
+          className={`${merri.className} text-white uppercase text-center text-[24px] sm:text-[28px] md:text-[40px] font-bold mb-10`}
+        >
+          Contact Us
+        </h2>
+
         {/* Rows stack on mobile and go inline from md up. Stacking is deliberate:
             at 360px only ~328px is usable, and the email row needs ~474px, so it
             wraps no matter what. Left to flex-wrap alone, email wrapped while phone
@@ -40,7 +51,7 @@ const Footer = () => {
         </div>
 
         {/* Phone */}
-        <div className="flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center mt-8 md:mt-3">
+        <div className="flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center mt-9 md:mt-6">
           <span className='font-bold'>Call us at :</span>
           <div className="flex items-center gap-2">
             <Phone className="w-5 h-5 md:w-7 md:h-7" />
@@ -50,7 +61,7 @@ const Footer = () => {
 
         {/* Social Icons — the icon row keeps its own gap-4 so the circles' spacing
             stays independent of the gap between label and row. */}
-        <div className="flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center md:gap-3 mt-10 md:mt-8">
+        <div className="flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center md:gap-3 mt-9 md:mt-6">
           <span className='font-bold'>Follow us at :</span>
           <div className="flex gap-4">
           <a

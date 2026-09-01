@@ -32,7 +32,7 @@ export default function HeroSection() {
               className="w-full max-w-[220px]"
             />
           </div>
-          <p className={`${merri.className} text-white text-center text-2xl lg:text-5xl lg:leading-tight font-normal italic mt-4 lg:mt-8 px-6 drop-shadow-md`}>
+          <p className={`${merri.className} text-white text-center text-2xl lg:text-7xl lg:leading-tight font-normal italic mt-4 lg:mt-8 px-6 drop-shadow-md`}>
             Stories from the past.
             <br />
             Conversations for today.

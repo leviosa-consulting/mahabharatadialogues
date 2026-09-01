@@ -31,6 +31,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
   const settings = usePageSettingsStore((s) => s.settings)
 
+
   const coreTeamMembers = members.filter((m) => m.teamType === 'core')
   const collaboratorMembers = members.filter(
     (m) => m.teamType === 'collaborators',
@@ -46,11 +47,12 @@ export default function AboutClient({ members }: { members: Member[] }) {
 
   return (
     <div>
-      {/* Hero + strip share a full-viewport flex column so both always land on the
-          first screen — the same pattern the home page uses. The hero takes the
-          leftover height (flex-1 min-h-0) and the strip keeps its own (shrink-0). */}
-      <div className="flex flex-col h-[100svh]">
-        <div className="flex-1 min-h-0 flex flex-col">
+      {/* The hero sizes to its content rather than a fixed viewport height: the about
+          copy is ~888 characters, which at this size needs ~640px against roughly
+          400px of leftover screen — so forcing 100svh could only ever clip or scroll
+          it, and on a phone no readable size fits at all. */}
+      <div className="flex flex-col">
+        <div className="flex flex-col">
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
           <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
@@ -59,16 +61,10 @@ export default function AboutClient({ members }: { members: Member[] }) {
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
         <NavbarScroll textColor="#1D5C75" />
-        {/* flex-1 + items-center centres the title in whatever height is left
-            between the navbar and the strip. my-10 is what keeps it clear of both:
-            as a flex item's margin it is subtracted from the space flex-1 can claim,
-            so the box can never grow into either neighbour. overflow-y-auto is the
-            short-viewport fallback — a long title scrolls inside its own box rather
-            than spilling over the navbar or the strip. */}
-        <div className="mx-4 xl:mx-10 my-10 flex-1 min-h-0 overflow-y-auto flex items-center">
+        <div className="mx-6 md:mx-12 xl:mx-20 my-10">
           <div className="grid grid-cols-12 gap-3 w-full">
             <div className="col-start-1 col-span-12">
-              <p className="font-neco font-medium italic text-[#1D5C75] text-[20px] md:text-[28px] text-center">
+              <p className="font-neco font-medium italic text-[#1D5C75] text-[20px] md:text-[28px] text-center leading-relaxed max-w-[65ch] mx-auto">
                 {settings?.about.title}
               </p>
             </div>
@@ -133,8 +129,8 @@ export default function AboutClient({ members }: { members: Member[] }) {
       </div>
 
       {/* CORE TEAM */}
-      <div className="my-30">
-        <div className="flex flex-col md:flex-row justify-center items-center my-12 ">
+      <div className="my-16">
+        <div className="flex flex-col md:flex-row justify-center items-center mb-12 ">
           <h2
             className={`${merri.className} font-bold text-[#1D5C75] text-[18px]`}
           >
@@ -144,12 +140,12 @@ export default function AboutClient({ members }: { members: Member[] }) {
         <div className="w-full">
           {coreTeamMembers.length > 0 && (
             <div
-              /* max-w-5xl, not 7xl: the container is what sizes the cards. At lg the
-                 track is (1024 - 2*64)/3 = 299px, so the card max-w-[320px] cap stops
+              /* The container is what sizes the photos — the card *is* the image. At lg the
+                 track is (896 - 2*64)/3 = 256px, so the card max-w-[320px] cap stops
                  binding — which matters because with place-items-center a binding cap
                  dumps the leftover track width into the gutter, making the visual gap
                  grid-gap + (track - card) rather than grid-gap. */
-              className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 place-items-center px-2 md:px-0 max-w-5xl">
+              className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-8 place-items-center px-2 md:px-0 max-w-4xl">
               {coreTeamMembers.map((item, index) => (
                 <div
                   key={index}
@@ -191,8 +187,8 @@ export default function AboutClient({ members }: { members: Member[] }) {
       </div>
 
       {/* COLLABORATORS */}
-      <div className="my-30">
-        <div className="flex justify-center items-center my-12 ">
+      <div className="my-16">
+        <div className="flex justify-center items-center mb-12 ">
           <h2
             className={`${merri.className} font-bold text-[#1D5C75] text-[18px]`}
           >
@@ -205,7 +201,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
               <p className="text-gray-600">No collaborators found.</p>
             </div>
           ) : (
-            <div className="w-full mx-auto px-2 md:px-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-16">
+            <div className="w-full mx-auto px-2 md:px-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl gap-16">
               {collaboratorMembers.map((item, index) => (
                 <div
                   key={index}
@@ -213,7 +209,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
                   onClick={() => handleMemberClick(item)}
                 >
                   {/* IMAGE */}
-                  <div className="w-full h-80 overflow-hidden">
+                  <div className="w-full aspect-[4/5] overflow-hidden">
                     <img
                       src={item.imageUrl}
                       alt={item.name}

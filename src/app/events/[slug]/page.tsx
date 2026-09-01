@@ -130,7 +130,7 @@ export default async function Page({
         }}
         className="pt-12"
       >
-        <FooterWithBlogs />
+        <FooterWithBlogs showBlogs={false} />
       </div>
     </>
   )
