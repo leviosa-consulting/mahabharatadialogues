@@ -127,7 +127,7 @@ export default async function EventsPage() {
           backgroundSize: '240px 240px',
         }}
       >
-        <FooterWithBlogs />
+        <FooterWithBlogs showBlogs={false} />
       </div>
     </>
   )

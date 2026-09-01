@@ -101,13 +101,14 @@ const MobileNavbar = ({ textColor, isNotHome }: MobileNavbarProps) => {
             Products
           </Link>
 
-          <Link
+          {/* Blog link hidden for now — restore by uncommenting */}
+          {/* <Link
             href="/blogs"
             onClick={() => setOpen(false)}
             className={`${merri.className} text-white font-bold uppercase text-[18px]`}
           >
             Blog
-          </Link>
+          </Link> */}
           <Link
             href="/about"
             onClick={() => setOpen(false)}

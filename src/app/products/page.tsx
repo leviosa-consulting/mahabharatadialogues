@@ -55,7 +55,7 @@ export default async function Page() {
           backgroundSize: '240px 240px',
         }}
       >
-        <FooterWithBlogs />
+        <FooterWithBlogs showBlogs={false} />
       </div>
     </>
   )

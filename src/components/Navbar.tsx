@@ -53,13 +53,14 @@ const Navbar = ({ textColor, isNotHome }: NavProps) => {
 
         {/* RIGHT — flex-1 + justify-start pulls links toward the logo */}
         <div className={`flex flex-1 justify-start ${isNotHome ? 'gap-12' : 'gap-6'}`}>
-          <Link
+          {/* Blog link hidden for now — restore by uncommenting */}
+          {/* <Link
             href="/blogs"
             className={`${merri.className} font-bold uppercase text-[14px]`}
             style={{ color: textColor }}
           >
             Blog
-          </Link>
+          </Link> */}
           <Link
             href="/about"
             className={`${merri.className} font-bold uppercase text-[14px]`}

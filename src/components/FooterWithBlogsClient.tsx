@@ -1,8 +1,8 @@
 
 
-import { Mail, Phone, Youtube, Instagram, Linkedin } from 'lucide-react'
 import LatestBlogs from '@/lib/LatestBlogs'
 import YouTubeSection from './YouTubeSection'
+import Footer from './Footer'
 import { merri } from '@/app/fonts/merri'
 
 
@@ -18,11 +18,14 @@ export default function FooterWithBlogsClient({
   blogs,
   videos,
   count = 2,
+  showBlogs = true,
 }: {
   blogs: Blog[]
   videos: any[]
   count?: number
-}) { 
+  /* Hide the "ON OUR BLOG" column and let YouTube fill the card instead. */
+  showBlogs?: boolean
+}) {
 
 
   return (
@@ -33,7 +36,13 @@ export default function FooterWithBlogsClient({
           <div className="grid grid-cols-1 md:grid-cols-10 xl:grid-cols-12">
             
             {/* YOUTUBE */}
-            <div className="order-1 md:order-0 col-start-1 md:col-span-6 xl:col-span-8 bg-[#D1212780]">
+            <div
+              className={`order-1 md:order-0 col-start-1 bg-[#D1212780] ${
+                showBlogs
+                  ? 'md:col-span-6 xl:col-span-8'
+                  : 'md:col-span-10 xl:col-span-12'
+              }`}
+            >
               <div className="flex flex-col gap-6 px-6 py-8">
                 <h2
                   className={`${merri.className} text-[18px] text-center md:text-left text-white font-bold`}
@@ -41,56 +50,43 @@ export default function FooterWithBlogsClient({
                   LATEST ON YOUTUBE
                 </h2>
 
-                <YouTubeSection videos={videos} count={1} layout="row" />
+                {/* Without the blog panel this column spans the full row, so fill it with
+                    the two-up grid — the same treatment RetreatsClient uses. getLatestVideos
+                    always returns two, so the second one is already to hand. "column" is
+                    required alongside columns={2}: a "row" card needs ~600px. */}
+                {showBlogs ? (
+                  <YouTubeSection videos={videos} count={1} layout="row" />
+                ) : (
+                  <YouTubeSection
+                    videos={videos}
+                    count={2}
+                    columns={2}
+                    layout="column"
+                  />
+                )}
               </div>
             </div>
 
             {/* BLOG */}
-            <div className="order-2 md:order-0 md:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
-              <div className="flex flex-col px-6 py-8">
-                <h2
-                  className={`${merri.className} text-white font-bold text-[18px] text-center md:text-left`}
-                >
-                  ON OUR BLOG
-                </h2>
+            {showBlogs && (
+              <div className="order-2 md:order-0 md:col-start-7 xl:col-start-9 col-span-4 bg-[#47ABD880]">
+                <div className="flex flex-col px-6 py-8">
+                  <h2
+                    className={`${merri.className} text-white font-bold text-[18px] text-center md:text-left`}
+                  >
+                    ON OUR BLOG
+                  </h2>
 
-                <LatestBlogs blogs={blogs} count={count} />
+                  <LatestBlogs blogs={blogs} count={count} />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* CONTACT */}
-      <div id="contact">
-        <div className="flex flex-col justify-center items-center text-white font-bold font-neco py-16 text-[20px] sm:text-[22px] md:text-[32px] px-4 text-center">
-          <a href="mailto:mahabharatadialogues@gmail.com" className="flex items-center gap-2 hover:underline">
-            <Mail className="w-5 h-5 md:w-7 md:h-7" />
-            <span>mahabharatadialogues@gmail.com</span>
-          </a>
-
-          <div className="flex items-center gap-2 mt-2">
-            <Phone className="w-5 h-5 md:w-7 md:h-7" />
-            <p>+91 78923 32932</p>
-          </div>
-
-          <div className="flex gap-4 mt-6">
-            <a href="https://www.youtube.com/@MahabharataDialogues/videos" target="_blank" className="w-10 h-10 bg-[#D9D9D9] rounded-full flex items-center justify-center">
-              <Youtube className="w-5 h-5 text-black" />
-            </a>
-
-            <a href="https://www.instagram.com/mahabharatadialogues/" target="_blank" className="w-10 h-10 bg-[#D9D9D9] rounded-full flex items-center justify-center">
-              <Instagram className="w-5 h-5 text-black" />
-            </a>
-
-            <a href="https://in.linkedin.com/company/mahabharatadialogues" target="_blank" className="w-10 h-10 bg-[#D9D9D9] rounded-full flex items-center justify-center">
-              <Linkedin className="w-5 h-5 text-black" />
-            </a>
-          </div>
-        </div>
-
-        <div className="bg-[#124056] py-6 w-full" />
-      </div>
+      {/* CONTACT — the shared section, identical to the one the home page renders */}
+      <Footer />
     </div>
   )
 }

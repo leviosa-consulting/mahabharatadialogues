@@ -1,22 +1,7 @@
 import { cache } from 'react'
 import UpcomingEventsClient from './UpcomingEventsClient'
 import { adminDB } from '@/firebase/firebaseAdmin'
-
-interface Event {
-  id: string
-  type: 'event' | 'retreat'
-  title: string
-  coverImage: string
-  date: string
-  time: string
-  venue: string
-  mapUrl: string
-  description: string
-  bookingUrl?: string
-  slug?: string
-  endDate?: string
-  city?: string
-}
+import { Event, parseDate } from '@/lib/events'
 
 interface RetreatData {
   id: string
@@ -55,29 +40,6 @@ interface EventData {
   description?: string
   bookingUrl?: string
   slug?: string
-}
-
-const parseDate = (dateStr: string): Date => {
-  if (dateStr.includes('-')) {
-    return new Date(dateStr)
-  }
-
-  const [day, month, year] = dateStr.split(' ')
-  const monthMap: { [key: string]: number } = {
-    Jan: 0,
-    Feb: 1,
-    Mar: 2,
-    Apr: 3,
-    May: 4,
-    Jun: 5,
-    Jul: 6,
-    Aug: 7,
-    Sep: 8,
-    Oct: 9,
-    Nov: 10,
-    Dec: 11,
-  }
-  return new Date(parseInt(year), monthMap[month], parseInt(day))
 }
 
 // Cache the API calls with revalidation

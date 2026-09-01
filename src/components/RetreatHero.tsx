@@ -462,7 +462,7 @@ export default async function RetreatHero() {
             </div>
           )}
 
-          <FooterWithBlogs />
+          <FooterWithBlogs showBlogs={false} />
         </div>
       </div>
     </div>

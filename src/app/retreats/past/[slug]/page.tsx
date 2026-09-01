@@ -83,7 +83,7 @@ export default async function Page({
       <PastRetreatClient testimonials={testimonials} retreat={retreat} />
 
       <div className="bg-[#1D5C75CC] pt-12">
-        <FooterWithBlogs />
+        <FooterWithBlogs showBlogs={false} />
       </div>
     </>
   )

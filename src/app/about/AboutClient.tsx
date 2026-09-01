@@ -46,7 +46,11 @@ export default function AboutClient({ members }: { members: Member[] }) {
 
   return (
     <div>
-      <div>
+      {/* Hero + strip share a full-viewport flex column so both always land on the
+          first screen — the same pattern the home page uses. The hero takes the
+          leftover height (flex-1 min-h-0) and the strip keeps its own (shrink-0). */}
+      <div className="flex flex-col h-[100svh]">
+        <div className="flex-1 min-h-0 flex flex-col">
         <div>
           <MobileNavbar textColor="#1D5C75" isNotHome />
           <MobileNavbarScroll textColor="#1D5C75" showOnScrollUp={true} />
@@ -55,9 +59,15 @@ export default function AboutClient({ members }: { members: Member[] }) {
           <Navbar textColor="#1D5C75" isNotHome />
         </div>
         <NavbarScroll textColor="#1D5C75" />
-        <div className="mx-4 xl:mx-30 my-10">
-          <div className="grid grid-cols-12 gap-3">
-            <div className="col-start-1 lg:col-start-3 col-span-12 lg:col-span-8">
+        {/* flex-1 + items-center centres the title in whatever height is left
+            between the navbar and the strip. my-10 is what keeps it clear of both:
+            as a flex item's margin it is subtracted from the space flex-1 can claim,
+            so the box can never grow into either neighbour. overflow-y-auto is the
+            short-viewport fallback — a long title scrolls inside its own box rather
+            than spilling over the navbar or the strip. */}
+        <div className="mx-4 xl:mx-10 my-10 flex-1 min-h-0 overflow-y-auto flex items-center">
+          <div className="grid grid-cols-12 gap-3 w-full">
+            <div className="col-start-1 col-span-12">
               <p className="font-neco font-medium italic text-[#1D5C75] text-[20px] md:text-[28px] text-center">
                 {settings?.about.title}
               </p>
@@ -66,8 +76,10 @@ export default function AboutClient({ members }: { members: Member[] }) {
         </div>
       </div>
 
-      {/* second section */}
+      {/* second section — the strip. shrink-0 keeps its height while the hero
+          above absorbs the rest of the viewport. */}
       <div
+        className="shrink-0"
         style={{
           backgroundImage: `
   
@@ -77,9 +89,11 @@ export default function AboutClient({ members }: { members: Member[] }) {
           backgroundSize: '240px 240px',
         }}
       >
-        <div className="py-20">
+        {/* Same vertical rhythm as the home CTA strip (CTAStrip.tsx), so the strip
+            stays compact and leaves the height to the hero above. */}
+        <div className="py-4 sm:py-6 xl:py-8">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row items-center md:justify-center gap-8 md:gap-0">
+            <div className="flex flex-col md:flex-row items-center md:justify-center gap-6 md:gap-0">
               {/* TEXT */}
               <div>
                 <p
@@ -116,6 +130,7 @@ export default function AboutClient({ members }: { members: Member[] }) {
           </div>
         </div>
       </div>
+      </div>
 
       {/* CORE TEAM */}
       <div className="my-30">
@@ -128,16 +143,23 @@ export default function AboutClient({ members }: { members: Member[] }) {
         </div>
         <div className="w-full">
           {coreTeamMembers.length > 0 && (
-            <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 place-items-center px-2 md:px-0 max-w-7xl">
+            <div
+              /* max-w-5xl, not 7xl: the container is what sizes the cards. At lg the
+                 track is (1024 - 2*64)/3 = 299px, so the card max-w-[320px] cap stops
+                 binding — which matters because with place-items-center a binding cap
+                 dumps the leftover track width into the gutter, making the visual gap
+                 grid-gap + (track - card) rather than grid-gap. */
+              className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 place-items-center px-2 md:px-0 max-w-5xl">
               {coreTeamMembers.map((item, index) => (
                 <div
                   key={index}
-                  className="relative w-full max-w-[400px] h-[440px] flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105"
+                  /* aspect-[4/5] rather than a fixed height: width is fluid from the
+                     grid track, so a pixel height made the card a different shape at
+                     every breakpoint (0.65 at 1024px, 0.91 at 1536px). A ratio keeps
+                     the portrait frame stable and lets the card scale. */
+                  className="relative w-full max-w-[320px] aspect-[4/5] overflow-hidden cursor-pointer transition-transform hover:scale-105"
                   onClick={() => handleMemberClick(item)}
                 >
-                  {/* Image background */}
-                  <div className="absolute top-0 w-full h-[80%] md:h-[78%] bg-[#D9D9D9]/20" />
-
                   <img
                     src={item.imageUrl}
                     alt={item.name}
@@ -145,15 +167,18 @@ export default function AboutClient({ members }: { members: Member[] }) {
                   />
 
                   {/* Bottom gradient content */}
-                  <div className="w-full flex flex-col justify-center items-center absolute bottom-0 left-0 p-4 bg-gradient-to-b from-[#1D5C75] to-[#1D5C75]/50 text-center">
+                  {/* to-t, not to-b: the scrim must be solid behind the text and fade
+                      upward into the photo. The other direction left the roles line
+                      sitting on the weakest part of the gradient. */}
+                  <div className="w-full flex flex-col justify-center items-center absolute bottom-0 left-0 p-3 bg-gradient-to-t from-[#1D5C75] to-[#1D5C75]/50 text-center">
                     <h2
-                      className={`${merri.className} italic font-extrabold text-[24px] md:text-[28px] text-white`}
+                      className={`${merri.className} italic font-extrabold text-[20px] md:text-[22px] text-white`}
                     >
                       {item.name}
                     </h2>
 
                     <h3
-                      className={`${merri.className} font-normal text-[16px] text-white uppercase`}
+                      className={`${merri.className} font-normal text-[14px] text-white uppercase`}
                     >
                       {item.roles.join(' | ')}
                     </h3>

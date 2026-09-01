@@ -89,13 +89,14 @@ const NavbarScroll = ({ textColor, isNotHome }: NavProps) => {
 
             {/* RIGHT — flex-1 + justify-end so it takes equal half and aligns right */}
             <div className="flex flex-1 justify-end mr-7 gap-12">
-              <Link
+              {/* Blog link hidden for now — restore by uncommenting */}
+              {/* <Link
                 href="/blogs"
                 className={`${merri.className} font-bold uppercase text-[14px]`}
                 style={{ color: textColor }}
               >
                 Blog
-              </Link>
+              </Link> */}
               <Link
                 href="/about"
                 className={`${merri.className} font-bold uppercase text-[14px]`}

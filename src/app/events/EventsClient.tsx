@@ -9,25 +9,15 @@ import CustomButton from '@/components/CustomButton'
 import { MapPin, X } from 'lucide-react'
 import NavbarScroll from '@/components/NavbarScroll'
 
+import FeaturedEventCard from '@/components/FeaturedEventCard'
+import {
+  Event,
+  formatEventDateTime,
+  formatPastEventDate,
+} from '@/lib/events'
+
 import { usePageSettingsStore } from '@/store/usePageSettingsStore'
 import { useRouter } from 'next/navigation'
-
-interface Event {
-  id: string
-  type: 'event' | 'retreat'
-  title: string
-  coverImage: string
-  date: string
-  time: string
-  venue: string
-  mapUrl: string
-  description: string
-  bookingUrl?: string
-  slug?: string
-  endDate?: string
-  city?: string
-  gallery?: string[]
-}
 
 interface EventsClientProps {
   upcomingEvents: Event[]
@@ -39,74 +29,10 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
   const settings = usePageSettingsStore((state) => state.settings)
   const router = useRouter()
 
-  const formatEventDateTime = (dateTimeStr: string): string => {
-    const date = new Date(dateTimeStr)
-
-    const weekdays = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ]
-    const dayName = weekdays[date.getDay()]
-
-    const day = date.getDate()
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ]
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
-
-    let hours = date.getHours()
-    const minutes = date.getMinutes()
-    const ampm = hours >= 12 ? 'pm' : 'am'
-    hours = hours % 12
-    hours = hours ? hours : 12
-
-    const timeStr = `${hours}${
-      minutes > 0 ? ':' + minutes.toString().padStart(2, '0') : ''
-    }${ampm}`
-
-    return `${dayName}, ${day} ${month} ${year} | ${timeStr}`
-  }
-
-  const formatPastEventDate = (dateTimeStr: string): string => {
-    const date = new Date(dateTimeStr)
-
-    const day = date.getDate()
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ]
-    const month = months[date.getMonth()]
-    const year = date.getFullYear()
-
-    return `${day} ${month} ${year}`
-  }
+  /* The soonest event gets the big shared FeaturedEventCard; the rest stay in the
+     horizontal strip. With only one upcoming event the strip is not rendered at
+     all, so the featured card is what sits under the header. */
+  const [featuredEvent, ...restEvents] = upcomingEvents
 
   const openImageModal = (imageSrc: string) => {
     setSelectedImage(imageSrc)
@@ -157,7 +83,9 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
             {settings?.events.subtitle}
           </p>
         </div>
-        <div className="pb-28">
+        {/* pb-8, not pb-28: the extra 80px only existed to host the card overlap
+            below, which is gone. 32px is what actually showed under the heading. */}
+        <div className="pb-8">
           {upcomingEvents.length > 0 && (
             <h2
               className={`${merri.className} text-[#D9D9D9] uppercase text-center text-[16px] md:text-[18px] font-bold`}
@@ -181,15 +109,23 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
         }}
       >
         {upcomingEvents.length > 0 ? (
+          <>
+            {/* No negative margin here: the gap comes from the card's own my-10, the
+                same way the home page renders it. */}
+            <div className="w-full flex justify-center px-4 lg:px-8 xl:px-16">
+              <FeaturedEventCard item={featuredEvent} />
+            </div>
+
+            {restEvents.length > 0 && (
           <div
-            className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory -mt-20 pb-8 px-4 scroll-pl-4 md:scroll-pl-0 
-              ${upcomingEvents.length === 1 ? 'justify-center' : ''}
-              ${upcomingEvents.length === 2 ? 'md:justify-center' : ''}
-              ${upcomingEvents.length === 3 ? 'md:justify-start md:pl-[8%] lg:pl-[8%]' : ''}
-              ${upcomingEvents.length >= 4 ? 'md:pl-[8%] lg:pl-[8%]' : ''}
+            className={`flex items-start gap-8 md:gap-12 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-8 px-4 scroll-pl-4 md:scroll-pl-0
+              ${restEvents.length === 1 ? 'justify-center' : ''}
+              ${restEvents.length === 2 ? 'md:justify-center' : ''}
+              ${restEvents.length === 3 ? 'md:justify-start md:pl-[8%] lg:pl-[8%]' : ''}
+              ${restEvents.length >= 4 ? 'md:pl-[8%] lg:pl-[8%]' : ''}
             `}
           >
-            {upcomingEvents.map((event) => (
+            {restEvents.map((event) => (
               <div
                 key={event.id}
                 className="snap-start shrink-0 flex flex-col gap-3
@@ -279,8 +215,10 @@ const EventsClient = ({ upcomingEvents, pastEvents }: EventsClientProps) => {
               </div>
             ))}
           </div>
+            )}
+          </>
         ) : (
-          <div className="flex justify-center items-center -mt-20 pb-20">
+          <div className="flex justify-center items-center py-20">
             <p className={`${merri.className} text-white text-xl text-center`}>
               No upcoming events at the moment
             </p>

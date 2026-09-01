@@ -79,7 +79,7 @@ export default async function Page({
       <RetreatClient retreat={retreat} />
 
       <div className="bg-[#1D5C75CC] pt-18">
-        <FooterWithBlogs />
+        <FooterWithBlogs showBlogs={false} />
       </div>
     </>
   )
